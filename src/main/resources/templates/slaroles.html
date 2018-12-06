@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+		<!-- Navigation -->
+		<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Role<a href="/addSLARole" data-toggle="tooltip" title="Create Role"><i class="fa fa-plus" style="float:right"></i></a></h1>
+					
+                </div>
+
+				
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Role Table
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th>Role</th>
+										<th>Description</th>
+										<th>Responsibility</th>
+                                        <th>Influence</th>
+										<th>Interest</th>
+										<th>RACI For Sys Changes</th>
+
+										<!--<th class="no-sort">Action</th>-->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="slarole: ${slaroles}">
+                                        <td>
+											<a th:href="@{'/deleteSLARole?id='+${slarole.id}+'&slaroleName='+${slarole.SLARoleName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
+												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											</a>&nbsp 
+											<a data-toggle="modal" th:data-target="@{'#'+${slarole.id}}" th:text="${slarole.SLARoleName}" style="cursor:pointer"></a>
+										</td>
+										<td th:text="${slarole.description}"></td>
+										<td th:text="${slarole.responsibility}"></td>
+                                        <td th:text="${slarole.influence}"></td>
+                                        <td th:text="${slarole.interest}"></td>
+										<td th:text="${slarole.raciforsyschanges}"></td>
+
+										
+
+										  <!-- Modal -->
+										  <div class="modal fade" th:id="${slarole.id}" role="dialog">
+											<div class="modal-dialog">
+											
+											  <!-- Modal content-->
+											  <div class="modal-content">
+												<div class="modal-header">
+												  <button type="button" class="close" data-dismiss="modal">&times;</button>
+												  <h4 class="modal-title" th:text="${slarole.SLARoleName}"></h4>
+												</div>
+												<div class="modal-body">
+													<form action="#" th:action="@{/updateSLARole}" th:object="${slaroleModel}" method="post">													
+												
+													  <div class="form-group">
+														<label for="SLARoleName">Role:</label>
+														<input type="text" class="form-control" th:name="SLARoleName" th:value="${slarole.SLARoleName}"></input>
+														<input type="hidden" class="form-control" th:name="id" th:value="${slarole.id}"></input>
+													  </div>													  
+													  <div class="form-group">
+														<label for="description">Description:</label>
+														<input type="text" class="form-control" th:name="description" th:value="${slarole.description}">
+													  </div>													  
+													  <div class="form-group">
+														<label for="description">Responsibility:</label>
+														<input type="text" class="form-control" th:name="responsibility" th:value="${slarole.responsibility}">
+													  </div>													  
+													  <div class="form-group">
+														<label for="note">Influence:</label>
+														<input type="text" class="form-control" th:name="influence" th:value="${slarole.influence}">
+													  </div>
+													  <div class="form-group">
+														<label for="note">Interest:</label>
+														<input type="text" class="form-control" th:name="interest" th:value="${slarole.interest}">
+													  </div>
+													  <div class="form-group">
+														<label for="note">RACI For Sys Changes:</label>
+														<input type="text" class="form-control" th:name="raciforsyschanges" th:value="${slarole.raciforsyschanges}">
+													  </div>												  
+													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+													</form>
+												</div>
+											  </div>
+											  
+											</div>
+										  </div>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                            <!-- /.table-responsive -->
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('#datetimepicker2').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+		});
+	</script>
+</body>
+
+</html>

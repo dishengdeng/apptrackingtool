@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+		<!-- Navigation -->
+		<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Supports<a href="/addSupport" data-toggle="tooltip" title="Create Support"><i class="fa fa-plus" style="float:right"></i></a></h1>
+					
+                </div>
+
+				
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Support Table
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th>Support</th>
+										<th>App Instance</th>										
+                                        <th>Phone</th>
+										<th>Email</th>
+										<th>Note</th>
+										<!--<th class="no-sort">Action</th>-->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="support: ${supports}">
+                                        <td>
+											<a th:href="@{'/deleteSupport?id='+${support.id}+'&supportName='+${support.supportName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
+												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											</a>&nbsp 
+											<a data-toggle="modal" th:data-target="@{'#'+${support.id}}" th:text="${support.supportName}"></a>
+										</td>
+										<td>
+											<a data-toggle="modal" th:if="${support.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',support.id,'instances')}}">App Instances</a>
+										</td>										
+                                        <td th:text="${support.phone}"></td>
+										<td th:text="${support.email}"></td>
+										<td th:text="${support.note}"></td>
+										  <!-- Modal -->
+									  
+										  
+										  
+										  <div class="modal fade" th:id="${support.id}" role="dialog">
+											<div class="modal-dialog">
+											
+											  <!-- Modal content-->
+											  <div class="modal-content">
+												<div class="modal-header">
+												  <button type="button" class="close" data-dismiss="modal">&times;</button>
+												  <h4 class="modal-title" th:text="${support.supportName}"></h4>
+												</div>
+												<div class="modal-body">
+													<form action="#" th:action="@{/updateSupport}" th:object="${supportModel}" method="post">													
+												
+													  <div class="form-group">
+														<label for="supportName">Support:</label>
+														<input type="text" class="form-control" th:name="supportName" th:value="${support.supportName}"></input>
+														<input type="hidden" class="form-control" th:name="id" th:value="${support.id}"></input>
+													  </div>												  
+													  <div class="form-group">
+														<label for="description">Phone:</label>
+														<input type="text" class="form-control" th:name="phone" th:value="${support.phone}">
+													  </div>													  
+													  <div class="form-group">
+														<label for="note">Email:</label>
+														<input type="text" class="form-control" th:name="email" th:value="${support.email}">
+													  </div>
+													  <div class="form-group">
+														<label for="note">Note:</label>
+														<input type="text" class="form-control" th:name="note" th:value="${support.note}">
+													  </div>													  
+													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+													</form>
+												</div>
+											  </div>
+											  
+											</div>
+										  </div>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                            <!-- /.table-responsive -->
+							
+							<!--App instance Modal-->
+							<div th:each="support: ${supports}" th:if="${support.appInstances.size()>0}">
+								<div class="modal fade" th:id="${#strings.concat(support.id,'instances')}" role="dialog" >
+								<!-- Modal content-->
+										<div class="modal-dialog">
+										  <div class="modal-content">
+											<div class="modal-header">
+											  <button type="button" class="close" data-dismiss="modal">&times;</button>
+											  <h4 class="modal-title"> App Instances</h4>
+											</div>
+											<div class="modal-body">
+												<table class="table table-striped" id="instancetable">
+												  <thead>
+													<tr>
+													  <th scope="col">App Instance Name</th>
+													  <th scope="col">Status</th>
+													  <th scope="col">Description</th>														  
+													</tr>
+												  </thead>
+												  <tbody>
+													<tr th:each="appinstance : ${support.appInstances}">
+													  <th><a th:href="@{'/instancedetail?id='+${appinstance.id}}"><h5 th:text="${appinstance.appInstanceName}"></h5></a></th>
+													  <th><h5 th:text="${appinstance.status}"></h5></th>
+													  <th><h5 th:text="${appinstance.description}"></h5></th>
+													</tr>
+												  </tbody>
+												</table>
+											</div>
+										   </div>
+										 </div>
+								</div>
+							</div>								
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('#datetimepicker2').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+		});
+	</script>
+</body>
+
+</html>

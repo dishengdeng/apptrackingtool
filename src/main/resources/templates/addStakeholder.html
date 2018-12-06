@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Create Stakeholder</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<form action="#" th:action="@{/addStakeholder}" th:object="${stakeholder}" method="post">													
+			
+				  <div class="form-group">
+					<label for="stakeholderName">Stakeholder Name:</label>
+					<input type="text" class="form-control" th:name="stakeholderName" th:value="${stakeholder.stakeholderName}"></input>
+
+				  </div>
+				  <div class="form-group">
+					<label for="roleSelect">Role:</label>
+					<select name="role" class="form-control" id="roleSelect">
+					<option selected="selected" th:value="${stakeholder.role}"></option>
+					  <option th:each="roleEntity : ${roles}" 
+					  th:text="${roleEntity.SLARoleName}" 
+					  th:attr="value = ${roleEntity.id}">
+					  
+					  </option>
+					</select>
+				  </div>													  
+				  <div class="form-group">
+					<label for="departmentSelect">Department:</label>
+					<select name="department" class="form-control" id="departmentSelect">
+						<option selected="selected" th:value="${stakeholder.department}"></option>
+					  <option th:each="departmentEntity : ${departments}" 
+					  th:text="${departmentEntity.departmentName}" 
+					  th:attr="value = ${departmentEntity.id}">
+					  
+					  </option>
+					</select>
+				  </div>					  
+				  <div class="form-group">
+					<label for="description">First Name:</label>
+					<input type="text" class="form-control" th:name="firstname">
+				  </div>													  
+				  <div class="form-group">
+					<label for="description">Last Name:</label>
+					<input type="text" class="form-control" th:name="lastname">
+				  </div>													  
+				  <div class="form-group">
+					<label for="note">Address:</label>
+					<input type="text" class="form-control" th:name="address">
+				  </div>
+				  <div class="form-group">
+					<label for="note">Phone:</label>
+					<input type="text" class="form-control" th:name="phone">
+				  </div>
+				  <div class="form-group">
+					<label for="note">Email:</label>
+					<input type="text" class="form-control" th:name="email">
+				  </div>
+				  <div class="form-group">
+					<label for="note">Position:</label>
+					<input type="text" class="form-control" th:name="position">
+				  </div>													  
+				  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Submit" />
+				</form>
+			</div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('#datetimepicker2').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+		});
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" th:text="${appinstance.appInstanceName}"><h1>
+					
+                </div>			
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+				<div class="col-lg-8">
+                    <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> Details
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+							<form action="#" th:action="@{/updateAppInstance}" th:object="${appinstance}" method="post">													
+						
+							  <div class="form-group">
+								<label for="appInstanceName">Instance:</label>
+								<input type="text" class="form-control" th:name="appInstanceName" th:value="${appinstance.appInstanceName}"></input>
+								<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+							  </div>
+							  <div class="form-group">
+								<label for="appInstanceName">Status:</label>
+								<select name="status" class="form-control" id="statusSelect">
+									<option th:selected="${appinstance.status==null}"></option>
+									<option th:attr="value = 'Active'" th:selected="${appinstance.status==null} ? false:${appinstance.status=='Active'}" th:text="Active"></option>
+									<option th:attr="value = 'Inactive'" th:selected="${appinstance.status==null} ? false:${appinstance.status=='Inactive'}" th:text="Inactive"></option>
+								</select>
+							  </div>					
+							  <div class="form-group">
+								<label for="note">Description:</label>
+								<input type="text" class="form-control" th:name="description" th:value="${appinstance.description}">
+							  </div>													  
+							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							</form>                            
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+            </div>
+
+            <!-- /.row -->
+			<!--SLA Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+                        <div class="panel-heading">
+                            <i class="fa fa-newspaper-o"></i> SLA
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addsla'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${sla!=null}" th:href="${#strings.concat('/deleteInstanceSLA?id=',sla.id)}">
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${sla!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">Name:</th><td th:text="${sla.slaName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${sla.description}"></td></tr>
+								<tr><th scope="row" style="width:25%">Effective Date:</th><td th:text="${sla.effectivedate}"></td></tr>
+								<tr><th scope="row" style="width:25%">Termination Date:</th><td th:text="${sla.terminationdate}"></td></tr>
+								<tr><th scope="row" style="width:25%">Approver:</th><td th:text="${sla.approvername}"></td></tr>
+								<tr><th scope="row" style="width:25%">Approval Date:</th><td th:text="${sla.approvaldate}"></td></tr>
+								<tr><th scope="row" style="width:25%">Attachment:</th><td th:text="${sla.attachment}"></td></tr>
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			
+			<!--Contract Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+                        <div class="panel-heading">
+                            <i class="fa fa-newspaper-o"></i> Contract
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addContract'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${contract!=null}" th:href="${#strings.concat('/deleteInstanceContract?id=',contract.id)}">
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${contract!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">Contract:</th><td th:text="${contract.description}"></td></tr>
+								<tr><th scope="row" style="width:25%">Expired Date:</th><td th:text="${contract.expireDate}"></td></tr>
+								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${contract.description}"></td></tr>
+								<tr><th scope="row" style="width:25%">SMA Description:</th><td th:text="${contract.smaDescription}"></td></tr>
+								<tr><th scope="row" style="width:25%">SLA Description:</th><td th:text="${contract.slaDescription}"></td></tr>
+								<tr><th scope="row" style="width:25%">Attachment:</th><td th:text="${contract.attachment}"></td></tr>
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			
+			<!--license Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+                        <div class="panel-heading">
+                            <i class="fa fa-newspaper-o"></i> License
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addlicense'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${license!=null}" th:href="${#strings.concat('/deleteInstanceLicense?id=',license.id)}">
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${license!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">License Number:</th><td th:text="${license.licenseNumber}"></td></tr>
+								<tr><th scope="row" style="width:25%">Registration Date:</th><td th:text="${license.registrationDate}"></td></tr>
+								<tr><th scope="row" style="width:25%">Expiry Date:</th><td th:text="${license.expireDate}"></td></tr>
+								<tr><th scope="row" style="width:25%">Note:</th><td th:text="${license.note}"></td></tr>
+								<tr><th scope="row" style="width:25%">Price:</th><td th:text="'$'+${#numbers.formatDecimal(license.price,2,2,'COMMA')}"></td></tr>
+								<tr><th scope="row" style="width:25%">Number Of License Required:</th><td th:text="${license.numberoflicenserequired}"></td></tr>
+								<tr><th scope="row" style="width:25%">Renewal Frequency:</th><td th:text="${license.renewalfrequency}"></td></tr>
+								<tr><th scope="row" style="width:25%">Renewal Owner:</th><td th:text="${license.renewalowner}"></td></tr>
+								<tr><th scope="row" style="width:25%">Warrenty:</th><td th:text="${license.warrenty}"></td></tr>
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			
+			<!--desktop Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+                        <div class="panel-heading">
+                            <i class="fa fa-newspaper-o"></i> Desktop
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#adddesktop'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${desktop!=null}" th:href="${#strings.concat('/deleteInstanceDesktop?id=',desktop.id)}">
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${desktop!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">Desktop:</th><td th:text="${desktop.desktopName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Operation System Version:</th><td th:text="${desktop.osVersion}"></td></tr>
+								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${desktop.description}"></td></tr>
+								<tr><th scope="row" style="width:25%">HW Platform:</th><td th:text="${desktop.hwplatform}"></td></tr>
+								<tr><th scope="row" style="width:25%">Decomminsion Date:</th><td th:text="${desktop.decomminsionDate}"></td></tr>
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			
+			<!--server Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+                        <div class="panel-heading">
+                            <i class="fa fa-newspaper-o"></i> Server
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addserver'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${server!=null}" th:href="${#strings.concat('/deleteInstanceServer?id=',server.id)}">
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${server!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">Server:</th><td th:text="${server.serverName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Cluster:</th><td th:text="${server.cluster==null}? '': ${server.cluster.getClusterName()}"></td></tr>
+								<tr><th scope="row" style="width:25%">Address:</th><td th:text="${server.address}"></td></tr>
+								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${server.description}"></td></tr>
+								<tr><th scope="row" style="width:25%">Server Version:</th><td th:text="${server.serverVersion}"></td></tr>
+								<tr><th scope="row" style="width:25%">HW Platform:</th><td th:text="${server.hwplatform}"></td></tr>
+								<tr><th scope="row" style="width:25%">Decomminsion Date:</th><td th:text="${server.decomminsionDate}"></td></tr>
+								<tr><th scope="row" style="width:25%">Attachment:</th><td th:text="${server.attachment}"></td></tr>								
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+
+			<!--Vendor Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+                        <div class="panel-heading">
+                            <i class="fa fa-newspaper-o"></i> Vendor
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addcompany'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${company!=null}" th:href="${#strings.concat('/deleteInstanceCompany?id=',company.id)}">
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${company!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">Vendor:</th><td th:text="${company.companyName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Address:</th><td th:text="${company.address}"></td></tr>
+								<tr><th scope="row" style="width:25%">Phone:</th><td th:text="${company.phone}"></td></tr>
+								<tr><th scope="row" style="width:25%">Email:</th><td th:text="${company.email}"></td></tr>
+								<tr><th scope="row" style="width:25%">Contact Name:</th><td th:text="${company.contactName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Contact Phone:</th><td th:text="${company.contactPhone}"></td></tr>								
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+
+
+			<!--Department Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+                        <div class="panel-heading">
+                            <i class="fa fa-newspaper-o"></i> Department
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#adddepartment'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${department!=null}" th:href="${#strings.concat('/deleteInstanceDepartment?id=',appinstance.id)}">
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${department!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">department:</th><td th:text="${department.departmentName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Stakeholder:</th><td><a data-toggle="modal" th:if="${department.stakeholders.size()>0}" th:data-target="@{${#strings.concat('#',department.id,'stakeholders')}}">Stakeholders</a></td></tr>
+								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${department.description}"></td></tr>
+								<tr><th scope="row" style="width:25%">Purpose:</th><td th:text="${department.purpose}"></td></tr>
+								<tr><th scope="row" style="width:25%">Stragic Plan:</th><td th:text="${department.stragicplan}"></td></tr>
+								<tr><th scope="row" style="width:25%">Goal:</th><td th:text="${department.goal}"></td></tr>
+								<tr><th scope="row" style="width:25%">Road Map:</th><td th:text="${department.roadMap}"></td></tr>								
+								<tr><th scope="row" style="width:25%">Pain Point:</th><td th:text="${department.painpoint}"></td></tr>
+								<tr><th scope="row" style="width:25%">Attachment:</th><td th:text="${department.attachment}"></td></tr>								
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+					<!---Department stakeholders detail-->
+
+						<div class="modal fade" th:if="${department!=null}" th:id="${#strings.concat(department.id,'stakeholders')}" stakeholder="dialog" >
+						<!-- Modal content-->
+								<div class="modal-dialog">
+								  <div class="modal-content">
+									<div class="modal-header">
+									  <button type="button" class="close" data-dismiss="modal">&times;</button>
+									  <h4 class="modal-title"> Stakeholders</h4>
+									</div>
+									<div class="modal-body">
+										<table class="table table-striped" id="stakeholdertable">
+										  <thead>
+											<tr>
+											  <th scope="col">Stakeholder</th>
+											  <th scope="col">First Name</th>
+											  <th scope="col">Last Name</th>
+											  <th scope="col">Address</th>
+											  <th scope="col">Phone</th>
+											  <th scope="col">Position</th>
+											  <th scope="col">Email</th>														  
+											</tr>
+										  </thead>
+										  <tbody>
+											<tr th:each="stakholder : ${department.stakeholders}">
+											  <th><h5 th:text="${stakholder.stakeholderName}"></h5></th>
+											  <th><h5 th:text="${stakholder.firstname}"></h5></th>
+											  <th><h5 th:text="${stakholder.lastname}"></h5></th>
+											  <th><h5 th:text="${stakholder.address}"></h5></th>
+											  <th><h5 th:text="${stakholder.phone}"></h5></th>														  
+											  <th><h5 th:text="${stakholder.position}"></h5></th>
+											  <th><h5 th:text="${stakholder.email}"></h5></th>
+											</tr>
+										  </tbody>
+										</table>
+									</div>
+								   </div>
+								 </div>
+						</div>
+
+			<!--Suport Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+                        <div class="panel-heading">
+                            <i class="fa fa-newspaper-o"></i> Support
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addsupport'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${support!=null}" th:href="${#strings.concat('/deleteInstanceSupport?id=',appinstance.id)}">
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${support!=null}" class="panel-body">
+							<div class="row"><div class="col-sm-2"><strong>Support:</strong></div><div class="col-sm-10"><span th:text="${support.supportName}"></span></div></div>
+							<div class="row"><div class="col-sm-2"><strong>Phone:</strong></div><div class="col-sm-10"><span th:text="${support.phone}"></span></div></div>
+							<div class="row"><div class="col-sm-2"><strong>Email:</strong></div><div class="col-sm-10"><span th:text="${support.email}"></span></div></div>
+							<div class="row"><div class="col-sm-2"><strong>Note:</strong></div><div class="col-sm-10"><span th:text="${support.note}"></span></div></div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>						
+						
+			<!--Site Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+						<div class="panel-heading">
+							<i class="fa fa-newspaper-o"></i> Location
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addinstancelocation'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${instancelocations.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th class="pull-center">Site</th>
+								<th>Zone</th>
+								<th>Description</th>
+								<th>Note</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="instancelocation: ${instancelocations}">
+									<td>
+										<a th:href="@{'/deleteInstanceSite?siteid='+${instancelocation.id}+'&appinstanceid='+${appinstance.id}}" 
+											style="margin-right:20px;text-decoration: none"
+										   title="Delete" 
+										   >
+											<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+										</a>
+										<span th:text="${instancelocation.siteName}"></span>
+									</td>
+									<td th:text="${instancelocation.zone==null}? '': ${instancelocation.zone.getZoneName()}"></td>
+									<td th:text="${instancelocation.description}"></td>
+									<td th:text="${instancelocation.note}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+
+						
+			<!--Model Areas-->
+				<!--SLA model-->
+				<div class="modal fade" th:id="addsla" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change SLA - '+${appinstance.appInstanceName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addInstanceSLA}" th:object="${sla}" method="post">
+								<div class="form-group">
+									<label for="clusterSelect">SLA:</label>
+									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
+									<select name="id" class="form-control" id="slaSelect">
+									  <option th:selected="${sla==null}"></option>
+									  <option th:each="slaEntity : ${slas}" 
+									  th:text="${slaEntity.slaName}" 
+									  th:attr="value = ${slaEntity.id}" th:selected="${sla==null} ? false:${sla.getId()==slaEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>	
+				<!--Contract model-->
+				<div class="modal fade" th:id="addContract" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Contract - '+${appinstance.appInstanceName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addInstanceContract}" th:object="${contract}" method="post">
+								<div class="form-group">
+									<label for="contractSelect">Contract:</label>
+									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
+									<select name="id" class="form-control" id="contractSelect">
+									  <option th:selected="${contract==null}"></option>
+									  <option th:each="contractEntity : ${contracts}" 
+									  th:text="${contractEntity.contractName}" 
+									  th:attr="value = ${contractEntity.id}" th:selected="${contract==null} ? false:${contract.getId()==contractEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+				
+				<!--License model-->
+				<div class="modal fade" th:id="addlicense" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change License - '+${appinstance.appInstanceName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addInstanceLicense}" th:object="${license}" method="post">
+								<div class="form-group">
+									<label for="licenseSelect">License:</label>
+									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
+									<select name="id" class="form-control" id="licenseSelect">
+									  <option th:selected="${license==null}"></option>
+									  <option th:each="licenseEntity : ${licenses}" 
+									  th:text="${licenseEntity.licenseNumber}" 
+									  th:attr="value = ${licenseEntity.id}" th:selected="${license==null} ? false:${license.getId()==licenseEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+
+				<!--desktop model-->
+				<div class="modal fade" th:id="adddesktop" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Desktop - '+${appinstance.appInstanceName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addInstanceDesktop}" th:object="${desktop}" method="post">
+								<div class="form-group">
+									<label for="desktopSelect">Desktop:</label>
+									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
+									<select name="id" class="form-control" id="desktopSelect">
+									  <option th:selected="${desktop==null}"></option>
+									  <option th:each="desktopEntity : ${desktops}" 
+									  th:text="${desktopEntity.desktopName}" 
+									  th:attr="value = ${desktopEntity.id}" th:selected="${desktop==null} ? false:${desktop.getId()==desktopEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>	
+
+				<!--server model-->
+				<div class="modal fade" th:id="addserver" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change server - '+${appinstance.appInstanceName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addInstanceServer}" th:object="${server}" method="post">
+								<div class="form-group">
+									<label for="serverSelect">Server:</label>
+									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
+									<select name="id" class="form-control" id="serverSelect">
+									  <option th:selected="${server==null}"></option>
+									  <option th:each="serverEntity : ${servers}" 
+									  th:text="${serverEntity.serverName}" 
+									  th:attr="value = ${serverEntity.id}" th:selected="${server==null} ? false:${server.getId()==serverEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>	
+
+				<!--Vendor model-->
+				<div class="modal fade" th:id="addcompany" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Vendor - '+${appinstance.appInstanceName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addInstanceCompany}" th:object="${company}" method="post">
+								<div class="form-group">
+									<label for="companySelect">Vendor:</label>
+									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
+									<select name="id" class="form-control" id="companySelect">
+									  <option th:selected="${company==null}"></option>
+									  <option th:each="companyEntity : ${companys}" 
+									  th:text="${companyEntity.companyName}" 
+									  th:attr="value = ${companyEntity.id}" th:selected="${company==null} ? false:${company.getId()==companyEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>	
+
+				<!--Department model-->
+				<div class="modal fade" th:id="adddepartment" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Department - '+${appinstance.appInstanceName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addInstanceDepartment}" th:object="${appinstance}" method="post">
+								<div class="form-group">
+									<label for="departmentSelect">Department:</label>
+									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<select name="department" class="form-control" id="departmentSelect">
+									  <option th:selected="${appinstance.department==null}"></option>
+									  <option th:each="departmentEntity : ${departments}" 
+									  th:text="${departmentEntity.departmentName}" 
+									  th:attr="value = ${departmentEntity.id}" th:selected="${appinstance.department==null} ? false:${appinstance.department.getId()==departmentEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>				
+
+				<!--Support model-->
+				<div class="modal fade" th:id="addsupport" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Support - '+${appinstance.appInstanceName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addInstanceSupport}" th:object="${appinstance}" method="post">
+								<div class="form-group">
+									<label for="supportSelect">Support:</label>
+									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<select name="support" class="form-control" id="supportSelect">
+									  <option th:selected="${appinstance.support==null}"></option>
+									  <option th:each="supportEntity : ${supports}" 
+									  th:text="${supportEntity.supportName}" 
+									  th:attr="value = ${supportEntity.id}" th:selected="${appinstance.support==null} ? false:${appinstance.support.getId()==supportEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+
+				<!--Site model-->
+				<div class="modal fade" th:id="addinstancelocation" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change site - '+${appinstance.appInstanceName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addInstanceSite}" th:object="${appInstance}" method="post">
+								<div class="form-group">
+									<label for="clusterSelect">Site:</label>
+									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<select name="sites" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="siteselect">
+									  <option th:each="siteEntity : ${sites}" 
+									  th:text="${siteEntity.siteName}" 
+									  th:attr="value = ${siteEntity.id}" th:selected="${instancelocations.contains(siteEntity)} ? true">
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+				
+				
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+			<script>
+			$(document).ready(function() {
+			  $('#siteselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Location'
+			  });
+			});
+			</script>
+
+	
+
+</body>
+
+</html>

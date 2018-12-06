@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head> 
+    <title>Getting Started: Serving Web Content</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+ 	<!--<script src="javascript/angular/angular.min.js"></script>-->
+</head>
+<body>
+    <!--<p th:text="'Hello, ' + ${name} + '!'" />-->
+	<div th:text="${name}"></div>
+	<!--<div ng-app="myApp" ng-controller="myCtrl">
+	{{ firstName}}
+	</div>	
+	<script>
+	var app = angular.module("myApp", []);
+	app.controller("myCtrl", function($scope) {
+	    $scope.firstName = ${name};
+
+	});
+	</script>-->
+</body>
+</html>

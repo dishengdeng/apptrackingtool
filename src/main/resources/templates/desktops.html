@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+		<!-- Navigation -->
+		<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Desktops<a href="/addDesktop" data-toggle="tooltip" title="Create Desktop"><i class="fa fa-plus" style="float:right"></i></a></h1>
+					
+                </div>
+
+				
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Desktop Table
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                                <thead>
+                                    <tr>
+                                        <th>Desktop</th>
+										<th>App Instance</th>
+										<th>OS Version</th>
+                                        <th>Description</th>
+										<th>HW Platform</th>
+										<th>Decomminsion Date</th>
+										<!--<th class="no-sort">Action</th>-->
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="desktop: ${desktops}">
+                                        <td>
+											<a th:href="@{'/deleteDesktop?id='+${desktop.id}+'&desktopName='+${desktop.desktopName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
+												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											</a>&nbsp 
+											<a data-toggle="modal" th:data-target="@{'#'+${desktop.id}}" th:text="${desktop.desktopName}" style="cursor:pointer"></a>
+										</td>
+										<td>
+											<a th:if="${desktop.appInstance!=null}"  th:text="${desktop.appInstance.appInstanceName}" th:href="@{'/instancedetail?id='+${desktop.appInstance.id}}"></a>
+										</td>										
+                                        <td th:text="${desktop.osVersion}"></td>
+                                        <td th:text="${desktop.description}"></td>
+										<td th:text="${desktop.hwplatform}"></td>
+										<td th:text="${desktop.decomminsionDate}"></td>
+										  <!-- Modal -->
+										  <div class="modal fade" th:id="${desktop.id}" role="dialog">
+											<div class="modal-dialog">
+											
+											  <!-- Modal content-->
+											  <div class="modal-content">
+												<div class="modal-header">
+												  <button type="button" class="close" data-dismiss="modal">&times;</button>
+												  <h4 class="modal-title" th:text="${desktop.desktopName}"></h4>
+												</div>
+												<div class="modal-body">
+													<form action="#" th:action="@{/updateDesktop}" th:object="${desktopModel}" method="post">													
+												
+													  <div class="form-group">
+														<label for="desktopName">Desktop Name:</label>
+														<input type="text" class="form-control" th:name="desktopName" th:value="${desktop.desktopName}"></input>
+														<input type="hidden" class="form-control" th:name="id" th:value="${desktop.id}"></input>
+													  </div>
+													  <div class="form-group">
+														<label for="description">Operation System Version:</label>
+														<input type="text" class="form-control" th:name="osVersion" th:value="${desktop.osVersion}">
+													  </div>													  
+													  <div class="form-group">
+														<label for="description">Description:</label>
+														<input type="text" class="form-control" th:name="description" th:value="${desktop.description}">
+													  </div>													  
+													  <div class="form-group">
+														<label for="note">HW Platform:</label>
+														<input type="text" class="form-control" th:name="hwplatform" th:value="${desktop.hwplatform}">
+													  </div>
+													  <div>
+														<label for="Decomminsion Date">Decomminsion Date:</label>
+														<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
+															<input type="text" class="form-control" th:name="decomminsionDate" th:value="${desktop.decomminsionDate}">
+															<div class="input-group-addon">
+																<span class="glyphicon glyphicon-calendar"></span>
+															</div>
+
+														</div>
+													  </div>													  
+													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+													</form>
+												</div>
+											  </div>
+											  
+											</div>
+										  </div>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                            <!-- /.table-responsive -->
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('#datetimepicker2').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+		});
+	</script>
+</body>
+
+</html>

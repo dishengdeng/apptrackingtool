@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Create License</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<form action="#" th:action="@{/addLicense}" th:object="${license}" method="post">													
+			
+				  <div class="form-group">
+					<label for="licenseNumber">License Number:</label>
+					<input type="text" class="form-control" th:name="licenseNumber"></input>
+
+				  </div>
+				  <div>
+					<label for="Decomminsion Date">Registration Date:</label>
+					<div class="input-group date" data-provide="datepicker" id='datetimepicker1'>
+						<input type="text" class="form-control" th:name="registrationDate">
+						<div class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</div>
+
+					</div>
+				  </div>
+				  <div>
+					<label for="Decomminsion Date">Expiry Date:</label>
+					<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
+						<input type="text" class="form-control" th:name="expireDate">
+						<div class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</div>
+
+					</div>
+				  </div>													  
+				  <div class="form-group">
+					<label for="description">Note:</label>
+					<input type="text" class="form-control" th:name="Note">
+				  </div>													  
+				  <div class="form-group">
+					<label for="description">Price:</label>
+					<input type="text" class="form-control" th:name="price">
+				  </div>													  
+				  <div class="form-group">
+					<label for="note">Number Of License Required:</label>
+					<input type="text" class="form-control" th:name="numberoflicenserequired">
+				  </div>
+				  <div class="form-group">
+					<label for="note">Renewal Frequency:</label>
+					<input type="text" class="form-control" th:name="renewalfrequency">
+				  </div>
+				  <div class="form-group">
+					<label for="note">Renewal Owner:</label>
+					<input type="text" class="form-control" th:name="renewalowner">
+				  </div>
+				  <div class="form-group">
+					<label for="note">Warrenty:</label>
+					<input type="text" class="form-control" th:name="warrenty">
+				  </div>													  
+				  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Submit" />
+				</form>
+			</div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('#datetimepicker1').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+			$('#datetimepicker2').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+		});
+	</script>
+
+</body>
+
+</html>

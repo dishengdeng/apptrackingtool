@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Create Server</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<form action="#" th:action="@{/addServer}" th:object="${server}" method="post">
+				  <div class="form-group">
+					<label for="AppName">server Name:</label>
+					<input type="text" class="form-control" th:name="serverName" th:value="${server.serverName}">
+				  </div>
+				  <div class="form-group">
+					<label for="AppName">Description:</label>
+					<input type="text" class="form-control" th:name="description" th:value="${server.description}">
+				  </div>
+				  <div class="form-group">
+					<label for="AppName">Address:</label>
+					<input type="text" class="form-control" th:name="address" th:value="${server.address}">
+				  </div>
+				  <div class="form-group">
+					<label for="AppName">Server Version:</label>
+					<input type="text" class="form-control" th:name="serverVersion" th:value="${server.serverVersion}">
+				  </div>
+				  <div class="form-group">
+					<label for="AppName">HW Platform:</label>
+					<input type="text" class="form-control" th:name="hwplatform" th:value="${server.hwplatform}">
+				  </div>
+				  <div>
+				  	<label for="Decomminsion Date">Decomminsion Date:</label>
+					<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
+						<input type="text" class="form-control" th:name="decomminsionDate">
+					    <div class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</div>
+
+					</div>
+				  </div>				  
+				  <div class="form-group">
+					<label for="clusterSelect">Server Cluster:</label>
+					<select name="cluster" class="form-control" id="zoneSelect">
+					  <option selected="selected" th:value="${server.cluster}"></option>
+					  <option th:each="clusterEntity : ${clusters}" th:text="${clusterEntity.clusterName}" th:attr="value = ${clusterEntity.id}"></option>
+					</select>
+				  </div>
+				  <input class="btn btn-primary" type="submit" value="Submit" />
+				</form>
+			</div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('#datetimepicker2').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+		});
+	</script>
+
+</body>
+
+</html>
