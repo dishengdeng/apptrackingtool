@@ -44,7 +44,7 @@ public class License {
     @JsonView(Views.Public.class)
 	private String note;
     
-    @Column(name = "price",columnDefinition="NUMBER(9,2)")
+    @Column(name = "price",columnDefinition="NUMERIC(9,2)")
     @JsonView(Views.Public.class)
 	private Double price;
     
@@ -53,7 +53,7 @@ public class License {
     @JsonView(Views.Public.class)
 	private Date expireDate;
 
-    @Column(name = "numberoflicenserequired",columnDefinition="NUMBER(4)")
+    @Column(name = "numberoflicenserequired",columnDefinition="NUMERIC(4)")
     @JsonView(Views.Public.class)
 	private int numberoflicenserequired;  
     

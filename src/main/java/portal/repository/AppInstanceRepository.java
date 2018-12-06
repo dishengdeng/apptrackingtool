@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.Support;
 
@@ -36,4 +37,9 @@ public interface AppInstanceRepository  extends JpaRepository<AppInstance, Long>
     @Modifying
     @Query("update AppInstance t set t.support=null where t.support = :support")
     void removeSupport(@Param("support") Support support);
+    
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Modifying
+    @Query("update AppInstance t set t.application=null where t.application = :application")
+    void removeApplication(@Param("application") Application application);
 }

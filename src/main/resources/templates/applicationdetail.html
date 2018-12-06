@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" th:text="${app.AppName}"><h1>
+					
+                </div>			
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> Details
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+							<form action="#" th:action="@{/updateApplication}" th:object="${app}" method="post">													
+						
+								  <div class="form-group">
+									<label for="AppName">Application Name:</label>
+									<input type="text" class="form-control" th:name="AppName" th:value="${app.AppName}">
+									<input type="hidden" class="form-control" th:name="id" th:value="${app.id}">
+									<select name="appInstances" multiple hidden>
+									  <option th:each="instanceEntity : ${appinstances}" 
+									  th:text="${instanceEntity.appInstanceName}" 
+									  th:attr="value = ${instanceEntity.id}" selected>
+									</select>
+								  </div>
+								  <div class="form-group">
+									<label for="description">Version:</label>
+									<input type="text" class="form-control" th:name="AppVersion" th:value="${app.AppVersion}">
+								  </div>
+								  <div class="form-group">
+									<label for="description">Type:</label>
+									<input type="text" class="form-control" th:name="AppType" th:value="${app.AppType}">
+								  </div>
+								  <div class="form-group">
+									<label for="description">Aliase:</label>
+									<input type="text" class="form-control" th:name="AppAliase" th:value="${app.AppAliase}">
+								  </div>
+								  <div class="form-group">
+									<label for="description">Purpose:</label>
+									<input type="text" class="form-control" th:name="AppPurpose" th:value="${app.AppPurpose}">
+								  </div>				  
+								  <div class="form-group">
+									<label for="description">Application Prerequisite:</label>
+									<input type="text" class="form-control" th:name="AppPrerequisite" th:value="${app.AppPrerequisite}">
+								  </div>					  
+								  <div class="form-group">
+									<label for="Decomminsion Date">Decomminsion Date:</label>
+									<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
+										<input type="text" class="form-control" th:name="appDecomminsionDate"  th:value="${app.appDecomminsionDate}">
+										<div class="input-group-addon">
+											<span class="glyphicon glyphicon-calendar"></span>
+										</div>
+
+									</div>
+								  </div>
+								  <div class="form-group">
+									<label for="description">Comments:</label>
+									<input type="text" class="form-control" th:name="AppComments" th:value="${app.AppComments}">
+								  </div>
+								  <div class="form-group">
+									<label for="description">Governance:</label>
+									<input type="text" class="form-control" th:name="AppGovernance" th:value="${app.AppGovernance}">
+								  </div>													  
+							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							</form>                            
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+            </div>
+						
+			<!--AppInstance Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-newspaper-o"></i> App Instances
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addinstanceInstance'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${appinstances.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th class="pull-center">Site</th>
+								<th>App Instance</th>
+								<th>Status</th>
+								<th>Description</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="appinstance: ${appinstances}">
+									<td>
+										<a th:href="@{'/deleteApplicationInstance?instanceid='+${appinstance.id}+'&applicationid='+${app.id}}" 
+											style="margin-right:20px;text-decoration: none"
+										   title="Delete" 
+										   >
+											<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/instancedetail?id='+${appinstance.id}}" th:text="${appinstance.appInstanceName}"></a>
+									</td>
+									<td th:text="${appinstance.status}"></td>
+									<td th:text="${appinstance.description}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+
+						
+			<!--Model Areas-->
+
+				<!--AppInstance model-->
+				<div class="modal fade" th:id="addinstanceInstance" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Instance - '+${app.AppName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addApplicationInstance}" th:object="${app}" method="post">
+								<div class="form-group">
+									<label for="instanceselect">App Instance:</label>
+									<input type="hidden" class="form-control" th:name="id" th:value="${app.id}"></input>
+									<select name="appInstances" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="instanceselect">
+									  <option th:each="instanceEntity : ${instances}" 
+									  th:text="${instanceEntity.appInstanceName}" 
+									  th:attr="value = ${instanceEntity.id}" th:selected="${appinstances.contains(instanceEntity)} ? true">
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+				
+				
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+			<script>
+			$(document).ready(function() {
+			  $('#instanceselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Instance'
+			  });
+			});
+			</script>
+
+	
+
+</body>
+
+</html>

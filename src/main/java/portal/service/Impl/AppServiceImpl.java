@@ -62,4 +62,10 @@ public class AppServiceImpl implements AppService{
 		return appModels;
 	}
 
+	@Override
+	public Application findbyId(Long id) {
+
+		return appRepository.findOne(id);
+	}
+
 }

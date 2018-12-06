@@ -53,7 +53,11 @@ public class AppInstance {
     private Support support;
     
 	@ManyToMany(mappedBy = "appInstances")
-    private List<Site> sites = new ArrayList<Site>();    
+    private List<Site> sites = new ArrayList<Site>();
+	
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "application_id",referencedColumnName="id")
+    private Application application;
 
 	public Long getId() {
 		return id;
@@ -109,6 +113,14 @@ public class AppInstance {
 
 	public void setSites(List<Site> sites) {
 		this.sites = sites;
+	}
+
+	public Application getApplication() {
+		return application;
+	}
+
+	public void setApplication(Application application) {
+		this.application = application;
 	}
 
 	@Override

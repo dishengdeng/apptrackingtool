@@ -2,13 +2,17 @@ package portal.entity;
 
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -76,7 +80,12 @@ public class Application {
     @JsonView(Views.Public.class)
 	private String AppSupportByCapSys;
     
-    
+    @OneToMany(
+            mappedBy = "application", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private List<AppInstance> appInstances = new ArrayList<AppInstance>();    
     
     public Long getId() {
 		return id;
@@ -164,5 +173,29 @@ public class Application {
 
 	public void setAppSupportByCapSys(String appSupportByCapSys) {
 		AppSupportByCapSys = appSupportByCapSys;
+	}
+
+	public List<AppInstance> getAppInstances() {
+		return appInstances;
+	}
+
+	public void setAppInstances(List<AppInstance> appInstances) {
+		this.appInstances = appInstances;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this==obj) return true;
+		
+		if(obj==null) return false;
+		
+		if(this.getClass()!=obj.getClass()) return false;
+		
+		AppInstance other = (AppInstance) obj;
+		
+		if(this.getId()!=other.getId()) return false;
+		
+		return true;
 	}
 }
