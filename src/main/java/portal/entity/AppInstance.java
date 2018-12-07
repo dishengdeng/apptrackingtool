@@ -5,6 +5,7 @@ package portal.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
+import portal.utility.Status;
 
 @Entity
 @Table(name = "AppInstance")
@@ -137,6 +139,11 @@ public class AppInstance {
 		if(this.getId()!=other.getId()) return false;
 		
 		return true;
+	}
+	
+	public Status getAppStatus()
+	{
+		return Status.valueOf(this.status);
 	}
 	
 }

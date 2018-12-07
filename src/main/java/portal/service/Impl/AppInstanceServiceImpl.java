@@ -12,6 +12,7 @@ import portal.entity.Support;
 import portal.models.AppInstanceModel;
 import portal.repository.AppInstanceRepository;
 import portal.service.AppInstanceService;
+import portal.utility.Status;
 
 @Service
 public class AppInstanceServiceImpl implements AppInstanceService{
@@ -89,7 +90,7 @@ public class AppInstanceServiceImpl implements AppInstanceService{
 	@Override
 	public List<AppInstance> findNotAssgined(Application application) {
 		List<AppInstance> appInstances = appInstanceRepository.findAll();
-		appInstances.removeIf(obj->obj.getApplication()!=null);
+		appInstances.removeIf(obj->obj.getAppStatus()==Status.Inactive || obj.getApplication()!=null);
 		return appInstances;
 	}
 
