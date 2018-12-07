@@ -37,8 +37,8 @@
 @echo off
 @REM enable echoing my setting MAVEN_BATCH_ECHO to 'on'
 @if "%MAVEN_BATCH_ECHO%" == "on"  echo %MAVEN_BATCH_ECHO%
-set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_121
-set M2_HOME=P:\mywork\apache-maven-3.5.3
+@REM set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_121
+@REM set M2_HOME=P:\mywork\apache-maven-3.5.3
 @REM set %HOME% to equivalent of $HOME
 if "%HOME%" == "" (set "HOME=%HOMEDRIVE%%HOMEPATH%")
 
