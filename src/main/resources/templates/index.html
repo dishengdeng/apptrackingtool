@@ -28,91 +28,36 @@
                     <div class="panel panel-primary">
                         <div class="panel-heading">
 							<div class="row">
-								<div class="col-xs-12 text-right">
+								<div class="small col-xs-10 text-left pull-left">
+									<span th:text="'Decommision Date: '+@{${Application.appDecomminsionDate==null} ? '':${Application.appDecomminsionDate}}"></span>
+								</div>
+								<div class="small col-xs-2 text-right pull-right">
 										<a th:href="@{'/deleteApplication?id='+${Application.id}+'&name='+${Application.appName}}" style="color:white" data-toggle="tooltip" data-placement="top" title="Delete">
 											<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
 										</a>
 								</div>
+							</div>
+							<div class="row">							
 								<div class="col-xs-12">
 									 <p class="h4" th:text="${Application.appName}"></p>
 								</div>
-								<div class="small col-xs-12">
-									 <span class="pull-right" th:text="'Decommision Date: '+${Application.appDecomminsionDate}"></span>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 text-right pull-right">
+									<span th:text="@{'Total Instance: '+${Application.appInstances.size()}}"></span>
 								</div>
 							</div>
+
                         </div>
-                        <a data-toggle="modal" th:data-target="@{'#' + ${Application.id}}">
+                        <a th:href="@{'/applicationdetail?id=' + ${Application.id}}">
                             <div class="panel-footer">
                                 <span class="pull-left">More Details</span>
                                 <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
                                 <div class="clearfix"></div>
                             </div>
                         </a>
-						  <!-- Modal -->
-						  <div class="modal fade" th:id="${Application.id}" role="dialog">
-							<div class="modal-dialog">
-							
-							  <!-- Modal content-->
-							  <div class="modal-content">
-								<div class="modal-header">
-								  <button type="button" class="close" data-dismiss="modal">&times;</button>
-								  <h4 class="modal-title" th:text="${Application.appName}"></h4>
-								</div>
-								<div class="modal-body">
-								  <p th:text="'Decominssion Date:' + ${Application.appDecomminsionDate}"></p>
-								</div>
-								<div class="modal-footer">
-								  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								</div>
-							  </div>
-							  
-							</div>
-						  </div>
                     </div>
                 </div>
-				<!--Create App-->
-				<!--<div class="col-lg-3 col-md-6">
-					  <div class="panel panel-default">
-							<div class="panel-heading">
-								<div class="row">
-									<div class="col-xs-3">								
-									</div>
-									<div class="col-xs-9 text-right">
-										<a data-toggle="modal" data-target="#addApplication">
-										<div class="huge"><i class="fa fa-plus"></i></div>
-										</a>
-									</div>
-								</div>
-							</div>
-							<div class="panel-footer">
-                                <div class="clearfix"></div>
-                            </div>
-						
-						  <div class="modal fade" id="addApplication" role="dialog">
-							<div class="modal-dialog">
-							
-							 
-							  <div class="modal-content">
-								<div class="modal-header">
-								  <button type="button" class="close" data-dismiss="modal">&times;</button>
-								  <h4 class="modal-title">Create Application</h4>
-								</div>
-								<div class="modal-body">
-									<form action="#" th:action="@{/addApplication}" th:object="${app}" method="post">
-										<p>Application Name: <input type="text" th:field="*{appName}" /></p>
-										<p>Decomminsion Date: <input type="date" th:field="*{appDecomminsionDate}" /></p>
-										<p><input type="submit" value="Submit" /> <input type="reset" value="Reset" /></p>
-									</form>
-								</div>
-								<div class="modal-footer">
-								  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								</div>
-							  </div>
-							  
-							</div>
-						  </div>
-					  </div>
-				</div>-->
             </div>
 
             <!-- /.row -->

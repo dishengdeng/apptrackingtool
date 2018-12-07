@@ -12,4 +12,5 @@ public interface AppService {
     List<App> getAllApp();
     Application getByName(String AppName);
     Application updateApp(Application application);
+    Application findbyId(Long id);
 }

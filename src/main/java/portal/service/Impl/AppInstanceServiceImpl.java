@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.Support;
 import portal.models.AppInstanceModel;
@@ -82,6 +83,19 @@ public class AppInstanceServiceImpl implements AppInstanceService{
 	@Override
 	public void removeSupport(Support support) {
 		appInstanceRepository.removeSupport(support);
+		
+	}
+
+	@Override
+	public List<AppInstance> findNotAssgined(Application application) {
+		List<AppInstance> appInstances = appInstanceRepository.findAll();
+		appInstances.removeIf(obj->obj.getApplication()!=null);
+		return appInstances;
+	}
+
+	@Override
+	public void removeApplication(Application application) {
+		appInstanceRepository.removeApplication(application);
 		
 	}
 

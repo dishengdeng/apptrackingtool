@@ -19,11 +19,31 @@
             </div>
             <!-- /.row -->
 			<div class="row">
-				<form action="#" th:action="@{/addApplication}" th:object="${app}" method="post">
+				<form action="#" th:action="@{/addApplication}" th:object="${application}" method="post">
 				  <div class="form-group">
 					<label for="AppName">Application Name:</label>
 					<input type="text" class="form-control" th:field="*{appName}">
 				  </div>
+				  <div class="form-group">
+					<label for="description">Version:</label>
+					<input type="text" class="form-control" th:name="AppVersion">
+				  </div>
+				  <div class="form-group">
+					<label for="description">Type:</label>
+					<input type="text" class="form-control" th:name="AppType">
+				  </div>
+				  <div class="form-group">
+					<label for="description">Aliase:</label>
+					<input type="text" class="form-control" th:name="AppAliase">
+				  </div>
+				  <div class="form-group">
+					<label for="description">Purpose:</label>
+					<input type="text" class="form-control" th:name="AppPurpose">
+				  </div>				  
+				  <div class="form-group">
+					<label for="description">Application Prerequisite:</label>
+					<input type="text" class="form-control" th:name="AppPrerequisite">
+				  </div>					  
 				  <div class="form-group">
 				  	<label for="Decomminsion Date">Decomminsion Date:</label>
 					<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
@@ -34,6 +54,14 @@
 
 					</div>
 				  </div>
+				  <div class="form-group">
+					<label for="description">Comments:</label>
+					<input type="text" class="form-control" th:name="AppComments">
+				  </div>
+				  <div class="form-group">
+					<label for="description">Governance:</label>
+					<input type="text" class="form-control" th:name="AppGovernance">
+				  </div>					  
 				  <input class="btn btn-primary" type="submit" value="Submit" />
 				</form>
 			</div>
