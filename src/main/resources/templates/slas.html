@@ -61,7 +61,30 @@
 										<td th:text="${sla.terminationdate}"></td>
 										<td th:text="${sla.approvername}"></td>
 										<td th:text="${sla.approvaldate}"></td>
-										<td th:text="${sla.attachment}"></td>
+										<!--<td th:text="${sla.attachment}"></td>-->
+										<td>
+											<a th:if="${sla.attachment!=null}" th:href="@{'/downloadsla?id='+${sla.id}}" th:text="${sla.attachment}"></a>
+											<form th:if="${sla.attachment==null}" method="POST" action="/slaupload" enctype="multipart/form-data">
+												<!-- COMPONENT START -->
+												<div class="form-group">
+													<div class="input-group input-file">
+														
+														<input type="text" class="form-control" placeholder='Choose a file...' />			
+														<span class="input-group-btn">
+															<button class="btn btn-default btn-choose" type="button">Choose</button>
+														</span>
+
+
+													</div>
+												</div>
+												<!-- COMPONENT END -->
+												<div class="form-group  pull-center">
+													<input type="hidden" class="form-control" th:name="slaid" th:value="${sla.id}"></input>
+													<button type="submit" class="btn btn-primary btn-sm">Upload</button>
+
+												</div>
+											</form>
+										</td>
 
 										  <!-- SLA update Modal -->
 										  <div class="modal fade" th:id="${sla.id}" role="dialog">
