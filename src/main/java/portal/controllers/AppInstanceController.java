@@ -85,9 +85,13 @@ public class AppInstanceController {
     
     @PostMapping("/updateAppInstance")
     public String updateAppInstance(@ModelAttribute("appinstance") AppInstance appInstance) {
-    	
-    	AppInstance updatedAppinstance=appInstanceService.updateAppInstance(appInstance);
-        return "redirect:/instancedetail?id="+updatedAppinstance.getId();
+    	AppInstance AppinstanceEntity=appInstanceService.getById(appInstance.getId());
+    	appInstance.setApplication(AppinstanceEntity.getApplication());
+    	appInstance.setDepartment(AppinstanceEntity.getDepartment());
+    	appInstance.setSupport(AppinstanceEntity.getSupport());
+    	appInstance.setSites(AppinstanceEntity.getSites());
+    	appInstanceService.updateAppInstance(appInstance);
+        return "redirect:/instancedetail?id="+appInstance.getId();
     }
     
     @GetMapping("/addAppInstance")

@@ -1,5 +1,6 @@
 package portal.service.Impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -62,7 +63,7 @@ public class FileServiceImpl implements FileService{
 		
 		        return ResponseEntity.ok()
 		                .contentType(MediaType.parseMediaType(contentType))
-		                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+		                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file + "\"")
 		                .body(resource);
         }
         else
@@ -72,6 +73,21 @@ public class FileServiceImpl implements FileService{
         }
 
 	}
+	
+	@Override
+	public boolean removeFile(String UPLOAD_FOLDER, String id, String fileName) {
+		
+		File file =  new File(getfileName(UPLOAD_FOLDER,id,fileName));
+		if(file.delete())
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}	
+	
 	
 	private Resource loadFileAsResource(String fileName)
 	{
@@ -93,6 +109,8 @@ public class FileServiceImpl implements FileService{
 	{
 		return UPLOAD_FOLDER+Long.valueOf(id)+"_"+filename;
 	}
+
+
 	
 
 }

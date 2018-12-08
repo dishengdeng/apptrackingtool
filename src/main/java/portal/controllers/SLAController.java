@@ -60,7 +60,7 @@ public class SLAController {
     @GetMapping("/deleteSLA")
     public String deleteSLA(@RequestParam(name="id", required=true) String id,@RequestParam(name="slaName", required=true) String slaName) {
     	SLA sla = new SLA();
-    	sla.setId(Long.valueOf(id));
+    	sla.setId(id);
     	sla.setSlaName(slaName);
     	slaService.delete(sla);
     	return "redirect:/slas";
@@ -92,4 +92,18 @@ public class SLAController {
     	return fileService.downloadFile(UPLOADED_FOLDER, id, sla.getAttachment(), request);
     }
 
+    @GetMapping("/deleteslafile")
+    public String deletefile(@RequestParam(name="id", required=true) String id)
+    {
+    	
+    	SLA sla= slaService.getById(Long.valueOf(id));
+    	
+		if(fileService.removeFile(UPLOADED_FOLDER, id, sla.getAttachment()));
+		{
+			sla.setAttachment(null);
+			slaService.updateSLA(sla);
+		}
+		return "redirect:/slas";
+    	
+    }
 }
