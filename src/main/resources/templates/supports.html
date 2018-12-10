@@ -88,7 +88,15 @@
 													  <div class="form-group">
 														<label for="note">Note:</label>
 														<input type="text" class="form-control" th:name="note" th:value="${support.note}">
-													  </div>													  
+													  </div>
+												  	 <select th:if="${support.appInstances.size()>0}" name="appInstances" class="form-control" id="instanceSelect" multiple style="visibility:hidden;height:0">
+
+													  <option th:each="instanceEntity : ${support.appInstances}" 
+
+													  th:attr="value = ${instanceEntity.id}" selected>
+													  
+													  </option>
+													</select>													  
 													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 													</form>
 												</div>

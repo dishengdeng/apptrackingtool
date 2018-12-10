@@ -78,6 +78,7 @@
 														<label for="contractName">contract Name:</label>
 														<input type="text" class="form-control" th:name="contractName" th:value="${contract.contractName}"></input>
 														<input type="hidden" class="form-control" th:name="id" th:value="${contract.id}"></input>
+														<input th:if="${contract.appInstance!=null}" type="hidden" class="form-control" th:name="appInstance" th:value="${contract.appInstance.id}"></input>
 													  </div>
 													  <div>
 														<label for="Decomminsion Date">Expired Date:</label>

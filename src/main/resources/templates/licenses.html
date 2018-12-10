@@ -83,6 +83,7 @@
 														<label for="licenseName">License Number:</label>
 														<input type="text" class="form-control" th:name="licenseNumber" th:value="${license.licenseNumber}"></input>
 														<input type="hidden" class="form-control" th:name="id" th:value="${license.id}"></input>
+														<input th:if="${license.appInstance!=null}" type="hidden" class="form-control" th:name="appInstance" th:value="${license.appInstance.id}"></input>
 													  </div>
 													  <div>
 														<label for="Decomminsion Date">Registration Date:</label>

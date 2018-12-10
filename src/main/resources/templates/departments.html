@@ -198,6 +198,22 @@
 														<input type="text" class="form-control" th:name="attachment" th:value="${department.attachment}">
 													  </div>													  
 													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+													  	<select th:if="${department.appInstances.size()>0}" name="appInstances" class="form-control" id="instanceSelect" multiple style="visibility:hidden;height:0">
+
+														  <option th:each="instanceEntity : ${department.appInstances}" 
+ 
+														  th:attr="value = ${instanceEntity.id}" selected>
+														  
+														  </option>
+														</select>
+														 <select th:if="${department.stakeholders.size()>0}" name="stakeholders" class="form-control" id="stakeholderSelect" multiple style="visibility:hidden;height:0">
+
+														  <option th:each="stakeholderEntity : ${department.stakeholders}" 
+ 
+														  th:attr="value = ${stakeholderEntity.id}" selected>
+														  
+														  </option>
+														</select>
 													</form>
 												</div>
 											  </div>
