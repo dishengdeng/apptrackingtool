@@ -1,15 +1,21 @@
 package portal.controllers;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.Server;
 import portal.service.ClusterService;
+import portal.service.FileService;
 import portal.service.ServerService;
 
 
@@ -20,6 +26,12 @@ public class ServerController {
 	private ClusterService clusterService;
 	@Autowired
 	private ServerService serverService;
+	
+	@Autowired
+	private FileService fileService;
+	
+	private final String UPLOADED_FOLDER="files//server//";
+	
     @GetMapping("/servers")
     public String servertable(ModelMap model) {
     	model.addAttribute("servers", serverService.getAll());
@@ -55,6 +67,48 @@ public class ServerController {
     	server.setServerName(serverName);
     	serverService.delete(server);
     	return "redirect:/servers";
+    }
+    
+  //------file management----
+    @PostMapping("/serverupload")
+    public String uploadServer(@RequestParam("file") MultipartFile file,@RequestParam("serverid") String id) {
+    	Server server= serverService.getById(Long.valueOf(id));
+    	if(!file.getOriginalFilename().isEmpty())
+    	{
+
+    			if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
+    			{
+    				server.setAttachment(file.getOriginalFilename());
+    				serverService.updateServer(server);
+    			}
+
+
+    		
+    	}
+        return "redirect:/servers";
+    }
+    
+    @GetMapping("/downloadserver")
+    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
+    {
+    	
+    	Server server= serverService.getById(Long.valueOf(id));
+    	return fileService.downloadFile(UPLOADED_FOLDER, id, server.getAttachment(), request);
+    }
+
+    @GetMapping("/deleteserverfile")
+    public String deletefile(@RequestParam(name="id", required=true) String id)
+    {
+    	
+    	Server server= serverService.getById(Long.valueOf(id));
+    	
+		if(fileService.removeFile(UPLOADED_FOLDER, id, server.getAttachment()));
+		{
+			server.setAttachment(null);
+			serverService.updateServer(server);
+		}
+		return "redirect:/servers";
+    	
     }
 
 }

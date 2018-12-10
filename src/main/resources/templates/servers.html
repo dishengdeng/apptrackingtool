@@ -86,7 +86,29 @@
 										<td th:text="${server.serverVersion}"></td>
 										<td th:text="${server.hwplatform}"></td>
 										<td th:text="${server.decomminsionDate}"></td>
-										<td th:text="${server.attachment}"></td>
+										<td>
+											<a th:if="${server.attachment!=null && !server.attachment.isEmpty()}" th:href="@{'/deleteserverfile?id='+${server.id}}" title="Delete" style="text-decoration: none;margin-right:5px">
+												<i class="fa fa-remove fa-2x" style="color:red" aria-hidden="true"></i>
+											</a>
+											<a th:if="${server.attachment!=null && !server.attachment.isEmpty()}" th:href="@{'/downloadserver?id='+${server.id}}" th:text="${server.attachment}"></a>
+											<form th:if="${server.attachment==null || server.attachment.isEmpty()}" method="POST" action="/serverupload" enctype="multipart/form-data">
+												<!-- COMPONENT START -->
+												<div class="form-group">
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
+													
+									
+														<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+														<button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload fa-2x"></i></button>
+											
+												</div>
+												<!-- COMPONENT END -->
+												<div class="form-group  pull-center">
+													<input type="hidden" class="form-control" th:name="serverid" th:value="${server.id}"></input>
+
+
+												</div>
+											</form>
+										</td>
 										  <!-- Modal -->
 										  <div class="modal fade" th:id="${server.id}" role="dialog">
 											<div class="modal-dialog">
@@ -184,10 +206,11 @@
     </script>
 	<script type="text/javascript">
 		$(function () {
-			$('#datetimepicker2').datepicker({
+			$('[id^=datetimepicker]').datepicker({
 				format: 'yyyy-mm-dd',
 				 orientation: "bottom auto"
 			});
+
 		});
 	</script>
 

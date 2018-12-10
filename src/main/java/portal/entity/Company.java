@@ -61,6 +61,10 @@ public class Company {
     @JoinColumn(name = "appInstance_id")
     private AppInstance appInstance;
     
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "application_id")
+    private Application application;
+    
 	public Long getId() {
 		return id;
 	}
@@ -132,6 +136,14 @@ public class Company {
 
 	public void setAppInstance(AppInstance appInstance) {
 		this.appInstance = appInstance;
+	}
+
+	public Application getApplication() {
+		return application;
+	}
+
+	public void setApplication(Application application) {
+		this.application = application;
 	}
 
 	public boolean isVendor()

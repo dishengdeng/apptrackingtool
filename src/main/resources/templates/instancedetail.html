@@ -49,7 +49,7 @@
 								<input type="text" class="form-control" th:name="description" th:value="${appinstance.description}">
 							  </div>													  
 							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
-							</form>                            
+							</form>                           
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -84,7 +84,7 @@
 								<tr><th scope="row" style="width:25%">Termination Date:</th><td th:text="${sla.terminationdate}"></td></tr>
 								<tr><th scope="row" style="width:25%">Approver:</th><td th:text="${sla.approvername}"></td></tr>
 								<tr><th scope="row" style="width:25%">Approval Date:</th><td th:text="${sla.approvaldate}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th><td th:text="${sla.attachment}"></td></tr>
+								<tr><th scope="row" style="width:25%">Attachment:</th><td><a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" th:href="@{'/downloadsla?id='+${sla.id}}" th:text="${sla.attachment}"></a></td></tr>
 							  </tbody>
 							</table>
                         </div>
@@ -119,7 +119,7 @@
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${contract.description}"></td></tr>
 								<tr><th scope="row" style="width:25%">SMA Description:</th><td th:text="${contract.smaDescription}"></td></tr>
 								<tr><th scope="row" style="width:25%">SLA Description:</th><td th:text="${contract.slaDescription}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th><td th:text="${contract.attachment}"></td></tr>
+								<tr><th scope="row" style="width:25%">Attachment:</th><td><a th:if="${contract.attachment!=null && !contract.attachment.isEmpty()}" th:href="@{'/downloadcontract?id='+${contract.id}}" th:text="${contract.attachment}"></a></td></tr>
 							  </tbody>
 							</table>
                         </div>
@@ -228,7 +228,7 @@
 								<tr><th scope="row" style="width:25%">Server Version:</th><td th:text="${server.serverVersion}"></td></tr>
 								<tr><th scope="row" style="width:25%">HW Platform:</th><td th:text="${server.hwplatform}"></td></tr>
 								<tr><th scope="row" style="width:25%">Decomminsion Date:</th><td th:text="${server.decomminsionDate}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th><td th:text="${server.attachment}"></td></tr>								
+								<tr><th scope="row" style="width:25%">Attachment:</th><td><a th:if="${server.attachment!=null && !server.attachment.isEmpty()}" th:href="@{'/downloadserver?id='+${server.id}}" th:text="${server.attachment}"></a></td></tr>								
 							  </tbody>
 							</table>
                         </div>
@@ -302,7 +302,7 @@
 								<tr><th scope="row" style="width:25%">Goal:</th><td th:text="${department.goal}"></td></tr>
 								<tr><th scope="row" style="width:25%">Road Map:</th><td th:text="${department.roadMap}"></td></tr>								
 								<tr><th scope="row" style="width:25%">Pain Point:</th><td th:text="${department.painpoint}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th><td th:text="${department.attachment}"></td></tr>								
+								<tr><th scope="row" style="width:25%">Attachment:</th><td><a th:if="${department.attachment!=null && !department.attachment.isEmpty()}" th:href="@{'/downloaddepartment?id='+${department.id}}" th:text="${department.attachment}"></a></td></tr>								
 							  </tbody>
 							</table>
                         </div>

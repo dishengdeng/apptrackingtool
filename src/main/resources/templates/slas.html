@@ -63,29 +63,24 @@
 										<td th:text="${sla.approvaldate}"></td>
 										<!--<td th:text="${sla.attachment}"></td>-->
 										<td>
-											<a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" th:href="@{'/deleteslafile?id='+${sla.id}}" title="Delete" style="text-decoration: none">
+											<a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" th:href="@{'/deleteslafile?id='+${sla.id}}" title="Delete" style="text-decoration: none;margin-right:5px">
 												<i class="fa fa-remove fa-2x" style="color:red" aria-hidden="true"></i>
-											</a>&nbsp&nbsp
+											</a>
 											<a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" th:href="@{'/downloadsla?id='+${sla.id}}" th:text="${sla.attachment}"></a>
 											<form th:if="${sla.attachment==null || sla.attachment.isEmpty()}" method="POST" action="/slaupload" enctype="multipart/form-data">
 												<!-- COMPONENT START -->
 												<div class="form-group">
-													<div class="input-group input-file">
-														
-														<input type="text" class="form-control" placeholder='Choose a file...' />			
-														<span class="input-group-btn">
-															<button class="btn btn-default btn-choose" type="button">Choose</button>
-														</span>
-
-
-													</div>
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
+													
+	
+													<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+													<button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload fa-2x"></i></button>
+	
 												</div>
 												<!-- COMPONENT END -->
 												<div class="form-group  pull-center">
 													<input type="hidden" class="form-control" th:name="slaid" th:value="${sla.id}"></input>
-													<button type="submit" class="btn btn-primary btn-sm">Upload</button>
-
-												</div>
+												</div>	
 											</form>
 										</td>
 
@@ -114,7 +109,7 @@
 													  </div>
 													  <div>
 														<label for="Decomminsion Date">Effective Date:</label>
-														<div class="input-group date" data-provide="datepicker" id='datetimepicker1'>
+														<div class="input-group date" data-provide="datepicker" id="datetimepicker1">
 															<input type="text" class="form-control" th:name="effectivedate" th:value="${sla.effectivedate}">
 															<div class="input-group-addon">
 																<span class="glyphicon glyphicon-calendar"></span>
@@ -191,20 +186,21 @@
     </script>
 	<script type="text/javascript">
 		$(function () {
-			$('#datetimepicker1').datepicker({
+			$('[id^=datetimepicker]').datepicker({
 				format: 'yyyy-mm-dd',
 				 orientation: "bottom auto"
 			});
-			$('#datetimepicker2').datepicker({
-				format: 'yyyy-mm-dd',
-				 orientation: "bottom auto"
-			});
-			$('#datetimepicker3').datepicker({
-				format: 'yyyy-mm-dd',
-				 orientation: "bottom auto"
-			});
+
 		});
 	</script>
+	
+	
+
+
+
+
+
+
 
 </body>
 

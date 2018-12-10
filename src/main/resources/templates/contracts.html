@@ -59,7 +59,28 @@
 										<td th:text="${contract.description}"></td>
                                         <td th:text="${contract.smaDescription}"></td>
                                         <td th:text="${contract.slaDescription}"></td>
-										<td th:text="${contract.attachment}"></td>
+										<td>
+											<a th:if="${contract.attachment!=null && !contract.attachment.isEmpty()}" th:href="@{'/deletecontractfile?id='+${contract.id}}" title="Delete" style="text-decoration: none margin-right:15px">
+												<i class="fa fa-remove fa-2x" style="color:red" aria-hidden="true"></i>
+											</a>
+											<a th:if="${contract.attachment!=null && !contract.attachment.isEmpty()}" th:href="@{'/downloadcontract?id='+${contract.id}}" th:text="${contract.attachment}"></a>
+											<form th:if="${contract.attachment==null || contract.attachment.isEmpty()}" method="POST" action="/contractupload" enctype="multipart/form-data">
+												<!-- COMPONENT START -->
+												<div class="form-group">
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
+			
+														<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+														<button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload fa-2x"></i></button>
+							
+												</div>
+												<!-- COMPONENT END -->
+												<div class="form-group  pull-center">
+													<input type="hidden" class="form-control" th:name="contractid" th:value="${contract.id}"></input>
+
+
+												</div>
+											</form>
+										</td>
 
 										  <!-- Modal -->
 										  <div class="modal fade" th:id="${contract.id}" role="dialog">
@@ -101,11 +122,7 @@
 													  <div class="form-group">
 														<label for="note">SLA Description:</label>
 														<input type="text" class="form-control" th:name="slaDescription" th:value="${contract.slaDescription}">
-													  </div>
-													  <div class="form-group">
-														<label for="note">Attachment:</label>
-														<input type="text" class="form-control" th:name="attachment" th:value="${contract.attachment}">
-													  </div>													  
+													  </div>												  
 													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 													</form>
 												</div>
@@ -147,10 +164,11 @@
     </script>
 	<script type="text/javascript">
 		$(function () {
-			$('#datetimepicker2').datepicker({
+			$('[id^=datetimepicker]').datepicker({
 				format: 'yyyy-mm-dd',
 				 orientation: "bottom auto"
 			});
+
 		});
 	</script>
 </body>

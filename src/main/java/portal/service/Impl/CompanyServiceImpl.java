@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Company;
 import portal.models.CompanyModel;
 import portal.repository.CompanyRepository;
@@ -101,6 +102,33 @@ public class CompanyServiceImpl implements CompanyService{
 	public Company findByAppInstance(AppInstance appInstance) {
 
 		return companyRepository.findByAppInstance(appInstance);
+	}
+
+	@Override
+	public List<Company> findApplicationByNotAssigned(Application application) {
+		List<Company> companys = companyRepository.findAll();
+		companys.removeIf(obj->(obj != null && obj.isVendor()) || (application.equals(obj.getApplication()) || obj.getApplication()!=null));
+	
+		
+		return companys;
+	}
+
+	@Override
+	public void removeApplication(Application application) {
+		companyRepository.removeApplication(application);
+		
+	}
+
+	@Override
+	public void updateApplication(Application application, Long id) {
+		companyRepository.updateApplication(application, id);
+		
+	}
+
+	@Override
+	public Company findByApplication(Application application) {
+
+		return companyRepository.findByApplication(application);
 	}
 
 }

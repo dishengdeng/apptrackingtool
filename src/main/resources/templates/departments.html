@@ -67,7 +67,29 @@
 										<td th:text="${department.roadMap}"></td>
 										<td th:text="${department.goal}"></td>
 										<td th:text="${department.painpoint}"></td>
-										<td th:text="${department.attachment}"></td>
+										<td>
+											<a th:if="${department.attachment!=null && !department.attachment.isEmpty()}" th:href="@{'/deletedepartmentfile?id='+${department.id}}" title="Delete" style="text-decoration: none;;margin-right:5px">
+												<i class="fa fa-remove fa-2x" style="color:red" aria-hidden="true"></i>
+											</a>
+											<a th:if="${department.attachment!=null && !department.attachment.isEmpty()}" th:href="@{'/downloaddepartment?id='+${department.id}}" th:text="${department.attachment}"></a>
+											<form th:if="${department.attachment==null || department.attachment.isEmpty()}" method="POST" action="/departmentupload" enctype="multipart/form-data">
+												<!-- COMPONENT START -->
+												<div class="form-group">
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
+													
+										
+														<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+														<button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload fa-2x"></i></button>
+											
+												</div>
+												<!-- COMPONENT END -->
+												<div class="form-group  pull-center">
+													<input type="hidden" class="form-control" th:name="departmentid" th:value="${department.id}"></input>
+
+
+												</div>
+											</form>
+										</td>
 										
 
                                     </tr>
@@ -192,11 +214,7 @@
 													  <div class="form-group">
 														<label for="note">Paint Point:</label>
 														<input type="text" class="form-control" th:name="painpoint" th:value="${department.painpoint}">
-													  </div>														  
-													  <div class="form-group">
-														<label for="note">Attachment:</label>
-														<input type="text" class="form-control" th:name="attachment" th:value="${department.attachment}">
-													  </div>													  
+													  </div>														  												  
 													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 													  	<select th:if="${department.appInstances.size()>0}" name="appInstances" class="form-control" id="instanceSelect" multiple style="visibility:hidden;height:0">
 
@@ -247,10 +265,11 @@
     </script>
 	<script type="text/javascript">
 		$(function () {
-			$('#datetimepicker2').datepicker({
+			$('[id^=datetimepicker]').datepicker({
 				format: 'yyyy-mm-dd',
 				 orientation: "bottom auto"
 			});
+
 		});
 	</script>
 </body>

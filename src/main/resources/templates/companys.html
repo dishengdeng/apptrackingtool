@@ -36,6 +36,7 @@
                                     <tr>
                                         <th>Company</th>
 										<th>App Instance</th>
+										<th>Application</th>
 										<th>Address</th>
                                         <th>Phone</th>
 										<th>Email</th>
@@ -55,6 +56,9 @@
 										</td>
 										<td>
 											<a th:if="${company.appInstance!=null}"  th:text="${company.appInstance.appInstanceName}" th:href="@{'/instancedetail?id='+${company.appInstance.id}}"></a>
+										</td>
+										<td>
+											<a th:if="${company.application!=null}"  th:text="${company.application.AppName}" th:href="@{'/applicationdetail?id='+${company.application.id}}"></a>
 										</td>										
                                         <td th:text="${company.address}"></td>
                                         <td th:text="${company.phone}"></td>
@@ -80,6 +84,7 @@
 														<input type="text" class="form-control" th:name="companyName" th:value="${company.companyName}"></input>
 														<input type="hidden" class="form-control" th:name="id" th:value="${company.id}"></input>
 														<input th:if="${company.appInstance!=null}" type="hidden" class="form-control" th:name="appInstance" th:value="${company.appInstance.id}"></input>
+														<input th:if="${company.application!=null}" type="hidden" class="form-control" th:name="application" th:value="${company.application.id}"></input>
 													  </div>
 													  <div class="form-group">
 														<label for="description">Address:</label>
@@ -146,10 +151,11 @@
     </script>
 	<script type="text/javascript">
 		$(function () {
-			$('#datetimepicker2').datepicker({
+			$('[id^=datetimepicker]').datepicker({
 				format: 'yyyy-mm-dd',
 				 orientation: "bottom auto"
 			});
+
 		});
 	</script>
 </body>

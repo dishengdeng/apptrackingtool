@@ -1,17 +1,22 @@
 package portal.controllers;
 
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.Contract;
-
 import portal.service.ContractService;
+import portal.service.FileService;
 
 
 
@@ -21,6 +26,10 @@ public class ContractController {
 	@Autowired
 	private ContractService contractService;
 	
+	@Autowired
+	private FileService fileService;
+	
+	private final String UPLOADED_FOLDER="files//contract//";
 	
     @GetMapping("/contracts")
     public String contracttable(ModelMap model) {
@@ -61,5 +70,45 @@ public class ContractController {
     	return "redirect:/contracts";
     }
 
+  //------file management----
+    @PostMapping("/contractupload")
+    public String uploadContract(@RequestParam("file") MultipartFile file,@RequestParam("contractid") String id) {
+    	Contract contract= contractService.getById(Long.valueOf(id));
+    	if(!file.getOriginalFilename().isEmpty())
+    	{
 
+    			if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
+    			{
+    				contract.setAttachment(file.getOriginalFilename());
+    				contractService.updateContract(contract);
+    			}
+
+
+    		
+    	}
+        return "redirect:/contracts";
+    }
+    
+    @GetMapping("/downloadcontract")
+    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
+    {
+    	
+    	Contract contract= contractService.getById(Long.valueOf(id));
+    	return fileService.downloadFile(UPLOADED_FOLDER, id, contract.getAttachment(), request);
+    }
+
+    @GetMapping("/deletecontractfile")
+    public String deletefile(@RequestParam(name="id", required=true) String id)
+    {
+    	
+    	Contract contract= contractService.getById(Long.valueOf(id));
+    	
+		if(fileService.removeFile(UPLOADED_FOLDER, id, contract.getAttachment()));
+		{
+			contract.setAttachment(null);
+			contractService.updateContract(contract);
+		}
+		return "redirect:/contracts";
+    	
+    }
 }

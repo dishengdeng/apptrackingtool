@@ -49,11 +49,7 @@
 				  <div class="form-group">
 					<label for="note">Paint Point:</label>
 					<input type="text" class="form-control" th:name="painpoint">
-				  </div>														  
-				  <div class="form-group">
-					<label for="note">Attachment:</label>
-					<input type="text" class="form-control" th:name="attachment">
-				  </div>													  
+				  </div>														  												  
 				  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Submit" />
 				</form>
 			</div>
@@ -75,10 +71,11 @@
     </script>
 	<script type="text/javascript">
 		$(function () {
-			$('#datetimepicker2').datepicker({
+			$('[id^=datetimepicker]').datepicker({
 				format: 'yyyy-mm-dd',
 				 orientation: "bottom auto"
 			});
+
 		});
 	</script>
 

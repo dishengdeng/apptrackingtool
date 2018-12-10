@@ -12,16 +12,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.AppInstance;
 import portal.entity.Application;
+import portal.entity.Company;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
+import portal.service.CompanyService;
 
 @Controller
 public class HomeController {
 	@Autowired
-	AppService appService;
+	private AppService appService;
 	
 	@Autowired
-	AppInstanceService appInstanceService;
+	private AppInstanceService appInstanceService;
+	
+	@Autowired
+	private CompanyService companyService;
 	
     @GetMapping("/")
     public String home(ModelMap model) {
@@ -67,6 +72,10 @@ public class HomeController {
     	model.addAttribute("appinstances",application.getAppInstances());
 
     	model.addAttribute("instances",appInstanceService.findNotAssgined(application));
+    	
+    	//--Manufacturer-----
+    	model.addAttribute("company",companyService.findByApplication(application));
+    	model.addAttribute("companys",companyService.findApplicationByNotAssigned(application));
 
     	return "applicationdetail";
     } 
@@ -98,7 +107,27 @@ public class HomeController {
     	return "redirect:/applicationdetail?id="+applicationId;
     }     
     
-   
+    //------Manufacturer---------------    
+    @GetMapping("/deleteApplicationCompany")
+    public String deleteApplicationCompany(@RequestParam(name="id", required=false) String id) {
+    	Company company = companyService.getById(Long.valueOf(id));
+    	Long applicationId = company.getApplication().getId();
+    	company.setApplication(null);
+    	companyService.updateCompany(company);
+
+
+    	return "redirect:/applicationdetail?id="+applicationId;
+    }
+    
+    @PostMapping("/addApplicationCompany")
+    public String addOrupdateApplicationCompany(@ModelAttribute("company") Company company) {
+
+
+    	companyService.removeApplication(company.getApplication());//remove application from previous company
+    	companyService.updateApplication(company.getApplication(), company.getId());//assign it to a new company
+        return "redirect:/applicationdetail?id="+company.getApplication().getId();
+    }
+  //-----------------------    
      
 
 }

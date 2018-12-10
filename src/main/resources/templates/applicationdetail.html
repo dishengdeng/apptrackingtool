@@ -133,6 +133,40 @@
 				</div>
 			</div>
 
+			<!--Manufacturer Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-newspaper-o"></i> Manufacturer
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addcompany'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a style="text-decoration: none;color:white;cursor: pointer" title="Delete" th:if="${company!=null}" th:href="${#strings.concat('/deleteApplicationCompany?id=',company.id)}">
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${company!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">Manufacturer:</th><td th:text="${company.manufacturer}"></td></tr>
+								<tr><th scope="row" style="width:25%">Address:</th><td th:text="${company.address}"></td></tr>
+								<tr><th scope="row" style="width:25%">Phone:</th><td th:text="${company.phone}"></td></tr>
+								<tr><th scope="row" style="width:25%">Email:</th><td th:text="${company.email}"></td></tr>
+								<tr><th scope="row" style="width:25%">Contact Name:</th><td th:text="${company.contactName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Contact Phone:</th><td th:text="${company.contactPhone}"></td></tr>								
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>		
 						
 			<!--Model Areas-->
 
@@ -164,6 +198,39 @@
 
 					</div>	
 				</div>
+				
+				<!--Manufacturer model-->
+				<div class="modal fade" th:id="addcompany" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Manufacturer - '+${app.AppName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addApplicationCompany}" th:object="${company}" method="post">
+								<div class="form-group">
+									<label for="companySelect">Manufacturer:</label>
+									<input type="hidden" class="form-control" th:name="application" th:value="${app.id}"></input>
+									<select name="id" class="form-control" id="companySelect">
+									  <option th:selected="${company==null}"></option>
+									  <option th:each="companyEntity : ${companys}" 
+									  th:text="${companyEntity.companyName}" 
+									  th:attr="value = ${companyEntity.id}" th:selected="${company==null} ? false:${company.getId()==companyEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>					
+			
 				
 				
         </div>
