@@ -9,6 +9,7 @@ import java.nio.file.Paths;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -27,11 +28,13 @@ public class FileServiceImpl implements FileService{
 	public boolean uploadFile(MultipartFile file, String UPLOAD_FOLDER,String id) {
 		boolean result= false;
 		try
-		{
-			byte[] bytes = file.getBytes();
-			Path path = Paths.get(getfileName(UPLOAD_FOLDER,id,file.getOriginalFilename()));
-			Files.write(path, bytes);
-			result = true;
+		{	if(!file.getOriginalFilename().isEmpty())
+			{
+				byte[] bytes = file.getBytes();
+				Path path = Paths.get(getfileName(UPLOAD_FOLDER,id,file.getOriginalFilename()));
+				Files.write(path, bytes);
+				result = true;
+			}
 			
 		}
 		catch(IOException e)
@@ -107,7 +110,13 @@ public class FileServiceImpl implements FileService{
 	
 	private String getfileName(String UPLOAD_FOLDER,String id,String filename)
 	{
-		return UPLOAD_FOLDER+Long.valueOf(id)+"_"+filename;
+		return UPLOAD_FOLDER+Long.valueOf(id)+"_"+getFileName(filename);
+	}
+
+	@Override
+	public String getFileName(String fileOriginalName) {
+		
+		return FilenameUtils.getName(fileOriginalName);
 	}
 
 

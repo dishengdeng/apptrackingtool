@@ -702,7 +702,7 @@
 									<select name="sites" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="siteselect">
 									  <option th:each="siteEntity : ${sites}" 
 									  th:text="${siteEntity.siteName}" 
-									  th:attr="value = ${siteEntity.id}" th:selected="${instancelocations.contains(siteEntity)} ? true">
+									  th:attr="value = ${siteEntity.id}">
 									</select>
 								</div>
 							  <input class="btn btn-primary" type="submit" value="Submit" />

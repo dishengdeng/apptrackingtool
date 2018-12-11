@@ -90,18 +90,17 @@ public class DepartmentController {
     @PostMapping("/departmentupload")
     public String uploadDepartment(@RequestParam("file") MultipartFile file,@RequestParam("departmentid") String id) {
     	Department department= departmentService.getById(Long.valueOf(id));
-    	if(!file.getOriginalFilename().isEmpty())
-    	{
 
-    			if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
-    			{
-    				department.setAttachment(file.getOriginalFilename());
-        			departmentService.updateDepartment(department);
-    			}
+
+			if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
+			{
+				department.setAttachment(fileService.getFileName(file.getOriginalFilename()));
+    			departmentService.updateDepartment(department);
+			}
 
 
     		
-    	}
+    	
         return "redirect:/departments";
     }
     

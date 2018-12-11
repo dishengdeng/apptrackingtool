@@ -74,18 +74,17 @@ public class ContractController {
     @PostMapping("/contractupload")
     public String uploadContract(@RequestParam("file") MultipartFile file,@RequestParam("contractid") String id) {
     	Contract contract= contractService.getById(Long.valueOf(id));
-    	if(!file.getOriginalFilename().isEmpty())
-    	{
 
-    			if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
-    			{
-    				contract.setAttachment(file.getOriginalFilename());
-    				contractService.updateContract(contract);
-    			}
+
+		if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
+		{
+			contract.setAttachment(fileService.getFileName(file.getOriginalFilename()));
+			contractService.updateContract(contract);
+		}
 
 
     		
-    	}
+    	
         return "redirect:/contracts";
     }
     

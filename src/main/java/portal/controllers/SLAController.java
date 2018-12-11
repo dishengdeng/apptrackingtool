@@ -70,18 +70,16 @@ public class SLAController {
     @PostMapping("/slaupload")
     public String uploadSLA(@RequestParam("file") MultipartFile file,@RequestParam("slaid") String id) {
     	SLA sla= slaService.getById(Long.valueOf(id));
-    	if(!file.getOriginalFilename().isEmpty())
-    	{
 
-    			if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
-    			{
-        			sla.setAttachment(file.getOriginalFilename());
-        			slaService.updateSLA(sla);
-    			}
+		if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
+		{
+			sla.setAttachment(fileService.getFileName(file.getOriginalFilename()));
+			slaService.updateSLA(sla);
+		}
 
 
     		
-    	}
+ 
         return "redirect:/slas";
     }
     

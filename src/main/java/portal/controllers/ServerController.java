@@ -73,18 +73,16 @@ public class ServerController {
     @PostMapping("/serverupload")
     public String uploadServer(@RequestParam("file") MultipartFile file,@RequestParam("serverid") String id) {
     	Server server= serverService.getById(Long.valueOf(id));
-    	if(!file.getOriginalFilename().isEmpty())
-    	{
 
-    			if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
-    			{
-    				server.setAttachment(file.getOriginalFilename());
-    				serverService.updateServer(server);
-    			}
+		if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
+		{
+			server.setAttachment(fileService.getFileName(file.getOriginalFilename()));
+			serverService.updateServer(server);
+		}
 
 
     		
-    	}
+    	
         return "redirect:/servers";
     }
     
