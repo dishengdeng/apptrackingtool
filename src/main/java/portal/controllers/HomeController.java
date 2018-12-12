@@ -52,6 +52,7 @@ public class HomeController {
     public String DeleteApplication(@RequestParam(name="id", required=true) String id,@RequestParam(name="name", required=true) String name) {
     	Application application = appService.findbyId(Long.valueOf(id));
     	appInstanceService.removeApplication(application);
+    	companyService.removeApplication(application);
     	appService.delete(application);
     	return "redirect:/";
     }

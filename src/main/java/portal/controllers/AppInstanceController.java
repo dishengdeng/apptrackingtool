@@ -110,7 +110,9 @@ public class AppInstanceController {
     	serverService.removeAppInstance(appInstance);
     	companyService.removeAppInstance(appInstance);
     	siteService.removeAppInstance(appInstance);
-    	
+    	appInstance.setApplication(null);
+    	appInstance.setDepartment(null);
+    	appInstance.setSupport(null);
     	appInstanceService.delete(appInstance);
     	return "redirect:/instances";
     }
