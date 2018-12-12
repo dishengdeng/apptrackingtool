@@ -27,7 +27,7 @@ public interface CompanyRepository  extends JpaRepository<Company, Long>  {
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Modifying    
-    @Query("update Company t set t.application=:appInstance where t.id = :id")
+    @Query("update Company t set t.appInstance=:appInstance where t.id = :id")
     void updateAppInstance(@Param("appInstance") AppInstance appInstance,@Param("id") Long id);  
     
     @Query("select t from Company t where t.application = :application")
