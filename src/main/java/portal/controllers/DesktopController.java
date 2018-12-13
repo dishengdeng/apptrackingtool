@@ -53,7 +53,7 @@ public class DesktopController {
     	desktop.setId(Long.valueOf(id));
     	desktop.setDesktopName(desktopName);
     	
-
+    	desktopService.updateDesktop(desktop);
     	
     	desktopService.delete(desktop);
     	return "redirect:/desktops";

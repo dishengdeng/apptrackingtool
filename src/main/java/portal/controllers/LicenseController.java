@@ -55,7 +55,7 @@ public class LicenseController {
     	license.setId(Long.valueOf(id));
     	license.setLicenseNumber(licenseNumber);
     	
-
+    	licenseService.updateLicense(license);
     	
     	licenseService.delete(license);
     	return "redirect:/licenses";

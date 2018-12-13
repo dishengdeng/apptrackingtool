@@ -50,8 +50,9 @@ public class SiteController {
     
     @GetMapping("/deleteSite")
     public String deleteSite(@RequestParam(name="id", required=true) String id,@RequestParam(name="siteName", required=true) String siteName) {
-    	Site site = siteService.getById(Long.valueOf(id));
-    	site.setAppInstances(null);
+    	Site site = new Site();
+    	site.setId(Long.valueOf(id));
+    	site.setSiteName(siteName);;
     	siteService.updateSite(site);
     	siteService.delete(site);
     	return "redirect:/sites";

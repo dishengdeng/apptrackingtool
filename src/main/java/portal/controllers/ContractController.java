@@ -64,7 +64,7 @@ public class ContractController {
     	contract.setId(Long.valueOf(id));
     	contract.setContractName(contractName);
     	
-
+    	contractService.updateContract(contract);
     	
     	contractService.delete(contract);
     	return "redirect:/contracts";

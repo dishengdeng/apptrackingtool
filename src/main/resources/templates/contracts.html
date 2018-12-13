@@ -67,7 +67,7 @@
 											<form th:if="${contract.attachment==null || contract.attachment.isEmpty()}" method="POST" action="/contractupload" enctype="multipart/form-data">
 												<!-- COMPONENT START -->
 												<div class="form-group">
-													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
+													
 			
 														<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
 														<button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload fa-2x"></i></button>
@@ -75,6 +75,7 @@
 												</div>
 												<!-- COMPONENT END -->
 												<div class="form-group  pull-center">
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
 													<input type="hidden" class="form-control" th:name="contractid" th:value="${contract.id}"></input>
 
 

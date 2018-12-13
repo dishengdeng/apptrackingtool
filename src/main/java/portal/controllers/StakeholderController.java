@@ -65,7 +65,7 @@ public class StakeholderController {
     	Stakeholder stakeholder = new Stakeholder();
     	stakeholder.setId(Long.valueOf(id));
     	stakeholder.setStakeholderName(stakeholderName);
-    	
+    	stakeholderService.updateStakeholder(stakeholder);
 
     	
     	stakeholderService.delete(stakeholder);

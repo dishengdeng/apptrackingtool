@@ -62,9 +62,10 @@ public class ServerController {
     
     @GetMapping("/deleteServer")
     public String deleteServer(@RequestParam(name="id", required=true) String id,@RequestParam(name="serverName", required=true) String serverName) {
-    	Server server = new Server();
-    	server.setId(Long.valueOf(id));
-    	server.setServerName(serverName);
+    	Server server = serverService.getById(Long.valueOf(id));
+    	server.setAppInstance(null);
+    	server.setCluster(null);
+    	serverService.updateServer(server);
     	serverService.delete(server);
     	return "redirect:/servers";
     }
