@@ -28,14 +28,21 @@
                     <div th:class="${instance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
                         <div class="panel-heading">
 							<div class="row">
-								<div class="col-xs-12 text-right">
+								<div class="col-xs-8 text-left">
+									<small id="appName" th:text="${instance.application!=null}? ${instance.application.getAppName()} : null"></small>
+								</div>
+								<div class="col-xs-4 text-right">
 										<a th:href="@{'/deleteAppInstance?id='+${instance.id}}" th:style="${instance.status=='Active'} ? 'text-decoration: none;color:white': 'text-decoration: none;color:black'" data-toggle="tooltip" data-placement="top" title="Delete">
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
 								</div>
+							</div>
+							<div class="row">
 								<div class="col-xs-12">
 									 <p id="instanceName" class="h4" th:text="${instance.appInstanceName}"></p>
 								</div>
+							</div>
+							<div class="row">
 								<div class="small col-xs-12">
 									 <span class="pull-right" th:text="${instance.status}"></span>
 								</div>
@@ -67,9 +74,17 @@ $("#instanceSearch").on('change keyup paste', function() {
     $('[id^=instanceDiv]').each(function(){
 		var isShow=true;
 		//enable search by instance name
-		var instanceName=$(this).find("#instanceName")
+		var instanceName=$(this).find("#instanceName");
+		
+		//enable search by application name
+		var appName=$(this).find("#appName");
 		
 		if(instanceName.text().toLowerCase().search(searchText.toLowerCase())>-1)
+		{
+			isShow=true;
+		}
+		//enable search by application name
+		else if(appName.text().toLowerCase().search(searchText.toLowerCase())>-1)
 		{
 			isShow=true;
 		}
@@ -77,7 +92,6 @@ $("#instanceSearch").on('change keyup paste', function() {
 		{
 			isShow=false;
 		}
-		
 		
 		//show or hide div
 		isShow? $(this).show():$(this).hide();
