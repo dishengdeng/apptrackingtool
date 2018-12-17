@@ -68,7 +68,7 @@ public class ServerServiceImpl implements ServerService{
 	@Override
 	public List<Server> findByNotAssigned(AppInstance appInstance) {
 		List<Server> servers = serverRepository.findAll();
-		servers.removeIf(obj->appInstance.equals(obj.getAppInstance()) || obj.getAppInstance()!=null);
+		servers.removeIf(obj->obj.getAppInstance()!=null);
 	
 		
 		return servers;

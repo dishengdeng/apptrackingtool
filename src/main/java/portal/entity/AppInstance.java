@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -60,7 +61,14 @@ public class AppInstance {
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "application_id",referencedColumnName="id")
     private Application application;
-
+    
+    @OneToMany(
+            mappedBy = "appInstance", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private List<Server> servers = new ArrayList<Server>(); 
+    
 	public Long getId() {
 		return id;
 	}
@@ -123,6 +131,14 @@ public class AppInstance {
 
 	public void setApplication(Application application) {
 		this.application = application;
+	}
+
+	public List<Server> getServers() {
+		return servers;
+	}
+
+	public void setServers(List<Server> servers) {
+		this.servers = servers;
 	}
 
 	@Override

@@ -139,7 +139,7 @@ public class AppInstanceController {
     	model.addAttribute("desktops",desktopService.findByNotAssigned(appInstance));
     	
     	//--Server-----
-    	model.addAttribute("server",serverService.findByAppInstance(appInstance));
+    	model.addAttribute("serverSelected",appInstance.getServers());
     	model.addAttribute("servers",serverService.findByNotAssigned(appInstance));  
     	
     	//--Vendor-----
@@ -264,12 +264,23 @@ public class AppInstanceController {
     }
     
     @PostMapping("/addInstanceServer")
-    public String addOrupdateInstanceServer(@ModelAttribute("server") Server server) {
+    public String addOrupdateInstanceServer(@ModelAttribute("appinstance") AppInstance appInstance) {
 
 
-    	serverService.removeAppInstance(server.getAppInstance());
-    	serverService.updateAppInstance(server.getAppInstance(), server.getId());
-        return "redirect:/instancedetail?id="+server.getAppInstance().getId();
+    	AppInstance appInstanceEntity= appInstanceService.getById(appInstance.getId());   	
+
+    	
+    	List<Server> servers=appInstance.getServers();
+
+    	for(Server server:servers)
+    	{
+
+    		server.setAppInstance(appInstanceEntity);
+    		serverService.updateServer(server);
+    
+    	}
+    	
+        return "redirect:/instancedetail?id="+appInstance.getId();
     }
   //----------------------- 
     

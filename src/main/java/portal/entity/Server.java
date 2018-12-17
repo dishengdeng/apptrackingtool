@@ -12,7 +12,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -62,8 +61,8 @@ public class Server {
     @JsonView(Views.Public.class)
 	private String attachment;
     
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "appInstance_id")
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "appInstance_id",referencedColumnName="id")
     private AppInstance appInstance;
     
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)

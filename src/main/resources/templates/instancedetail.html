@@ -212,25 +212,40 @@
 								<a data-toggle="modal" th:data-target="@{'#addserver'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${server!=null}" th:href="${#strings.concat('/deleteInstanceServer?id=',server.id)}">
-									<i class="fa fa-trash-o fa-lg"></i>
-								</a>
                             </div>
                         </div>
                         <!-- /.panel-heading -->
-                        <div th:if="${server!=null}" class="panel-body">
-							<table class="table">
-							  <tbody>
-								<tr><th scope="row" style="width:25%">Server:</th><td th:text="${server.serverName}"></td></tr>
-								<tr><th scope="row" style="width:25%">Cluster:</th><td th:text="${server.cluster==null}? '': ${server.cluster.getClusterName()}"></td></tr>
-								<tr><th scope="row" style="width:25%">Address:</th><td th:text="${server.address}"></td></tr>
-								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${server.description}"></td></tr>
-								<tr><th scope="row" style="width:25%">Server Version:</th><td th:text="${server.serverVersion}"></td></tr>
-								<tr><th scope="row" style="width:25%">HW Platform:</th><td th:text="${server.hwplatform}"></td></tr>
-								<tr><th scope="row" style="width:25%">Decomminsion Date:</th><td th:text="${server.decomminsionDate}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th><td><a th:if="${server.attachment!=null && !server.attachment.isEmpty()}" th:href="@{'/downloadserver?id='+${server.id}}" th:text="${server.attachment}"></a></td></tr>								
-							  </tbody>
-							</table>
+                        <div th:if="${serverSelected.size()>0}" class="panel-body">
+
+
+								<div th:each="server: ${serverSelected}" class="panel panel-primary">									
+
+									<div class="panel-heading text-right">
+										<div class="row">
+											<div class="small col-xs-10 text-left pull-left">								
+												<span th:text="${server.serverName}"></span>		
+											</div>
+											<div class="small col-xs-2 text-right pull-right">
+												<a th:href="@{'/deleteInstanceServer?id='+${server.id}}" style="text-decoration: none;color:white"  title="Delete" >
+													<i class="fa fa-trash-o fa-lg"></i>
+												</a>
+											</div>
+										</div>
+				
+									</div>
+
+									<div class="panel-body">								
+										<div class="row"><div class="col-sm-2"><strong>Cluster:</strong></div><div class="col-sm-10"><span th:text="${server.cluster==null}? '': ${server.cluster.getClusterName()}"></span></div></div>
+										<div class="row"><div class="col-sm-2"><strong>Address:</strong></div><div class="col-sm-10"><span th:text="${server.address}"></span></div></div>
+										<div class="row"><div class="col-sm-2"><strong>Description:</strong></div><div class="col-sm-10"><span th:text="${server.description}"></span></div></div>
+										<div class="row"><div class="col-sm-2"><strong>Server Version:</strong></div><div class="col-sm-10"><span th:text="${server.serverVersion}"></span></div></div>
+										<div class="row"><div class="col-sm-2"><strong>HW Platform:</strong></div><div class="col-sm-10"><span th:text="${server.hwplatform}"></span></div></div>
+										<div class="row"><div class="col-sm-2"><strong>Decomminsion Date:</strong></div><div class="col-sm-10"><span th:text="${server.decomminsionDate}"></span></div></div>
+										<div class="row"><div class="col-sm-2"><strong>Attachment:</strong></div><div class="col-sm-10"><a th:if="${server.attachment!=null && !server.attachment.isEmpty()}" th:href="@{'/downloadserver?id='+${server.id}}" th:text="${server.attachment}"></a></div></div>
+									</div>
+								</div>
+
+
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -567,17 +582,14 @@
 						  <h4 class="modal-title" th:text="'Add Or Change server - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceServer}" th:object="${server}" method="post">
+							<form action="#" th:action="@{/addInstanceServer}" th:object="${appInstance}" method="post">
 								<div class="form-group">
 									<label for="serverSelect">Server:</label>
-									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
-									<select name="id" class="form-control" id="serverSelect">
-									  <option th:selected="${server==null}"></option>
+									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<select name="servers" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="serverSelect">
 									  <option th:each="serverEntity : ${servers}" 
 									  th:text="${serverEntity.serverName}" 
-									  th:attr="value = ${serverEntity.id}" th:selected="${server==null} ? false:${server.getId()==serverEntity.id}">
-									  
-									  </option>
+									  th:attr="value = ${serverEntity.id}">
 									</select>
 								</div>
 							  <input class="btn btn-primary" type="submit" value="Submit" />
@@ -731,6 +743,16 @@
 				nonSelectedText: 'Select Location'
 			  });
 			});
+			$(document).ready(function() {
+			  $('#serverSelect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Server'
+			  });
+			});			
+			
 			</script>
 
 	
