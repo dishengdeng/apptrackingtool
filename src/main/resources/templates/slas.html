@@ -69,16 +69,20 @@
 											<a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" th:href="@{'/downloadsla?id='+${sla.id}}" th:text="${sla.attachment}"></a>
 											<form th:if="${sla.attachment==null || sla.attachment.isEmpty()}" method="POST" action="/slaupload" enctype="multipart/form-data">
 												<!-- COMPONENT START -->
-												<div class="form-group">
-													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
+												<div class="input-group">
+													
 													
 	
 													<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
-													<button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload fa-2x"></i></button>
+													<div class="input-group-btn">
+													<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
+												
+													</div>
 	
 												</div>
 												<!-- COMPONENT END -->
 												<div class="form-group  pull-center">
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
 													<input type="hidden" class="form-control" th:name="slaid" th:value="${sla.id}"></input>
 												</div>	
 											</form>

@@ -66,11 +66,13 @@
 											<a th:if="${contract.attachment!=null && !contract.attachment.isEmpty()}" th:href="@{'/downloadcontract?id='+${contract.id}}" th:text="${contract.attachment}"></a>
 											<form th:if="${contract.attachment==null || contract.attachment.isEmpty()}" method="POST" action="/contractupload" enctype="multipart/form-data">
 												<!-- COMPONENT START -->
-												<div class="form-group">
+												<div class="input-group">
 													
-			
+																	
 														<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
-														<button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-upload fa-2x"></i></button>
+														<div class="input-group-btn">
+														<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
+														</div>
 							
 												</div>
 												<!-- COMPONENT END -->
