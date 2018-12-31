@@ -69,7 +69,14 @@
 								<a data-toggle="modal" th:data-target="@{'#addsla'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${sla!=null}" th:href="${#strings.concat('/deleteInstanceSLA?id=',sla.id)}">
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" 
+									th:if="${sla!=null}" th:href="${#strings.concat('/deleteInstanceSLA?id=',sla.id)}"
+									data-title="Are you sure to delete?" 
+									data-toggle="confirmation" 
+									data-singleton="true" 
+									data-popout="true"
+									
+								>
 									<i class="fa fa-trash-o fa-lg"></i>
 								</a>
                             </div>
@@ -105,7 +112,13 @@
 								<a data-toggle="modal" th:data-target="@{'#addContract'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${contract!=null}" th:href="${#strings.concat('/deleteInstanceContract?id=',contract.id)}">
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+									th:if="${contract!=null}" th:href="${#strings.concat('/deleteInstanceContract?id=',contract.id)}"
+									data-title="Are you sure to delete?" 
+									data-toggle="confirmation" 
+									data-singleton="true" 
+									data-popout="true"
+								>
 									<i class="fa fa-trash-o fa-lg"></i>
 								</a>
                             </div>
@@ -140,7 +153,14 @@
 								<a data-toggle="modal" th:data-target="@{'#addlicense'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${license!=null}" th:href="${#strings.concat('/deleteInstanceLicense?id=',license.id)}">
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+									th:if="${license!=null}" 
+									th:href="${#strings.concat('/deleteInstanceLicense?id=',license.id)}"
+									data-title="Are you sure to delete?" 
+									data-toggle="confirmation" 
+									data-singleton="true" 
+									data-popout="true"									
+									>
 									<i class="fa fa-trash-o fa-lg"></i>
 								</a>
                             </div>
@@ -178,7 +198,13 @@
 								<a data-toggle="modal" th:data-target="@{'#adddesktop'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${desktop!=null}" th:href="${#strings.concat('/deleteInstanceDesktop?id=',desktop.id)}">
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+									th:if="${desktop!=null}" th:href="${#strings.concat('/deleteInstanceDesktop?id=',desktop.id)}"
+									data-title="Are you sure to delete?" 
+									data-toggle="confirmation" 
+									data-singleton="true" 
+									data-popout="true"									
+									>
 									<i class="fa fa-trash-o fa-lg"></i>
 								</a>
                             </div>
@@ -226,7 +252,13 @@
 												<span th:text="${server.serverName}"></span>		
 											</div>
 											<div class="small col-xs-2 text-right pull-right">
-												<a th:href="@{'/deleteInstanceServer?id='+${server.id}}" style="text-decoration: none;color:white"  title="Delete" >
+												<a th:href="@{'/deleteInstanceServer?id='+${server.id}}" 
+												style="text-decoration: none;color:white"  
+												data-title="Are you sure to delete?" 
+												data-toggle="confirmation" 
+												data-singleton="true" 
+												data-popout="true" 
+												>
 													<i class="fa fa-trash-o fa-lg"></i>
 												</a>
 											</div>
@@ -264,7 +296,13 @@
 								<a data-toggle="modal" th:data-target="@{'#addcompany'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${company!=null}" th:href="${#strings.concat('/deleteInstanceCompany?id=',company.id)}">
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+								th:if="${company!=null}" th:href="${#strings.concat('/deleteInstanceCompany?id=',company.id)}"
+								data-title="Are you sure to delete?" 
+								data-toggle="confirmation" 
+								data-singleton="true" 
+								data-popout="true"								
+								>
 									<i class="fa fa-trash-o fa-lg"></i>
 								</a>
                             </div>
@@ -300,7 +338,13 @@
 								<a data-toggle="modal" th:data-target="@{'#adddepartment'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${department!=null}" th:href="${#strings.concat('/deleteInstanceDepartment?id=',appinstance.id)}">
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+								 th:if="${department!=null}" th:href="${#strings.concat('/deleteInstanceDepartment?id=',appinstance.id)}"
+								data-title="Are you sure to delete?" 
+								data-toggle="confirmation" 
+								data-singleton="true" 
+								data-popout="true"
+								 >
 									<i class="fa fa-trash-o fa-lg"></i>
 								</a>
                             </div>
@@ -377,7 +421,13 @@
 								<a data-toggle="modal" th:data-target="@{'#addsupport'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Delete" th:if="${support!=null}" th:href="${#strings.concat('/deleteInstanceSupport?id=',appinstance.id)}">
+								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+									th:if="${support!=null}" th:href="${#strings.concat('/deleteInstanceSupport?id=',appinstance.id)}"
+									data-title="Are you sure to delete?" 
+									data-toggle="confirmation" 
+									data-singleton="true" 
+									data-popout="true"									
+									>
 									<i class="fa fa-trash-o fa-lg"></i>
 								</a>
                             </div>
@@ -422,7 +472,10 @@
 									<td>
 										<a th:href="@{'/deleteInstanceSite?siteid='+${instancelocation.id}+'&appinstanceid='+${appinstance.id}}" 
 											style="margin-right:20px;text-decoration: none"
-										   title="Delete" 
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
 										   >
 											<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
 										</a>

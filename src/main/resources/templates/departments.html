@@ -50,8 +50,13 @@
                                 <tbody>
                                     <tr th:each="department: ${departments}">
                                         <td>
-											<a th:href="@{'/deleteDepartment?id='+${department.id}+'&departmentName='+${department.departmentName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
-												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											<a th:href="@{'/deleteDepartment?id='+${department.id}+'&departmentName='+${department.departmentName}}" 
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"											
+											style="text-decoration: none">
+												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a data-toggle="modal" th:data-target="@{'#'+${department.id}}" th:text="${department.departmentName}" style="cursor:pointer"></a>
 										</td>

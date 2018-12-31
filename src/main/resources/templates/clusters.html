@@ -42,8 +42,13 @@
                                 <tbody>
                                     <tr th:each="cluster: ${clusters}">
                                         <td>
-											<a th:href="@{'/deleteCluster?id='+${cluster.id}+'&clusterName='+${cluster.clusterName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
-												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											<a th:href="@{'/deleteCluster?id='+${cluster.id}+'&clusterName='+${cluster.clusterName}}"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+											style="text-decoration: none">
+												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a data-toggle="modal" th:data-target="@{'#'+${cluster.id}}" th:text="${cluster.clusterName}" style="cursor:pointer"></a>
 										</td>

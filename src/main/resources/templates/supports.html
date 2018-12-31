@@ -45,8 +45,13 @@
                                 <tbody>
                                     <tr th:each="support: ${supports}">
                                         <td>
-											<a th:href="@{'/deleteSupport?id='+${support.id}+'&supportName='+${support.supportName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
-												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											<a th:href="@{'/deleteSupport?id='+${support.id}+'&supportName='+${support.supportName}}" 
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+											style="text-decoration: none">
+												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a data-toggle="modal" th:data-target="@{'#'+${support.id}}" th:text="${support.supportName}" style="cursor:pointer"></a>
 										</td>

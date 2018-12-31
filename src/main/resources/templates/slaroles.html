@@ -47,8 +47,13 @@
                                 <tbody>
                                     <tr th:each="slarole: ${slaroles}">
                                         <td>
-											<a th:href="@{'/deleteSLARole?id='+${slarole.id}+'&slaroleName='+${slarole.SLARoleName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
-												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											<a th:href="@{'/deleteSLARole?id='+${slarole.id}+'&slaroleName='+${slarole.SLARoleName}}"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+											style="text-decoration: none">
+												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a data-toggle="modal" th:data-target="@{'#'+${slarole.id}}" th:text="${slarole.SLARoleName}" style="cursor:pointer"></a>
 										</td>

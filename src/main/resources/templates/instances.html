@@ -32,7 +32,13 @@
 									<small id="appName" th:text="${instance.application!=null}? ${instance.application.getAppName()} : null"></small>
 								</div>
 								<div class="col-xs-4 text-right">
-										<a th:href="@{'/deleteAppInstance?id='+${instance.id}}" th:style="${instance.status=='Active'} ? 'text-decoration: none;color:white': 'text-decoration: none;color:black'" data-toggle="tooltip" data-placement="top" title="Delete">
+										<a th:href="@{'/deleteAppInstance?id='+${instance.id}}" 
+											th:style="${instance.status=='Active'} ? 'text-decoration: none;color:white': 'text-decoration: none;color:black'" 
+											data-title="Are you sure to delete this Instance?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										>
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
 								</div>

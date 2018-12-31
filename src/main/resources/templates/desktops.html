@@ -46,8 +46,13 @@
                                 <tbody>
                                     <tr th:each="desktop: ${desktops}">
                                         <td>
-											<a th:href="@{'/deleteDesktop?id='+${desktop.id}+'&desktopName='+${desktop.desktopName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
-												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											<a th:href="@{'/deleteDesktop?id='+${desktop.id}+'&desktopName='+${desktop.desktopName}}"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+											style="text-decoration: none">
+												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a data-toggle="modal" th:data-target="@{'#'+${desktop.id}}" th:text="${desktop.desktopName}" style="cursor:pointer"></a>
 										</td>

@@ -49,8 +49,13 @@
                                 <tbody>
                                     <tr th:each="stakeholder: ${stakeholders}">
                                         <td>
-											<a th:href="@{'/deleteStakeholder?id='+${stakeholder.id}+'&stakeholderName='+${stakeholder.stakeholderName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
-												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											<a th:href="@{'/deleteStakeholder?id='+${stakeholder.id}+'&stakeholderName='+${stakeholder.stakeholderName}}" 
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+											style="text-decoration: none">
+												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a data-toggle="modal" th:data-target="@{'#'+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}" style="cursor:pointer"></a>
 										</td>

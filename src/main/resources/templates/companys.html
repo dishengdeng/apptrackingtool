@@ -49,8 +49,13 @@
                                 <tbody>
                                     <tr th:each="company: ${companys}">
                                         <td>
-											<a th:href="@{'/deleteCompany?id='+${company.id}+'&companyName='+${company.companyName}}" data-toggle="tooltip" title="Delete" style="text-decoration: none">
-												<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											<a th:href="@{'/deleteCompany?id='+${company.id}+'&companyName='+${company.companyName}}"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+											style="text-decoration: none">
+												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a data-toggle="modal" th:data-target="@{'#'+${company.id}}" th:text="${company.companyName}" style="cursor:pointer"></a>
 										</td>

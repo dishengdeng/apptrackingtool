@@ -37,7 +37,12 @@
 									<span th:text="'Decommision Date: '+@{${Application.appDecomminsionDate==null} ? '':${Application.appDecomminsionDate}}"></span>
 								</div>
 								<div class="small col-xs-2 text-right pull-right">
-										<a th:href="@{'/deleteApplication?id='+${Application.id}+'&name='+${Application.appName}}" style="color:white" data-toggle="tooltip" data-placement="top" title="Delete">
+										<a th:href="@{'/deleteApplication?id='+${Application.id}+'&name='+${Application.appName}}" 
+											style="color:white;text-decoration: none" 
+											data-title="Are you sure to delete this Application?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
 								</div>
@@ -92,7 +97,7 @@ $("#appSearch").on('change keyup paste', function() {
 		//show or hide div
 		isShow? $(this).show():$(this).hide();
 	});
-});	
+});
 </script>
 	
 	
