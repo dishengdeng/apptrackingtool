@@ -114,9 +114,12 @@
 									<td>
 										<a th:href="@{'/deleteApplicationInstance?instanceid='+${appinstance.id}+'&applicationid='+${app.id}}" 
 											style="margin-right:20px;text-decoration: none"
-										   title="Delete" 
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
 										   >
-											<i class="fa fa-trash fa-2x" aria-hidden="true"></i>
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
 										<a th:href="@{'/instancedetail?id='+${appinstance.id}}" th:text="${appinstance.appInstanceName}"></a>
 									</td>
@@ -143,7 +146,13 @@
 								<a data-toggle="modal" th:data-target="@{'#addcompany'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a style="text-decoration: none;color:white;cursor: pointer" title="Delete" th:if="${company!=null}" th:href="${#strings.concat('/deleteApplicationCompany?id=',company.id)}">
+								<a style="text-decoration: none;color:white;cursor: pointer" 
+									th:if="${company!=null}" th:href="${#strings.concat('/deleteApplicationCompany?id=',company.id)}"
+									data-title="Are you sure to delete?" 
+									data-toggle="confirmation" 
+									data-singleton="true" 
+									data-popout="true"
+									>
 									<i class="fa fa-trash-o fa-lg"></i>
 								</a>
                             </div>
