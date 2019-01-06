@@ -1,5 +1,8 @@
 package portal.entity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -33,6 +36,10 @@ public class User {
     @JsonView(Views.Public.class)
 	private String password;
     
+    @Column(name = "passwordchg",columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String passwordchg;    
+    
     @Column(name = "passwordconfirm",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String passwordconfirm;
@@ -41,7 +48,7 @@ public class User {
     @JoinTable(name = "user_role", 
     joinColumns = @JoinColumn(name = "user_id"), 
     inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+    private List<Role> roles=new ArrayList<Role>();
 
 	public Long getId() {
 		return id;
@@ -75,13 +82,24 @@ public class User {
 		this.passwordconfirm = passwordconfirm;
 	}
 
-	public Set<Role> getRoles() {
-		return roles;
+	public List<Role> getRoles() {
+		return this.roles;
 	}
 
-	public void setRoles(Set<Role> roles) {
+	public void setRoles(List<Role> roles) {
+		
 		this.roles = roles;
 	}
+
+	public String getPasswordchg() {
+		return passwordchg;
+	}
+
+	public void setPasswordchg(String passwordchg) {
+		this.passwordchg = passwordchg;
+	}
+	
+
     
     
 }

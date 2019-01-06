@@ -1,5 +1,7 @@
 package portal.service.Impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,24 @@ public class UserServiceImpl implements UserService{
 	public User findByName(String username) {
 
 		return userRepository.findByName(username);
+	}
+
+	@Override
+	public User updateUser(User user) {
+	
+		return userRepository.saveAndFlush(user);
+	}
+
+	@Override
+	public List<User> getAll() {
+
+		return userRepository.findAll();
+	}
+
+	@Override
+	public void deleteUser(User user) {
+		userRepository.delete(user);
+		
 	}
 
 }

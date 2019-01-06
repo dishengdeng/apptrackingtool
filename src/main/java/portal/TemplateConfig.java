@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.ViewResolver;
 
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
@@ -39,6 +40,7 @@ public class TemplateConfig extends WebMvcConfigurerAdapter  implements Applicat
 	  @Bean
 	  public SpringTemplateEngine templateEngine() {
 	    SpringTemplateEngine engine = new SpringTemplateEngine();
+	    engine.addDialect(new SpringSecurityDialect());
 	    engine.setTemplateResolver(templateResolver());
 	    return engine;
 	  }

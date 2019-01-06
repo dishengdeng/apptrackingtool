@@ -26,6 +26,10 @@ public class Role {
     @Column(name = "name",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String name;
+    
+    @Column(name = "description",columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String description;    
 
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
@@ -52,6 +56,14 @@ public class Role {
 
 	public void setUsers(Set<User> users) {
 		this.users = users;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}    
 
 }
