@@ -19,12 +19,13 @@
 					<!-- /.dropdown -->
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<i class="fa fa-user fa-fw"></i> <i class="fa fa-caret-down"></i>
+							<i class="fa fa-user fa-fw"></i><span>[[${#httpServletRequest.remoteUser}]]</span> <i class="fa fa-caret-down"></i>
 						</a>
 						<ul class="dropdown-menu dropdown-user">
-							<li><a href="/user?id"><i class="fa fa-user fa-fw"></i> User Profile</a>
+							<li th:if="${#httpServletRequest.remoteUser!='capsys'}">
+								<a th:href="@{'/userprofile?name='+${#authentication.getPrincipal().getUsername()}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
 							</li>
-							<li class="divider"></li>
+							<li class="divider" th:if="${#httpServletRequest.remoteUser!='capsys'}"></li>
 							<li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
 							</li>
 						</ul>
@@ -85,10 +86,10 @@
 									<li>
 										<a href="/supports">Support</a>
 									</li>
-									<li>
-										<a href="/users">Users</a>
+									<li sec:authorize="hasAnyRole('ADMIN','SYSADMIN')">
+										<a href="/users">System Users</a>
 									</li>
-									<li>
+									<li sec:authorize="hasRole('SYSADMIN')">
 										<a href="/roles">System User Roles</a>
 									</li>										
 								</ul>

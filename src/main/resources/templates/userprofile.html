@@ -16,7 +16,7 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">System User Profile</h1>
+                    <h1 class="page-header">User Profile</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -28,6 +28,7 @@
 					  <div class="form-group">
 						<label for="username">User:</label>
 						<input type="text" class="form-control" th:name="username" th:value="${user.username}"></input>
+						<p class="text-danger" th:if="${#fields.hasErrors('username')}"><strong  th:errors="*{username}"></strong></p>
 						<input type="hidden" class="form-control" th:name="id" th:value="${user.id}"></input>
 						<input type="hidden" class="form-control" th:name="password" th:value="${user.password}"></input>
 					  </div>
@@ -38,11 +39,18 @@
 							<option value="Active" th:selected="${user.status=='Active'}">Active</option>
 							<option value="Inactive" th:selected="${user.status=='Inactive'}">Inactive</option>
 						</select>
+						<p class="text-danger" th:if="${#fields.hasErrors('status')}"><strong  th:errors="*{status}"></strong></p>
 					  </div>					  
 					  <div class="form-group">
 						<label for="username">Change Password:</label>
-						<input type="text" class="form-control" th:name="passwordchg"></input>
-					  </div>				  
+						<input type="password" class="form-control" th:name="passwordchg" th:value="${user.passwordchg}"></input>
+						<p class="text-danger" th:if="${#fields.hasErrors('passwordchg')}"><strong  th:errors="*{passwordchg}"></strong></p>
+					  </div>
+					  <div class="form-group">
+						<label for="username">Password Confrim:</label>
+						<input type="password" class="form-control" th:name="passwordconfirm" th:value="${user.passwordconfirm}"></input>
+						<p class="text-danger" th:if="${#fields.hasErrors('passwordconfirm')}"><strong  th:errors="*{passwordconfirm}"></strong></p>
+					  </div>					  
 					  <div class="form-group">
 						<label for="roleSelect">Role:</label>
 						<select name="roles" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="roleSelect">

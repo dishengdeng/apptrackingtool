@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
+import portal.utility.Action;
 
 @Entity
 @Table(name = "user")
@@ -49,7 +50,11 @@ public class User {
     @Column(name = "status",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String status;
- 
+    
+    @Column(name = "action",columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String action=Action.CREATE.name();
+    
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", 
     joinColumns = @JoinColumn(name = "user_id"), 
@@ -121,6 +126,14 @@ public class User {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
 	}
     
     
