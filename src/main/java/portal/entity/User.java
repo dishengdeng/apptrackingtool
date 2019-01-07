@@ -1,19 +1,21 @@
 package portal.entity;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.JoinColumn;
+
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -43,8 +45,12 @@ public class User {
     @Column(name = "passwordconfirm",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String passwordconfirm;
+    
+    @Column(name = "status",columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String status;
  
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", 
     joinColumns = @JoinColumn(name = "user_id"), 
     inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -99,7 +105,23 @@ public class User {
 		this.passwordchg = passwordchg;
 	}
 	
+	public String getRoleStrWithComma()
+	{
+		List<String> roleNames = new ArrayList<>();
+		for(Role role:this.roles)
+		{
+			roleNames.add(role.getName());
+		}
+		return roleNames.stream().collect(Collectors.joining(","));
+	}
 
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
     
     
 }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">System User Profile</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<div class="col-lg-6">
+					<form action="#" th:action="@{/updateUser}" th:object="${user}" method="post">													
+				
+					  <div class="form-group">
+						<label for="username">User:</label>
+						<input type="text" class="form-control" th:name="username" th:value="${user.username}"></input>
+						<input type="hidden" class="form-control" th:name="id" th:value="${user.id}"></input>
+						<input type="hidden" class="form-control" th:name="password" th:value="${user.password}"></input>
+					  </div>
+					  <div class="form-group">
+						<label for="statusSelect">Status:</label>
+						<select name="status" class="form-control" id="statusSelect">
+							<option></option>
+							<option value="Active" th:selected="${user.status=='Active'}">Active</option>
+							<option value="Inactive" th:selected="${user.status=='Inactive'}">Inactive</option>
+						</select>
+					  </div>					  
+					  <div class="form-group">
+						<label for="username">Change Password:</label>
+						<input type="text" class="form-control" th:name="passwordchg"></input>
+					  </div>				  
+					  <div class="form-group">
+						<label for="roleSelect">Role:</label>
+						<select name="roles" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="roleSelect">
+						  <option th:each="roleEntity : ${roles}" 
+						  th:text="${roleEntity.name}" 
+						  th:attr="value = ${roleEntity.id}" th:selected="${user.roles.contains(roleEntity)}">
+						</select>
+					  </div>													  
+					  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+					</form>
+				</div>
+			</div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+	$(document).ready(function() {
+	  $('#roleSelect').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: 300, 
+		enableFiltering: true,
+		nonSelectedText: 'Select Role'
+	  });
+	});		
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>

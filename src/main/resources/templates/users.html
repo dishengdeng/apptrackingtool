@@ -35,6 +35,7 @@
                                 <thead>
                                     <tr>
                                         <th>User</th>
+										<th>Status</th>
 										<th>Role</th>										
 
 										<!--<th class="no-sort">Action</th>-->
@@ -51,56 +52,20 @@
 											style="text-decoration: none">
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
-											<a data-toggle="modal" th:data-target="@{'#'+${user.id}}" th:text="${user.username}" style="cursor:pointer"></a>
+											<a th:href="@{'/userprofile?id='+${user.id}}" th:text="${user.username}" style="cursor:pointer"></a>
+										</td>
+										<td th:text="${user.status}">
 										</td>
 										<td>
-											<a data-toggle="modal" th:if="${user.roles.size()>0}" th:data-target="@{${#strings.concat('#',user.id,'roles')}}" style="cursor:pointer">Roles</a>
+											<a data-toggle="modal" 
+											th:if="${user.roles.size()>0}" 
+											th:text="${user.getRoleStrWithComma()}" 
+											th:data-target="@{${#strings.concat('#',user.id,'roles')}}" 
+											style="cursor:pointer"></a>
 										</td>										
 
 										  <!-- Modal -->
-									  
-										  
-										  
-										  <div class="modal fade" th:id="${user.id}" role="dialog">
-											<div class="modal-dialog">
-											
-											  <!-- Modal content-->
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${user.username}"></h4>
-												</div>
-												<div class="modal-body">
-													<form action="#" th:action="@{/updateUser}" th:object="${userModel}" method="post">													
-												
-													  <div class="form-group">
-														<label for="username">user:</label>
-														<input type="text" class="form-control" th:name="username" th:value="${user.username}"></input>
-														<input type="hidden" class="form-control" th:name="id" th:value="${user.id}"></input>
-														<input type="hidden" class="form-control" th:name="password" th:value="${user.password}"></input>
-													  </div>
-													  <div class="form-group">
-														<label for="PasswordChange">New Password:</label>
-														<input type="text" class="form-control" th:name="passwordchg"></input>
-
-													  </div>														  
-													  <div class="form-group">
-														<label for="roleSelect">Role:</label>
-														<select name="roles" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="roleSelect">
-														  <option th:each="roleEntity : ${userroles}" 
-														  th:text="${roleEntity.name}" 
-														  th:attr="value = ${roleEntity.id}">
-														  </option>
-														</select>
-													  </div>
-												  
-													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
-													</form>
-												</div>
-											  </div>
-											  
-											</div>
-										  </div>
+									 
                                     </tr>
 
 
@@ -161,16 +126,16 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
-    });
-	$(document).ready(function() {
-	  $('#roleSelect').multiselect(
+		
+	  /*--$('[id^=roleSelect]').multiselect(
 	  {
 		includeSelectAllOption: true,
 		buttonWidth: 300, 
 		enableFiltering: true,
 		nonSelectedText: 'Select Role'
-	  });
-	});	
+	  });--*/		
+    });
+
     </script>
 	<script type="text/javascript">
 		$(function () {

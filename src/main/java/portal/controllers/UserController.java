@@ -42,12 +42,11 @@ public class UserController {
     public String supporttable(ModelMap model) {
     	model.addAttribute("users", userService.getAll());
     	model.addAttribute("userroles", roleService.getAll());
-    	model.addAttribute("userModel", new User());
         return "users";
     }
     
     @PostMapping("/updateUser")
-    public String updateUser(@ModelAttribute("userModel") User user) {
+    public String updateUser(@ModelAttribute("user") User user) {
     	
     	if(user.getPasswordchg()!=null && !user.getPasswordchg().isEmpty())
     	{
@@ -57,7 +56,14 @@ public class UserController {
 
     	userService.updateUser(user);
         return "redirect:/users";
-    }    
+    } 
+    
+    @GetMapping("/userprofile")
+    public String userprofile(ModelMap model,@RequestParam(name="id", required=true) String id) {
+        model.addAttribute("user", userService.findById(Long.valueOf(id)));
+        model.addAttribute("roles", roleService.getAll());
+        return "userprofile";
+    }
     
     @GetMapping("/addUser")
     public String registration(ModelMap model) {
