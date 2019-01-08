@@ -2,51 +2,28 @@
 <html lang="en">
 
 <head th:insert="head :: header">
-
 <body>
-
-
 
         <!-- Navigation -->
 			<!-- <div th:insert="navigation :: navbar">  </div>-->
 
 
-			<div class="row" style="padding-top:20px">
+			<div class="row" style="padding-top:30px">
 			<div class="row">
-				<div class="col-lg-2"></div>
-				<div class="col-lg-8">
+				<div class="col-lg-3"></div>
+				<div class="col-lg-6">
 					<div class="panel panel-danger">
-					  <div class="panel-heading"><h3><strong>Error</strong></h3></div>
+					  <div class="panel-heading"><h4><strong>Error</strong></h4></div>
 					  <div class="panel-body">
-						<p><span th:text="@{${error}+' - '+${status}}"></span></p>
-						<p><span th:text="${message}"></span></p>
+						<p><strong><span th:text="@{${status}+' - '+${error}}"></span><strong></p>
+
 					  </div>
 					</div>
 				</div>
-				<div class="col-lg-2"></div>
+				<div class="col-lg-3"></div>
 			</div>		
 
 
-
-
-
-    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
-    <script>
-    $(document).ready(function() {
-        $('#dataTables-example').DataTable({
-            responsive: true
-        });
-    });
-    </script>
-	<script type="text/javascript">
-		$(function () {
-			$('[id^=datetimepicker]').datepicker({
-				format: 'yyyy-mm-dd',
-				 orientation: "bottom auto"
-			});
-
-		});
-	</script>
 
 </body>
 
