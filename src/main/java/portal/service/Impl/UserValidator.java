@@ -30,21 +30,24 @@ public class UserValidator implements Validator{
         
         
         
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "NotEmpty");
-        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");
+        ValidationUtils.rejectIfEmptyOrWhitespace(errors, "username", "NotEmpty");        
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "status", "NotEmpty");
         
         if (user.getUsername().length() > 32) {
             errors.rejectValue("username", "Size.user.username");
         }
         
-        if (userService.findByName(user.getUsername()) != null) {
-            errors.rejectValue("username", "Duplicate.user.username");
+        if(!user.getNamebypass())
+        {
+            if (userService.findByName(user.getUsername()) != null) {
+                errors.rejectValue("username", "Duplicate.user.username");
+            }
         }
+
         
         if(user.getAction().equals(Action.CREATE.name()))
         {
-        	
+        	ValidationUtils.rejectIfEmptyOrWhitespace(errors, "password", "NotEmpty");        	
             if (user.getPassword().length() < 6) {
                 errors.rejectValue("password", "Size.user.password");
             }

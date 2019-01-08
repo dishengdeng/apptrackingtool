@@ -2,6 +2,8 @@ package portal.controllers;
 
 
 
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,6 +15,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,12 +38,12 @@ public class UserController {
 	
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
-
-
   
 
     @Autowired
     private UserValidator userValidator;
+    
+
     
     @GetMapping("/users")
     public String supporttable(ModelMap model) {
@@ -50,18 +53,32 @@ public class UserController {
     }
     
     @PostMapping("/updateUser")
-    public String updateUser(@ModelAttribute("user") User user) {
+    public String updateUser(@ModelAttribute("user") User user,BindingResult bindingResult,ModelMap model){
+    	User pastUser=userService.findById(user.getId());
     	
-    	if(user.getPasswordchg()!=null && !user.getPasswordchg().isEmpty())
+    	if(user.getUsername()!=null && !user.getUsername().isEmpty() && pastUser.getUsername().equals(user.getUsername()))
     	{
-    		user.setPassword(bCryptPasswordEncoder.encode(user.getPasswordchg()));
-    		user.setPasswordchg(null);
-    		user.setPasswordconfirm(null);
+    		user.setNamebypass(true);
     	}
 
-    	userService.updateUser(user);
+        userValidator.validate(user, bindingResult);
 
+        if (bindingResult.hasErrors()) {
 
+            return "redirect:/userprofile?id="+user.getId();
+        }    	
+
+    	pastUser.setUsername(user.getUsername());
+    	pastUser.setStatus(user.getStatus());
+    	pastUser.setRoles(user.getRoles());
+    	pastUser.setPasswordchg(null);
+    	pastUser.setPasswordconfirm(null);
+    	pastUser.setPassword(bCryptPasswordEncoder.encode(user.getPasswordchg()));
+
+    	
+
+    	userService.updateUser(pastUser);
+   
         return "redirect:/users";
 
     } 
@@ -84,6 +101,7 @@ public class UserController {
     
     @PostMapping("/addUser")
     public String registration(@ModelAttribute("user") User userForm, BindingResult bindingResult, ModelMap model) {
+    	userForm.setNamebypass(false);
         userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors()) {

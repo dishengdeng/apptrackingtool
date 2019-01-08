@@ -55,6 +55,10 @@ public class User {
     @JsonView(Views.Public.class)
 	private String action=Action.CREATE.name();
     
+    @Column(name = "namebypass")
+    @JsonView(Views.Public.class)
+	private Boolean namebypass=false;
+    
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", 
     joinColumns = @JoinColumn(name = "user_id"), 
@@ -134,6 +138,14 @@ public class User {
 
 	public void setAction(String action) {
 		this.action = action;
+	}
+
+	public Boolean getNamebypass() {
+		return namebypass;
+	}
+
+	public void setNamebypass(Boolean namebypass) {
+		this.namebypass = namebypass;
 	}
     
     
