@@ -2,6 +2,7 @@ package portal.service.Impl;
 
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -62,7 +63,7 @@ public class UserValidator implements Validator{
         
         if(user.getAction().equals(Action.UPDATE.name()))
         {
-        	if(user.getPasswordchg()!=null && !user.getPasswordchg().isEmpty())
+        	if(!StringUtils.isEmpty(user.getPasswordchg()))
         	{
                 if (user.getPasswordchg().length() < 6) {
                     errors.rejectValue("passwordchg", "Size.user.passwordchg");

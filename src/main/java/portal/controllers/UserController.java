@@ -3,10 +3,13 @@ package portal.controllers;
 
 
 
-import javax.servlet.ServletException;
+
+
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,9 +26,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.User;
 import portal.service.RoleService;
-
+import portal.service.SecurityService;
 import portal.service.UserService;
 import portal.service.Impl.UserValidator;
+import portal.utility.Role;
 
 
 @Controller
@@ -43,7 +47,8 @@ public class UserController {
     @Autowired
     private UserValidator userValidator;
     
-
+    @Autowired
+    private SecurityService securityService;
     
     @GetMapping("/users")
     public String supporttable(ModelMap model) {
@@ -52,42 +57,90 @@ public class UserController {
         return "users";
     }
     
+    
     @PostMapping("/updateUser")
     public String updateUser(@ModelAttribute("user") User user,BindingResult bindingResult,ModelMap model){
-    	User pastUser=userService.findById(user.getId());
     	
-    	if(user.getUsername()!=null && !user.getUsername().isEmpty() && pastUser.getUsername().equals(user.getUsername()))
-    	{
-    		user.setNamebypass(true);
-    	}
+    	User pastUser=userService.findById(user.getId());
 
-        userValidator.validate(user, bindingResult);
+        userValidator.validate(getValidationByPassUser(pastUser,user), bindingResult);
 
         if (bindingResult.hasErrors()) {
+        	model.addAttribute("user", user);
+        	model.addAttribute("roles", roleService.getAll());
+            return "userprofile";
+        }
 
-            return "redirect:/userprofile?id="+user.getId();
-        }    	
+    	if(securityService.hasRole(Role.ADMIN) || securityService.hasRole(Role.SYSADMIN)) 
+    	{
+    		userService.updateUser(adminUpdatedUser(pastUser,user));
+    		return "redirect:/users";
+    	}
+    	else
+    	{
+    		userService.updateUser(updatedUser(pastUser,user));
+    		return "redirect:/userprofile";
+    	}
+   
+        
 
-    	pastUser.setUsername(user.getUsername());
-    	pastUser.setStatus(user.getStatus());
-    	pastUser.setRoles(user.getRoles());
+    }   
+    
+    private User updatedUser(User pastUser,User formUser)
+    {
+    	pastUser.setUsername(formUser.getUsername());
+    	pastUser.setStatus(formUser.getStatus());
+
+    	if(!StringUtils.isEmpty(formUser.getPasswordchg()))
+    	{
+    		pastUser.setPassword(bCryptPasswordEncoder.encode(formUser.getPasswordchg()));
+    	}
     	pastUser.setPasswordchg(null);
     	pastUser.setPasswordconfirm(null);
-    	pastUser.setPassword(bCryptPasswordEncoder.encode(user.getPasswordchg()));
+    	
+    	return pastUser;
+    }
+    
+    private User adminUpdatedUser(User pastUser,User formUser)
+    {
+    	pastUser.setUsername(formUser.getUsername());
+    	pastUser.setStatus(formUser.getStatus());
+    	pastUser.setRoles(formUser.getRoles());
+ 
 
     	
-
-    	userService.updateUser(pastUser);
-   
-        return "redirect:/users";
-
-    } 
+    	if(!StringUtils.isEmpty(formUser.getPasswordchg()))
+    	{
+    		pastUser.setPassword(bCryptPasswordEncoder.encode(formUser.getPasswordchg()));
+    	}
+    	pastUser.setPasswordchg(null);
+    	pastUser.setPasswordconfirm(null);
+    	
+    	return pastUser;
+    }    
+    
+    private User getValidationByPassUser(User pastUser,User formUser)
+    {
+    	//set all by pass rule
+    	if(!StringUtils.isEmpty(formUser.getUsername()) && pastUser.getUsername().equals(formUser.getUsername()))
+    	{
+    		formUser.setNamebypass(true);
+    	}
+    	
+    	return formUser;
+    }
     
 
 	@GetMapping("/userprofile")
-    public String userprofile(ModelMap model,@RequestParam(name="id", required=false) String id,@RequestParam(name="name", required=false) String name) {
-    	if(name !=null && !name.isEmpty())  model.addAttribute("user", userService.findByName(name));
-    	if(id !=null && !id.isEmpty()) model.addAttribute("user", userService.findById(Long.valueOf(id)));
+    public String userprofile(ModelMap model,@RequestParam(name="id", required=false) String id) {
+      	if(!StringUtils.isEmpty(id) && (securityService.hasRole(Role.ADMIN) || securityService.hasRole(Role.SYSADMIN))) 
+      	{
+      		model.addAttribute("user", userService.findById(Long.valueOf(id)));
+      	}
+      	else
+      	{
+      		model.addAttribute("user", securityService.getCurrentUserProfile());
+      	}
         model.addAttribute("roles", roleService.getAll());
         return "userprofile";
     }

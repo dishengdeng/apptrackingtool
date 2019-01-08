@@ -23,7 +23,7 @@
 						</a>
 						<ul class="dropdown-menu dropdown-user">
 							<li th:if="${#httpServletRequest.remoteUser!='capsys'}">
-								<a th:href="@{'/userprofile?name='+${#authentication.getPrincipal().getUsername()}}"><i class="fa fa-user fa-fw"></i> User Profile</a>
+								<a href="/userprofile"><i class="fa fa-user fa-fw"></i> User Profile</a>
 							</li>
 							<li class="divider" th:if="${#httpServletRequest.remoteUser!='capsys'}"></li>
 							<li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>

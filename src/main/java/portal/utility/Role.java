@@ -3,8 +3,10 @@ package portal.utility;
 
 
 public enum Role {
-	ADMIN(1),
-	GENERAL(0);
+	ADMIN(0),
+	GENERAL(1),
+	SYSADMIN(2),
+	USER(3);
 	
 	private final int roleCode;
 
