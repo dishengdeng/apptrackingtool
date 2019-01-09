@@ -93,7 +93,7 @@
 												<div class="form-group  pull-center">
 													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
 													<input type="hidden" class="form-control" th:name="departmentid" th:value="${department.id}"></input>
-
+													<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
 
 												</div>
 											</form>

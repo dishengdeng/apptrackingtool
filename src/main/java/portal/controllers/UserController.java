@@ -6,13 +6,15 @@ package portal.controllers;
 
 
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -71,6 +73,7 @@ public class UserController{
     public String updateUser(@ModelAttribute("user") User user,BindingResult bindingResult,ModelMap model){
     	
     	User pastUser=userService.findById(user.getId());
+    	
 
         userValidator.validate(getValidationByPassUser(pastUser,user), bindingResult);
 
@@ -96,7 +99,8 @@ public class UserController{
         	
         	model.addAttribute("user", updatedUser);
         	model.addAttribute("roles", roleService.getAll());
-        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString()));
+        	//for now hard code the locale, if need to change other language, need to reimplement
+        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString(),Locale.US));
         	return "userprofile";
     	}
     	else
@@ -106,7 +110,7 @@ public class UserController{
     		securityService.autologin(updatedUser.getUsername(),new String(Base64.decodeBase64(updatedUser.getEncodedpassword().getBytes())));
         	model.addAttribute("user", updatedUser);
         	model.addAttribute("roles", roleService.getAll());
-        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString()));
+        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString(),Locale.US));
     		return "userprofile";
     	}
    
@@ -180,7 +184,7 @@ public class UserController{
     public String registration(ModelMap model) {
         model.addAttribute("user", new User());
         model.addAttribute("roles", roleService.getAll());
-        return "adduser";
+        return "addUser";
     }  
     
     @PostMapping("/addUser")
@@ -191,7 +195,7 @@ public class UserController{
         if (bindingResult.hasErrors()) {
         	model.addAttribute("user", userForm);
         	model.addAttribute("roles", roleService.getAll());
-            return "adduser";
+            return "addUser";
         }
         userForm.setPasswordconfirm(null);
         userService.saveUser(userForm);
