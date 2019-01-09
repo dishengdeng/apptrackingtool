@@ -111,6 +111,7 @@ body {
   .navbar-top-links .dropdown-alerts {
     margin-left: auto;
   }
+
 }
 .btn-outline {
   color: inherit;
@@ -431,4 +432,10 @@ table.dataTable thead .sorting:after {
     border-right-width: 14px;
     border-left-width: 0;
   }
+  
+  .navbar-top-links .dropdown-user 
+  {right:0 !important;
+   left:0 !important}
+
 }
+

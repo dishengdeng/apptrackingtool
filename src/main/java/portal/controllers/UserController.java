@@ -29,12 +29,16 @@ import portal.service.RoleService;
 import portal.service.SecurityService;
 import portal.service.UserService;
 import portal.service.Impl.UserValidator;
+import portal.utility.CurrentUser;
 import portal.utility.Role;
 
 
 @Controller
-public class UserController {
-    @Autowired
+public class UserController{
+	
+
+
+	@Autowired
     private UserService userService;
     
 	@Autowired
@@ -89,6 +93,7 @@ public class UserController {
     private User updatedUser(User pastUser,User formUser)
     {
     	pastUser.setUsername(formUser.getUsername());
+    	CurrentUser.updatedLogginUserName=formUser.getUsername();
     	pastUser.setStatus(formUser.getStatus());
 
     	if(!StringUtils.isEmpty(formUser.getPasswordchg()))
@@ -106,7 +111,11 @@ public class UserController {
     	pastUser.setUsername(formUser.getUsername());
     	pastUser.setStatus(formUser.getStatus());
     	pastUser.setRoles(formUser.getRoles());
- 
+    	
+    	if(!securityService.hasRole(Role.SYSADMIN) && pastUser.getId().equals(securityService.getCurrentUserProfile().getId()))
+    	{
+    		CurrentUser.updatedLogginUserName=formUser.getUsername();
+    	}
 
     	
     	if(!StringUtils.isEmpty(formUser.getPasswordchg()))
@@ -197,6 +206,7 @@ public class UserController {
     	    if (auth != null){    
     	        new SecurityContextLogoutHandler().logout(request, response, auth);
     	    }
+    	    CurrentUser.updatedLogginUserName="";
     	    return "redirect:/login?logout";
     }
 	

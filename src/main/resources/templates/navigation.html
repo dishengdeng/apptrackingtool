@@ -19,13 +19,16 @@
 					<!-- /.dropdown -->
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<i class="fa fa-user fa-fw"></i><span>[[${#httpServletRequest.remoteUser}]]</span> <i class="fa fa-caret-down"></i>
+							<i class="fa fa-user fa-fw"></i>
+							<span sec:authorize="hasAnyRole('ADMIN','GENERAL','USER')" th:text="${T(portal.utility.CurrentUser).updatedLogginUserName}"></span>
+							<span sec:authorize="hasRole('SYSADMIN')" th:text="${#httpServletRequest.remoteUser}"></span> 
+							<i class="fa fa-caret-down"></i>
 						</a>
 						<ul class="dropdown-menu dropdown-user">
-							<li th:if="${#httpServletRequest.remoteUser!='capsys'}">
+							<li sec:authorize="hasAnyRole('ADMIN','GENERAL','USER')">
 								<a href="/userprofile"><i class="fa fa-user fa-fw"></i> User Profile</a>
 							</li>
-							<li class="divider" th:if="${#httpServletRequest.remoteUser!='capsys'}"></li>
+							<li class="divider" sec:authorize="hasAnyRole('ADMIN','GENERAL','USER')"></li>
 							<li><a href="/logout"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
 							</li>
 						</ul>
