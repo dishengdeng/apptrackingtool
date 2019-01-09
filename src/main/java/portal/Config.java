@@ -2,6 +2,7 @@ package portal;
 
 
 
+
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.env.Environment;
 
@@ -22,6 +24,9 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
+
+
 
 
 @Configuration
@@ -83,7 +88,7 @@ public class Config {
 	    ReloadableResourceBundleMessageSource messageSource
 	      = new ReloadableResourceBundleMessageSource();
 	     
-	    messageSource.setBasename("classpath:validation");
+	    messageSource.setBasename("classpath:messages");
 	    messageSource.setDefaultEncoding("UTF-8");
 	    return messageSource;
 	}
@@ -94,7 +99,7 @@ public class Config {
 	    bean.setValidationMessageSource(messageSource());
 	    return bean;
 	}
-	
+		
 	private Properties getHibernateProperties() {
 		Properties properties = new Properties();
 		properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));

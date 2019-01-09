@@ -58,7 +58,8 @@
 						  th:text="${roleEntity.name}" 
 						  th:attr="value = ${roleEntity.id}" th:selected="${user.roles.contains(roleEntity)}">
 						</select>
-					  </div>													  
+					  </div>
+						<p th:if="${#strings.isEmpty(message)!=true}" class="text-success"><strong th:text="${message}"></strong></p>					  
 					  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 					</form>
 				</div>

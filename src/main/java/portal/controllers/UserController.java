@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,11 +27,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.User;
+import portal.service.MessageSourceService;
 import portal.service.RoleService;
 import portal.service.SecurityService;
 import portal.service.UserService;
 import portal.service.Impl.UserValidator;
 import portal.utility.Role;
+import portal.utility.messages;
 
 
 @Controller
@@ -54,6 +57,8 @@ public class UserController{
     @Autowired
     private SecurityService securityService;
     
+    @Autowired
+    private MessageSourceService messageSourceService;
     @GetMapping("/users")
     public String supporttable(ModelMap model) {
     	model.addAttribute("users", userService.getAll());
@@ -85,16 +90,24 @@ public class UserController{
 
     		User updatedUser=userService.updateUser(adminUpdatedUser(pastUser,user));
 
+
         	if(isAutoLogin) securityService.autologin(updatedUser.getUsername(),new String(Base64.decodeBase64(updatedUser.getEncodedpassword().getBytes())));
-    		return "redirect:/users";
+
+        	
+        	model.addAttribute("user", updatedUser);
+        	model.addAttribute("roles", roleService.getAll());
+        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString()));
+        	return "userprofile";
     	}
     	else
     	{
     		User updatedUser=userService.updateUser(updatedUser(pastUser,user));
     		
     		securityService.autologin(updatedUser.getUsername(),new String(Base64.decodeBase64(updatedUser.getEncodedpassword().getBytes())));
-    		
-    		return "redirect:/userprofile";
+        	model.addAttribute("user", updatedUser);
+        	model.addAttribute("roles", roleService.getAll());
+        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString()));
+    		return "userprofile";
     	}
    
         
