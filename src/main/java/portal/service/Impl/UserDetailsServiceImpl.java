@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import portal.entity.Role;
 import portal.entity.User;
 import portal.repository.UserRepository;
-import portal.utility.CurrentUser;
 import portal.utility.Status;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService{
@@ -46,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 				grantedAuthorities.add(new SimpleGrantedAuthority(user_prefix+portal.utility.Role.GENERAL.name()));
 			}
 			
-			CurrentUser.updatedLogginUserName=user.getUsername();
+
 			return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
 		}
 		

@@ -38,6 +38,10 @@ public class User {
     @Column(name = "password",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String password;
+
+    @Column(name = "encodedpassword",columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String encodedpassword;
     
     @Column(name = "passwordchg",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
@@ -146,6 +150,14 @@ public class User {
 
 	public void setNamebypass(Boolean namebypass) {
 		this.namebypass = namebypass;
+	}
+
+	public String getEncodedpassword() {
+		return encodedpassword;
+	}
+
+	public void setEncodedpassword(String encodedpassword) {
+		this.encodedpassword = encodedpassword;
 	}
     
     

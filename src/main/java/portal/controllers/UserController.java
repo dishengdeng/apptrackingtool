@@ -9,6 +9,7 @@ package portal.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,7 +30,6 @@ import portal.service.RoleService;
 import portal.service.SecurityService;
 import portal.service.UserService;
 import portal.service.Impl.UserValidator;
-import portal.utility.CurrentUser;
 import portal.utility.Role;
 
 
@@ -77,12 +77,23 @@ public class UserController{
 
     	if(securityService.hasRole(Role.ADMIN) || securityService.hasRole(Role.SYSADMIN)) 
     	{
-    		userService.updateUser(adminUpdatedUser(pastUser,user));
+    		boolean isAutoLogin=false;
+        	if(!securityService.hasRole(Role.SYSADMIN) && pastUser.getId().equals(securityService.getCurrentUserProfile().getId()))
+        	{
+        		isAutoLogin=true;
+        	}
+
+    		User updatedUser=userService.updateUser(adminUpdatedUser(pastUser,user));
+
+        	if(isAutoLogin) securityService.autologin(updatedUser.getUsername(),new String(Base64.decodeBase64(updatedUser.getEncodedpassword().getBytes())));
     		return "redirect:/users";
     	}
     	else
     	{
-    		userService.updateUser(updatedUser(pastUser,user));
+    		User updatedUser=userService.updateUser(updatedUser(pastUser,user));
+    		
+    		securityService.autologin(updatedUser.getUsername(),new String(Base64.decodeBase64(updatedUser.getEncodedpassword().getBytes())));
+    		
     		return "redirect:/userprofile";
     	}
    
@@ -93,15 +104,16 @@ public class UserController{
     private User updatedUser(User pastUser,User formUser)
     {
     	pastUser.setUsername(formUser.getUsername());
-    	CurrentUser.updatedLogginUserName=formUser.getUsername();
     	pastUser.setStatus(formUser.getStatus());
 
     	if(!StringUtils.isEmpty(formUser.getPasswordchg()))
     	{
     		pastUser.setPassword(bCryptPasswordEncoder.encode(formUser.getPasswordchg()));
+    		pastUser.setEncodedpassword(new String(Base64.encodeBase64(formUser.getPasswordchg().getBytes())));
     	}
     	pastUser.setPasswordchg(null);
-    	pastUser.setPasswordconfirm(null);
+    	pastUser.setPasswordconfirm(null);   	
+
     	
     	return pastUser;
     }
@@ -110,17 +122,14 @@ public class UserController{
     {
     	pastUser.setUsername(formUser.getUsername());
     	pastUser.setStatus(formUser.getStatus());
-    	pastUser.setRoles(formUser.getRoles());
-    	
-    	if(!securityService.hasRole(Role.SYSADMIN) && pastUser.getId().equals(securityService.getCurrentUserProfile().getId()))
-    	{
-    		CurrentUser.updatedLogginUserName=formUser.getUsername();
-    	}
+    	pastUser.setRoles(formUser.getRoles());	
+
 
     	
     	if(!StringUtils.isEmpty(formUser.getPasswordchg()))
     	{
     		pastUser.setPassword(bCryptPasswordEncoder.encode(formUser.getPasswordchg()));
+    		pastUser.setEncodedpassword(new String(Base64.encodeBase64(formUser.getPasswordchg().getBytes())));
     	}
     	pastUser.setPasswordchg(null);
     	pastUser.setPasswordconfirm(null);
@@ -206,7 +215,6 @@ public class UserController{
     	    if (auth != null){    
     	        new SecurityContextLogoutHandler().logout(request, response, auth);
     	    }
-    	    CurrentUser.updatedLogginUserName="";
     	    return "redirect:/login?logout";
     }
 	

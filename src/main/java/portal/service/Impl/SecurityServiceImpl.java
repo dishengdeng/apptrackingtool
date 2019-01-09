@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import portal.entity.User;
 import portal.service.SecurityService;
 import portal.service.UserService;
-import portal.utility.CurrentUser;
 import portal.utility.Role;
 @Service
 public class SecurityServiceImpl implements SecurityService{
@@ -64,7 +63,7 @@ public class SecurityServiceImpl implements SecurityService{
 	@Override
 	public User getCurrentUserProfile() {
 		
-		return userService.findByName(CurrentUser.updatedLogginUserName);
+		return userService.findByName(findLoggedInUsername());
 	}
 	
 
