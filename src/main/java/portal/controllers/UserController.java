@@ -99,8 +99,9 @@ public class UserController{
         	
         	model.addAttribute("user", updatedUser);
         	model.addAttribute("roles", roleService.getAll());
-        	//for now hard code the locale, if need to change other language, need to reimplement
-        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString(),Locale.US));
+
+
+        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString(),new Object[]{updatedUser.getUsername()},LocaleContextHolder.getLocale()));
         	return "userprofile";
     	}
     	else
@@ -110,7 +111,7 @@ public class UserController{
     		securityService.autologin(updatedUser.getUsername(),new String(Base64.decodeBase64(updatedUser.getEncodedpassword().getBytes())));
         	model.addAttribute("user", updatedUser);
         	model.addAttribute("roles", roleService.getAll());
-        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString(),Locale.US));
+        	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString(),new Object[]{updatedUser.getUsername()},LocaleContextHolder.getLocale()));
     		return "userprofile";
     	}
    

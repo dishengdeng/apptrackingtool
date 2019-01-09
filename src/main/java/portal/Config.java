@@ -3,19 +3,20 @@ package portal;
 
 
 
+
 import java.util.Properties;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 import org.hibernate.ejb.HibernatePersistence;
-import org.springframework.context.MessageSource;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+
 import org.springframework.core.env.Environment;
 
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -23,7 +24,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+
 
 
 
@@ -83,23 +84,7 @@ public class Config {
 		return transactionManager;
 	}	
 	
-	@Bean
-	public MessageSource messageSource() {
-	    ReloadableResourceBundleMessageSource messageSource
-	      = new ReloadableResourceBundleMessageSource();
-	     
-	    messageSource.setBasename("classpath:messages");
-	    messageSource.setDefaultEncoding("UTF-8");
-	    return messageSource;
-	}
-	  
-	@Bean
-	public LocalValidatorFactoryBean getValidator() {
-	    LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
-	    bean.setValidationMessageSource(messageSource());
-	    return bean;
-	}
-		
+	
 	private Properties getHibernateProperties() {
 		Properties properties = new Properties();
 		properties.put(PROP_HIBERNATE_DIALECT, env.getRequiredProperty(PROP_HIBERNATE_DIALECT));
