@@ -1,6 +1,9 @@
 package portal.controllers;
 
 
+
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +17,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+
 import portal.entity.Contract;
+import portal.service.AppInstanceService;
+import portal.service.AppService;
 import portal.service.ContractService;
 import portal.service.FileService;
 
@@ -27,6 +33,12 @@ public class ContractController {
 	private ContractService contractService;
 	
 	@Autowired
+	private AppInstanceService appInstanceService;
+	
+	@Autowired
+	private AppService appService;		
+	
+	@Autowired
 	private FileService fileService;
 	
 	private final String UPLOADED_FOLDER="files//contract//";
@@ -34,6 +46,8 @@ public class ContractController {
     @GetMapping("/contracts")
     public String contracttable(ModelMap model) {
     	model.addAttribute("contracts", contractService.getAll());
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
     	model.addAttribute("contractModel", new Contract());
         return "contracts";
     }
@@ -48,6 +62,7 @@ public class ContractController {
     @PostMapping("/updateContract")
     public String updateContract(@ModelAttribute("contractModel") Contract contract) {
 
+    	contractService.updateAppInstanceContract(contract.getAppInstances(), contract);
     	contractService.updateContract(contract);
         return "redirect:/contracts";
     }
@@ -64,7 +79,7 @@ public class ContractController {
     	contract.setId(Long.valueOf(id));
     	contract.setContractName(contractName);
     	
-    	contractService.updateContract(contract);
+    	contractService.updateAppInstanceContract(contract.getAppInstances(), contract);
     	
     	contractService.delete(contract);
     	return "redirect:/contracts";

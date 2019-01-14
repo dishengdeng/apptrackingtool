@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.AppInstance;
 import portal.entity.Company;
-import portal.entity.Contract;
 import portal.entity.Desktop;
 import portal.entity.License;
 import portal.entity.SLA;
@@ -104,7 +103,6 @@ public class AppInstanceController {
     public String DeleteAppInstance(@RequestParam(name="id", required=true) String id) {
     	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
     	slaService.removeAppInstance(appInstance);
-    	contractService.removeAppInstance(appInstance);
     	licenseService.removeAppInstance(appInstance);
     	desktopService.removeAppInstance(appInstance);
     	serverService.removeAppInstance(appInstance);
@@ -113,6 +111,7 @@ public class AppInstanceController {
     	appInstance.setApplication(null);
     	appInstance.setDepartment(null);
     	appInstance.setSupport(null);
+    	appInstance.setContract(null);
     	appInstanceService.delete(appInstance);
     	return "redirect:/instances";
     }
@@ -127,8 +126,8 @@ public class AppInstanceController {
     	model.addAttribute("slas",slaService.findByNotAssigned(appInstance));
     	
     	//--Contract-----
-    	model.addAttribute("contract",contractService.findByAppInstance(appInstance));
-    	model.addAttribute("contracts",contractService.findByNotAssigned(appInstance));
+    	model.addAttribute("contract",appInstance.getContract());
+    	model.addAttribute("contracts",contractService.getAll());
     	
     	//--License-----
     	model.addAttribute("license",licenseService.findByAppInstance(appInstance));
@@ -186,22 +185,20 @@ public class AppInstanceController {
   //------Contract---------------    
     @GetMapping("/deleteInstanceContract")
     public String deleteInstanceContract(@RequestParam(name="id", required=false) String id) {
-    	Contract contract = contractService.getById(Long.valueOf(id));
-    	Long appInstanceId = contract.getAppInstance().getId();
-    	contract.setAppInstance(null);
-    	contractService.updateContract(contract);
+    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
+    	appInstance.setContract(null);
+    	appInstanceService.updateAppInstance(appInstance);
 
-
-    	return "redirect:/instancedetail?id="+appInstanceId;
+    	return "redirect:/instancedetail?id="+Long.valueOf(id);
     }
     
     @PostMapping("/addInstanceContract")
-    public String addOrupdateInstanceContract(@ModelAttribute("contract") Contract contract) {
+    public String addOrupdateInstanceContract(@ModelAttribute("appinstance") AppInstance appinstance) {
 
-
-    	contractService.removeAppInstance(contract.getAppInstance());
-    	contractService.updateAppInstance(contract.getAppInstance(), contract.getId());
-        return "redirect:/instancedetail?id="+contract.getAppInstance().getId();
+    	AppInstance appinstanceEntity = appInstanceService.getById(appinstance.getId());
+    	appinstanceEntity.setContract(appinstance.getContract());
+    	appInstanceService.updateAppInstance(appinstanceEntity);
+        return "redirect:/instancedetail?id="+appinstance.getId();
     }
   //----------------------- 
     

@@ -92,8 +92,15 @@
 										<td th:text="${server.hwplatform}"></td>
 										<td th:text="${server.decomminsionDate}"></td>
 										<td>
-											<a th:if="${server.attachment!=null && !server.attachment.isEmpty()}" th:href="@{'/deleteserverfile?id='+${server.id}}" title="Delete" style="text-decoration: none;margin-right:5px">
-												<i class="fa fa-remove fa-2x" style="color:red" aria-hidden="true"></i>
+											<a th:if="${server.attachment!=null && !server.attachment.isEmpty()}" 
+												th:href="@{'/deleteserverfile?id='+${server.id}}" 
+												style="text-decoration: none;margin-right:5px"
+												data-title="Are you sure to delete?" 
+												data-toggle="confirmation" 
+												data-singleton="true" 
+												data-popout="true"
+											>
+												<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
 											</a>
 											<a th:if="${server.attachment!=null && !server.attachment.isEmpty()}" th:href="@{'/downloadserver?id='+${server.id}}" th:text="${server.attachment}"></a>
 											<form th:if="${server.attachment==null || server.attachment.isEmpty()}" method="POST" action="/serverupload" enctype="multipart/form-data">
@@ -112,7 +119,6 @@
 												<div class="form-group  pull-center">
 													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
 													<input type="hidden" class="form-control" th:name="serverid" th:value="${server.id}"></input>
-													<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
 													<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
 
 												</div>

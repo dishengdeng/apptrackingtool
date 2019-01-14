@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import portal.entity.AppInstance;
 import portal.entity.Department;
+import portal.entity.Stakeholder;
 import portal.models.DepartmentModel;
 import portal.repository.DepartmentRepository;
 import portal.service.DepartmentService;
@@ -70,6 +72,38 @@ public class DepartmentServiceImpl implements DepartmentService{
 	public Department updateDepartment(Department department) {
 
 		return departmentRepository.saveAndFlush(department);
+	}
+
+	@Override
+	public void updateAppIstanceDepartment(List<AppInstance> appInstances, Department department) {
+		if(appInstances.size()>0)
+		{
+			for(AppInstance appInstance:appInstances)
+			{
+				departmentRepository.updateAppIstanceDepartment(appInstance.getId(), department);
+			}
+		}
+		else
+		{
+			departmentRepository.removeAllDepartment(department);
+		}
+		
+	}
+
+	@Override
+	public void updateStakeholderDepartment(List<Stakeholder> stakeholders, Department department) {
+		if(stakeholders.size()>0)
+		{
+			for(Stakeholder stakeholder:stakeholders)
+			{
+				departmentRepository.updateStakeholderDepartment(stakeholder.getId(), department);
+			}
+		}
+		else
+		{
+			departmentRepository.removeAllStakeholderDepartment(department);
+		}
+		
 	}
 
 }

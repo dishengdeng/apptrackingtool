@@ -2,6 +2,7 @@ package portal.service;
 
 import java.util.List;
 
+import portal.entity.AppInstance;
 import portal.entity.Support;
 import portal.models.SupportModel;
 
@@ -15,5 +16,7 @@ public interface SupportService {
     List<SupportModel> getAllSupport();
     Support getByName(String supportName);
     Support getById(Long id);
-    Support updateSupport(Support support);	
+    Support updateSupport(Support support);
+    
+    void updateAppInstanceSupport(List<AppInstance> appInstances,Support support);
 }

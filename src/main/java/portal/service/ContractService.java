@@ -16,10 +16,7 @@ public interface ContractService {
     List<ContractModel> getAllContract();
     Contract getByName(String contractName);
     Contract getById(Long id);
-    Contract updateContract(Contract contract);	
-    List<Contract> findByNotAssigned(AppInstance appInstance);
-    void removeAppInstance(AppInstance appInstance);
-    void updateAppInstance(AppInstance appInstance,Long id);
-    
-    Contract findByAppInstance(AppInstance appInstance);
+    Contract updateContract(Contract contract);
+    void updateAppInstanceContract(List<AppInstance> appInstances,Contract contract);
+
 }

@@ -1,6 +1,8 @@
 package portal.controllers;
 
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.Support;
 import portal.service.AppInstanceService;
+import portal.service.AppService;
 import portal.service.SupportService;
 
 
@@ -25,9 +28,14 @@ public class SupportController {
 	@Autowired
 	private AppInstanceService appInstanceService;
 	
+	@Autowired
+	private AppService appService;
+	
     @GetMapping("/supports")
     public String supporttable(ModelMap model) {
     	model.addAttribute("supports", supportService.getAll());
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
     	model.addAttribute("supportModel", new Support());
         return "supports";
     }
@@ -41,7 +49,7 @@ public class SupportController {
  
     @PostMapping("/updateSupport")
     public String updateSupport(@ModelAttribute("supportModel") Support support) {
-
+    	supportService.updateAppInstanceSupport(support.getAppInstances(), support);
     	supportService.updateSupport(support);
         return "redirect:/supports";
     }

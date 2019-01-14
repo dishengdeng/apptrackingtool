@@ -68,8 +68,15 @@
 										<td th:text="${sla.approvaldate}"></td>
 										<!--<td th:text="${sla.attachment}"></td>-->
 										<td>
-											<a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" th:href="@{'/deleteslafile?id='+${sla.id}}" title="Delete" style="text-decoration: none;margin-right:5px">
-												<i class="fa fa-remove fa-2x" style="color:red" aria-hidden="true"></i>
+											<a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" 
+												th:href="@{'/deleteslafile?id='+${sla.id}}" 
+												style="text-decoration: none;margin-right:5px"
+												data-title="Are you sure to delete?" 
+												data-toggle="confirmation" 
+												data-singleton="true" 
+												data-popout="true"
+												>
+												<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
 											</a>
 											<a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" th:href="@{'/downloadsla?id='+${sla.id}}" th:text="${sla.attachment}"></a>
 											<form th:if="${sla.attachment==null || sla.attachment.isEmpty()}" method="POST" action="/slaupload" enctype="multipart/form-data">

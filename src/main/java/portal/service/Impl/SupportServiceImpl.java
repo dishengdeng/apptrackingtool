@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import portal.entity.AppInstance;
 import portal.entity.Support;
 import portal.models.SupportModel;
 import portal.repository.SupportRepository;
@@ -55,6 +56,23 @@ public class SupportServiceImpl implements SupportService{
 	public Support updateSupport(Support support) {
 
 		return supportRepository.saveAndFlush(support);
+	}
+
+	@Override
+	public void updateAppInstanceSupport(List<AppInstance> appInstances, Support support) {
+		
+		if(appInstances.size()>0)
+		{
+			for(AppInstance appInstance:appInstances)
+			{
+				supportRepository.updateAppIstanceSupport(appInstance.getId(), support);
+			}
+		}
+		else
+		{
+			supportRepository.removeAllSupport(support);
+		}
+		
 	}
 
 }

@@ -100,4 +100,10 @@ public class AppInstanceServiceImpl implements AppInstanceService{
 		
 	}
 
+	@Override
+	public List<AppInstance> getUnassginedAppInstances() {
+
+		return appInstanceRepository.findUnAssingedAppInstances();
+	}
+
 }

@@ -1,5 +1,7 @@
 package portal.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -42,4 +44,7 @@ public interface AppInstanceRepository  extends JpaRepository<AppInstance, Long>
     @Modifying
     @Query("update AppInstance t set t.application=null where t.application = :application")
     void removeApplication(@Param("application") Application application);
+    
+    @Query("select t from AppInstance t where t.application is null")
+    List<AppInstance> findUnAssingedAppInstances();
 }

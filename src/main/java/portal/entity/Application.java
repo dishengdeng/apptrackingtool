@@ -5,6 +5,7 @@ package portal.entity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -29,7 +30,7 @@ import portal.utility.Convertor;
 
 @Entity
 @Table(name = "Application")
-public class Application {
+public class Application implements Comparable<Application>{
 	@Id
     @GeneratedValue(generator="ApplicationInvSeq",strategy=GenerationType.SEQUENCE) 
     @SequenceGenerator(name="ApplicationInvSeq",sequenceName="ApplicationInvSeq_INV_SEQ", allocationSize=5)	
@@ -176,7 +177,15 @@ public class Application {
 	}
 
 	public List<AppInstance> getAppInstances() {
-		return appInstances;
+		if(this.appInstances.size()>0)
+		{
+			return appInstances.stream().sorted().collect(Collectors.toList());
+		}
+		else
+		{
+			return appInstances;
+		}
+		
 	}
 
 	public void setAppInstances(List<AppInstance> appInstances) {
@@ -197,5 +206,11 @@ public class Application {
 		if(this.getId()!=other.getId()) return false;
 		
 		return true;
+	}
+
+	@Override
+	public int compareTo(Application app) {
+		
+		return this.AppName.compareToIgnoreCase(app.getAppName());
 	}
 }

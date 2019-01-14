@@ -2,8 +2,9 @@ package portal.service;
 
 import java.util.List;
 
-
+import portal.entity.AppInstance;
 import portal.entity.Department;
+import portal.entity.Stakeholder;
 import portal.models.DepartmentModel;
 
 
@@ -16,5 +17,8 @@ public interface DepartmentService {
     List<DepartmentModel> getAllDepartment();
     Department getByName(String departmentName);
     Department getById(Long id);
-    Department updateDepartment(Department department);	
+    Department updateDepartment(Department department);
+    
+    void updateAppIstanceDepartment(List<AppInstance> appInstances,Department department);
+    void updateStakeholderDepartment(List<Stakeholder> stakeholders,Department department);
 }

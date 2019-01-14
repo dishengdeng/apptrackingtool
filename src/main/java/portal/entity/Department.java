@@ -2,6 +2,7 @@ package portal.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -168,9 +169,27 @@ public class Department {
 	}
 
 	
+	public String getInstanceNameWithComma()
+	{
+		List<String> instanceName=new ArrayList<String>();
+		for(AppInstance appinstance:this.appInstances)
+		{
+			instanceName.add(appinstance.getAppInstanceName());
+		}
+		
+		return instanceName.stream().collect(Collectors.joining(","));
+	}
 
-
-
+	public String getStakeHolderNameWithComma()
+	{
+		List<String> stakeHolderName=new ArrayList<String>();
+		for(Stakeholder stakeholder:this.stakeholders)
+		{
+			stakeHolderName.add(stakeholder.getStakeholderName());
+		}
+		
+		return stakeHolderName.stream().collect(Collectors.joining(","));
+	}
 
 	
 }

@@ -56,68 +56,81 @@
 											<a data-toggle="modal" th:data-target="@{'#'+${support.id}}" th:text="${support.supportName}" style="cursor:pointer"></a>
 										</td>
 										<td>
-											<a data-toggle="modal" th:if="${support.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',support.id,'instances')}}" style="cursor:pointer">App Instances</a>
+											<a data-toggle="modal" th:if="${support.appInstances.size()>0}" th:text="${support.getInstanceNameWithComma()}" th:data-target="@{${#strings.concat('#',support.id,'instances')}}" style="cursor:pointer"></a>
 										</td>										
                                         <td th:text="${support.phone}"></td>
 										<td th:text="${support.email}"></td>
 										<td th:text="${support.note}"></td>
-										  <!-- Modal -->
-									  
-										  
-										  
-										  <div class="modal fade" th:id="${support.id}" role="dialog">
-											<div class="modal-dialog">
-											
-											  <!-- Modal content-->
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${support.supportName}"></h4>
-												</div>
-												<div class="modal-body">
-													<form action="#" th:action="@{/updateSupport}" th:object="${supportModel}" method="post">													
-												
-													  <div class="form-group">
-														<label for="supportName">Support:</label>
-														<input type="text" class="form-control" th:name="supportName" th:value="${support.supportName}"></input>
-														<input type="hidden" class="form-control" th:name="id" th:value="${support.id}"></input>
-													  </div>												  
-													  <div class="form-group">
-														<label for="description">Phone:</label>
-														<input type="text" class="form-control" th:name="phone" th:value="${support.phone}">
-													  </div>													  
-													  <div class="form-group">
-														<label for="note">Email:</label>
-														<input type="text" class="form-control" th:name="email" th:value="${support.email}">
-													  </div>
-													  <div class="form-group">
-														<label for="note">Note:</label>
-														<input type="text" class="form-control" th:name="note" th:value="${support.note}">
-													  </div>
-												  	 <select th:if="${support.appInstances.size()>0}" name="appInstances" class="form-control" id="instanceSelect" multiple style="visibility:hidden;height:0">
 
-													  <option th:each="instanceEntity : ${support.appInstances}" 
-
-													  th:attr="value = ${instanceEntity.id}" selected>
-													  
-													  </option>
-													</select>													  
-													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
-													</form>
-												</div>
-											  </div>
-											  
-											</div>
-										  </div>
                                     </tr>
 
 
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
-							
+							  <!-- Modal -->
+						  
+							  
+						<div th:each="support: ${supports}" >	  
+							<div class="modal fade" th:id="${support.id}" role="dialog">
+								<div class="modal-dialog">
+								
+								  <!-- Modal content-->
+								  <div class="modal-content">
+									<div class="modal-header">
+									  <button type="button" class="close" data-dismiss="modal">&times;</button>
+									  <h4 class="modal-title" th:text="${support.supportName}"></h4>
+									</div>
+									<div class="modal-body">
+										<form action="#" th:action="@{/updateSupport}" th:object="${supportModel}" method="post">													
+									
+										  <div class="form-group">
+											<label for="supportName">Support:</label>
+											<input type="text" class="form-control" th:name="supportName" th:value="${support.supportName}"></input>
+											<input type="hidden" class="form-control" th:name="id" th:value="${support.id}"></input>
+										  </div>												  
+										  <div class="form-group">
+											<label for="description">Phone:</label>
+											<input type="text" class="form-control" th:name="phone" th:value="${support.phone}">
+										  </div>													  
+										  <div class="form-group">
+											<label for="note">Email:</label>
+											<input type="text" class="form-control" th:name="email" th:value="${support.email}">
+										  </div>
+										  <div class="form-group">
+											<label for="note">Note:</label>
+											<input type="text" class="form-control" th:name="note" th:value="${support.note}">
+										  </div>
+											<div class="form-group">
+												<label for="instanceSelect">App Instance:</label>											  	
+												<select name="appInstances" class="form-control" id="instanceSelect" multiple>
+													<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
+														  <option th:each="instanceEntity : ${appEntity.appInstances}" 
+
+														  th:attr="value = ${instanceEntity.id}" th:selected="${support.appInstances.contains(instanceEntity)}"
+														  th:text="${instanceEntity.appInstanceName}">
+														  
+														  </option>
+													</optgroup>
+													<optgroup th:if="${appUnassginedInstances.size()>0}" label="Unassigned">
+														  <option th:each="instanceEntity : ${appUnassginedInstances}" 
+
+														  th:attr="value = ${instanceEntity.id}" th:selected="${support.appInstances.contains(instanceEntity)}"
+														  th:text="${instanceEntity.appInstanceName}">
+														  
+														  </option>
+													</optgroup>													
+												</select>
+											</div>												  
+										  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+										</form>
+									</div>
+								  </div>
+								  
+								</div>
+							</div>							
 							<!--App instance Modal-->
-							<div th:each="support: ${supports}" th:if="${support.appInstances.size()>0}">
+							<div th:if="${support.appInstances.size()>0}">
 								<div class="modal fade" th:id="${#strings.concat(support.id,'instances')}" role="dialog" >
 								<!-- Modal content-->
 										<div class="modal-dialog">
@@ -148,7 +161,7 @@
 										 </div>
 								</div>
 							</div>								
-
+						</div><!-- Modal -->
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -172,6 +185,14 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
+		$('[id^=instanceSelect]').multiselect(
+		  {
+			includeSelectAllOption: true,
+			buttonWidth: '100%', 
+			enableFiltering: true,
+			nonSelectedText: 'Select Instance',
+			enableCaseInsensitiveFiltering:true
+		  });
     });
     </script>
 	<script type="text/javascript">

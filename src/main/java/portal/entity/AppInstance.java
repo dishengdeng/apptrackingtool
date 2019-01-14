@@ -26,7 +26,7 @@ import portal.utility.Status;
 
 @Entity
 @Table(name = "AppInstance")
-public class AppInstance {
+public class AppInstance implements Comparable<AppInstance>{
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
@@ -61,6 +61,10 @@ public class AppInstance {
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "application_id",referencedColumnName="id")
     private Application application;
+    
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "contract_id",referencedColumnName="id")
+    private Contract contract;   
     
     @OneToMany(
             mappedBy = "appInstance", 
@@ -141,6 +145,14 @@ public class AppInstance {
 		this.servers = servers;
 	}
 
+	public Contract getContract() {
+		return contract;
+	}
+
+	public void setContract(Contract contract) {
+		this.contract = contract;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -160,6 +172,12 @@ public class AppInstance {
 	public Status getAppStatus()
 	{
 		return Status.valueOf(this.status);
+	}
+
+	@Override
+	public int compareTo(AppInstance o) {
+
+		return this.appInstanceName.compareToIgnoreCase(o.getAppInstanceName());
 	}
 	
 }

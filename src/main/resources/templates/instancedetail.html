@@ -113,7 +113,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-									th:if="${contract!=null}" th:href="${#strings.concat('/deleteInstanceContract?id=',contract.id)}"
+									th:if="${contract!=null}" th:href="${#strings.concat('/deleteInstanceContract?id=',appinstance.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
 									data-singleton="true" 
@@ -127,7 +127,7 @@
                         <div th:if="${contract!=null}" class="panel-body">
 							<table class="table">
 							  <tbody>
-								<tr><th scope="row" style="width:25%">Contract:</th><td th:text="${contract.description}"></td></tr>
+								<tr><th scope="row" style="width:25%">Contract:</th><td th:text="${contract.contractName}"></td></tr>
 								<tr><th scope="row" style="width:25%">Expired Date:</th><td th:text="${contract.expireDate}"></td></tr>
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${contract.description}"></td></tr>
 								<tr><th scope="row" style="width:25%">SMA Description:</th><td th:text="${contract.smaDescription}"></td></tr>
@@ -539,11 +539,11 @@
 						  <h4 class="modal-title" th:text="'Add Or Change Contract - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceContract}" th:object="${contract}" method="post">
+							<form action="#" th:action="@{/addInstanceContract}" th:object="${appinstance}" method="post">
 								<div class="form-group">
 									<label for="contractSelect">Contract:</label>
-									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
-									<select name="id" class="form-control" id="contractSelect">
+									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<select name="contract" class="form-control" id="contractSelect">
 									  <option th:selected="${contract==null}"></option>
 									  <option th:each="contractEntity : ${contracts}" 
 									  th:text="${contractEntity.contractName}" 

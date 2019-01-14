@@ -28,4 +28,6 @@ public interface AppInstanceService {
     List<AppInstance> findNotAssgined(Application application);
     
     void removeApplication(Application application);
+    
+    List<AppInstance> getUnassginedAppInstances();
 }

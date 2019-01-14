@@ -5,6 +5,8 @@ package portal.controllers;
 
 
 
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.Department;
 import portal.service.AppInstanceService;
+import portal.service.AppService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.StakeholderService;
@@ -40,6 +43,9 @@ public class DepartmentController {
 	private AppInstanceService appInstanceService;
 	
 	@Autowired
+	private AppService appService;	
+	
+	@Autowired
 	private FileService fileService;
 	
 	private final String UPLOADED_FOLDER="files//department//";
@@ -47,6 +53,8 @@ public class DepartmentController {
     @GetMapping("/departments")
     public String departmenttable(ModelMap model) {
     	model.addAttribute("departments", departmentService.getAll());
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
     	model.addAttribute("departmentModel", new Department());
         return "departments";
     }
@@ -61,8 +69,8 @@ public class DepartmentController {
     @PostMapping("/updateDepartment")
     public String updateDepartment(@ModelAttribute("departmentModel") Department department) {
     	
-    	department.setStakeholders(stakholderService.findbyDepartment(department));
-
+    	departmentService.updateAppIstanceDepartment(department.getAppInstances(), department);
+    	departmentService.updateStakeholderDepartment(department.getStakeholders(), department);
     	departmentService.updateDepartment(department);
         return "redirect:/departments";
     }

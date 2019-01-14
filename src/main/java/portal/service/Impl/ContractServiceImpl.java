@@ -76,31 +76,21 @@ public class ContractServiceImpl implements ContractService{
 	}
 
 	@Override
-	public void removeAppInstance(AppInstance appInstance) {
-		
-		contractRepository.removeAppInstance(appInstance);
+	public void updateAppInstanceContract(List<AppInstance> appInstances, Contract contract) {
+
+		if(appInstances.size()>0)
+		{
+			for(AppInstance appInstance:appInstances)
+			{
+				contractRepository.updateAppIstanceContract(appInstance.getId(), contract);
+			}
+		}
+		else
+		{
+			contractRepository.removeAllContract(contract);
+		}
+
 	}
 
-	@Override
-	public void updateAppInstance(AppInstance appInstance, Long id) {
-		contractRepository.updateAppInstance(appInstance, id);
-		
-	}
-
-	@Override
-	public List<Contract> findByNotAssigned(AppInstance appInstance) {
-		
-		List<Contract> contracts = contractRepository.findAll();
-		contracts.removeIf(obj->appInstance.equals(obj.getAppInstance()) || obj.getAppInstance()!=null);
-	
-		
-		return contracts;
-	}
-
-	@Override
-	public Contract findByAppInstance(AppInstance appInstance) {
-		
-		return contractRepository.findByAppInstance(appInstance);
-	}
 
 }
