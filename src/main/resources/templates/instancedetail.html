@@ -354,7 +354,7 @@
 							<table class="table">
 							  <tbody>
 								<tr><th scope="row" style="width:25%">department:</th><td th:text="${department.departmentName}"></td></tr>
-								<tr><th scope="row" style="width:25%">Stakeholder:</th><td><a data-toggle="modal" th:if="${department.stakeholders.size()>0}" th:data-target="@{${#strings.concat('#',department.id,'stakeholders')}}">Stakeholders</a></td></tr>
+								<tr><th scope="row" style="width:25%">Stakeholder:</th><td><a data-toggle="modal" th:if="${department.stakeholders.size()>0}" th:text="${department.getStakeHolderNameWithComma()}" th:data-target="@{${#strings.concat('#',department.id,'stakeholders')}}"></a></td></tr>
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${department.description}"></td></tr>
 								<tr><th scope="row" style="width:25%">Purpose:</th><td th:text="${department.purpose}"></td></tr>
 								<tr><th scope="row" style="width:25%">Stragic Plan:</th><td th:text="${department.stragicplan}"></td></tr>
