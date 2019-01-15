@@ -77,32 +77,6 @@ public class CompanyServiceImpl implements CompanyService{
 		return companyRepository.saveAndFlush(company);
 	}
 
-	@Override
-	public List<Company> findByNotAssigned(AppInstance appInstance) {
-		List<Company> companys = companyRepository.findAll();
-		companys.removeIf(obj->(obj != null && !obj.isVendor()) || (appInstance.equals(obj.getAppInstance()) || obj.getAppInstance()!=null));
-	
-		
-		return companys;
-	}
-
-	@Override
-	public void removeAppInstance(AppInstance appInstance) {
-		companyRepository.removeAppInstance(appInstance);
-		
-	}
-
-	@Override
-	public void updateAppInstance(AppInstance appInstance, Long id) {
-		companyRepository.updateAppInstance(appInstance, id);
-		
-	}
-
-	@Override
-	public Company findByAppInstance(AppInstance appInstance) {
-
-		return companyRepository.findByAppInstance(appInstance);
-	}
 
 	@Override
 	public List<Company> findApplicationByNotAssigned(Application application) {
@@ -129,6 +103,37 @@ public class CompanyServiceImpl implements CompanyService{
 	public Company findByApplication(Application application) {
 
 		return companyRepository.findByApplication(application);
+	}
+
+	@Override
+	public void updateAppIstanceCompany(List<AppInstance> appInstances, Company company) {
+		
+		companyRepository.removeAllCompany(company);
+		if(appInstances.size()>0)
+		{
+			for(AppInstance appInstance:appInstances)
+			{
+				companyRepository.updateAppIstanceCompany(appInstance.getId(), company);
+			}
+		}
+
+
+
+		
+	}
+
+	@Override
+	public void removeAllCompany(Company company) {
+		
+		companyRepository.removeAllCompany(company);
+	}
+
+	@Override
+	public List<Company> findAllVendor() {
+		
+		List<Company> companys = companyRepository.findAll();
+		companys.removeIf(obj->(!obj.isVendor()));
+		return companys;
 	}
 
 }

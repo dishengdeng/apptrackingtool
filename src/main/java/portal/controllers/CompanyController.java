@@ -1,6 +1,8 @@
 package portal.controllers;
 
 
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,7 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.Company;
-
+import portal.service.AppInstanceService;
+import portal.service.AppService;
 import portal.service.CompanyService;
 
 
@@ -21,10 +24,17 @@ public class CompanyController {
 	@Autowired
 	private CompanyService companyService;
 	
+	@Autowired
+	private AppInstanceService appInstanceService;
+	
+	@Autowired
+	private AppService appService;	
 	
     @GetMapping("/companys")
     public String companytable(ModelMap model) {
     	model.addAttribute("companys", companyService.getAll());
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
     	model.addAttribute("companyModel", new Company());
         return "companys";
     }
@@ -39,6 +49,7 @@ public class CompanyController {
     @PostMapping("/updateCompany")
     public String updateCompany(@ModelAttribute("companyModel") Company company) {
 
+    	companyService.updateAppIstanceCompany(company.getAppInstances(), company);
     	companyService.updateCompany(company);
         return "redirect:/companys";
     }
@@ -55,8 +66,8 @@ public class CompanyController {
     	company.setId(Long.valueOf(id));
     	company.setCompanyName(companyName);
     	
-
-    	
+    	companyService.removeAllCompany(company);
+    	companyService.updateCompany(company);
     	companyService.delete(company);
     	return "redirect:/companys";
     }

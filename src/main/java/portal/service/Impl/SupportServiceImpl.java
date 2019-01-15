@@ -61,6 +61,7 @@ public class SupportServiceImpl implements SupportService{
 	@Override
 	public void updateAppInstanceSupport(List<AppInstance> appInstances, Support support) {
 		
+		supportRepository.removeAllSupport(support);	
 		if(appInstances.size()>0)
 		{
 			for(AppInstance appInstance:appInstances)
@@ -68,10 +69,7 @@ public class SupportServiceImpl implements SupportService{
 				supportRepository.updateAppIstanceSupport(appInstance.getId(), support);
 			}
 		}
-		else
-		{
-			supportRepository.removeAllSupport(support);
-		}
+
 		
 	}
 

@@ -7,7 +7,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Company;
 
@@ -16,19 +15,7 @@ import portal.entity.Company;
 public interface CompanyRepository  extends JpaRepository<Company, Long>  {
     @Query("select t from Company t where t.companyName = :companyName")
     Company findByName(@Param("companyName") String companyName);
-    
-    @Query("select t from Company t where t.appInstance = :appInstance")
-    Company findByAppInstance(@Param("appInstance") AppInstance appInstance);
-    
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Modifying    
-    @Query("update Company t set t.appInstance=null where t.appInstance = :appInstance")
-    void removeAppInstance(@Param("appInstance") AppInstance appInstance);
-    
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Modifying    
-    @Query("update Company t set t.appInstance=:appInstance where t.id = :id")
-    void updateAppInstance(@Param("appInstance") AppInstance appInstance,@Param("id") Long id);  
+      
     
     @Query("select t from Company t where t.application = :application")
     Company findByApplication(@Param("application") Application application);
@@ -41,6 +28,16 @@ public interface CompanyRepository  extends JpaRepository<Company, Long>  {
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
     @Modifying    
     @Query("update Company t set t.application=:application where t.id = :id")
-    void updateApplication(@Param("application") Application application,@Param("id") Long id);      
+    void updateApplication(@Param("application") Application application,@Param("id") Long id);  
+    
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Modifying
+    @Query("update AppInstance t set t.company=:company where t.id = :id")
+    void updateAppIstanceCompany(@Param("id") Long id,@Param("company") Company company);
+    
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Modifying
+    @Query("update AppInstance t set t.company=null where t.company=:company")
+    void removeAllCompany(@Param("company") Company company);
     
 }

@@ -2,6 +2,10 @@ package portal.entity;
 
 
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +14,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -57,9 +64,12 @@ public class Company {
     @JsonView(Views.Public.class)
 	private String manufacturer;
     
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "appInstance_id")
-    private AppInstance appInstance;
+    @OneToMany(
+            mappedBy = "company", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private List<AppInstance> appInstances = new ArrayList<AppInstance>();
     
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "application_id")
@@ -129,15 +139,6 @@ public class Company {
 		this.manufacturer = manufacturer;
 	}
 
-
-	public AppInstance getAppInstance() {
-		return appInstance;
-	}
-
-	public void setAppInstance(AppInstance appInstance) {
-		this.appInstance = appInstance;
-	}
-
 	public Application getApplication() {
 		return application;
 	}
@@ -148,12 +149,28 @@ public class Company {
 
 	public boolean isVendor()
 	{
-		if(this.manufacturer ==null) return true;
-		
-		if(this.manufacturer.isEmpty()) return true;
+		if(StringUtils.isEmpty(this.manufacturer)) return true;
 		
 		return false;
 	}
 
+	public List<AppInstance> getAppInstances() {
+		return appInstances;
+	}
+
+	public void setAppInstances(List<AppInstance> appInstances) {
+		this.appInstances = appInstances;
+	}
+	
+	public String getInstanceNameWithComma()
+	{
+		List<String> instanceName=new ArrayList<String>();
+		for(AppInstance appinstance:this.appInstances)
+		{
+			instanceName.add(appinstance.getAppInstanceName());
+		}
+		
+		return instanceName.stream().collect(Collectors.joining(","));
+	}
 	
 }

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.AppInstance;
-import portal.entity.Company;
 import portal.entity.Desktop;
 import portal.entity.License;
 import portal.entity.SLA;
@@ -106,12 +105,13 @@ public class AppInstanceController {
     	licenseService.removeAppInstance(appInstance);
     	desktopService.removeAppInstance(appInstance);
     	serverService.removeAppInstance(appInstance);
-    	companyService.removeAppInstance(appInstance);
+    	//companyService.removeAppInstance(appInstance);
     	siteService.removeAppInstance(appInstance);
     	appInstance.setApplication(null);
     	appInstance.setDepartment(null);
     	appInstance.setSupport(null);
     	appInstance.setContract(null);
+    	appInstance.setCompany(null);
     	appInstanceService.delete(appInstance);
     	return "redirect:/instances";
     }
@@ -130,11 +130,11 @@ public class AppInstanceController {
     	model.addAttribute("contracts",contractService.getAll());
     	
     	//--License-----
-    	model.addAttribute("license",licenseService.findByAppInstance(appInstance));
+    	model.addAttribute("license",appInstance.getLicense());
     	model.addAttribute("licenses",licenseService.findByNotAssigned(appInstance));
     	
     	//--Desktop-----
-    	model.addAttribute("desktop",desktopService.findByAppInstance(appInstance));
+    	model.addAttribute("desktop",appInstance.getDesktop());
     	model.addAttribute("desktops",desktopService.findByNotAssigned(appInstance));
     	
     	//--Server-----
@@ -142,8 +142,8 @@ public class AppInstanceController {
     	model.addAttribute("servers",serverService.findByNotAssigned(appInstance));  
     	
     	//--Vendor-----
-    	model.addAttribute("company",companyService.findByAppInstance(appInstance));
-    	model.addAttribute("companys",companyService.findByNotAssigned(appInstance));     	
+    	model.addAttribute("company",appInstance.getCompany());
+    	model.addAttribute("companys",companyService.getAll());     	
 
     	//--Department-----
     	model.addAttribute("department",appInstance.getDepartment());
@@ -284,22 +284,20 @@ public class AppInstanceController {
     //------Vendor---------------    
     @GetMapping("/deleteInstanceCompany")
     public String deleteInstanceCompany(@RequestParam(name="id", required=false) String id) {
-    	Company company = companyService.getById(Long.valueOf(id));
-    	Long appInstanceId = company.getAppInstance().getId();
-    	company.setAppInstance(null);
-    	companyService.updateCompany(company);
+    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
+    	appInstance.setCompany(null);
+    	appInstanceService.updateAppInstance(appInstance);
 
-
-    	return "redirect:/instancedetail?id="+appInstanceId;
+    	return "redirect:/instancedetail?id="+Long.valueOf(id);
     }
     
     @PostMapping("/addInstanceCompany")
-    public String addOrupdateInstanceCompany(@ModelAttribute("company") Company company) {
+    public String addOrupdateInstanceCompany(@ModelAttribute("appinstance") AppInstance appInstance) {
 
-
-    	companyService.removeAppInstance(company.getAppInstance());
-    	companyService.updateAppInstance(company.getAppInstance(), company.getId());
-        return "redirect:/instancedetail?id="+company.getAppInstance().getId();
+    	AppInstance appInstanceEntity=appInstanceService.getById(appInstance.getId());
+    	appInstanceEntity.setCompany(appInstance.getCompany());
+    	appInstanceService.updateAppInstance(appInstanceEntity);
+        return "redirect:/instancedetail?id="+appInstance.getId();
     }
   //----------------------- 
     

@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -64,14 +65,32 @@ public class AppInstance implements Comparable<AppInstance>{
     
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "contract_id",referencedColumnName="id")
-    private Contract contract;   
+    private Contract contract;
+    
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "company_id")
+    private Company company;
     
     @OneToMany(
             mappedBy = "appInstance", 
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<Server> servers = new ArrayList<Server>(); 
+    private List<Server> servers = new ArrayList<Server>();
+    
+    @OneToOne(
+            mappedBy = "appInstance", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private License license;
+    
+    @OneToOne(
+            mappedBy = "appInstance", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private Desktop desktop;
     
 	public Long getId() {
 		return id;
@@ -178,6 +197,30 @@ public class AppInstance implements Comparable<AppInstance>{
 	public int compareTo(AppInstance o) {
 
 		return this.appInstanceName.compareToIgnoreCase(o.getAppInstanceName());
+	}
+
+	public License getLicense() {
+		return license;
+	}
+
+	public void setLicense(License license) {
+		this.license = license;
+	}
+
+	public Desktop getDesktop() {
+		return desktop;
+	}
+
+	public void setDesktop(Desktop desktop) {
+		this.desktop = desktop;
+	}
+
+	public Company getCompany() {
+		return company;
+	}
+
+	public void setCompany(Company company) {
+		this.company = company;
 	}
 	
 }

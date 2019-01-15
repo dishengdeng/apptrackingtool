@@ -76,6 +76,7 @@ public class DepartmentServiceImpl implements DepartmentService{
 
 	@Override
 	public void updateAppIstanceDepartment(List<AppInstance> appInstances, Department department) {
+		departmentRepository.removeAllDepartment(department);
 		if(appInstances.size()>0)
 		{
 			for(AppInstance appInstance:appInstances)
@@ -83,15 +84,14 @@ public class DepartmentServiceImpl implements DepartmentService{
 				departmentRepository.updateAppIstanceDepartment(appInstance.getId(), department);
 			}
 		}
-		else
-		{
-			departmentRepository.removeAllDepartment(department);
-		}
+
 		
 	}
 
 	@Override
 	public void updateStakeholderDepartment(List<Stakeholder> stakeholders, Department department) {
+		
+		departmentRepository.removeAllStakeholderDepartment(department);	
 		if(stakeholders.size()>0)
 		{
 			for(Stakeholder stakeholder:stakeholders)
@@ -99,10 +99,7 @@ public class DepartmentServiceImpl implements DepartmentService{
 				departmentRepository.updateStakeholderDepartment(stakeholder.getId(), department);
 			}
 		}
-		else
-		{
-			departmentRepository.removeAllStakeholderDepartment(department);
-		}
+
 		
 	}
 

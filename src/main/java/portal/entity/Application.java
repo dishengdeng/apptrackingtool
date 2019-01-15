@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -86,7 +87,14 @@ public class Application implements Comparable<Application>{
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<AppInstance> appInstances = new ArrayList<AppInstance>();    
+    private List<AppInstance> appInstances = new ArrayList<AppInstance>();
+    
+    @OneToOne(
+            mappedBy = "application", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private Company manufacturer;
     
     public Long getId() {
 		return id;
@@ -212,5 +220,13 @@ public class Application implements Comparable<Application>{
 	public int compareTo(Application app) {
 		
 		return this.AppName.compareToIgnoreCase(app.getAppName());
+	}
+
+	public Company getManufacturer() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(Company manufacturer) {
+		this.manufacturer = manufacturer;
 	}
 }

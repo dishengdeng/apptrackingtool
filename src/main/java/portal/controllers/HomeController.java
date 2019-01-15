@@ -75,7 +75,7 @@ public class HomeController {
     	model.addAttribute("instances",appInstanceService.findNotAssgined(application));
     	
     	//--Manufacturer-----
-    	model.addAttribute("company",companyService.findByApplication(application));
+    	model.addAttribute("company",application.getManufacturer());
     	model.addAttribute("companys",companyService.findApplicationByNotAssigned(application));
 
     	return "applicationdetail";
@@ -115,9 +115,9 @@ public class HomeController {
     	Long applicationId = company.getApplication().getId();
     	company.setApplication(null);
     	companyService.updateCompany(company);
-
-
+ 
     	return "redirect:/applicationdetail?id="+applicationId;
+
     }
     
     @PostMapping("/addApplicationCompany")

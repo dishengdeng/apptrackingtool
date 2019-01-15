@@ -297,7 +297,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-								th:if="${company!=null}" th:href="${#strings.concat('/deleteInstanceCompany?id=',company.id)}"
+								th:if="${company!=null}" th:href="${#strings.concat('/deleteInstanceCompany?id=',appinstance.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 
 								data-singleton="true" 
@@ -664,11 +664,11 @@
 						  <h4 class="modal-title" th:text="'Add Or Change Vendor - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceCompany}" th:object="${company}" method="post">
+							<form action="#" th:action="@{/addInstanceCompany}" th:object="${appinstance}" method="post">
 								<div class="form-group">
 									<label for="companySelect">Vendor:</label>
-									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
-									<select name="id" class="form-control" id="companySelect">
+									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<select name="company" class="form-control" id="companySelect">
 									  <option th:selected="${company==null}"></option>
 									  <option th:each="companyEntity : ${companys}" 
 									  th:text="${companyEntity.companyName}" 

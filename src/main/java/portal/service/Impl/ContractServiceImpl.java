@@ -77,7 +77,7 @@ public class ContractServiceImpl implements ContractService{
 
 	@Override
 	public void updateAppInstanceContract(List<AppInstance> appInstances, Contract contract) {
-
+		contractRepository.removeAllContract(contract);
 		if(appInstances.size()>0)
 		{
 			for(AppInstance appInstance:appInstances)
@@ -85,10 +85,7 @@ public class ContractServiceImpl implements ContractService{
 				contractRepository.updateAppIstanceContract(appInstance.getId(), contract);
 			}
 		}
-		else
-		{
-			contractRepository.removeAllContract(contract);
-		}
+
 
 	}
 
