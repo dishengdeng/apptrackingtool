@@ -104,22 +104,22 @@ public class ContractController {
     }
     
     @GetMapping("/downloadcontract")
-    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
+    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,@RequestParam(name="filename", required=true) String filename,HttpServletRequest request)
     {
     	
-    	Contract contract= contractService.getById(Long.valueOf(id));
-    	return fileService.downloadFile(UPLOADED_FOLDER, id, contract.getAttachment(), request);
+
+    	return fileService.downloadFile(UPLOADED_FOLDER, id, filename, request);
     }
 
     @GetMapping("/deletecontractfile")
-    public String deletefile(@RequestParam(name="id", required=true) String id)
+    public String deletefile(@RequestParam(name="id", required=true) String id,@RequestParam(name="filename", required=true) String filename)
     {
     	
     	Contract contract= contractService.getById(Long.valueOf(id));
     	
-		if(fileService.removeFile(UPLOADED_FOLDER, id, contract.getAttachment()));
+		if(fileService.removeFile(UPLOADED_FOLDER, id, filename));
 		{
-			contract.setAttachment(null);
+			contract.removeAttachment(filename);
 			contractService.updateContract(contract);
 		}
 		return "redirect:/contracts";

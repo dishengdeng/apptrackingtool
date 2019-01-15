@@ -70,18 +70,29 @@
                                         <td th:text="${contract.smaDescription}"></td>
                                         <td th:text="${contract.slaDescription}"></td>
 										<td>
-											<a th:if="${contract.attachment!=null && !contract.attachment.isEmpty()}" 
-												th:href="@{'/deletecontractfile?id='+${contract.id}}" 
-												style="text-decoration: none margin-right:15px"
-												data-title="Are you sure to delete?" 
-												data-toggle="confirmation" 
-												data-singleton="true" 
-												data-popout="true"
-											>
-												<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
-											</a>
-											<a th:if="${contract.attachment!=null && !contract.attachment.isEmpty()}" th:href="@{'/downloadcontract?id='+${contract.id}}" th:text="${contract.attachment}"></a>
-											<form th:if="${contract.attachment==null || contract.attachment.isEmpty()}" method="POST" action="/contractupload" enctype="multipart/form-data">
+
+											<ul style="padding:0" th:if="${#strings.isEmpty(contract.attachment)!=true}">
+												<li style="list-style-type:none" th:each="attachment : ${#strings.listSplit(contract.attachment,',')}">
+													<a  
+														th:href="@{'/deletecontractfile?id='+${contract.id}+'&filename='+${attachment}}" 
+														style="text-decoration: none; margin-right:5px"
+														data-title="Are you sure to delete?" 
+														data-toggle="confirmation" 
+														data-singleton="true" 
+														data-popout="true"
+													>
+														<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
+													</a>
+													<a 	
+														th:href="@{'/downloadcontract?id='+${contract.id}+'&filename='+${attachment}}" 
+														th:text="${attachment}"
+													>
+													</a>
+												</li>
+											</ul>
+
+
+											<form  method="POST" action="/contractupload" enctype="multipart/form-data">
 												<!-- COMPONENT START -->
 												<div class="input-group">
 													
@@ -100,6 +111,7 @@
 
 												</div>
 											</form>
+
 										</td>
 
                                     </tr>

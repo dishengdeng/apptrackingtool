@@ -4,6 +4,7 @@ package portal.entity;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -121,7 +124,13 @@ public class Contract {
 	}
 
 	public void setAttachment(String attachment) {
-		this.attachment = attachment;
+		List<String> filelist;
+		
+		if(StringUtils.isEmpty(this.attachment))  filelist=new ArrayList<>();
+		else filelist=new ArrayList<>(Arrays.asList(StringUtils.split(this.attachment, ",")));
+		
+		filelist.add(attachment);
+		this.attachment = filelist.stream().collect(Collectors.joining(","));
 	}
 
 
@@ -144,8 +153,19 @@ public class Contract {
 		return instanceName.stream().collect(Collectors.joining(","));
 	}
 
+	public List<String> getAttachmentList()
+	{
+		if(StringUtils.isEmpty(this.attachment)) return new ArrayList<>();
+		
+		return new ArrayList<>(Arrays.asList(StringUtils.split(this.attachment, ",")));
+	}
 
-
+	public void removeAttachment(String attachment)
+	{
+		List<String> filelist=new ArrayList<>(Arrays.asList(StringUtils.split(this.attachment, ",")));
+		filelist.remove(attachment);
+		this.attachment = filelist.stream().collect(Collectors.joining(","));
+	}
 
 	
 }
