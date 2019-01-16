@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     		"/font-awesome/**",
                     		"/datatables-plugins/**",
                     		"/datatables-responsive/**",
-                    		"/favicon_a.ico",
+                    		"/favicon.png",
                     		"/registration").permitAll()
                     .antMatchers("/deleteInstanceSLA").hasAnyRole("ADMIN","SYSADMIN","USER")
                     .antMatchers("/addInstanceSLA").hasAnyRole("ADMIN","SYSADMIN","USER")

@@ -30,11 +30,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 
+@SuppressWarnings("deprecation")
 @Configuration
 @EnableTransactionManagement
 @ComponentScan({ "portal" })
 @PropertySource("classpath:application.properties")
-
 @EnableJpaRepositories("portal.repository")
 public class Config {
 	private static final String PROP_DATABASE_DRIVER = "db.driver";
@@ -64,6 +64,7 @@ public class Config {
 
 		return dataSource;
 	}
+
 	@Bean
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();

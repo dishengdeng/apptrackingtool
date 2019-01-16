@@ -96,10 +96,7 @@ public class ContractController {
 			contract.setAttachment(fileService.getFileName(file.getOriginalFilename()));
 			contractService.updateContract(contract);
 		}
-
-
-    		
-    	
+		
         return "redirect:/contracts";
     }
     
