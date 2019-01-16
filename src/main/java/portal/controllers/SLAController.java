@@ -1,5 +1,7 @@
 package portal.controllers;
 
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import portal.entity.SLA;
+import portal.service.AppInstanceService;
+import portal.service.AppService;
 import portal.service.FileService;
 import portal.service.SLAService;
 
@@ -28,11 +32,19 @@ public class SLAController {
 	private SLAService slaService;
 	
 	@Autowired
-	private FileService fileService;	
+	private FileService fileService;
+	
+	@Autowired
+	private AppInstanceService appInstanceService;
+	
+	@Autowired
+	private AppService appService;			
 	
     @GetMapping("/slas")
     public String slatable(ModelMap model) {
     	model.addAttribute("slas", slaService.getAll());
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));    	
     	model.addAttribute("updateSLA", new SLA());    	
         return "slas";
     }
@@ -45,7 +57,7 @@ public class SLAController {
  
     @PostMapping("/updateSLA")
     public String updateSLA(@ModelAttribute("updateSLA") SLA sla) {
-
+    	slaService.updateAppIstanceSLA(sla.getAppInstances(), sla);
     	slaService.updateSLA(sla);
         return "redirect:/slas";
     }
@@ -62,6 +74,8 @@ public class SLAController {
     	SLA sla = new SLA();
     	sla.setId(id);
     	sla.setSlaName(slaName);
+    	
+    	slaService.removeAllSLA(sla);
     	slaService.delete(sla);
     	return "redirect:/slas";
     }

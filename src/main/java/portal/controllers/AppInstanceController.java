@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import portal.entity.AppInstance;
 import portal.entity.Desktop;
 import portal.entity.License;
-import portal.entity.SLA;
 import portal.entity.Server;
 import portal.entity.Site;
 import portal.models.App;
@@ -101,7 +100,7 @@ public class AppInstanceController {
     @GetMapping("/deleteAppInstance")
     public String DeleteAppInstance(@RequestParam(name="id", required=true) String id) {
     	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
-    	slaService.removeAppInstance(appInstance);
+    	//slaService.removeAppInstance(appInstance);
     	licenseService.removeAppInstance(appInstance);
     	desktopService.removeAppInstance(appInstance);
     	serverService.removeAppInstance(appInstance);
@@ -112,6 +111,7 @@ public class AppInstanceController {
     	appInstance.setSupport(null);
     	appInstance.setContract(null);
     	appInstance.setCompany(null);
+    	appInstance.setSla(null);
     	appInstanceService.delete(appInstance);
     	return "redirect:/instances";
     }
@@ -122,8 +122,8 @@ public class AppInstanceController {
     	model.addAttribute("appinstance", appInstance);
    
     	//--SLA-----
-    	model.addAttribute("sla",slaService.findByAppInstance(appInstance));
-    	model.addAttribute("slas",slaService.findByNotAssigned(appInstance));
+    	model.addAttribute("sla",appInstance.getSla());
+    	model.addAttribute("slas",slaService.getAll());
     	
     	//--Contract-----
     	model.addAttribute("contract",appInstance.getContract());
@@ -163,22 +163,21 @@ public class AppInstanceController {
 //------SLA---------------    
     @GetMapping("/deleteInstanceSLA")
     public String deleteInstanceSLA(@RequestParam(name="id", required=false) String id) {
-    	SLA sla = slaService.getById(Long.valueOf(id));
-    	Long appInstanceId = sla.getAppInstance().getId();
-    	sla.setAppInstance(null);
-    	slaService.updateSLA(sla);
+    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
+    	appInstance.setSla(null);
 
-
-    	return "redirect:/instancedetail?id="+appInstanceId;
+    	appInstanceService.updateAppInstance(appInstance);
+    	return "redirect:/instancedetail?id="+Long.valueOf(id);
     }
     
     @PostMapping("/addInstanceSLA")
-    public String addOrupdateInstanceSLA(@ModelAttribute("sla") SLA sla) {
+    public String addOrupdateInstanceSLA(@ModelAttribute("appinstance") AppInstance appinstance) {
 
 
-    	slaService.removeAppInstance(sla.getAppInstance());
-    	slaService.updateAppInstance(sla.getAppInstance(), sla.getId());
-        return "redirect:/instancedetail?id="+sla.getAppInstance().getId();
+    	AppInstance appinstanceEntity = appInstanceService.getById(appinstance.getId());
+    	appinstanceEntity.setSla(appinstance.getSla());
+    	appInstanceService.updateAppInstance(appinstanceEntity);
+        return "redirect:/instancedetail?id="+appinstance.getId();
     }
   //-----------------------
     

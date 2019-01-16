@@ -16,9 +16,7 @@ public interface SLAService {
     SLA getByName(String slaName);
     SLA getById(Long id);
     SLA updateSLA(SLA sla);
-    SLA findByAppInstance(AppInstance appInstance);
-    List<SLA> findByNotAssigned(AppInstance appInstance);
-    void removeAppInstance(AppInstance appInstance);
-    void updateAppInstance(AppInstance appInstance,Long id);
+    void updateAppIstanceSLA(List<AppInstance> appInstances,SLA sla);
+    void removeAllSLA(SLA sla);
 
 }

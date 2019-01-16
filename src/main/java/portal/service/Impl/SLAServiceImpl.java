@@ -80,32 +80,25 @@ public class SLAServiceImpl implements SLAService{
 	}
 
 	@Override
-	public SLA findByAppInstance(AppInstance appInstance) {
+	public void updateAppIstanceSLA(List<AppInstance> appInstances, SLA sla) {
 		
-		return slaRepository.findByAppInstance(appInstance);
+		slaRepository.removeAllSLA(sla);
+		if(appInstances.size()>0)
+		{
+			for(AppInstance appInstance:appInstances)
+			{
+				slaRepository.updateAppIstanceSLA(appInstance.getId(), sla);
+			}
+		}
 	}
 
 	@Override
-	public List<SLA> findByNotAssigned(AppInstance appInstance) {
+	public void removeAllSLA(SLA sla) {
 		
-		List<SLA> slas = slaRepository.findAll();
-		slas.removeIf(obj->appInstance.equals(obj.getAppInstance()) || obj.getAppInstance()!=null);
-	
-		
-		return slas;
+		slaRepository.removeAllSLA(sla);
 	}
 
-	@Override
-	public void removeAppInstance(AppInstance appInstance) {
-		slaRepository.removeAppInstance(appInstance);
-		
-	}
 
-	@Override
-	public void updateAppInstance(AppInstance appInstance, Long id) {
-		slaRepository.updateAppInstance(appInstance, id);
-		
-	}
 
 
 }

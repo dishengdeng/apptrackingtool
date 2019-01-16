@@ -122,7 +122,35 @@
                             <!-- /.table-responsive -->
 							  <!-- Modal area-->
 							<div th:each="contract: ${contracts}"> 
-
+									<div class="modal fade" th:if="${sla.appInstances.size()>0}" th:id="${#strings.concat(sla.id,'instances')}" role="dialog" >
+									<!-- Modal content-->
+											<div class="modal-dialog">
+											  <div class="modal-content">
+												<div class="modal-header">
+												  <button type="button" class="close" data-dismiss="modal">&times;</button>
+												  <h4 class="modal-title"> App Instances</h4>
+												</div>
+												<div class="modal-body">
+													<table class="table table-striped" id="instancetable">
+													  <thead>
+														<tr>
+														  <th scope="col">App Instance</th>
+														  <th scope="col">status</th>
+														  <th scope="col">Description</th>														  
+														</tr>
+													  </thead>
+													  <tbody>
+														<tr th:each="appInstance : ${sla.appInstances}">
+														  <th><a th:href="@{'/instancedetail?id='+${appInstance.id}}"><h5 th:text="${appInstance.appInstanceName}"></h5></a></th>
+														  <th><h5 th:text="${appInstance.status}"></h5></th>
+														  <th><h5 th:text="${appInstance.description}"></h5></th>
+														</tr>
+													  </tbody>
+													</table>
+												</div>
+											   </div>
+											 </div>
+									</div>	
 									<div class="modal fade" th:if="${contract.appInstances.size()>0}" th:id="${#strings.concat(contract.id,'instances')}" role="dialog" >
 									<!-- Modal content-->
 											<div class="modal-dialog">

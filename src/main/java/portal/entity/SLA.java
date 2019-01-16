@@ -2,18 +2,21 @@ package portal.entity;
 
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
+
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -69,10 +72,13 @@ public class SLA {
     @JsonView(Views.Public.class)
 	private String attachment;   
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "appInstance_id")
-    private AppInstance appInstance;
-
+    @OneToMany(
+            mappedBy = "sla", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private List<AppInstance> appInstances = new ArrayList<AppInstance>();
+    
 	public Long getId() {
 		return id;
 	}
@@ -145,12 +151,23 @@ public class SLA {
 		this.attachment = attachment;
 	}
 
-	public AppInstance getAppInstance() {
-		return appInstance;
+	public List<AppInstance> getAppInstances() {
+		return appInstances;
 	}
 
-	public void setAppInstance(AppInstance appInstance) {
-		this.appInstance = appInstance;
+	public void setAppInstances(List<AppInstance> appInstances) {
+		this.appInstances = appInstances;
+	}
+
+	public String getInstanceNameWithComma()
+	{
+		List<String> instanceName=new ArrayList<String>();
+		for(AppInstance appinstance:this.appInstances)
+		{
+			instanceName.add(appinstance.getAppInstanceName());
+		}
+		
+		return instanceName.stream().collect(Collectors.joining(","));
 	}
 	
 }

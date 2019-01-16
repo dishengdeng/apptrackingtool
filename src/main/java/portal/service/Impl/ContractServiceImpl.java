@@ -89,5 +89,11 @@ public class ContractServiceImpl implements ContractService{
 
 	}
 
+	@Override
+	public void removeAllContract(Contract contract) {
+		contractRepository.removeAllContract(contract);
+		
+	}
+
 
 }

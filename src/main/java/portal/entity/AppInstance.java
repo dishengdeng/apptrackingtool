@@ -71,6 +71,10 @@ public class AppInstance implements Comparable<AppInstance>{
     @JoinColumn(name = "company_id")
     private Company company;
     
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "sla_id")
+    private SLA sla;
+    
     @OneToMany(
             mappedBy = "appInstance", 
             cascade = CascadeType.ALL, 
@@ -221,6 +225,14 @@ public class AppInstance implements Comparable<AppInstance>{
 
 	public void setCompany(Company company) {
 		this.company = company;
+	}
+
+	public SLA getSla() {
+		return sla;
+	}
+
+	public void setSla(SLA sla) {
+		this.sla = sla;
 	}
 	
 }

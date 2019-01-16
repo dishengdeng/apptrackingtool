@@ -79,7 +79,7 @@ public class ContractController {
     	contract.setId(Long.valueOf(id));
     	contract.setContractName(contractName);
     	
-    	contractService.updateAppInstanceContract(contract.getAppInstances(), contract);
+    	contractService.removeAllContract(contract);
     	
     	contractService.delete(contract);
     	return "redirect:/contracts";

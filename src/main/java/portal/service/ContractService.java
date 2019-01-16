@@ -18,5 +18,6 @@ public interface ContractService {
     Contract getById(Long id);
     Contract updateContract(Contract contract);
     void updateAppInstanceContract(List<AppInstance> appInstances,Contract contract);
+    void removeAllContract(Contract contract);
 
 }

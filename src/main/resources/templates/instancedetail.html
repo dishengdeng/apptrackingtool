@@ -70,7 +70,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" 
-									th:if="${sla!=null}" th:href="${#strings.concat('/deleteInstanceSLA?id=',sla.id)}"
+									th:if="${sla!=null}" th:href="${#strings.concat('/deleteInstanceSLA?id=',appinstance.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
 									data-singleton="true" 
@@ -510,11 +510,11 @@
 						  <h4 class="modal-title" th:text="'Add Or Change SLA - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceSLA}" th:object="${sla}" method="post">
+							<form action="#" th:action="@{/addInstanceSLA}" th:object="${appinstance}" method="post">
 								<div class="form-group">
 									<label for="clusterSelect">SLA:</label>
-									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
-									<select name="id" class="form-control" id="slaSelect">
+									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<select name="sla" class="form-control" id="slaSelect">
 									  <option th:selected="${sla==null}"></option>
 									  <option th:each="slaEntity : ${slas}" 
 									  th:text="${slaEntity.slaName}" 

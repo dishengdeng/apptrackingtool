@@ -59,7 +59,12 @@
 											<a data-toggle="modal" th:data-target="@{'#'+${sla.id}}" th:text="${sla.slaName}" style="cursor:pointer"></a>
 										</td>
 										<td>
-											<a th:if="${sla.appInstance!=null}"  th:text="${sla.appInstance.appInstanceName}" th:href="@{'/instancedetail?id='+${sla.appInstance.id}}"></a>
+											<a data-toggle="modal" 
+											th:if="${sla.appInstances.size()>0}" 
+											th:text="${sla.getInstanceNameWithComma()}" 
+											th:data-target="@{${#strings.concat('#',sla.id,'instances')}}" 
+											style="cursor:pointer">
+											</a>
 										</td>
                                         <td th:text="${sla.description}"></td>
                                         <td th:text="${sla.effectivedate}"></td>
@@ -99,81 +104,130 @@
 												</div>	
 											</form>
 										</td>
-
-										  <!-- SLA update Modal -->
-										  <div class="modal fade" th:id="${sla.id}" role="dialog">
-											<div class="modal-dialog">
-											
-											  <!-- Modal content-->
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${sla.slaName}"></h4>
-												</div>
-												<div class="modal-body">
-													<form action="#" th:action="@{/updateSLA}" th:object="${updateSLA}" method="post">													
-												
-													  <div class="form-group">
-														<label for="slaName">SLA:</label>
-														<input type="text" class="form-control" th:name="slaName" th:value="${sla.slaName}"></input>
-														<input type="hidden" class="form-control" th:name="id" th:value="${sla.id}"></input>
-														<input th:if="${sla.appInstance!=null}" type="hidden" class="form-control" th:name="appInstance" th:value="${sla.appInstance.id}"></input>
-													  </div>
-													  <div class="form-group">
-														<label for="description">Description:</label>
-														<input type="text" class="form-control" th:name="description" th:value="${sla.description}">
-													  </div>
-													  <div>
-														<label for="Decomminsion Date">Effective Date:</label>
-														<div class="input-group date" data-provide="datepicker" id="datetimepicker1">
-															<input type="text" class="form-control" th:name="effectivedate" th:value="${sla.effectivedate}">
-															<div class="input-group-addon">
-																<span class="glyphicon glyphicon-calendar"></span>
-															</div>
-
-														</div>
-													  </div>
-													  <div>
-														<label for="Decomminsion Date">Termination Date:</label>
-														<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
-															<input type="text" class="form-control" th:name="terminationdate" th:value="${sla.terminationdate}">
-															<div class="input-group-addon">
-																<span class="glyphicon glyphicon-calendar"></span>
-															</div>
-
-														</div>
-													  </div>
-													  <div class="form-group">
-														<label for="stragicplan">Approver Name:</label>
-														<input type="text" class="form-control" th:name="approvername" th:value="${sla.approvername}">
-													  </div>
-													  <div>
-														<label for="Decomminsion Date">Approval Date:</label>
-														<div class="input-group date" data-provide="datepicker" id='datetimepicker3'>
-															<input type="text" class="form-control" th:name="approvaldate" th:value="${sla.approvaldate}">
-															<div class="input-group-addon">
-																<span class="glyphicon glyphicon-calendar"></span>
-															</div>
-
-														</div>
-													  </div>
-
-														<input type="hidden" class="form-control" th:name="attachment" th:value="${sla.attachment}">
-										  
-
-													  <input class="btn btn-primary" type="submit" value="Update" />
-													</form>
-												</div>
-											  </div>
-											  
-											</div>
-										  </div>
                                     </tr>
-
-
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
+							
+							<!-- SLA update Modal -->
+							<div th:each="sla: ${slas}">
+								<div class="modal fade" th:if="${sla.appInstances.size()>0}" th:id="${#strings.concat(sla.id,'instances')}" role="dialog" >
+									<!-- Modal content-->
+											<div class="modal-dialog">
+											  <div class="modal-content">
+												<div class="modal-header">
+												  <button type="button" class="close" data-dismiss="modal">&times;</button>
+												  <h4 class="modal-title"> App Instances</h4>
+												</div>
+												<div class="modal-body">
+													<table class="table table-striped" id="instancetable">
+													  <thead>
+														<tr>
+														  <th scope="col">App Instance</th>
+														  <th scope="col">status</th>
+														  <th scope="col">Description</th>														  
+														</tr>
+													  </thead>
+													  <tbody>
+														<tr th:each="appInstance : ${sla.appInstances}">
+														  <th><a th:href="@{'/instancedetail?id='+${appInstance.id}}"><h5 th:text="${appInstance.appInstanceName}"></h5></a></th>
+														  <th><h5 th:text="${appInstance.status}"></h5></th>
+														  <th><h5 th:text="${appInstance.description}"></h5></th>
+														</tr>
+													  </tbody>
+													</table>
+												</div>
+											   </div>
+											 </div>
+								</div>	
+								<div class="modal fade" th:id="${sla.id}" role="dialog">
+									<div class="modal-dialog">
+									
+									  <!-- Modal content-->
+									  <div class="modal-content">
+										<div class="modal-header">
+										  <button type="button" class="close" data-dismiss="modal">&times;</button>
+										  <h4 class="modal-title" th:text="${sla.slaName}"></h4>
+										</div>
+										<div class="modal-body">
+											<form action="#" th:action="@{/updateSLA}" th:object="${updateSLA}" method="post">													
+										
+											<div class="form-group">
+												<label for="slaName">SLA:</label>
+												<input type="text" class="form-control" th:name="slaName" th:value="${sla.slaName}"></input>
+												<input type="hidden" class="form-control" th:name="id" th:value="${sla.id}"></input>
+											</div>
+											<div class="form-group">
+												<label for="instanceSelect">App Instance:</label>											  	
+												<select name="appInstances" class="form-control" id="instanceSelect" multiple>
+													<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
+														  <option th:each="instanceEntity : ${appEntity.appInstances}" 
+
+														  th:attr="value = ${instanceEntity.id}" th:selected="${sla.appInstances.contains(instanceEntity)}"
+														  th:text="${instanceEntity.appInstanceName}">
+														  
+														  </option>
+													</optgroup>
+													<optgroup th:if="${appUnassginedInstances.size()>0}" label="Unassigned">
+														  <option th:each="instanceEntity : ${appUnassginedInstances}" 
+
+														  th:attr="value = ${instanceEntity.id}" th:selected="${sla.appInstances.contains(instanceEntity)}"
+														  th:text="${instanceEntity.appInstanceName}">
+														  
+														  </option>
+													</optgroup>													
+												</select>
+											</div>											  
+											<div class="form-group">
+												<label for="description">Description:</label>
+												<input type="text" class="form-control" th:name="description" th:value="${sla.description}">
+											</div>
+											<div>
+												<label for="Decomminsion Date">Effective Date:</label>
+												<div class="input-group date" data-provide="datepicker" id="datetimepicker1">
+													<input type="text" class="form-control" th:name="effectivedate" th:value="${sla.effectivedate}">
+													<div class="input-group-addon">
+														<span class="glyphicon glyphicon-calendar"></span>
+													</div>
+
+												</div>
+											</div>
+											<div>
+												<label for="Decomminsion Date">Termination Date:</label>
+												<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
+													<input type="text" class="form-control" th:name="terminationdate" th:value="${sla.terminationdate}">
+													<div class="input-group-addon">
+														<span class="glyphicon glyphicon-calendar"></span>
+													</div>
+
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="stragicplan">Approver Name:</label>
+												<input type="text" class="form-control" th:name="approvername" th:value="${sla.approvername}">
+											</div>
+											<div>
+												<label for="Decomminsion Date">Approval Date:</label>
+												<div class="input-group date" data-provide="datepicker" id='datetimepicker3'>
+													<input type="text" class="form-control" th:name="approvaldate" th:value="${sla.approvaldate}">
+													<div class="input-group-addon">
+														<span class="glyphicon glyphicon-calendar"></span>
+													</div>
+
+												</div>
+											</div>
+
+												<input type="hidden" class="form-control" th:name="attachment" th:value="${sla.attachment}">
+								  
+
+											  <input class="btn btn-primary" type="submit" value="Update" />
+											</form>
+										</div>
+									  </div>
+									  
+									</div>
+								</div>
+							</div>							
 
                         </div>
                         <!-- /.panel-body -->
@@ -198,6 +252,14 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
+	  $('[id^=instanceSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Instance',
+		enableCaseInsensitiveFiltering:true
+	  });				
     });
     </script>
 	<script type="text/javascript">
