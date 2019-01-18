@@ -21,11 +21,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.Department;
+import portal.entity.File;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.StakeholderService;
+import portal.utility.FileType;
 
 
 
@@ -100,11 +102,12 @@ public class DepartmentController {
     	Department department= departmentService.getById(Long.valueOf(id));
 
 
-			if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
-			{
-				department.setAttachment(fileService.getFileName(file.getOriginalFilename()));
-    			departmentService.updateDepartment(department);
-			}
+    	File fileEntity = new File();
+    	fileEntity.setFiletype(FileType.SLA);
+    	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
+    	fileEntity.setDepartment(department);
+
+		fileService.uploadFile(file, UPLOADED_FOLDER,id,fileEntity);
 
 
     		
@@ -116,21 +119,17 @@ public class DepartmentController {
     public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
     {
     	
-    	Department department= departmentService.getById(Long.valueOf(id));
-    	return fileService.downloadFile(UPLOADED_FOLDER, id, department.getAttachment(), request);
+    	File file= fileService.findById(Long.valueOf(id));
+    	return fileService.downloadFile(UPLOADED_FOLDER,file.getDepartment().getId().toString(),file , request);
     }
 
     @GetMapping("/deletedepartmentfile")
     public String deletefile(@RequestParam(name="id", required=true) String id)
     {
     	
-    	Department department= departmentService.getById(Long.valueOf(id));
+    	File file= fileService.findById(Long.valueOf(id));
     	
-		if(fileService.removeFile(UPLOADED_FOLDER, id, department.getAttachment()));
-		{
-			department.setAttachment(null);
-			departmentService.updateDepartment(department);
-		}
+		fileService.removeFile(UPLOADED_FOLDER,file.getDepartment().getId().toString(), file);
 		return "redirect:/departments";
     	
     }

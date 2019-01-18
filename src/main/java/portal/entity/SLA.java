@@ -79,6 +79,13 @@ public class SLA {
         )
     private List<AppInstance> appInstances = new ArrayList<AppInstance>();
     
+    @OneToMany(
+            mappedBy = "sla", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private List<File> files = new ArrayList<File>();
+    
 	public Long getId() {
 		return id;
 	}
@@ -168,6 +175,14 @@ public class SLA {
 		}
 		
 		return instanceName.stream().collect(Collectors.joining(","));
+	}
+
+	public List<File> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<File> files) {
+		this.files = files;
 	}
 	
 }

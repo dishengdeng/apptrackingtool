@@ -71,7 +71,7 @@ public class AppInstance implements Comparable<AppInstance>{
     @JoinColumn(name = "company_id")
     private Company company;
     
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "sla_id")
     private SLA sla;
     

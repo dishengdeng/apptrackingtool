@@ -4,7 +4,7 @@ package portal.entity;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.apache.commons.lang3.StringUtils;
+
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -60,16 +60,21 @@ public class Contract {
     @JsonView(Views.Public.class)
 	private Date expireDate;
 
-    @Column(name = "attachment",columnDefinition="VARCHAR(250)")
-    @JsonView(Views.Public.class)
-	private String attachment; 
+
     
     @OneToMany(
             mappedBy = "contract", 
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<AppInstance> appInstances = new ArrayList<AppInstance>();   
+    private List<AppInstance> appInstances = new ArrayList<AppInstance>();
+    
+    @OneToMany(
+            mappedBy = "contract", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private List<File> files = new ArrayList<File>();
 
 	public Long getId() {
 		return id;
@@ -119,19 +124,9 @@ public class Contract {
 		this.expireDate = Convertor.JavaDate(expireDate);
 	}
 
-	public String getAttachment() {
-		return attachment;
-	}
 
-	public void setAttachment(String attachment) {
-		List<String> filelist;
-		
-		if(StringUtils.isEmpty(this.attachment))  filelist=new ArrayList<>();
-		else filelist=new ArrayList<>(Arrays.asList(StringUtils.split(this.attachment, ",")));
-		
-		filelist.add(attachment);
-		this.attachment = filelist.stream().collect(Collectors.joining(","));
-	}
+
+
 
 
 	public List<AppInstance> getAppInstances() {
@@ -153,19 +148,15 @@ public class Contract {
 		return instanceName.stream().collect(Collectors.joining(","));
 	}
 
-	public List<String> getAttachmentList()
-	{
-		if(StringUtils.isEmpty(this.attachment)) return new ArrayList<>();
-		
-		return new ArrayList<>(Arrays.asList(StringUtils.split(this.attachment, ",")));
+	public List<File> getFiles() {
+		return files;
 	}
 
-	public void removeAttachment(String attachment)
-	{
-		List<String> filelist=new ArrayList<>(Arrays.asList(StringUtils.split(this.attachment, ",")));
-		filelist.remove(attachment);
-		this.attachment = filelist.stream().collect(Collectors.joining(","));
+	public void setFiles(List<File> files) {
+		this.files = files;
 	}
+
+
 
 	
 }

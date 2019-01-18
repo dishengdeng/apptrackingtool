@@ -1,7 +1,9 @@
 package portal.entity;
 
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -68,6 +71,13 @@ public class Server {
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "cluster_id",referencedColumnName="id")
     private Cluster cluster;
+    
+    @OneToMany(
+            mappedBy = "server", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private List<File> files = new ArrayList<File>();
     
 	public Cluster getCluster() {
 		return cluster;
@@ -147,6 +157,14 @@ public class Server {
 
 	public void setAppInstance(AppInstance appInstance) {
 		this.appInstance = appInstance;
+	}
+
+	public List<File> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<File> files) {
+		this.files = files;
 	}
 
 

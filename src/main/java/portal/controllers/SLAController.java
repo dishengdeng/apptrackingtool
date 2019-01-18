@@ -14,11 +14,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+
+import portal.entity.File;
 import portal.entity.SLA;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.FileService;
 import portal.service.SLAService;
+import portal.utility.FileType;
 
 
 
@@ -84,12 +87,14 @@ public class SLAController {
     @PostMapping("/slaupload")
     public String uploadSLA(@RequestParam("file") MultipartFile file,@RequestParam("slaid") String id) {
     	SLA sla= slaService.getById(Long.valueOf(id));
+    	
+    	File fileEntity = new File();
+    	fileEntity.setFiletype(FileType.SLA);
+    	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
+    	fileEntity.setSla(sla);
 
-		if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
-		{
-			sla.setAttachment(fileService.getFileName(file.getOriginalFilename()));
-			slaService.updateSLA(sla);
-		}
+		fileService.uploadFile(file, UPLOADED_FOLDER,id,fileEntity);
+
 
 
     		
@@ -101,21 +106,18 @@ public class SLAController {
     public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
     {
     	
-    	SLA sla= slaService.getById(Long.valueOf(id));
-    	return fileService.downloadFile(UPLOADED_FOLDER, id, sla.getAttachment(), request);
+    	File file= fileService.findById(Long.valueOf(id));
+    	return fileService.downloadFile(UPLOADED_FOLDER,file.getSla().getId().toString(),file , request);
     }
 
     @GetMapping("/deleteslafile")
     public String deletefile(@RequestParam(name="id", required=true) String id)
     {
     	
-    	SLA sla= slaService.getById(Long.valueOf(id));
+    	File file= fileService.findById(Long.valueOf(id));
     	
-		if(fileService.removeFile(UPLOADED_FOLDER, id, sla.getAttachment()));
-		{
-			sla.setAttachment(null);
-			slaService.updateSLA(sla);
-		}
+		fileService.removeFile(UPLOADED_FOLDER,file.getSla().getId().toString(), file);
+
 		return "redirect:/slas";
     	
     }

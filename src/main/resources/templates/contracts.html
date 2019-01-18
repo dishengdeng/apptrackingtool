@@ -71,10 +71,10 @@
                                         <td th:text="${contract.slaDescription}"></td>
 										<td>
 
-											<ul style="padding:0" th:if="${#strings.isEmpty(contract.attachment)!=true}">
-												<li style="list-style-type:none" th:each="attachment : ${#strings.listSplit(contract.attachment,',')}">
+											<ul style="padding:0" th:if="${contract.files.size()>0}">
+												<li style="list-style-type:none" th:each="file : ${contract.files}">
 													<a  
-														th:href="@{'/deletecontractfile?id='+${contract.id}+'&filename='+${attachment}}" 
+														th:href="@{'/deletecontractfile?id='+${file.id}}" 
 														style="text-decoration: none; margin-right:5px"
 														data-title="Are you sure to delete?" 
 														data-toggle="confirmation" 
@@ -84,8 +84,8 @@
 														<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
 													</a>
 													<a 	
-														th:href="@{'/downloadcontract?id='+${contract.id}+'&filename='+${attachment}}" 
-														th:text="${attachment}"
+														th:href="@{'/downloadcontract?id='+${file.id}}" 
+														th:text="${file.attachment}"
 													>
 													</a>
 												</li>
@@ -97,7 +97,7 @@
 												<div class="input-group">
 													
 																	
-														<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+														<a th:onclick="@{'uploadfile(\''+${contract.id}+'\')'}"><input type="text" th:id="@{${contract.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
 														<div class="input-group-btn">
 														<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
 														</div>
@@ -105,7 +105,7 @@
 												</div>
 												<!-- COMPONENT END -->
 												<div class="form-group  pull-center">
-													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${contract.id}+'fileupload'}">
 													<input type="hidden" class="form-control" th:name="contractid" th:value="${contract.id}"></input>
 													<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
 
@@ -122,7 +122,7 @@
                             <!-- /.table-responsive -->
 							  <!-- Modal area-->
 							<div th:each="contract: ${contracts}"> 
-									<div class="modal fade" th:if="${sla.appInstances.size()>0}" th:id="${#strings.concat(sla.id,'instances')}" role="dialog" >
+									<div class="modal fade" th:if="${contract.appInstances.size()>0}" th:id="${#strings.concat(contract.id,'instances')}" role="dialog" >
 									<!-- Modal content-->
 											<div class="modal-dialog">
 											  <div class="modal-content">
@@ -140,7 +140,7 @@
 														</tr>
 													  </thead>
 													  <tbody>
-														<tr th:each="appInstance : ${sla.appInstances}">
+														<tr th:each="appInstance : ${contract.appInstances}">
 														  <th><a th:href="@{'/instancedetail?id='+${appInstance.id}}"><h5 th:text="${appInstance.appInstanceName}"></h5></a></th>
 														  <th><h5 th:text="${appInstance.status}"></h5></th>
 														  <th><h5 th:text="${appInstance.description}"></h5></th>

@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import portal.entity.File;
 import portal.entity.Server;
 import portal.service.ClusterService;
 import portal.service.FileService;
 import portal.service.ServerService;
+import portal.utility.FileType;
 
 
 
@@ -75,11 +77,12 @@ public class ServerController {
     public String uploadServer(@RequestParam("file") MultipartFile file,@RequestParam("serverid") String id) {
     	Server server= serverService.getById(Long.valueOf(id));
 
-		if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
-		{
-			server.setAttachment(fileService.getFileName(file.getOriginalFilename()));
-			serverService.updateServer(server);
-		}
+    	File fileEntity = new File();
+    	fileEntity.setFiletype(FileType.SERVER);
+    	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
+    	fileEntity.setServer(server);
+
+		fileService.uploadFile(file, UPLOADED_FOLDER,id,fileEntity);
 
 
     		
@@ -91,21 +94,18 @@ public class ServerController {
     public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
     {
     	
-    	Server server= serverService.getById(Long.valueOf(id));
-    	return fileService.downloadFile(UPLOADED_FOLDER, id, server.getAttachment(), request);
+    	File file= fileService.findById(Long.valueOf(id));
+    	return fileService.downloadFile(UPLOADED_FOLDER,file.getServer().getId().toString(),file , request);
     }
 
     @GetMapping("/deleteserverfile")
     public String deletefile(@RequestParam(name="id", required=true) String id)
     {
     	
-    	Server server= serverService.getById(Long.valueOf(id));
+    	File file= fileService.findById(Long.valueOf(id));
     	
-		if(fileService.removeFile(UPLOADED_FOLDER, id, server.getAttachment()));
-		{
-			server.setAttachment(null);
-			serverService.updateServer(server);
-		}
+		fileService.removeFile(UPLOADED_FOLDER,file.getServer().getId().toString(), file);
+		
 		return "redirect:/servers";
     	
     }

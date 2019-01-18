@@ -7,9 +7,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -19,21 +21,34 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import portal.repository.FileRepository;
 import portal.service.FileService;
+import portal.utility.FileType;
 
 @Service
 public class FileServiceImpl implements FileService{
+	
+	@Autowired
+	private FileRepository fileRepository;
 
+	
 	@Override
-	public boolean uploadFile(MultipartFile file, String UPLOAD_FOLDER,String id) {
+	public boolean uploadFile(MultipartFile file, String UPLOAD_FOLDER,String FileTypeId,portal.entity.File fileEntity) {
 		boolean result= false;
+		
 		try
 		{	if(!file.getOriginalFilename().isEmpty())
 			{
+				boolean isFileExist=new File(getfileName(UPLOAD_FOLDER,FileTypeId,fileEntity.getAttachment())).exists();
 				byte[] bytes = file.getBytes();
-				Path path = Paths.get(getfileName(UPLOAD_FOLDER,id,file.getOriginalFilename()));
+				Path path = Paths.get(getfileName(UPLOAD_FOLDER,FileTypeId,file.getOriginalFilename()));
 				Files.write(path, bytes);
 				result = true;
+				
+				if(!isFileExist)
+				{
+					fileRepository.save(fileEntity);
+				}
 			}
 			
 		}
@@ -45,9 +60,9 @@ public class FileServiceImpl implements FileService{
 	}
 
 	@Override
-	public ResponseEntity<Resource> downloadFile(String UPLOAD_FOLDER,String id,String file, HttpServletRequest request) {
+	public ResponseEntity<Resource> downloadFile(String UPLOAD_FOLDER,String FileTypeId,portal.entity.File fileEntity, HttpServletRequest request) {
 		  // Load file as Resource
-        Resource resource = loadFileAsResource(getfileName(UPLOAD_FOLDER,id,file));
+        Resource resource = loadFileAsResource(getfileName(UPLOAD_FOLDER,FileTypeId,fileEntity.getAttachment()));
         if(resource!=null)
         {
 
@@ -66,7 +81,7 @@ public class FileServiceImpl implements FileService{
 		
 		        return ResponseEntity.ok()
 		                .contentType(MediaType.parseMediaType(contentType))
-		                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file + "\"")
+		                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileEntity.getAttachment() + "\"")
 		                .body(resource);
         }
         else
@@ -78,11 +93,14 @@ public class FileServiceImpl implements FileService{
 	}
 	
 	@Override
-	public boolean removeFile(String UPLOAD_FOLDER, String id, String fileName) {
+	public boolean removeFile(String UPLOAD_FOLDER, String FileTypeId,portal.entity.File fileEntity) {
 		
-		File file =  new File(getfileName(UPLOAD_FOLDER,id,fileName));
+		File file =  new File(getfileName(UPLOAD_FOLDER,FileTypeId,fileEntity.getAttachment()));
 		if(file.delete())
 		{
+			portal.entity.File emptyFile = new portal.entity.File();
+			emptyFile.setId(fileEntity.getId());
+			fileRepository.delete(emptyFile);
 			return true;
 		}
 		else
@@ -119,7 +137,27 @@ public class FileServiceImpl implements FileService{
 		return FilenameUtils.getName(fileOriginalName);
 	}
 
+	@Override
+	public portal.entity.File findByTypeAndName(String fileName, FileType type) {
+
+		return fileRepository.findByTypeAndName(type, fileName);
+	}
+
+	@Override
+	public portal.entity.File findById(Long id) {
+	
+		return fileRepository.findOne(id);
+	}
+
+
+
+}
 
 	
 
-}
+
+
+
+	
+
+

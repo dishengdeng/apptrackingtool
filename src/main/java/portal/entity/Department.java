@@ -77,6 +77,12 @@ public class Department {
         )
     private List<AppInstance> appInstances = new ArrayList<AppInstance>();
     
+    @OneToMany(
+            mappedBy = "department", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private List<File> files = new ArrayList<File>();
     
 	public Long getId() {
 		return id;
@@ -189,6 +195,14 @@ public class Department {
 		}
 		
 		return stakeHolderName.stream().collect(Collectors.joining(","));
+	}
+
+	public List<File> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<File> files) {
+		this.files = files;
 	}
 
 	

@@ -19,10 +19,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 
 import portal.entity.Contract;
+import portal.entity.File;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.ContractService;
 import portal.service.FileService;
+import portal.utility.FileType;
 
 
 
@@ -90,35 +92,32 @@ public class ContractController {
     public String uploadContract(@RequestParam("file") MultipartFile file,@RequestParam("contractid") String id) {
     	Contract contract= contractService.getById(Long.valueOf(id));
 
+    	File fileEntity = new File();
+    	fileEntity.setFiletype(FileType.CONTRACT);
+    	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
+    	fileEntity.setContract(contract);
 
-		if(fileService.uploadFile(file, UPLOADED_FOLDER,id));
-		{
-			contract.setAttachment(fileService.getFileName(file.getOriginalFilename()));
-			contractService.updateContract(contract);
-		}
+		fileService.uploadFile(file, UPLOADED_FOLDER,id,fileEntity);
 		
         return "redirect:/contracts";
     }
     
     @GetMapping("/downloadcontract")
-    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,@RequestParam(name="filename", required=true) String filename,HttpServletRequest request)
+    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
     {
     	
 
-    	return fileService.downloadFile(UPLOADED_FOLDER, id, filename, request);
+    	File file= fileService.findById(Long.valueOf(id));
+    	return fileService.downloadFile(UPLOADED_FOLDER,file.getContract().getId().toString(),file , request);
     }
 
     @GetMapping("/deletecontractfile")
-    public String deletefile(@RequestParam(name="id", required=true) String id,@RequestParam(name="filename", required=true) String filename)
+    public String deletefile(@RequestParam(name="id", required=true) String id)
     {
     	
-    	Contract contract= contractService.getById(Long.valueOf(id));
+    	File file= fileService.findById(Long.valueOf(id));
     	
-		if(fileService.removeFile(UPLOADED_FOLDER, id, filename));
-		{
-			contract.removeAttachment(filename);
-			contractService.updateContract(contract);
-		}
+		fileService.removeFile(UPLOADED_FOLDER, file.getContract().getId().toString(),file);
 		return "redirect:/contracts";
     	
     }

@@ -73,23 +73,31 @@
 										<td th:text="${sla.approvaldate}"></td>
 										<!--<td th:text="${sla.attachment}"></td>-->
 										<td>
-											<a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" 
-												th:href="@{'/deleteslafile?id='+${sla.id}}" 
-												style="text-decoration: none;margin-right:5px"
-												data-title="Are you sure to delete?" 
-												data-toggle="confirmation" 
-												data-singleton="true" 
-												data-popout="true"
-												>
-												<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
-											</a>
-											<a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" th:href="@{'/downloadsla?id='+${sla.id}}" th:text="${sla.attachment}"></a>
-											<form th:if="${sla.attachment==null || sla.attachment.isEmpty()}" method="POST" action="/slaupload" enctype="multipart/form-data">
+											<ul style="padding:0" th:if="${sla.files.size()>0}">
+												<li style="list-style-type:none" th:each="file : ${sla.files}">
+													<a  
+														th:href="@{'/deleteslafile?id='+${file.id}}" 
+														style="text-decoration: none; margin-right:5px"
+														data-title="Are you sure to delete?" 
+														data-toggle="confirmation" 
+														data-singleton="true" 
+														data-popout="true"
+													>
+														<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
+													</a>
+													<a 	
+														th:href="@{'/downloadsla?id='+${file.id}}" 
+														th:text="${file.attachment}"
+													>
+													</a>
+												</li>
+											</ul>
+											<form  method="POST" action="/slaupload" enctype="multipart/form-data">
 												<!-- COMPONENT START -->
 												<div class="input-group">
 													
 													
-													<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+													<a th:onclick="@{'uploadfile(\''+${sla.id}+'\')'}"><input type="text" th:id="@{${sla.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
 													<div class="input-group-btn">
 													<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
 												
@@ -98,7 +106,7 @@
 												</div>
 												<!-- COMPONENT END -->
 												<div class="form-group  pull-center">
-													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${sla.id}+'fileupload'}">
 													<input type="hidden" class="form-control" th:name="slaid" th:value="${sla.id}"></input>
 													<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
 												</div>	

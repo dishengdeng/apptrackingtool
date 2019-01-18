@@ -73,36 +73,43 @@
 										<td th:text="${department.goal}"></td>
 										<td th:text="${department.painpoint}"></td>
 										<td>
-											<a th:if="${department.attachment!=null && !department.attachment.isEmpty()}" 
-												th:href="@{'/deletedepartmentfile?id='+${department.id}}" 
-												style="text-decoration: none;;margin-right:5px"
-												data-title="Are you sure to delete?" 
-												data-toggle="confirmation" 
-												data-singleton="true" 
-												data-popout="true"
-											>
-												<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
-											</a>
-											<a th:if="${department.attachment!=null && !department.attachment.isEmpty()}" th:href="@{'/downloaddepartment?id='+${department.id}}" th:text="${department.attachment}"></a>
-											<form th:if="${department.attachment==null || department.attachment.isEmpty()}" method="POST" action="/departmentupload" enctype="multipart/form-data">
+											<ul style="padding:0" th:if="${department.files.size()>0}">
+												<li style="list-style-type:none" th:each="file : ${department.files}">
+													<a  
+														th:href="@{'/deletedepartmentfile?id='+${file.id}}" 
+														style="text-decoration: none; margin-right:5px"
+														data-title="Are you sure to delete?" 
+														data-toggle="confirmation" 
+														data-singleton="true" 
+														data-popout="true"
+													>
+														<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
+													</a>
+													<a 	
+														th:href="@{'/downloaddepartment?id='+${file.id}}" 
+														th:text="${file.attachment}"
+													>
+													</a>
+												</li>
+											</ul>
+											<form  method="POST" action="/departmentupload" enctype="multipart/form-data">
 												<!-- COMPONENT START -->
 												<div class="input-group">
 													
 													
-										
-														<a onclick="uploadfile()"><input type="text" id="filename" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
-														<div class="input-group-btn">
-														<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
-														</div>
-											
+													<a th:onclick="@{'uploadfile(\''+${department.id}+'\')'}"><input type="text" th:id="@{${department.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+													<div class="input-group-btn">
+													<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
+												
+													</div>
+	
 												</div>
 												<!-- COMPONENT END -->
 												<div class="form-group  pull-center">
-													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;"id="fileupload">
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${department.id}+'fileupload'}">
 													<input type="hidden" class="form-control" th:name="departmentid" th:value="${department.id}"></input>
 													<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-
-												</div>
+												</div>	
 											</form>
 										</td>
 										
