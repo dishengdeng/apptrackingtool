@@ -92,11 +92,25 @@
 								</a>
 							</li>
 						</ul>
-						<a data-toggle="modal" th:data-target="@{${#strings.concat('#',department.id,'attachment')}}"
-								style="text-decoration: none;cursor: pointer" 
-								title="Add files" id="uploadfileclick">
-								<i class="fa fa-plus fa-lg"></i>
-						</a>
+						<form  id="updateObejctForm" method="POST" action="/departmentupload" enctype="multipart/form-data" style="height:50px">
+							<!-- COMPONENT START -->
+							<div class="input-group">
+								
+								
+								<a th:onclick="@{'uploadfile(\''+${department.id}+'\')'}"><input type="text" th:id="@{${department.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+								<div class="input-group-btn">
+								<button type="submit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
+							
+								</div>
+
+							</div>
+							<!-- COMPONENT END -->
+							<div class="form-group  pull-center">
+								<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${department.id}+'fileupload'}">
+								<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+								<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+							</div>	
+						</form>
 					</div>
 				  
 					  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
@@ -112,42 +126,7 @@
 					</form>
 			</div>
             <!-- /.row -->
-			<div class="row">
-				<!-- model area-->
-				<div class="modal fade" th:id="${#strings.concat(department.id,'attachment')}" role="dialog" >
-				<!-- Modal content-->
-						<div class="modal-dialog">
-						  <div class="modal-content">
-							<div class="modal-header">
-							  <button type="button" class="close" data-dismiss="modal">&times;</button>
-							  <h4 class="modal-title"> Add Attachments</h4>
-							</div>
-							<div class="modal-body">
-								<form  id="updateObejctForm" method="POST" action="/departmentupload" th:object="${department}" enctype="multipart/form-data" style="height:50px">
-									<!-- COMPONENT START -->
-									<div class="input-group">
-										
-										
-										<a th:onclick="@{'uploadfile(\''+${department.id}+'\')'}"><input type="text" th:id="@{${department.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
-										<div class="input-group-btn">
-										<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
-									
-										</div>
 
-									</div>
-									<!-- COMPONENT END -->
-									<div class="form-group  pull-center">
-										<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${department.id}+'fileupload'}">
-										<input type="hidden" class="form-control" th:name="departmentid" th:value="${department.id}"></input>
-										<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-									</div>	
-								</form>
-							
-							</div>
-						   </div>
-						 </div>
-				</div>
-			</div>
         </div>
         <!-- /#page-wrapper -->
 
@@ -170,7 +149,7 @@
 		nonSelectedText: 'Select Instance',
 		enableCaseInsensitiveFiltering:true
 	  });
-	var counter=0;
+	/*var counter=0;
   $("#uploadfileclick").click(function(){
 		if(counter===0)
 		{
@@ -191,11 +170,55 @@
 		}
 
 
-  });	  
-	  
+  });*/	  
+    $("#btnSubmit").click(function (event) {
+
+        //stop submit the form, we will post it manually.
+        event.preventDefault();
+
+        fire_ajax_submit();
+
+    });	  
   
     });
-	
+function fire_ajax_submit() {
+
+    // Get form
+    var form = $('#updateObejctForm')[0];
+
+    var data = new FormData(form);
+
+
+
+    $("#btnSubmit").prop("disabled", true);
+
+    $.ajax({
+        type: "POST",
+        enctype: 'multipart/form-data',
+        url: "/departmentupload",
+        data: data,
+
+        processData: false, //prevent jQuery from automatically transforming the data into a query string
+        contentType: false,
+        cache: false,
+        timeout: 600000,
+        success: function (data) {
+
+            $("#result").text(data);
+            console.log("SUCCESS : ", data);
+            $("#btnSubmit").prop("disabled", false);
+
+        },
+        error: function (e) {
+
+            $("#result").text(e.responseText);
+            console.log("ERROR : ", e);
+            $("#btnSubmit").prop("disabled", false);
+
+        }
+    });
+
+}	
 	
     </script>
 	<script type="text/javascript">
