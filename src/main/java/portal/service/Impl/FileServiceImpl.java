@@ -23,6 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import portal.repository.FileRepository;
 import portal.service.FileService;
+import portal.service.SecurityService;
+import portal.utility.Convertor;
 import portal.utility.FileType;
 
 @Service
@@ -31,6 +33,8 @@ public class FileServiceImpl implements FileService{
 	@Autowired
 	private FileRepository fileRepository;
 
+	@Autowired
+	private SecurityService securityService;
 	
 	@Override
 	public boolean uploadFile(MultipartFile file, String UPLOAD_FOLDER,String FileTypeId,portal.entity.File fileEntity) {
@@ -47,6 +51,8 @@ public class FileServiceImpl implements FileService{
 				
 				if(!isFileExist)
 				{
+					fileEntity.setCreatedat(Convertor.JavaCurrentDate());
+					fileEntity.setCreatedby(securityService.findLoggedInUsername());
 					fileRepository.save(fileEntity);
 				}
 			}

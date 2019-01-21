@@ -77,6 +77,15 @@ public class Convertor {
 		}
 		
 
+		static public String JavaCurrentDate()
+		{
+				java.util.Date date=new java.util.Date();
+				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+				return dateFormatStr.format(date);
+	
+		}
+		
+
 
 
 

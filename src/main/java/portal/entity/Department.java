@@ -205,5 +205,14 @@ public class Department {
 		this.files = files;
 	}
 
-	
+	public String getFileNameWithComma()
+	{
+		List<String> fileName=new ArrayList<String>();
+		for(File file:this.files)
+		{
+			fileName.add(file.getAttachment());
+		}
+		
+		return fileName.stream().collect(Collectors.joining(","));
+	}	
 }

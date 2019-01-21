@@ -132,7 +132,16 @@
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${contract.description}"></td></tr>
 								<tr><th scope="row" style="width:25%">SMA Description:</th><td th:text="${contract.smaDescription}"></td></tr>
 								<tr><th scope="row" style="width:25%">SLA Description:</th><td th:text="${contract.slaDescription}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th><td><a th:if="${contract.attachment!=null && !contract.attachment.isEmpty()}" th:href="@{'/downloadcontract?id='+${contract.id}}" th:text="${contract.attachment}"></a></td></tr>
+								<tr><th scope="row" style="width:25%">Attachment:</th>
+								<td>
+									<a data-toggle="modal"  
+										th:data-target="@{${#strings.concat('#',contract.id,'files')}}" 
+										th:text="${contract.getFileNameWithComma()}"
+										th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+										>
+									</a>
+								</td>
+								</tr>
 							  </tbody>
 							</table>
                         </div>
@@ -140,6 +149,36 @@
                     </div>
 				</div>
 				<div class="col-lg-4">
+					<div class="modal fade" th:if="${contract.files.size()>0}" th:id="${#strings.concat(contract.id,'files')}" role="dialog" >
+						<!-- Modal content-->
+						<div class="modal-dialog">
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							  <h4 class="modal-title"> Attachments</h4>
+							</div>
+							<div class="modal-body">
+								<table class="table table-striped" id="filestable">
+								  <thead>
+									<tr>
+									  <th scope="col">File Name</th>
+									  <th scope="col">Created At</th>
+									  <th scope="col">Created By</th>														  
+									</tr>
+								  </thead>
+								  <tbody>
+									<tr th:each="file : ${contract.files}">
+									  <th><h5><a th:href="@{'/downloadcontract?id='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+									  <th><h5 th:text="${file.createdat}"></h5></th>
+									  <th><h5 th:text="${file.createdby}"></h5></th>
+									</tr>
+								  </tbody>
+								</table>
+							</div>
+						   </div>
+						 </div>
+					</div>					
+				
 				</div>
 			</div>
 			
@@ -355,15 +394,28 @@
                         <div th:if="${department!=null}" class="panel-body">
 							<table class="table">
 							  <tbody>
-								<tr><th scope="row" style="width:25%">department:</th><td th:text="${department.departmentName}"></td></tr>
+								<tr><th scope="row" style="width:25%">department:</th>
+								<td>
+									<a th:href="@{'/departmentdetail?id='+${department.id}}"><h5 th:text="${department.departmentName}"></h5></a>
+								</td>
+								</tr>
 								<tr><th scope="row" style="width:25%">Stakeholder:</th><td><a data-toggle="modal" th:if="${department.stakeholders.size()>0}" th:text="${department.getStakeHolderNameWithComma()}" th:data-target="@{${#strings.concat('#',department.id,'stakeholders')}}"></a></td></tr>
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${department.description}"></td></tr>
-								<tr><th scope="row" style="width:25%">Purpose:</th><td th:text="${department.purpose}"></td></tr>
+								<!--<tr><th scope="row" style="width:25%">Purpose:</th><td th:text="${department.purpose}"></td></tr>
 								<tr><th scope="row" style="width:25%">Stragic Plan:</th><td th:text="${department.stragicplan}"></td></tr>
 								<tr><th scope="row" style="width:25%">Goal:</th><td th:text="${department.goal}"></td></tr>
 								<tr><th scope="row" style="width:25%">Road Map:</th><td th:text="${department.roadMap}"></td></tr>								
-								<tr><th scope="row" style="width:25%">Pain Point:</th><td th:text="${department.painpoint}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th><td><a th:if="${department.attachment!=null && !department.attachment.isEmpty()}" th:href="@{'/downloaddepartment?id='+${department.id}}" th:text="${department.attachment}"></a></td></tr>								
+								<tr><th scope="row" style="width:25%">Pain Point:</th><td th:text="${department.painpoint}"></td></tr>-->
+								<tr><th scope="row" style="width:25%">Attachment:</th>
+								<td>									
+									<a data-toggle="modal"  
+											th:data-target="@{${#strings.concat('#',department.id,'files')}}" 
+											th:text="${department.getFileNameWithComma()}"
+											th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+											>
+									</a>
+								</td>
+								</tr>								
 							  </tbody>
 							</table>
                         </div>
@@ -371,6 +423,35 @@
                     </div>
 				</div>
 				<div class="col-lg-4">
+					<div class="modal fade" th:if="${department.files.size()>0}" th:id="${#strings.concat(department.id,'files')}" role="dialog" >
+						<!-- Modal content-->
+						<div class="modal-dialog">
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							  <h4 class="modal-title"> Attachments</h4>
+							</div>
+							<div class="modal-body">
+								<table class="table table-striped" id="filestable">
+								  <thead>
+									<tr>
+									  <th scope="col">File Name</th>
+									  <th scope="col">Created At</th>
+									  <th scope="col">Created By</th>														  
+									</tr>
+								  </thead>
+								  <tbody>
+									<tr th:each="file : ${department.files}">
+									  <th><h5><a th:href="@{'/downloaddepartment?id='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+									  <th><h5 th:text="${file.createdat}"></h5></th>
+									  <th><h5 th:text="${file.createdby}"></h5></th>
+									</tr>
+								  </tbody>
+								</table>
+							</div>
+						   </div>
+						 </div>
+					</div>
 				</div>
 			</div>
 					<!---Department stakeholders detail-->

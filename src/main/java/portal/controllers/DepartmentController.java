@@ -55,9 +55,9 @@ public class DepartmentController {
     @GetMapping("/departments")
     public String departmenttable(ModelMap model) {
     	model.addAttribute("departments", departmentService.getAll());
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
-    	model.addAttribute("departmentModel", new Department());
+    	//model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	//model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+    	//model.addAttribute("departmentModel", new Department());
         return "departments";
     }
     
@@ -69,7 +69,7 @@ public class DepartmentController {
     }
  
     @PostMapping("/updateDepartment")
-    public String updateDepartment(@ModelAttribute("departmentModel") Department department) {
+    public String updateDepartment(@ModelAttribute("department") Department department) {
     	
     	departmentService.updateAppIstanceDepartment(department.getAppInstances(), department);
     	departmentService.updateStakeholderDepartment(department.getStakeholders(), department);
@@ -82,6 +82,14 @@ public class DepartmentController {
     	model.addAttribute("department", new Department());
         return "addDepartment";
     }
+    
+    @GetMapping("/departmentdetail")
+    public String DepartmentDetial(@RequestParam(name="id", required=true) String id,ModelMap model) {
+    	model.addAttribute("department",departmentService.getById(Long.valueOf(id)));
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+        return "departmentdetail";
+    }    
     
     @GetMapping("/deleteDepartment")
     public String deleteDepartment(@RequestParam(name="id", required=true) String id,@RequestParam(name="departmentName", required=true) String departmentName) {
@@ -98,8 +106,8 @@ public class DepartmentController {
 
 //------file management----
     @PostMapping("/departmentupload")
-    public String uploadDepartment(@RequestParam("file") MultipartFile file,@RequestParam("departmentid") String id) {
-    	Department department= departmentService.getById(Long.valueOf(id));
+    public ResponseEntity<File>(@RequestParam("file") MultipartFile file,@ModelAttribute("department") Department department,ModelMap model) {
+    	//Department departmentEntity= departmentService.getById(Long.valueOf(id));
 
 
     	File fileEntity = new File();
@@ -107,12 +115,15 @@ public class DepartmentController {
     	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
     	fileEntity.setDepartment(department);
 
-		fileService.uploadFile(file, UPLOADED_FOLDER,id,fileEntity);
-
-
+		fileService.uploadFile(file, UPLOADED_FOLDER,department.getId().toString(),fileEntity);
+//		departmentEntity= departmentService.getById(Long.valueOf(id));
+//		department.setFiles(departmentEntity.getFiles());
+//    	model.addAttribute("department",department);
+//    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+//    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
     		
     	
-        return "redirect:/departments";
+        return ResponseEntity.;
     }
     
     @GetMapping("/downloaddepartment")
@@ -124,13 +135,19 @@ public class DepartmentController {
     }
 
     @GetMapping("/deletedepartmentfile")
-    public String deletefile(@RequestParam(name="id", required=true) String id)
+    public String deletefile(@ModelAttribute("file") File file,ModelMap model,@ModelAttribute("department") Department department)
     {
     	
-    	File file= fileService.findById(Long.valueOf(id));
-    	
+    	//File file= fileService.findById(Long.valueOf(id));
+    	department.getFiles().remove(file);
 		fileService.removeFile(UPLOADED_FOLDER,file.getDepartment().getId().toString(), file);
-		return "redirect:/departments";
+		
+		
+		model.addAttribute("department",department);
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+    	
+		return "departmentdetail";
     	
     }
 

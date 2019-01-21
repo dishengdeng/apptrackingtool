@@ -30,6 +30,14 @@ public class File {
     @JsonView(Views.Public.class)
 	private String attachment;
     
+    @Column(name = "createdby", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String createdby;
+    
+    @Column(name = "createdat", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String createdat;
+    
     @Column(name = "filetype", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private FileType filetype;    
@@ -105,6 +113,22 @@ public class File {
 
 	public void setDepartment(Department department) {
 		this.department = department;
+	}
+
+	public String getCreatedby() {
+		return createdby;
+	}
+
+	public void setCreatedby(String createdby) {
+		this.createdby = createdby;
+	}
+
+	public String getCreatedat() {
+		return createdat;
+	}
+
+	public void setCreatedat(String createdat) {
+		this.createdat = createdat;
 	}
 	
 }
