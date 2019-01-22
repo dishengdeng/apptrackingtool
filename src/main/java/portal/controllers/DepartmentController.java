@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.Department;
 import portal.entity.File;
+import portal.models.FileModel;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.DepartmentService;
@@ -106,24 +108,26 @@ public class DepartmentController {
 
 //------file management----
     @PostMapping("/departmentupload")
-    public ResponseEntity<File>(@RequestParam("file") MultipartFile file,@ModelAttribute("department") Department department,ModelMap model) {
-    	//Department departmentEntity= departmentService.getById(Long.valueOf(id));
-
+    public ResponseEntity<FileModel> departmentupload(@RequestParam("file") MultipartFile file,@RequestParam(name="departmentid", required=true) String id,ModelMap model) {
+    	Department department= departmentService.getById(Long.valueOf(id));
+    	
 
     	File fileEntity = new File();
     	fileEntity.setFiletype(FileType.SLA);
     	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
     	fileEntity.setDepartment(department);
 
-		fileService.uploadFile(file, UPLOADED_FOLDER,department.getId().toString(),fileEntity);
+    	fileEntity=fileService.uploadFile(file, UPLOADED_FOLDER,department.getId().toString(),fileEntity);
 //		departmentEntity= departmentService.getById(Long.valueOf(id));
 //		department.setFiles(departmentEntity.getFiles());
 //    	model.addAttribute("department",department);
 //    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
 //    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
-    		
-    	
-        return ResponseEntity.;
+		FileModel fileModel= new FileModel();
+		fileModel.setId(fileEntity.getId());
+		fileModel.setFilename(fileEntity.getAttachment());
+		fileModel.setDepartmentid(department.getId());
+        return new ResponseEntity<FileModel>(fileModel,HttpStatus.OK);
     }
     
     @GetMapping("/downloaddepartment")

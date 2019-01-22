@@ -73,8 +73,8 @@
 					  </div>
 					<div class="form-group">
 						<label for="note">Attachments:</label>
-						<ul style="padding:0" th:if="${department.files.size()>0}">
-							<li style="list-style-type:none" th:each="file : ${department.files}">
+						<ul style="padding:0" id="filelist">
+							<li style="list-style-type:none" th:if="${department.files.size()>0}" th:each="file : ${department.files}">
 								<a  
 									th:href="@{'/deletedepartmentfile?file='+${file.id}+'&department='+${department.id}}" 
 									style="text-decoration: none; margin-right:5px"
@@ -92,25 +92,25 @@
 								</a>
 							</li>
 						</ul>
-						<form  id="updateObejctForm" method="POST" action="/departmentupload" enctype="multipart/form-data" style="height:50px">
-							<!-- COMPONENT START -->
-							<div class="input-group">
-								
-								
-								<a th:onclick="@{'uploadfile(\''+${department.id}+'\')'}"><input type="text" th:id="@{${department.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
-								<div class="input-group-btn">
-								<button type="submit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
-							
-								</div>
 
+							<!-- COMPONENT START -->
+						<div class="input-group">
+							
+							
+							<a th:onclick="@{'uploadfile(\''+${department.id}+'\')'}"><input type="text" th:id="@{${department.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+							<div class="input-group-btn">
+							<button type="submit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
+						
 							</div>
-							<!-- COMPONENT END -->
-							<div class="form-group  pull-center">
-								<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${department.id}+'fileupload'}">
-								<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
-								<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-							</div>	
-						</form>
+
+						</div>
+						<!-- COMPONENT END -->
+						<div class="form-group  pull-center">
+							<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${department.id}+'fileupload'}">
+							<input type="hidden" class="form-control" th:name="departmentid" th:value="${department.id}">
+							<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+						</div>	
+
 					</div>
 				  
 					  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
@@ -184,10 +184,10 @@
 function fire_ajax_submit() {
 
     // Get form
-    var form = $('#updateObejctForm')[0];
+    var form = $('#FormUpdateData')[0];
 
     var data = new FormData(form);
-
+console.log(data);
 
 
     $("#btnSubmit").prop("disabled", true);
@@ -204,14 +204,30 @@ function fire_ajax_submit() {
         timeout: 600000,
         success: function (data) {
 
-            $("#result").text(data);
-            console.log("SUCCESS : ", data);
+            //$("#result").text(data);
+          
+            if(data.id)
+            {
+            	console.log("SUCCESS : ", data);
+            	var e = "<li style='list-style-type:none'><a "+	
+            			
+						"href='/deletedepartmentfile?file="+data.id+"\&department="+data.departmentid+"'"+
+							"style='text-decoration: none; margin-right:5px'"+
+							"data-title='Are you sure to delete?'" +
+							"data-toggle='confirmation'"+
+							"data-singleton='true'"+
+							"data-popout='true'"+
+						"><i class='fa fa-remove fa-lg' style='color:red' aria-hidden='true'></i></a>"+
+						
+							"<a href='/downloaddepartment?id="+data.id+"'>"+data.filename+"</a></li>"
+            	$('#filelist').append(e);
+            }
             $("#btnSubmit").prop("disabled", false);
 
         },
         error: function (e) {
 
-            $("#result").text(e.responseText);
+            //$("#result").text(e.responseText);
             console.log("ERROR : ", e);
             $("#btnSubmit").prop("disabled", false);
 

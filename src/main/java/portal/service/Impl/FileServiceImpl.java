@@ -37,8 +37,8 @@ public class FileServiceImpl implements FileService{
 	private SecurityService securityService;
 	
 	@Override
-	public boolean uploadFile(MultipartFile file, String UPLOAD_FOLDER,String FileTypeId,portal.entity.File fileEntity) {
-		boolean result= false;
+	public portal.entity.File uploadFile(MultipartFile file, String UPLOAD_FOLDER,String FileTypeId,portal.entity.File fileEntity) {
+		portal.entity.File result= fileEntity;
 		
 		try
 		{	if(!file.getOriginalFilename().isEmpty())
@@ -47,13 +47,13 @@ public class FileServiceImpl implements FileService{
 				byte[] bytes = file.getBytes();
 				Path path = Paths.get(getfileName(UPLOAD_FOLDER,FileTypeId,file.getOriginalFilename()));
 				Files.write(path, bytes);
-				result = true;
+
 				
 				if(!isFileExist)
 				{
 					fileEntity.setCreatedat(Convertor.JavaCurrentDate());
 					fileEntity.setCreatedby(securityService.findLoggedInUsername());
-					fileRepository.save(fileEntity);
+					result= fileRepository.save(fileEntity);
 				}
 			}
 			
