@@ -20,6 +20,7 @@ public interface StakeholderService {
     Stakeholder getById(Long id);
     Stakeholder updateStakeholder(Stakeholder stakeholder);	
     List<Stakeholder> findbyDepartment(Department department);
+    List<Stakeholder> getUnassginedStakeholders();
     public void removeDepartment(Department department);    
     public void removeRole(SLARole role);
 }

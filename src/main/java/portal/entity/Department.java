@@ -1,13 +1,15 @@
 package portal.entity;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -66,23 +68,26 @@ public class Department {
     @OneToMany(
             mappedBy = "department", 
             cascade = CascadeType.ALL, 
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch=FetchType.EAGER
         )
-    private List<Stakeholder> stakeholders = new ArrayList<>();
+    private Set<Stakeholder> stakeholders = new HashSet<>();
     
     @OneToMany(
             mappedBy = "department", 
             cascade = CascadeType.ALL, 
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch=FetchType.EAGER
         )
-    private List<AppInstance> appInstances = new ArrayList<AppInstance>();
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
     @OneToMany(
             mappedBy = "department", 
             cascade = CascadeType.ALL, 
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch=FetchType.EAGER
         )
-    private List<File> files = new ArrayList<File>();
+    private Set<File> files = new HashSet<File>();
     
 	public Long getId() {
 		return id;
@@ -158,23 +163,33 @@ public class Department {
 		this.attachment = attachment;
 	}
 
-	public List<Stakeholder> getStakeholders() {
+
+
+	
+	public Set<Stakeholder> getStakeholders() {
 		return stakeholders;
 	}
 
-	public void setStakeholders(List<Stakeholder> stakeholders) {
+	public void setStakeholders(Set<Stakeholder> stakeholders) {
 		this.stakeholders = stakeholders;
 	}
 
-	public List<AppInstance> getAppInstances() {
+	public Set<AppInstance> getAppInstances() {
 		return appInstances;
 	}
 
-	public void setAppInstances(List<AppInstance> appInstances) {
+	public void setAppInstances(Set<AppInstance> appInstances) {
 		this.appInstances = appInstances;
 	}
 
-	
+	public Set<File> getFiles() {
+		return files;
+	}
+
+	public void setFiles(Set<File> files) {
+		this.files = files;
+	}
+
 	public String getInstanceNameWithComma()
 	{
 		List<String> instanceName=new ArrayList<String>();
@@ -197,12 +212,16 @@ public class Department {
 		return stakeHolderName.stream().collect(Collectors.joining(","));
 	}
 
-	public List<File> getFiles() {
-		return files;
-	}
 
-	public void setFiles(List<File> files) {
-		this.files = files;
+	
+	public void addFile(File file)
+	{
+		this.files.add(file);
+	}
+	
+	public void removeFile(File file)
+	{
+		this.files.remove(file);
 	}
 
 	public String getFileNameWithComma()

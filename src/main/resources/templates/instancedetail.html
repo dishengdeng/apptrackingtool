@@ -64,7 +64,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
                         <div class="panel-heading">
-                            <i class="fa fa-newspaper-o"></i> SLA
+                            <i class="fa fa-file-o"></i> SLA
                             <div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addsla'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -107,7 +107,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
                         <div class="panel-heading">
-                            <i class="fa fa-newspaper-o"></i> Contract
+                            <i class="fa fa-pencil-square-o"></i> Contract
                             <div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addContract'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -149,7 +149,7 @@
                     </div>
 				</div>
 				<div class="col-lg-4">
-					<div class="modal fade" th:if="${contract.files.size()>0}" th:id="${#strings.concat(contract.id,'files')}" role="dialog" >
+					<div class="modal fade" th:if="${contract!=null && contract.files.size()>0}" th:id="${#strings.concat(contract.id,'files')}" role="dialog" >
 						<!-- Modal content-->
 						<div class="modal-dialog">
 						  <div class="modal-content">
@@ -187,7 +187,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
                         <div class="panel-heading">
-                            <i class="fa fa-newspaper-o"></i> License
+                            <i class="fa fa-leanpub"></i> License
                             <div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addlicense'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -232,7 +232,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
                         <div class="panel-heading">
-                            <i class="fa fa-newspaper-o"></i> Desktop
+                            <i class="fa fa-laptop"></i> Desktop
                             <div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#adddesktop'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -272,7 +272,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
                         <div class="panel-heading" id="serverheading">
-							<i class="fa fa-newspaper-o"></i> Server
+							<i class="fa  fa-server"></i> Server
                             <div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addserver'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -281,40 +281,47 @@
                         </div>
 
 						<!-- /.panel-heading -->
-						<div th:if="${serverSelected.size()>0}" class="panel-body">
+						<div th:if="${serverSelected!=null && serverSelected.size()>0}" class="panel-body">
 
-
-								<div th:each="server: ${serverSelected}" class="panel panel-primary">									
-
-									<div class="panel-heading text-right">
-										<div class="row">
-											<div class="small col-xs-10 text-left pull-left">								
-												<span th:text="${server.serverName}"></span>		
-											</div>
-											<div class="small col-xs-2 text-right pull-right">
-												<a th:href="@{'/deleteInstanceServer?id='+${server.id}}" 
-												style="text-decoration: none;color:white"  
-												data-title="Are you sure to delete?" 
-												data-toggle="confirmation" 
-												data-singleton="true" 
-												data-popout="true" 
-												>
-													<i class="fa fa-trash-o fa-lg"></i>
-												</a>
-											</div>
+								<div th:each="server: ${serverSelected}" th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
+									<div class="panel-heading">
+										<span th:text="${server.serverName}"></span>
+										<div class="pull-right">
+											<a th:href="@{'/deleteInstanceServer?id='+${server.id}}" 
+											style="text-decoration: none;color:white"  
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+											>
+												<i class="fa fa-trash-o fa-lg"></i>
+											</a>
 										</div>
-				
 									</div>
-
-									<div class="panel-body">								
-										<div class="row"><div class="col-sm-2"><strong>Cluster:</strong></div><div class="col-sm-10"><span th:text="${server.cluster==null}? '': ${server.cluster.getClusterName()}"></span></div></div>
-										<div class="row"><div class="col-sm-2"><strong>Address:</strong></div><div class="col-sm-10"><span th:text="${server.address}"></span></div></div>
-										<div class="row"><div class="col-sm-2"><strong>Description:</strong></div><div class="col-sm-10"><span th:text="${server.description}"></span></div></div>
-										<div class="row"><div class="col-sm-2"><strong>Server Version:</strong></div><div class="col-sm-10"><span th:text="${server.serverVersion}"></span></div></div>
-										<div class="row"><div class="col-sm-2"><strong>HW Platform:</strong></div><div class="col-sm-10"><span th:text="${server.hwplatform}"></span></div></div>
-										<div class="row"><div class="col-sm-2"><strong>Decomminsion Date:</strong></div><div class="col-sm-10"><span th:text="${server.decomminsionDate}"></span></div></div>
-										<div class="row"><div class="col-sm-2"><strong>Attachment:</strong></div><div class="col-sm-10"><a th:if="${server.attachment!=null && !server.attachment.isEmpty()}" th:href="@{'/downloadserver?id='+${server.id}}" th:text="${server.attachment}"></a></div></div>
+									<!-- /.panel-heading -->
+									<div class="panel-body">
+										<table class="table">
+										  <tbody>
+											<tr><th scope="row" style="width:25%">Cluster:</th><td th:text="${server.cluster==null}? '': ${server.cluster.getClusterName()}"></td></tr>
+											<tr><th scope="row" style="width:25%">Address:</th><td th:text="${server.address}"></td></tr>
+											<tr><th scope="row" style="width:25%">Description:</th><td th:text="${server.description}"></td></tr>
+											<tr><th scope="row" style="width:25%">Server Version:</th><td th:text="${server.serverVersion}"></td></tr>
+											<tr><th scope="row" style="width:25%">HW Platform:</th><td th:text="${server.hwplatform}"></td></tr>
+											<tr><th scope="row" style="width:25%">Decomminsion Date:</th><td th:text="${server.decomminsionDate}"></td></tr>
+											<tr><th scope="row" style="width:25%">Attachment:</th>
+											<td>
+												<a data-toggle="modal"  
+													th:data-target="@{${#strings.concat('#',server.id,'files')}}" 
+													th:text="${server.getFileNameWithComma()}"
+													th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+													>
+												</a>
+											</td>
+											</tr>
+										  </tbody>
+										</table>
 									</div>
+									<!-- /.panel-body -->
 								</div>
 
 
@@ -324,6 +331,37 @@
                     </div>
 				</div>
 				<div class="col-lg-4">
+					<div th:if="${serverSelected!=null && serverSelected.size()>0}" th:each="server: ${serverSelected}">
+						<div class="modal fade" th:if="${server.files.size()>0}" th:id="${#strings.concat(server.id,'files')}" role="dialog" >
+							<!-- Modal content-->
+							<div class="modal-dialog">
+							  <div class="modal-content">
+								<div class="modal-header">
+								  <button type="button" class="close" data-dismiss="modal">&times;</button>
+								  <h4 class="modal-title"> Attachments</h4>
+								</div>
+								<div class="modal-body">
+									<table class="table table-striped" id="filestable">
+									  <thead>
+										<tr>
+										  <th scope="col">File Name</th>
+										  <th scope="col">Created At</th>
+										  <th scope="col">Created By</th>														  
+										</tr>
+									  </thead>
+									  <tbody>
+										<tr th:each="file : ${server.files}">
+										  <th><h5><a th:href="@{'/downloadserver?id='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+										  <th><h5 th:text="${file.createdat}"></h5></th>
+										  <th><h5 th:text="${file.createdby}"></h5></th>
+										</tr>
+									  </tbody>
+									</table>
+								</div>
+							   </div>
+							 </div>
+						</div>
+					</div>
 				</div>
 			</div>
 
@@ -332,7 +370,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
                         <div class="panel-heading">
-                            <i class="fa fa-newspaper-o"></i> Vendor
+                            <i class="fa fa-user"></i> Vendor
                             <div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addcompany'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -374,7 +412,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
                         <div class="panel-heading">
-                            <i class="fa fa-newspaper-o"></i> Department
+                            <i class="fa  fa-building"></i> Department
                             <div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#adddepartment'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -401,11 +439,7 @@
 								</tr>
 								<tr><th scope="row" style="width:25%">Stakeholder:</th><td><a data-toggle="modal" th:if="${department.stakeholders.size()>0}" th:text="${department.getStakeHolderNameWithComma()}" th:data-target="@{${#strings.concat('#',department.id,'stakeholders')}}"></a></td></tr>
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${department.description}"></td></tr>
-								<!--<tr><th scope="row" style="width:25%">Purpose:</th><td th:text="${department.purpose}"></td></tr>
-								<tr><th scope="row" style="width:25%">Stragic Plan:</th><td th:text="${department.stragicplan}"></td></tr>
-								<tr><th scope="row" style="width:25%">Goal:</th><td th:text="${department.goal}"></td></tr>
-								<tr><th scope="row" style="width:25%">Road Map:</th><td th:text="${department.roadMap}"></td></tr>								
-								<tr><th scope="row" style="width:25%">Pain Point:</th><td th:text="${department.painpoint}"></td></tr>-->
+
 								<tr><th scope="row" style="width:25%">Attachment:</th>
 								<td>									
 									<a data-toggle="modal"  
@@ -423,7 +457,7 @@
                     </div>
 				</div>
 				<div class="col-lg-4">
-					<div class="modal fade" th:if="${department.files.size()>0}" th:id="${#strings.concat(department.id,'files')}" role="dialog" >
+					<div class="modal fade" th:if="${department!=null && department.files.size()>0}" th:id="${#strings.concat(department.id,'files')}" role="dialog" >
 						<!-- Modal content-->
 						<div class="modal-dialog">
 						  <div class="modal-content">
@@ -499,7 +533,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
                         <div class="panel-heading">
-                            <i class="fa fa-newspaper-o"></i> Support
+                            <i class="fa fa-support"></i> Support
                             <div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addsupport'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -534,7 +568,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
 						<div class="panel-heading">
-							<i class="fa fa-newspaper-o"></i> Location
+							<i class="fa fa-map"></i> Location
 							<div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addinstancelocation'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>

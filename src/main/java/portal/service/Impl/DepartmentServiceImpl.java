@@ -2,21 +2,27 @@ package portal.service.Impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import portal.entity.AppInstance;
 import portal.entity.Department;
+import portal.entity.File;
 import portal.entity.Stakeholder;
 import portal.models.DepartmentModel;
 import portal.repository.DepartmentRepository;
 import portal.service.DepartmentService;
+import portal.service.FileService;
 @Service
 public class DepartmentServiceImpl implements DepartmentService{
 
 	@Autowired
 	DepartmentRepository departmentRepository;
+	
+	@Autowired
+	private FileService fileService;
 	
 	@Override
 	public Department addDepartment(Department department) {
@@ -70,12 +76,12 @@ public class DepartmentServiceImpl implements DepartmentService{
 
 	@Override
 	public Department updateDepartment(Department department) {
-
+		department.setFiles(departmentRepository.findOne(department.getId()).getFiles());
 		return departmentRepository.saveAndFlush(department);
 	}
 
 	@Override
-	public void updateAppIstanceDepartment(List<AppInstance> appInstances, Department department) {
+	public void updateAppIstanceDepartment(Set<AppInstance> appInstances, Department department) {
 		departmentRepository.removeAllDepartment(department);
 		if(appInstances.size()>0)
 		{
@@ -89,7 +95,7 @@ public class DepartmentServiceImpl implements DepartmentService{
 	}
 
 	@Override
-	public void updateStakeholderDepartment(List<Stakeholder> stakeholders, Department department) {
+	public void updateStakeholderDepartment(Set<Stakeholder> stakeholders, Department department) {
 		
 		departmentRepository.removeAllStakeholderDepartment(department);	
 		if(stakeholders.size()>0)
@@ -100,6 +106,20 @@ public class DepartmentServiceImpl implements DepartmentService{
 			}
 		}
 
+		
+	}
+
+	@Override
+	public void removFiles(String upload_foler, Department department) {
+		if(department.getFiles().size()>0)
+		{
+			for(File file:department.getFiles())
+			{
+				fileService.removeFile(upload_foler,department.getId().toString(), file);
+			}			
+		}
+
+		
 		
 	}
 

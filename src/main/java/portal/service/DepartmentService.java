@@ -1,6 +1,7 @@
 package portal.service;
 
 import java.util.List;
+import java.util.Set;
 
 import portal.entity.AppInstance;
 import portal.entity.Department;
@@ -19,6 +20,7 @@ public interface DepartmentService {
     Department getById(Long id);
     Department updateDepartment(Department department);
     
-    void updateAppIstanceDepartment(List<AppInstance> appInstances,Department department);
-    void updateStakeholderDepartment(List<Stakeholder> stakeholders,Department department);
+    void updateAppIstanceDepartment(Set<AppInstance> appInstances,Department department);
+    void updateStakeholderDepartment(Set<Stakeholder> stakeholders,Department department);
+    void removFiles(String upload_foler,Department department);
 }

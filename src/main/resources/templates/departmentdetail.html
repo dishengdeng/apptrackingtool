@@ -19,114 +19,316 @@
             </div>
             <!-- /.row -->
 			<div class="row">
-					<form id="FormUpdateData" th:action="@{/updateDepartment}" th:object="${department}" method="post">													
-				
-					  <div class="form-group">
-						<label for="departmentName">Department Name:</label>
-						<input type="text" class="form-control" th:name="departmentName" th:value="${department.departmentName}"></input>
-						<input type="hidden" class="form-control" th:name="id" th:value="${department.id}"></input>
-					  </div>
-						<div class="form-group">
-							<label for="instanceSelect">App Instance:</label>											  	
-							<select name="appInstances" class="form-control" id="instanceSelect" multiple>
-								<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
-									  <option th:each="instanceEntity : ${appEntity.appInstances}" 
-
-									  th:attr="value = ${instanceEntity.id}" th:selected="${department.appInstances.contains(instanceEntity)}"
-									  th:text="${instanceEntity.appInstanceName}">
-									  
-									  </option>
-								</optgroup>
-								<optgroup th:if="${appUnassginedInstances.size()>0}" label="Unassigned">
-									  <option th:each="instanceEntity : ${appUnassginedInstances}" 
-
-									  th:attr="value = ${instanceEntity.id}" th:selected="${department.appInstances.contains(instanceEntity)}"
-									  th:text="${instanceEntity.appInstanceName}">
-									  
-									  </option>
-								</optgroup>													
-							</select>
-						</div>														  
-					  <div class="form-group">
-						<label for="description">Description:</label>
-						<input type="text" class="form-control" th:name="description" th:value="${department.description}">
-					  </div>													  
-					  <div class="form-group">
-						<label for="description">Purpose:</label>
-						<input type="text" class="form-control" th:name="purpose" th:value="${department.purpose}">
-					  </div>
-					  <div class="form-group">
-						<label for="note">Stragic Plan:</label>
-						<input type="text" class="form-control" th:name="stragicplan" th:value="${department.stragicplan}">
-					  </div>
-					  <div class="form-group">
-						<label for="note">Road Map:</label>
-						<input type="text" class="form-control" th:name="roadMap" th:value="${department.roadMap}">
-					  </div>
-					  <div class="form-group">
-						<label for="note">Goal:</label>
-						<input type="text" class="form-control" th:name="goal" th:value="${department.goal}">
-					  </div>
-					  <div class="form-group">
-						<label for="note">Paint Point:</label>
-						<input type="text" class="form-control" th:name="painpoint" th:value="${department.painpoint}">
-					  </div>
-					<div class="form-group">
-						<label for="note">Attachments:</label>
-						<ul style="padding:0" id="filelist">
-							<li style="list-style-type:none" th:if="${department.files.size()>0}" th:each="file : ${department.files}">
-								<a  
-									th:href="@{'/deletedepartmentfile?file='+${file.id}+'&department='+${department.id}}" 
-									style="text-decoration: none; margin-right:5px"
-									data-title="Are you sure to delete?" 
-									data-toggle="confirmation" 
-									data-singleton="true" 
-									data-popout="true"
-								>
-									<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
-								</a>
-								<a 	
-									th:href="@{'/downloaddepartment?id='+${file.id}}" 
-									th:text="${file.attachment}"
-								>
-								</a>
-							</li>
-						</ul>
-
-							<!-- COMPONENT START -->
-						<div class="input-group">
-							
-							
-							<a th:onclick="@{'uploadfile(\''+${department.id}+'\')'}"><input type="text" th:id="@{${department.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
-							<div class="input-group-btn">
-							<button type="submit" id="btnSubmit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> Details
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">				
+							<form id="FormUpdateData" th:action="@{/updateDepartment}"  method="post">													
 						
-							</div>
+							  <div class="form-group">
+								<label for="departmentName">Department Name:</label>
+								<input type="text" class="form-control" th:name="departmentName" th:value="${department.departmentName}"></input>
+								<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+							  </div>													  
+							  <div class="form-group">
+								<label for="description">Description:</label>
+								<input type="text" class="form-control" th:name="description" th:value="${department.description}">
+							  </div>													  
+							  <div class="form-group">
+								<label for="description">Purpose:</label>
+								<input type="text" class="form-control" th:name="purpose" th:value="${department.purpose}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Stragic Plan:</label>
+								<input type="text" class="form-control" th:name="stragicplan" th:value="${department.stragicplan}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Road Map:</label>
+								<input type="text" class="form-control" th:name="roadMap" th:value="${department.roadMap}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Goal:</label>
+								<input type="text" class="form-control" th:name="goal" th:value="${department.goal}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Paint Point:</label>
+								<input type="text" class="form-control" th:name="painpoint" th:value="${department.painpoint}">
+							  </div>
 
-						</div>
-						<!-- COMPONENT END -->
-						<div class="form-group  pull-center">
-							<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${department.id}+'fileupload'}">
-							<input type="hidden" class="form-control" th:name="departmentid" th:value="${department.id}">
-							<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-						</div>	
-
-					</div>
-				  
-					  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
-
-						 <select th:if="${department.stakeholders.size()>0}" name="stakeholders" class="form-control" id="stakeholderSelect" multiple style="visibility:hidden;height:0">
-
-						  <option th:each="stakeholderEntity : ${department.stakeholders}" 
-
-						  th:attr="value = ${stakeholderEntity.id}" selected>
 						  
-						  </option>
-						</select>
-					</form>
+							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+
+
+							</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>
 			</div>
             <!-- /.row -->
+			<!--AppInstance Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-laptop"></i> App Instances
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addInstance'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${department.appInstances.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>App Instance</th>
+								<th>Status</th>
+								<th>Description</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="appinstance: ${department.appInstances}">
+									<td>
+										<a th:href="@{'/deleteDepartmentInstance?instance='+${appinstance.id}+'&department='+${department.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/instancedetail?id='+${appinstance.id}}" th:text="${appinstance.appInstanceName}"></a>
+									</td>
+									<td th:text="${appinstance.status}"></td>
+									<td th:text="${appinstance.description}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			<!--stakeholder Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-users"></i> Stakeholders
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addstakeholder'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${department.stakeholders.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Stakeholder</th>
+								<th>Phone</th>
+								<th>Email</th>
+								<th>Position</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="stakeholder: ${department.stakeholders}">
+									<td>
+										<a th:href="@{'/deleteDepartmentStakeholder?stakeholder='+${stakeholder.id}+'&department='+${department.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/stakeholderdetail?id='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
+									</td>
+									<td th:text="${stakeholder.phone}"></td>
+									<td th:text="${stakeholder.email}"></td>
+									<td th:text="${stakeholder.position}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			<!--file detail-->			
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-paperclip"></i> Attachments
+							<div class="pull-right">
+								<a data-toggle="modal" 
+								th:data-target="@{${#strings.concat('#',department.id,'file')}}" 
+								style="text-decoration: none;cursor: pointer;color:white" 
+								title="Add Files">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<div th:if="${department.files.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>File</th>
+								<th>Created At</th>
+								<th>Created By</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="file: ${department.files}">
+									<td>
+										<a  
+											th:href="@{'/deletedepartmentfile?file='+${file.id}+'&department='+${department.id}}" 
+											style="text-decoration: none; margin-right:5px"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										>
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a 	
+											th:href="@{'/downloaddepartment?id='+${file.id}}" 
+											th:text="${file.attachment}"
+										>
+										</a>
+									</td>
+									<td th:text="${file.createdat}"></td>
+									<td th:text="${file.createdby}"></td>
+								</tr>
+							  </tbody>
+							</table>							
+						</div>
+						
+					</div>
 
+										
+
+
+				</div><!-- col-lg-8 -->									
+			</div>
+			<!-- /.row -->
+
+			<!-- Model Area -->
+				<div class="modal fade" th:id="${#strings.concat(department.id,'file')}" role="dialog" >
+						<!-- Modal content-->
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+									  <button type="button" class="close" data-dismiss="modal">&times;</button>
+									  <h4 class="modal-title"> Add Files</h4>
+									</div>
+									<div class="modal-body">
+										<form  id="UploadFileForm"  method="POST" action="/departmentupload" enctype="multipart/form-data">
+											<!-- COMPONENT START -->
+											<div class="input-group">
+																
+													<a th:onclick="@{'uploadfile(\''+${department.id}+'\')'}"><input type="text" th:id="@{${department.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+													<div class="input-group-btn">
+													<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
+													</div>
+						
+											</div>
+											<!-- COMPONENT END -->
+											<div class="form-group  pull-center">
+												<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${department.id}+'fileupload'}">
+												<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+												<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+
+											</div>
+										</form>
+									</div>
+							   </div>
+							</div>
+				</div>
+				<!--AppInstance model-->
+				<div class="modal fade" th:id="addInstance" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Instance - '+${department.departmentName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addDepartmentInstance}"  method="post">
+								<div class="form-group">
+									<label for="instanceselect">App Instance:</label>
+									<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+									<select name="appInstances" class="form-control" id="instanceSelect" multiple>
+										<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
+											  <option th:each="instanceEntity : ${appEntity.appInstances}" 
+
+											  th:attr="value = ${instanceEntity.id}" th:selected="${department.appInstances.contains(instanceEntity)}"
+											  th:text="${instanceEntity.appInstanceName}">
+											  
+											  </option>
+										</optgroup>
+										<optgroup th:if="${appUnassginedInstances.size()>0}" label="Other">
+											  <option th:each="instanceEntity : ${appUnassginedInstances}" 
+
+											  th:attr="value = ${instanceEntity.id}" th:selected="${department.appInstances.contains(instanceEntity)}"
+											  th:text="${instanceEntity.appInstanceName}">
+											  
+											  </option>
+										</optgroup>													
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+
+				<!--stakeholder model-->
+				<div class="modal fade" th:id="addstakeholder" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Stakeholders - '+${department.departmentName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addDepartmentStakeholder}"  method="post">
+								<div class="form-group">
+									<label for="instanceselect">Stakeholders:</label>
+									<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+									<select name="stakeholders" class="form-control" id="stakeholderSelect" multiple>
+
+											  <option th:each="stakeholder : ${stakeholders}" 
+
+											  th:attr="value = ${stakeholder.id}" th:selected="${department.stakeholders.contains(stakeholder)}"
+											  th:text="${stakeholder.stakeholderName}">
+											  
+											  </option>
+
+
+											
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>				
         </div>
         <!-- /#page-wrapper -->
 
@@ -149,92 +351,39 @@
 		nonSelectedText: 'Select Instance',
 		enableCaseInsensitiveFiltering:true
 	  });
+	  	$('[id^=stakeholderSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Stakeholder',
+		enableCaseInsensitiveFiltering:true
+	  });
 	/*var counter=0;
-  $("#uploadfileclick").click(function(){
-		if(counter===0)
-		{
-			counter=1;
-			$("#FormUpdateData").find(':input').each(function(){
-		   console.log("first time");
-
-		   //$("#updateObejctForm").append($(this).css({visibility:'hidden',height:0}));
-		   var e=$(this).clone();
-		   e.attr('type','hidden').css({visibility:'hidden',height:0}).appendTo( "#updateObejctForm" );
-			//$("#updateObejctForm").append($(this));
-
-		   //$("#updateObejctForm").append(old_v.attr('type','hidden').css({visibility:'hidden',height:0}));
-
-	
-
-			});
-		}
+	  $("#uploadfileclick").click(function(){
+			if(counter===0)
+			{
+				$("#UploadFileForm").css({height:'50px'});
+				counter=1;
+				$("#FormUpdateData").find(':input').each(function(){
+			   console.log("first time");
 
 
-  });*/	  
-    $("#btnSubmit").click(function (event) {
+			   var e=$(this).clone();
+			   e.attr('type','hidden').css({visibility:'hidden',height:0}).appendTo( "#UploadFileForm" );
 
-        //stop submit the form, we will post it manually.
-        event.preventDefault();
 
-        fire_ajax_submit();
+		
 
-    });	  
+				});
+			}
+
+
+		});*/ 
+  
   
     });
-function fire_ajax_submit() {
 
-    // Get form
-    var form = $('#FormUpdateData')[0];
-
-    var data = new FormData(form);
-console.log(data);
-
-
-    $("#btnSubmit").prop("disabled", true);
-
-    $.ajax({
-        type: "POST",
-        enctype: 'multipart/form-data',
-        url: "/departmentupload",
-        data: data,
-
-        processData: false, //prevent jQuery from automatically transforming the data into a query string
-        contentType: false,
-        cache: false,
-        timeout: 600000,
-        success: function (data) {
-
-            //$("#result").text(data);
-          
-            if(data.id)
-            {
-            	console.log("SUCCESS : ", data);
-            	var e = "<li style='list-style-type:none'><a "+	
-            			
-						"href='/deletedepartmentfile?file="+data.id+"\&department="+data.departmentid+"'"+
-							"style='text-decoration: none; margin-right:5px'"+
-							"data-title='Are you sure to delete?'" +
-							"data-toggle='confirmation'"+
-							"data-singleton='true'"+
-							"data-popout='true'"+
-						"><i class='fa fa-remove fa-lg' style='color:red' aria-hidden='true'></i></a>"+
-						
-							"<a href='/downloaddepartment?id="+data.id+"'>"+data.filename+"</a></li>"
-            	$('#filelist').append(e);
-            }
-            $("#btnSubmit").prop("disabled", false);
-
-        },
-        error: function (e) {
-
-            //$("#result").text(e.responseText);
-            console.log("ERROR : ", e);
-            $("#btnSubmit").prop("disabled", false);
-
-        }
-    });
-
-}	
 	
     </script>
 	<script type="text/javascript">

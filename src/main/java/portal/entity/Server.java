@@ -4,6 +4,7 @@ package portal.entity;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -167,6 +168,15 @@ public class Server {
 		this.files = files;
 	}
 
-
+	public String getFileNameWithComma()
+	{
+		List<String> fileName=new ArrayList<String>();
+		for(File file:this.files)
+		{
+			fileName.add(file.getAttachment());
+		}
+		
+		return fileName.stream().collect(Collectors.joining(","));
+	}
 	
 }

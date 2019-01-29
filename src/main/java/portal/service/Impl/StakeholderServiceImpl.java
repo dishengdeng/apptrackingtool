@@ -2,8 +2,10 @@ package portal.service.Impl;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import portal.entity.Department;
 import portal.entity.SLARole;
@@ -89,6 +91,13 @@ public class StakeholderServiceImpl implements StakeholderService{
 	public void removeRole(SLARole role) {
 		stakeholderRepository.removeRole(role);
 		
+	}
+
+	@Override
+	public List<Stakeholder> getUnassginedStakeholders() {
+		List<Stakeholder> stakeholders=stakeholderRepository.findAll();
+		 stakeholders.removeIf(obj->!ObjectUtils.isEmpty(obj.getDepartment()));
+		 return stakeholders;
 	}
 
 }

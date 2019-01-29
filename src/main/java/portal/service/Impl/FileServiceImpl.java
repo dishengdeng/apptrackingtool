@@ -106,6 +106,7 @@ public class FileServiceImpl implements FileService{
 		{
 			portal.entity.File emptyFile = new portal.entity.File();
 			emptyFile.setId(fileEntity.getId());
+			fileRepository.saveAndFlush(emptyFile);
 			fileRepository.delete(emptyFile);
 			return true;
 		}
