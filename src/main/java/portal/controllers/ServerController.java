@@ -72,41 +72,63 @@ public class ServerController {
     	return "redirect:/servers";
     }
     
+    @GetMapping("/serverdetail")
+    public String serverdetail(@ModelAttribute("server") Server server,ModelMap model) {
+    	model.addAttribute("server", server);
+    	model.addAttribute("clusters", clusterService.getAll());
+    	model.addAttribute("appInstances", serverService.getAppInstancesNotContainServer(server));
+        return "serverdetail";
+    }
+ //------instance------
+    @GetMapping("/deleteServerInstance")
+    public String deleteServerInstance(@ModelAttribute("server") Server server) {
+    	server.setAppInstance(null);
+    	serverService.updateServer(server);
+    	return "redirect:/serverdetail?server="+server.getId().toString();
+    }
+    
+    @PostMapping("/addServerInstance")
+    public String addServerInstance(@ModelAttribute("server") Server server) {
+
+    	serverService.updateServer(server);
+    	return "redirect:/serverdetail?server="+server.getId().toString();
+    }    
+    
   //------file management----
     @PostMapping("/serverupload")
-    public String uploadServer(@RequestParam("file") MultipartFile file,@RequestParam("serverid") String id) {
-    	Server server= serverService.getById(Long.valueOf(id));
+    public String uploadServer(@RequestParam("file") MultipartFile file,@ModelAttribute("server") Server server) {
+
 
     	File fileEntity = new File();
     	fileEntity.setFiletype(FileType.SERVER);
     	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
     	fileEntity.setServer(server);
 
-		fileService.uploadFile(file, UPLOADED_FOLDER,id,fileEntity);
+		fileService.uploadFile(file, UPLOADED_FOLDER,server.getId().toString(),fileEntity);
 
 
     		
     	
-        return "redirect:/servers";
+        return "redirect:/serverdetail?server="+server.getId().toString();
     }
     
     @GetMapping("/downloadserver")
-    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
+    public ResponseEntity<Resource> downloadfile(@ModelAttribute("file") File file,HttpServletRequest request)
     {
     	
-    	File file= fileService.findById(Long.valueOf(id));
+ 
     	return fileService.downloadFile(UPLOADED_FOLDER,file.getServer().getId().toString(),file , request);
     }
 
     @GetMapping("/deleteserverfile")
-    public String deletefile(@RequestParam(name="id", required=true) String id)
+    public String deletefile(@ModelAttribute("file") File file,@RequestParam(name="serverid", required=true) String id)
     {
     	
-    	File file= fileService.findById(Long.valueOf(id));
-    	
-		fileService.removeFile(UPLOADED_FOLDER,file.getServer().getId().toString(), file);
+
+
+		fileService.removeFile(UPLOADED_FOLDER,id, file);
 		
-		return "redirect:/servers";
+		return "redirect:/serverdetail?server="+id;
     	
     }
 

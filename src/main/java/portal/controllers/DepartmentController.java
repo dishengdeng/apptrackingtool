@@ -6,7 +6,7 @@ package portal.controllers;
 
 
 
-import java.util.Set;
+
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,9 +60,7 @@ public class DepartmentController {
     @GetMapping("/departments")
     public String departmenttable(ModelMap model) {
     	model.addAttribute("departments", departmentService.getAll());
-    	//model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	//model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
-    	//model.addAttribute("departmentModel", new Department());
+
         return "departments";
     }
     
@@ -78,8 +76,7 @@ public class DepartmentController {
     @PostMapping("/updateDepartment")
     public String updateDepartment(@ModelAttribute("department") Department department) {
     	
-    	//departmentService.updateAppIstanceDepartment(department.getAppInstances(), department);
-    	//departmentService.updateStakeholderDepartment(department.getStakeholders(), department);
+
     	departmentService.updateDepartment(department);
         return "redirect:/departmentdetail?id="+department.getId();
     }
@@ -120,7 +117,7 @@ public class DepartmentController {
     }    
     
     @PostMapping("/addDepartmentInstance")
-    public String addDepartmentInstance(ModelMap model,@ModelAttribute("department") Department department,@ModelAttribute("appInstances") Set<AppInstance> appInstances) {
+    public String addDepartmentInstance(ModelMap model,@ModelAttribute("department") Department department) {
 
     	departmentService.updateAppIstanceDepartment(department.getAppInstances(), department);
 
@@ -138,7 +135,7 @@ public class DepartmentController {
     }    
     
     @PostMapping("/addDepartmentStakeholder")
-    public String addDepartmentStakeholder(ModelMap model,@ModelAttribute("department") Department department,@ModelAttribute("stakeholders") Set<Stakeholder> stakeholders) {
+    public String addDepartmentStakeholder(ModelMap model,@ModelAttribute("department") Department department) {
 
     	departmentService.updateStakeholderDepartment(department.getStakeholders(), department);
 

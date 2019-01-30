@@ -3,9 +3,9 @@ package portal.controllers;
 
 
 import java.util.ArrayList;
-import java.util.HashSet;
+
 import java.util.List;
-import java.util.Set;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -341,42 +341,34 @@ public class AppInstanceController {
     
     //------Sites---------------    
     @GetMapping("/deleteInstanceSite")
-    public String deleteInstanceSite(@RequestParam(name="siteid", required=false) String siteid,@RequestParam(name="appinstanceid", required=false) String appinstanceid) {
+    public String deleteInstanceSite(@ModelAttribute("site") Site site,@ModelAttribute("appinstance") AppInstance appInstance) {
 
-    	AppInstance appInstanceEntity= appInstanceService.getById(Long.valueOf(appinstanceid));
-    	Site siteEntity= siteService.getById(Long.valueOf(siteid));
+
     	
-    	siteEntity.removeAppInstance(appInstanceEntity);
+    	site.removeAppInstance(appInstance);
     	
-    	siteService.updateSite(siteEntity);
+    	siteService.updateSite(site);
     	
     	
-    	return "redirect:/instancedetail?id="+appinstanceid;
+    	return "redirect:/instancedetail?id="+appInstance.getId();
     }
     
     @PostMapping("/addInstanceSite")
-    public String addOrupdateInstanceSite(@ModelAttribute("appinstance") AppInstance appInstance) {
+    public String addOrupdateInstanceSite(@ModelAttribute("appInstance") AppInstance appInstance) {
 
-    	AppInstance appInstanceEntity= appInstanceService.getById(appInstance.getId());
+
     	
-    	Set<Site> selectedLocations=new HashSet<Site>();
-    	selectedLocations.addAll(appInstanceEntity.getSites());
-    	selectedLocations.addAll(appInstance.getSites());
-    	selectedLocations.remove(null);
+    	List<Site> sites=new ArrayList<Site>(appInstance.getSites());
     	
-    	List<Site> sites=new ArrayList<Site>(selectedLocations);
-
-  
-
-    	for(Site site:sites)
-    	{
-    		if(!site.getAppInstances().contains(appInstanceEntity))
+    	sites.forEach(obj->{
+    		if(!obj.getAppInstances().contains(appInstance))
     		{
-	    		site.addAppInstance(appInstanceEntity);
+    			Site site=obj;
+	    		site.addAppInstance(appInstance);
 	    		siteService.updateSite(site);
     		}
-    	}
-
+    	});
+    	
 
         return "redirect:/instancedetail?id="+appInstance.getId();
     }

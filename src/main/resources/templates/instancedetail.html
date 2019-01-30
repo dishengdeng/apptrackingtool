@@ -283,12 +283,18 @@
 						<!-- /.panel-heading -->
 						<div th:if="${serverSelected!=null && serverSelected.size()>0}" class="panel-body">
 
-								<div th:each="server: ${serverSelected}" th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
-									<div class="panel-heading">
-										<span th:text="${server.serverName}"></span>
-										<div class="pull-right">
+							<table class="table">
+							  <thead>
+								<th class="pull-center">Server</th>
+								<th>Description</th>
+								<th>Decomminsion Date</th>
+								<th>Attachments</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="server: ${serverSelected}">
+									<td>
 											<a th:href="@{'/deleteInstanceServer?id='+${server.id}}" 
-											style="text-decoration: none;color:white"  
+											style="text-decoration: none;"  
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -296,33 +302,24 @@
 											>
 												<i class="fa fa-trash-o fa-lg"></i>
 											</a>
-										</div>
-									</div>
-									<!-- /.panel-heading -->
-									<div class="panel-body">
-										<table class="table">
-										  <tbody>
-											<tr><th scope="row" style="width:25%">Cluster:</th><td th:text="${server.cluster==null}? '': ${server.cluster.getClusterName()}"></td></tr>
-											<tr><th scope="row" style="width:25%">Address:</th><td th:text="${server.address}"></td></tr>
-											<tr><th scope="row" style="width:25%">Description:</th><td th:text="${server.description}"></td></tr>
-											<tr><th scope="row" style="width:25%">Server Version:</th><td th:text="${server.serverVersion}"></td></tr>
-											<tr><th scope="row" style="width:25%">HW Platform:</th><td th:text="${server.hwplatform}"></td></tr>
-											<tr><th scope="row" style="width:25%">Decomminsion Date:</th><td th:text="${server.decomminsionDate}"></td></tr>
-											<tr><th scope="row" style="width:25%">Attachment:</th>
-											<td>
-												<a data-toggle="modal"  
-													th:data-target="@{${#strings.concat('#',server.id,'files')}}" 
-													th:text="${server.getFileNameWithComma()}"
-													th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-													>
-												</a>
-											</td>
-											</tr>
-										  </tbody>
-										</table>
-									</div>
-									<!-- /.panel-body -->
-								</div>
+											<a th:href="@{'/serverdetail?server='+${server.id}}" 
+											style="text-decoration: none"> <span th:text="${server.serverName}"></span>
+											</a>
+									</td>
+									<td th:text="${server.description}"><span th:text="${server.description}"></td>
+									<td th:text="${server.decomminsionDate}"></td>
+									<td>
+										<a data-toggle="modal"  
+											th:data-target="@{${#strings.concat('#',server.id,'files')}}" 
+											th:text="${server.getFileNameWithComma()}"
+											th:if="${server.files.size()>0}"
+											style="text-decoration: none;cursor: pointer"
+											>
+										</a>
+									</td>
+								</tr>
+							  </tbody>
+							</table>
 
 
 						</div>
@@ -437,7 +434,14 @@
 									<a th:href="@{'/departmentdetail?id='+${department.id}}"><h5 th:text="${department.departmentName}"></h5></a>
 								</td>
 								</tr>
-								<tr><th scope="row" style="width:25%">Stakeholder:</th><td><a data-toggle="modal" th:if="${department.stakeholders.size()>0}" th:text="${department.getStakeHolderNameWithComma()}" th:data-target="@{${#strings.concat('#',department.id,'stakeholders')}}"></a></td></tr>
+								<tr><th scope="row" style="width:25%">Stakeholder:</th><td>
+								<a data-toggle="modal" th:if="${department.stakeholders.size()>0}"  th:data-target="@{${#strings.concat('#',department.id,'stakeholders')}}">
+									<ul style="padding:0" th:if="${department.stakeholders.size()>0}">
+										<li style="list-style-type:none" th:each="stakeholder : ${department.stakeholders}" th:text="${stakeholder.stakeholderName}">
+										</li>
+									</ul>
+								</a>
+								</td></tr>
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${department.description}"></td></tr>
 
 								<tr><th scope="row" style="width:25%">Attachment:</th>
@@ -587,7 +591,7 @@
 							  <tbody>
 								<tr th:each="instancelocation: ${instancelocations}">
 									<td>
-										<a th:href="@{'/deleteInstanceSite?siteid='+${instancelocation.id}+'&appinstanceid='+${appinstance.id}}" 
+										<a th:href="@{'/deleteInstanceSite?site='+${instancelocation.id}+'&appinstance='+${appinstance.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -877,10 +881,10 @@
 						  <h4 class="modal-title" th:text="'Add Or Change site - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceSite}" th:object="${appInstance}" method="post">
+							<form action="#" th:action="@{/addInstanceSite}" method="post">
 								<div class="form-group">
 									<label for="clusterSelect">Site:</label>
-									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
 									<select name="sites" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="siteselect">
 									  <option th:each="siteEntity : ${sites}" 
 									  th:text="${siteEntity.siteName}" 
@@ -910,7 +914,8 @@
 				includeSelectAllOption: true,
 				buttonWidth: 300, 
 				enableFiltering: true,
-				nonSelectedText: 'Select Location'
+				nonSelectedText: 'Select Location',
+				enableCaseInsensitiveFiltering:true
 			  });
 			});
 			$(document).ready(function() {
@@ -919,7 +924,8 @@
 				includeSelectAllOption: true,
 				buttonWidth: 300, 
 				enableFiltering: true,
-				nonSelectedText: 'Select Server'
+				nonSelectedText: 'Select Server',
+				enableCaseInsensitiveFiltering:true
 			  });
 			});			
 			

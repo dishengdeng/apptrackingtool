@@ -57,7 +57,9 @@
 											style="text-decoration: none">
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
-											<a data-toggle="modal" th:data-target="@{'#'+${server.id}}" th:text="${server.serverName}" style="cursor:pointer"></a>
+											<a th:href="@{'/serverdetail?server='+${server.id}}" 
+											style="text-decoration: none"> <span th:text="${server.serverName}"></span>
+											</a>
 										</td>
 										<td>
 											<div th:class="${server.cluster==null}? 'invisible':'panel-group'">
@@ -94,16 +96,7 @@
 										<td>
 											<ul style="padding:0" th:if="${server.files.size()>0}">
 												<li style="list-style-type:none" th:each="file : ${server.files}">
-													<a  
-														th:href="@{'/deleteserverfile?id='+${file.id}}" 
-														style="text-decoration: none; margin-right:5px"
-														data-title="Are you sure to delete?" 
-														data-toggle="confirmation" 
-														data-singleton="true" 
-														data-popout="true"
-													>
-														<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
-													</a>
+
 													<a 	
 														th:href="@{'/downloadserver?id='+${file.id}}" 
 														th:text="${file.attachment}"
@@ -111,89 +104,9 @@
 													</a>
 												</li>
 											</ul>
-											<form  method="POST" action="/serverupload" enctype="multipart/form-data">
-												<!-- COMPONENT START -->
-												<div class="input-group">
-													
-													
-													<a th:onclick="@{'uploadfile(\''+${server.id}+'\')'}"><input type="text" th:id="@{${server.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
-													<div class="input-group-btn">
-													<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
-												
-													</div>
-	
-												</div>
-												<!-- COMPONENT END -->
-												<div class="form-group  pull-center">
-													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${server.id}+'fileupload'}">
-													<input type="hidden" class="form-control" th:name="serverid" th:value="${server.id}"></input>
-													<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-												</div>	
-											</form>
-										</td>
-										  <!-- Modal -->
-										  <div class="modal fade" th:id="${server.id}" role="dialog">
-											<div class="modal-dialog">
-											
-											  <!-- Modal content-->
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${server.serverName}"></h4>
-												</div>
-												<div class="modal-body">
-													<form action="#" th:action="@{/updateServer}" th:object="${updateserver}" method="post">													
-												
-													  <div class="form-group">
-														<label for="serverName">server Name:</label>
-														<input type="text" class="form-control" th:name="serverName" th:value="${server.serverName}"></input>
-														<input type="hidden" class="form-control" th:name="id" th:value="${server.id}"></input>
-														<input th:if="${server.appInstance!=null}" type="hidden" class="form-control" th:name="appInstance" th:value="${server.appInstance.id}"></input>
-													  </div>
-													  <div class="form-group">
-														<label for="description">Description:</label>
-														<input type="text" class="form-control" th:name="description" th:value="${server.description}">
-													  </div>
-													  <div class="form-group">
-														<label for="description">Address:</label>
-														<input type="text" class="form-control" th:name="address" th:value="${server.address}">
-													  </div>
-													  <div class="form-group">
-														<label for="description">Server Version:</label>
-														<input type="text" class="form-control" th:name="serverVersion" th:value="${server.serverVersion}">
-													  </div>
-													  <div class="form-group">
-														<label for="hwplatform">HW Platform:</label>
-														<input type="text" class="form-control" th:name="hwplatform" th:value="${server.hwplatform}">
-													  </div>
-													  <div>
-														<label for="Decomminsion Date">Decomminsion Date:</label>
-														<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
-															<input type="text" class="form-control" th:name="decomminsionDate" th:value="${server.decomminsionDate}">
-															<div class="input-group-addon">
-																<span class="glyphicon glyphicon-calendar"></span>
-															</div>
 
-														</div>
-													  </div>													  
-														<div class="form-group">
-															<label for="clusterSelect">cluster:</label>
-															<select name="cluster" class="form-control" id="clusterSelect">
-															  <option th:selected="${server.cluster==null}"></option>
-															  <option th:each="clusterEntity : ${clusters}" 
-															  th:text="${clusterEntity.clusterName}" 
-															  th:attr="value = ${clusterEntity.id}" th:selected="${server.cluster==null} ? false:${server.cluster.getId()==clusterEntity.id}">
-															  
-															  </option>
-															</select>
-														</div>
-													  <input class="btn btn-primary" type="submit" value="Update" />
-													</form>
-												</div>
-											  </div>
-											  
-											</div>
-										  </div>
+										</td>
+
                                     </tr>
 
 

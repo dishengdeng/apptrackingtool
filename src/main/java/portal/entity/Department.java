@@ -171,7 +171,7 @@ public class Department {
 	}
 
 	public void setStakeholders(Set<Stakeholder> stakeholders) {
-		this.stakeholders = stakeholders;
+		this.stakeholders.addAll(stakeholders);
 	}
 
 	public Set<AppInstance> getAppInstances() {
@@ -179,7 +179,7 @@ public class Department {
 	}
 
 	public void setAppInstances(Set<AppInstance> appInstances) {
-		this.appInstances = appInstances;
+		this.appInstances.addAll(appInstances);
 	}
 
 	public Set<File> getFiles() {
@@ -187,7 +187,7 @@ public class Department {
 	}
 
 	public void setFiles(Set<File> files) {
-		this.files = files;
+		this.files.addAll(files);
 	}
 
 	public String getInstanceNameWithComma()

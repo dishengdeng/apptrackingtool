@@ -10,11 +10,15 @@ import portal.entity.Cluster;
 import portal.entity.Server;
 import portal.models.ServerModel;
 import portal.repository.ServerRepository;
+import portal.service.AppInstanceService;
 import portal.service.ServerService;
 @Service
 public class ServerServiceImpl implements ServerService{
 	@Autowired
 	private ServerRepository serverRepository;
+	
+	@Autowired
+	private AppInstanceService appInstanceService;
 	
 	@Override
 	public Server addServer(Server server) {
@@ -90,6 +94,13 @@ public class ServerServiceImpl implements ServerService{
 	public Server findByAppInstance(AppInstance appInstance) {
 
 		return serverRepository.findByAppInstance(appInstance);
+	}
+
+	@Override
+	public List<AppInstance> getAppInstancesNotContainServer(Server server) {
+		List<AppInstance> appInstances=appInstanceService.getAll();
+		appInstances.removeIf(obj->obj.getServers().contains(server));
+		return appInstances;
 	}
 
 }

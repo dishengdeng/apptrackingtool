@@ -3,7 +3,9 @@ package portal.entity;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -78,7 +80,7 @@ public class Server {
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<File> files = new ArrayList<File>();
+    private Set<File> files = new HashSet<File>();
     
 	public Cluster getCluster() {
 		return cluster;
@@ -160,12 +162,13 @@ public class Server {
 		this.appInstance = appInstance;
 	}
 
-	public List<File> getFiles() {
+
+	public Set<File> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<File> files) {
-		this.files = files;
+	public void setFiles(Set<File> files) {
+		this.files.addAll(files);
 	}
 
 	public String getFileNameWithComma()

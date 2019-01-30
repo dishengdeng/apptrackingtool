@@ -3,8 +3,9 @@ package portal.entity;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -57,7 +58,7 @@ public class AppInstance implements Comparable<AppInstance>{
     private Support support;
     
 	@ManyToMany(mappedBy = "appInstances")
-    private List<Site> sites = new ArrayList<Site>();
+    private Set<Site> sites = new HashSet<Site>();
 	
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "application_id",referencedColumnName="id")
@@ -144,12 +145,18 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.support = support;
 	}
 
-	public List<Site> getSites() {
+
+
+	public Set<Site> getSites() {
 		return sites;
 	}
 
-	public void setSites(List<Site> sites) {
-		this.sites = sites;
+	public void setSites(Set<Site> sites) {
+		this.sites.addAll(sites);
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public Application getApplication() {

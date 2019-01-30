@@ -25,4 +25,6 @@ public interface ServerService {
     void updateAppInstance(AppInstance appInstance,Long id);
     
     Server findByAppInstance(AppInstance appInstance);
+    
+    List<AppInstance> getAppInstancesNotContainServer(Server server);
 }

@@ -16,7 +16,6 @@
 
                     <h1 class="page-header">Application Instances
 						<div class="pull-right">
-							<input id="instanceSearch" type="text" class="input-lg" placeholder="Search..."></input>
 							<a href="/addAppInstance" title="Create Instance"><i class="fa fa-plus"></i></a>
 						</div>
 					</h1>
@@ -24,16 +23,35 @@
             </div>
             <!-- /.row -->
             <div class="row">
-                <div id="instanceDiv" class="col-lg-3 col-md-6" th:each="instance: ${appinstances}">
-                    <div th:class="${instance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
-                        <div class="panel-heading">
-							<div class="row">
-								<div class="col-xs-8 text-left">
-									<small id="appName" th:text="${instance.application!=null}? ${instance.application.getAppName()} : null"></small>
-								</div>
-								<div class="col-xs-4 text-right">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Instances - Total:<span th:text="${appinstances.size()}"></span>
+						</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+								<thead>
+									<tr>
+										<th>App Instance</th>
+										<th>Status</th>
+										<th>Descrption</th>										
+										<th>Application</th>
+										<th>Support</th>
+										<th>Department</th>
+										<th>Contract</th>
+										<th>SLA</th>
+										<th>Desktop</th>
+										<th>Server</th>
+										<th>Location</th>
+										<!--<th class="no-sort">Action</th>-->
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="instance: ${appinstances}">
+										<td>
 										<a th:href="@{'/deleteAppInstance?id='+${instance.id}}" 
-											th:style="${instance.status=='Active'} ? 'text-decoration: none;color:white': 'text-decoration: none;color:black'" 
+											style="text-decoration: none;" 
 											data-title="Are you sure to delete this Instance?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -41,29 +59,69 @@
 										>
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12">
-									 <p id="instanceName" class="h4" th:text="${instance.appInstanceName}"></p>
-								</div>
-							</div>
-							<div class="row">
-								<div class="small col-xs-12">
-									 <span class="pull-right" th:text="${instance.status}"></span>
-								</div>
-							</div>
-                        </div>
-                        <a th:href="@{'/instancedetail?id='+${instance.id}}" th:style="${instance.status=='Inactive'} ? 'text-decoration: none;color:black'">
-                            <div class="panel-footer">
-                                <span class="pull-left">More Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
+											<a th:href="@{'/instancedetail?id='+${instance.id}}" th:text="${instance.appInstanceName}"></a>
+										</td>
+										<td th:text="${instance.status}">
+										</td>
+										<td th:text="${instance.description}">
+										</td>										
+										<td>
+											<a th:if="${instance.application!=null}" th:href="@{'/applicationdetail?id=' + ${instance.application.id}}" th:text="${instance.application.AppName}"></a>
+										</td>
+										<td>
+											<span th:if="${instance.support!=null}" th:text="${instance.support.supportName}"></span>
+										</td>
+										<td>
+											<a th:if="${instance.department!=null}" th:href="@{'/departmentdetail?id='+${instance.department.id}}" 
+											th:text="${instance.department.departmentName}">
+											</a>
+										</td>
+										<td>
+											<span th:if="${instance.contract!=null}" th:text="${instance.contract.contractName}"></span>
+										</td>
+										<td>
+											<span th:if="${instance.sla!=null}" th:text="${instance.sla.slaName}"></span>
+										</td>
+										<td>
+											<span th:if="${instance.desktop!=null}" th:text="${instance.desktop.desktopName}"></span>
+										</td>
+										<td>
+											<ul style="padding:0" th:if="${instance.servers!=null && instance.servers.size()>0}">
+												<li style="list-style-type:none" th:each="server : ${instance.servers}">
+													<div class="panel panel-default">
+													<div class="panel-body">
+													<a th:href="@{'/serverdetail?server='+${server.id}}" 
+													style="text-decoration: none"> <span th:text="${server.serverName}"></span>
+													</a>
+													</div>
+													</div>
+												</li>
+											</ul>
+										</td>
+										<td>
+											<ul style="padding:0" th:if="${instance.sites!=null && instance.sites.size()>0}">
+												<li style="list-style-type:none" th:each="site : ${instance.sites}">
+													<div class="panel panel-default">
+													<div class="panel-body">
+													<span th:text="${site.siteName}"></span>
+													</div>
+													</div>
+												</li>
+											</ul>
+										</td>										
+										  <!-- Modal -->
+									 
+									</tr>
 
-                    </div>
-                </div>
+
+								</tbody>
+							</table>
+							
+						  </div>
+						<!-- /.panel-body -->
+					</div>
+					<!-- /.panel -->
+				</div>
 
             </div>
 
@@ -75,34 +133,12 @@
     <!-- /#wrapper -->
 
 <script>
-$("#instanceSearch").on('change keyup paste', function() {
-	var searchText = $(this).val();
-    $('[id^=instanceDiv]').each(function(){
-		var isShow=true;
-		//enable search by instance name
-		var instanceName=$(this).find("#instanceName");
-		
-		//enable search by application name
-		var appName=$(this).find("#appName");
-		
-		if(instanceName.text().toLowerCase().search(searchText.toLowerCase())>-1)
-		{
-			isShow=true;
-		}
-		//enable search by application name
-		else if(appName.text().toLowerCase().search(searchText.toLowerCase())>-1)
-		{
-			isShow=true;
-		}
-		else
-		{
-			isShow=false;
-		}
-		
-		//show or hide div
-		isShow? $(this).show():$(this).hide();
-	});
-});	
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+			
+    });
 </script>	
 
 </body>
