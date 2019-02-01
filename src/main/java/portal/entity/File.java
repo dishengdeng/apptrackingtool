@@ -18,7 +18,7 @@ import portal.utility.FileType;
 
 @Entity
 @Table(name = "file")
-public class File {
+public class File implements Comparable<File>{
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
@@ -130,5 +130,9 @@ public class File {
 	public void setCreatedat(String createdat) {
 		this.createdat = createdat;
 	}
-	
+	@Override
+	public int compareTo(File o) {
+
+		return this.attachment.compareToIgnoreCase(o.getAttachment());
+	}	
 }

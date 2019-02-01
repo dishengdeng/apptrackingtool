@@ -171,6 +171,7 @@ public class Department {
 	}
 
 	public void setStakeholders(Set<Stakeholder> stakeholders) {
+		this.stakeholders.retainAll(stakeholders);
 		this.stakeholders.addAll(stakeholders);
 	}
 
@@ -179,6 +180,7 @@ public class Department {
 	}
 
 	public void setAppInstances(Set<AppInstance> appInstances) {
+		this.appInstances.retainAll(appInstances);
 		this.appInstances.addAll(appInstances);
 	}
 

@@ -38,9 +38,11 @@
 										<th>Descrption</th>										
 										<th>Application</th>
 										<th>Support</th>
+										<th>Vendor</th>
 										<th>Department</th>
 										<th>Contract</th>
 										<th>SLA</th>
+										<th>License</th>
 										<th>Desktop</th>
 										<th>Server</th>
 										<th>Location</th>
@@ -69,18 +71,29 @@
 											<a th:if="${instance.application!=null}" th:href="@{'/applicationdetail?id=' + ${instance.application.id}}" th:text="${instance.application.AppName}"></a>
 										</td>
 										<td>
-											<span th:if="${instance.support!=null}" th:text="${instance.support.supportName}"></span>
+											<a th:if="${instance.support!=null}"  th:href="@{'/supportdetail?support='+${instance.support.id}}" th:text="${instance.support.supportName}"></a>
 										</td>
+										<td>
+											<span th:if="${instance.company!=null}" th:text="${instance.company.companyName}"></span>
+										</td>										
 										<td>
 											<a th:if="${instance.department!=null}" th:href="@{'/departmentdetail?id='+${instance.department.id}}" 
 											th:text="${instance.department.departmentName}">
 											</a>
 										</td>
+
 										<td>
-											<span th:if="${instance.contract!=null}" th:text="${instance.contract.contractName}"></span>
+											<a th:if="${instance.contract!=null}" th:href="@{'/contractdetail?contract='+${instance.contract.id}}" 
+											th:text="${instance.contract.contractName}">
+											</a>
 										</td>
 										<td>
-											<span th:if="${instance.sla!=null}" th:text="${instance.sla.slaName}"></span>
+											<a th:if="${instance.sla!=null}" th:href="@{'/sladetail?sla='+${instance.sla.id}}" 
+											th:text="${instance.sla.slaName}">
+											</a>											
+										</td>
+										<td>
+											<span th:if="${instance.license!=null}" th:text="${instance.license.licenseNumber}"></span>
 										</td>
 										<td>
 											<span th:if="${instance.desktop!=null}" th:text="${instance.desktop.desktopName}"></span>

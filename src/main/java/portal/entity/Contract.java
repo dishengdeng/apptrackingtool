@@ -6,7 +6,9 @@ package portal.entity;
 import java.util.ArrayList;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -67,14 +69,14 @@ public class Contract {
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<AppInstance> appInstances = new ArrayList<AppInstance>();
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
     @OneToMany(
             mappedBy = "contract", 
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<File> files = new ArrayList<File>();
+    private Set<File> files = new HashSet<File>();
 
 	public Long getId() {
 		return id;
@@ -127,14 +129,12 @@ public class Contract {
 
 
 
-
-
-	public List<AppInstance> getAppInstances() {
+	public Set<AppInstance> getAppInstances() {
 		return appInstances;
 	}
 
-	public void setAppInstances(List<AppInstance> appInstances) {
-		this.appInstances = appInstances;
+	public void setAppInstances(Set<AppInstance> appInstances) {
+		this.appInstances.addAll(appInstances);
 	}
 
 	public String getInstanceNameWithComma()
@@ -148,12 +148,14 @@ public class Contract {
 		return instanceName.stream().collect(Collectors.joining(","));
 	}
 
-	public List<File> getFiles() {
+
+
+	public Set<File> getFiles() {
 		return files;
 	}
 
-	public void setFiles(List<File> files) {
-		this.files = files;
+	public void setFiles(Set<File> files) {
+		this.files.addAll(files);
 	}
 
 	public String getFileNameWithComma()

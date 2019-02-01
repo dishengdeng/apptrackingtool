@@ -3,7 +3,9 @@ package portal.entity;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -52,7 +54,7 @@ public class Support {
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<AppInstance> appInstances = new ArrayList<AppInstance>();    
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>();    
 
 	public Long getId() {
 		return id;
@@ -94,14 +96,17 @@ public class Support {
 		this.note = note;
 	}
 
-	public List<AppInstance> getAppInstances() {
+
+   
+	public Set<AppInstance> getAppInstances() {
 		return appInstances;
 	}
 
-	public void setAppInstances(List<AppInstance> appInstances) {
-		this.appInstances = appInstances;
+	public void setAppInstances(Set<AppInstance> appInstances) {
+		
+		this.appInstances.addAll(appInstances);
 	}
-   
+
 	public String getInstanceNameWithComma()
 	{
 		List<String> instanceName=new ArrayList<String>();

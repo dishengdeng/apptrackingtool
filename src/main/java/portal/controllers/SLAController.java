@@ -1,5 +1,6 @@
 package portal.controllers;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import portal.entity.AppInstance;
 import portal.entity.File;
 import portal.entity.SLA;
 import portal.service.AppInstanceService;
@@ -45,10 +47,7 @@ public class SLAController {
 	
     @GetMapping("/slas")
     public String slatable(ModelMap model) {
-    	model.addAttribute("slas", slaService.getAll());
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));    	
-    	model.addAttribute("updateSLA", new SLA());    	
+    	model.addAttribute("slas", slaService.getAll());	
         return "slas";
     }
     
@@ -60,9 +59,9 @@ public class SLAController {
  
     @PostMapping("/updateSLA")
     public String updateSLA(@ModelAttribute("updateSLA") SLA sla) {
-    	slaService.updateAppIstanceSLA(sla.getAppInstances(), sla);
+
     	slaService.updateSLA(sla);
-        return "redirect:/slas";
+    	return "redirect:/sladetail?sla="+sla.getId();
     }
     
     @GetMapping("/addSLA")
@@ -82,43 +81,66 @@ public class SLAController {
     	slaService.delete(sla);
     	return "redirect:/slas";
     }
+    @GetMapping("/sladetail")
+    public String supportdetail(@ModelAttribute("sla") SLA sla,ModelMap model) {
+    	model.addAttribute("sla",sla);
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+        return "sladetail";
+    } 
+    //--Instance--    
+    @GetMapping("/deleteSLAInstance")
+    public String deleteSupportInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("sla") SLA sla,ModelMap model) {
+    	appInstance.setSla(null);
+    	appInstanceService.updateAppInstance(appInstance);
+
+    	return "redirect:/sladetail?sla="+sla.getId();
+    }    
+    
+    @PostMapping("/addSLAInstance")
+    public String addContractInstance(ModelMap model,@ModelAttribute("sla") SLA sla) {
+
+    	slaService.updateAppIstanceSLA(new ArrayList<>(sla.getAppInstances()), sla);
+
+    	return "redirect:/sladetail?sla="+sla.getId();
+    }    
     
     //------file management----   
     @PostMapping("/slaupload")
-    public String uploadSLA(@RequestParam("file") MultipartFile file,@RequestParam("slaid") String id) {
-    	SLA sla= slaService.getById(Long.valueOf(id));
+    public String uploadSLA(@RequestParam("file") MultipartFile file,@ModelAttribute("sla") SLA sla) {
+
     	
     	File fileEntity = new File();
     	fileEntity.setFiletype(FileType.SLA);
     	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
     	fileEntity.setSla(sla);
 
-		fileService.uploadFile(file, UPLOADED_FOLDER,id,fileEntity);
+		fileService.uploadFile(file, UPLOADED_FOLDER,sla.getId().toString(),fileEntity);
 
 
 
     		
  
-        return "redirect:/slas";
+		return "redirect:/sladetail?sla="+sla.getId();
     }
     
     @GetMapping("/downloadsla")
-    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
+    public ResponseEntity<Resource> downloadfile(@ModelAttribute("file") File file,HttpServletRequest request)
     {
     	
-    	File file= fileService.findById(Long.valueOf(id));
+
     	return fileService.downloadFile(UPLOADED_FOLDER,file.getSla().getId().toString(),file , request);
     }
 
     @GetMapping("/deleteslafile")
-    public String deletefile(@RequestParam(name="id", required=true) String id)
+    public String deletefile(@ModelAttribute("file") File file,@ModelAttribute("sla") SLA sla)
     {
     	
-    	File file= fileService.findById(Long.valueOf(id));
+
     	
 		fileService.removeFile(UPLOADED_FOLDER,file.getSla().getId().toString(), file);
 
-		return "redirect:/slas";
+		return "redirect:/sladetail?sla="+sla.getId();
     	
     }
 }

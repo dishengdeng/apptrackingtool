@@ -1,6 +1,7 @@
 package portal.controllers;
 
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import portal.entity.AppInstance;
 
 import portal.entity.Support;
 import portal.service.AppInstanceService;
@@ -34,9 +36,6 @@ public class SupportController {
     @GetMapping("/supports")
     public String supporttable(ModelMap model) {
     	model.addAttribute("supports", supportService.getAll());
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
-    	model.addAttribute("supportModel", new Support());
         return "supports";
     }
     
@@ -49,9 +48,9 @@ public class SupportController {
  
     @PostMapping("/updateSupport")
     public String updateSupport(@ModelAttribute("supportModel") Support support) {
-    	supportService.updateAppInstanceSupport(support.getAppInstances(), support);
+
     	supportService.updateSupport(support);
-        return "redirect:/supports";
+    	return "redirect:/supportdetail?support="+support.getId();
     }
     
     @GetMapping("/addSupport")
@@ -71,6 +70,30 @@ public class SupportController {
     	supportService.delete(support);
     	return "redirect:/supports";
     }
+    
+    @GetMapping("/supportdetail")
+    public String supportdetail(@ModelAttribute("support") Support support,ModelMap model) {
+    	model.addAttribute("support",support);
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+        return "supportdetail";
+    }
+    
+  //--Instance--    
+    @GetMapping("/deleteSupportInstance")
+    public String deleteSupportInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("support") Support support,ModelMap model) {
+    	appInstance.setSupport(null);
+    	appInstanceService.updateAppInstance(appInstance);
 
+    	return "redirect:/supportdetail?support="+support.getId();
+    }    
+    
+    @PostMapping("/addSupportInstance")
+    public String addSupportInstance(ModelMap model,@ModelAttribute("support") Support support) {
+
+    	supportService.updateAppInstanceSupport(new ArrayList<>(support.getAppInstances()), support);
+
+    	return "redirect:/supportdetail?support="+support.getId();
+    }
 
 }

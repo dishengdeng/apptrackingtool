@@ -85,13 +85,19 @@
                         <div th:if="${sla!=null}" class="panel-body">
 							<table class="table">
 							  <tbody>
-								<tr><th scope="row" style="width:25%">Name:</th><td th:text="${sla.slaName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Name:</th><td>
+											<a th:href="@{'/sladetail?sla='+${sla.id}}" th:text="${sla.slaName}">
+											</a>
+								</td></tr>
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${sla.description}"></td></tr>
-								<tr><th scope="row" style="width:25%">Effective Date:</th><td th:text="${sla.effectivedate}"></td></tr>
-								<tr><th scope="row" style="width:25%">Termination Date:</th><td th:text="${sla.terminationdate}"></td></tr>
-								<tr><th scope="row" style="width:25%">Approver:</th><td th:text="${sla.approvername}"></td></tr>
-								<tr><th scope="row" style="width:25%">Approval Date:</th><td th:text="${sla.approvaldate}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th><td><a th:if="${sla.attachment!=null && !sla.attachment.isEmpty()}" th:href="@{'/downloadsla?id='+${sla.id}}" th:text="${sla.attachment}"></a></td></tr>
+								<tr><th scope="row" style="width:25%">Attachment:</th><td>
+									<a data-toggle="modal"  
+										th:data-target="@{${#strings.concat('#',sla.id,'files')}}" 
+										th:text="${sla.getFileNameWithComma()}"
+										th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+										>
+									</a>
+								</td></tr>
 							  </tbody>
 							</table>
                         </div>
@@ -99,6 +105,35 @@
                     </div>
 				</div>
 				<div class="col-lg-4">
+					<div class="modal fade" th:if="${sla!=null && sla.files.size()>0}" th:id="${#strings.concat(sla.id,'files')}" role="dialog" >
+						<!-- Modal content-->
+						<div class="modal-dialog">
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							  <h4 class="modal-title"> Attachments</h4>
+							</div>
+							<div class="modal-body">
+								<table class="table table-striped" id="filestable">
+								  <thead>
+									<tr>
+									  <th scope="col">File Name</th>
+									  <th scope="col">Created At</th>
+									  <th scope="col">Created By</th>														  
+									</tr>
+								  </thead>
+								  <tbody>
+									<tr th:each="file : ${sla.files}">
+									  <th><h5><a th:href="@{'/downloadsla?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+									  <th><h5 th:text="${file.createdat}"></h5></th>
+									  <th><h5 th:text="${file.createdby}"></h5></th>
+									</tr>
+								  </tbody>
+								</table>
+							</div>
+						   </div>
+						 </div>
+					</div>					
 				</div>
 			</div>
 			
@@ -127,11 +162,12 @@
                         <div th:if="${contract!=null}" class="panel-body">
 							<table class="table">
 							  <tbody>
-								<tr><th scope="row" style="width:25%">Contract:</th><td th:text="${contract.contractName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Contract:</th><td>
+											<a th:href="@{'/contractdetail?contract='+${contract.id}}" th:text="${contract.contractName}">
+											</a>
+								</td></tr>
 								<tr><th scope="row" style="width:25%">Expired Date:</th><td th:text="${contract.expireDate}"></td></tr>
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${contract.description}"></td></tr>
-								<tr><th scope="row" style="width:25%">SMA Description:</th><td th:text="${contract.smaDescription}"></td></tr>
-								<tr><th scope="row" style="width:25%">SLA Description:</th><td th:text="${contract.slaDescription}"></td></tr>
 								<tr><th scope="row" style="width:25%">Attachment:</th>
 								<td>
 									<a data-toggle="modal"  
@@ -555,7 +591,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div th:if="${support!=null}" class="panel-body">
-							<div class="row"><div class="col-sm-2"><strong>Support:</strong></div><div class="col-sm-10"><span th:text="${support.supportName}"></span></div></div>
+							<div class="row"><div class="col-sm-2"><strong>Support:</strong></div><div class="col-sm-10"><a th:href="@{'/supportdetail?support='+${support.id}}" th:text="${support.supportName}"></a></div></div>
 							<div class="row"><div class="col-sm-2"><strong>Phone:</strong></div><div class="col-sm-10"><span th:text="${support.phone}"></span></div></div>
 							<div class="row"><div class="col-sm-2"><strong>Email:</strong></div><div class="col-sm-10"><span th:text="${support.email}"></span></div></div>
 							<div class="row"><div class="col-sm-2"><strong>Note:</strong></div><div class="col-sm-10"><span th:text="${support.note}"></span></div></div>

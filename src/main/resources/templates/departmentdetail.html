@@ -271,7 +271,7 @@
 										<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
 											  <option th:each="instanceEntity : ${appEntity.appInstances}" 
 
-											  th:attr="value = ${instanceEntity.id}" th:selected="${department.appInstances.contains(instanceEntity)}"
+											  th:attr="value = ${instanceEntity.id}"
 											  th:text="${instanceEntity.appInstanceName}">
 											  
 											  </option>
@@ -279,7 +279,7 @@
 										<optgroup th:if="${appUnassginedInstances.size()>0}" label="Other">
 											  <option th:each="instanceEntity : ${appUnassginedInstances}" 
 
-											  th:attr="value = ${instanceEntity.id}" th:selected="${department.appInstances.contains(instanceEntity)}"
+											  th:attr="value = ${instanceEntity.id}"
 											  th:text="${instanceEntity.appInstanceName}">
 											  
 											  </option>
@@ -313,7 +313,7 @@
 
 											  <option th:each="stakeholder : ${stakeholders}" 
 
-											  th:attr="value = ${stakeholder.id}" th:selected="${department.stakeholders.contains(stakeholder)}"
+											  th:attr="value = ${stakeholder.id}"
 											  th:text="${stakeholder.stakeholderName}">
 											  
 											  </option>

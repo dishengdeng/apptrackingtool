@@ -2,6 +2,7 @@ package portal.controllers;
 
 
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import portal.entity.AppInstance;
 import portal.entity.Contract;
 import portal.entity.File;
 import portal.service.AppInstanceService;
@@ -48,9 +49,7 @@ public class ContractController {
     @GetMapping("/contracts")
     public String contracttable(ModelMap model) {
     	model.addAttribute("contracts", contractService.getAll());
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
-    	model.addAttribute("contractModel", new Contract());
+
         return "contracts";
     }
     
@@ -64,9 +63,9 @@ public class ContractController {
     @PostMapping("/updateContract")
     public String updateContract(@ModelAttribute("contractModel") Contract contract) {
 
-    	contractService.updateAppInstanceContract(contract.getAppInstances(), contract);
+
     	contractService.updateContract(contract);
-        return "redirect:/contracts";
+    	return "redirect:/contractdetail?contract="+contract.getId();
     }
     
     @GetMapping("/addContract")
@@ -86,39 +85,64 @@ public class ContractController {
     	contractService.delete(contract);
     	return "redirect:/contracts";
     }
+    
+    @GetMapping("/contractdetail")
+    public String supportdetail(@ModelAttribute("contract") Contract contract,ModelMap model) {
+    	model.addAttribute("contract",contract);
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+        return "contractdetail";
+    } 
+    
+    //--Instance--    
+    @GetMapping("/deleteContractInstance")
+    public String deleteSupportInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("contract") Contract contract,ModelMap model) {
+    	appInstance.setContract(null);
+    	appInstanceService.updateAppInstance(appInstance);
+
+    	return "redirect:/contractdetail?contract="+contract.getId();
+    }    
+    
+    @PostMapping("/addContractInstance")
+    public String addContractInstance(ModelMap model,@ModelAttribute("contract") Contract contract) {
+
+    	contractService.updateAppInstanceContract(new ArrayList<>(contract.getAppInstances()), contract);
+
+    	return "redirect:/contractdetail?contract="+contract.getId();
+    }
 
   //------file management----
     @PostMapping("/contractupload")
-    public String uploadContract(@RequestParam("file") MultipartFile file,@RequestParam("contractid") String id) {
-    	Contract contract= contractService.getById(Long.valueOf(id));
+    public String uploadContract(@RequestParam("file") MultipartFile file,@ModelAttribute("contract") Contract contract) {
+
 
     	File fileEntity = new File();
     	fileEntity.setFiletype(FileType.CONTRACT);
     	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
     	fileEntity.setContract(contract);
 
-		fileService.uploadFile(file, UPLOADED_FOLDER,id,fileEntity);
+		fileService.uploadFile(file, UPLOADED_FOLDER,contract.getId().toString(),fileEntity);
 		
-        return "redirect:/contracts";
+        return "redirect:/contractdetail?contract="+contract.getId();
     }
     
     @GetMapping("/downloadcontract")
-    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
+    public ResponseEntity<Resource> downloadfile(@ModelAttribute("file") File file,HttpServletRequest request)
     {
     	
 
-    	File file= fileService.findById(Long.valueOf(id));
+
     	return fileService.downloadFile(UPLOADED_FOLDER,file.getContract().getId().toString(),file , request);
     }
 
     @GetMapping("/deletecontractfile")
-    public String deletefile(@RequestParam(name="id", required=true) String id)
+    public String deletefile(@ModelAttribute("file") File file,@ModelAttribute("contract") Contract contract)
     {
     	
-    	File file= fileService.findById(Long.valueOf(id));
+
     	
 		fileService.removeFile(UPLOADED_FOLDER, file.getContract().getId().toString(),file);
-		return "redirect:/contracts";
+		return "redirect:/contractdetail?contract="+contract.getId();
     	
     }
 }

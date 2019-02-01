@@ -55,7 +55,7 @@
 											style="text-decoration: none">
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
-											<a data-toggle="modal" th:data-target="@{'#'+${contract.id}}" th:text="${contract.contractName}" style="cursor:pointer"></a>
+											<a th:href="@{'/contractdetail?contract='+${contract.id}}" th:text="${contract.contractName}"></a>
 										</td>
 										<td>
 											<a data-toggle="modal" 
@@ -73,16 +73,6 @@
 
 											<ul style="padding:0" th:if="${contract.files.size()>0}">
 												<li style="list-style-type:none" th:each="file : ${contract.files}">
-													<a  
-														th:href="@{'/deletecontractfile?id='+${file.id}}" 
-														style="text-decoration: none; margin-right:5px"
-														data-title="Are you sure to delete?" 
-														data-toggle="confirmation" 
-														data-singleton="true" 
-														data-popout="true"
-													>
-														<i class="fa fa-remove fa-lg" style="color:red" aria-hidden="true"></i>
-													</a>
 													<a 	
 														th:href="@{'/downloadcontract?id='+${file.id}}" 
 														th:text="${file.attachment}"
@@ -90,27 +80,6 @@
 													</a>
 												</li>
 											</ul>
-
-
-											<form  method="POST" action="/contractupload" enctype="multipart/form-data">
-												<!-- COMPONENT START -->
-												<div class="input-group">
-													
-																	
-														<a th:onclick="@{'uploadfile(\''+${contract.id}+'\')'}"><input type="text" th:id="@{${contract.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
-														<div class="input-group-btn">
-														<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
-														</div>
-							
-												</div>
-												<!-- COMPONENT END -->
-												<div class="form-group  pull-center">
-													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${contract.id}+'fileupload'}">
-													<input type="hidden" class="form-control" th:name="contractid" th:value="${contract.id}"></input>
-													<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
-
-												</div>
-											</form>
 
 										</td>
 
@@ -151,104 +120,7 @@
 											   </div>
 											 </div>
 									</div>	
-									<div class="modal fade" th:if="${contract.appInstances.size()>0}" th:id="${#strings.concat(contract.id,'instances')}" role="dialog" >
-									<!-- Modal content-->
-											<div class="modal-dialog">
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title"> App Instances</h4>
-												</div>
-												<div class="modal-body">
-													<table class="table table-striped" id="instancetable">
-													  <thead>
-														<tr>
-														  <th scope="col">App Instance</th>
-														  <th scope="col">status</th>
-														  <th scope="col">Description</th>														  
-														</tr>
-													  </thead>
-													  <tbody>
-														<tr th:each="appInstance : ${contract.appInstances}">
-														  <th><a th:href="@{'/instancedetail?id='+${appInstance.id}}"><h5 th:text="${appInstance.appInstanceName}"></h5></a></th>
-														  <th><h5 th:text="${appInstance.status}"></h5></th>
-														  <th><h5 th:text="${appInstance.description}"></h5></th>
-														</tr>
-													  </tbody>
-													</table>
-												</div>
-											   </div>
-											 </div>
-									</div>
 
-								<div class="modal fade" th:id="${contract.id}" role="dialog">
-									<div class="modal-dialog">
-									
-									  <!-- Modal content-->
-									  <div class="modal-content">
-										<div class="modal-header">
-										  <button type="button" class="close" data-dismiss="modal">&times;</button>
-										  <h4 class="modal-title" th:text="${contract.contractName}"></h4>
-										</div>
-										<div class="modal-body">
-											<form action="#" th:action="@{/updateContract}" th:object="${contractModel}" method="post">													
-										
-											  <div class="form-group">
-												<label for="contractName">contract Name:</label>
-												<input type="text" class="form-control" th:name="contractName" th:value="${contract.contractName}"></input>
-												<input type="hidden" class="form-control" th:name="id" th:value="${contract.id}"></input>
-
-											  </div>
-											  <div>
-												<label for="Decomminsion Date">Expired Date:</label>
-												<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
-													<input type="text" class="form-control" th:name="expireDate" th:value="${contract.expireDate}">
-													<div class="input-group-addon">
-														<span class="glyphicon glyphicon-calendar"></span>
-													</div>
-
-												</div>
-											  </div>													  
-											  <div class="form-group">
-												<label for="description">Description:</label>
-												<input type="text" class="form-control" th:name="description" th:value="${contract.description}">
-											  </div>													  
-											  <div class="form-group">
-												<label for="description">SMA Description:</label>
-												<input type="text" class="form-control" th:name="smaDescription" th:value="${contract.smaDescription}">
-											  </div>													  
-											  <div class="form-group">
-												<label for="note">SLA Description:</label>
-												<input type="text" class="form-control" th:name="slaDescription" th:value="${contract.slaDescription}">
-											  </div>
-											<div class="form-group">
-												<label for="instanceSelect">App Instance:</label>											  	
-												<select name="appInstances" class="form-control" id="instanceSelect" multiple>
-													<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
-														  <option th:each="instanceEntity : ${appEntity.appInstances}" 
-
-														  th:attr="value = ${instanceEntity.id}" th:selected="${contract.appInstances.contains(instanceEntity)}"
-														  th:text="${instanceEntity.appInstanceName}">
-														  
-														  </option>
-													</optgroup>
-													<optgroup th:if="${appUnassginedInstances.size()>0}" label="Unassigned">
-														  <option th:each="instanceEntity : ${appUnassginedInstances}" 
-
-														  th:attr="value = ${instanceEntity.id}" th:selected="${contract.appInstances.contains(instanceEntity)}"
-														  th:text="${instanceEntity.appInstanceName}">
-														  
-														  </option>
-													</optgroup>													
-												</select>
-											</div>										  
-											  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
-											</form>
-										</div>
-									  </div>
-									  
-									</div>
-								</div>
 							 </div><!-- Modal area-->
                         </div>
                         <!-- /.panel-body -->
@@ -272,15 +144,7 @@
     $(document).ready(function() {
         $('#dataTables-example').DataTable({
             responsive: true
-        });
-	  $('[id^=instanceSelect]').multiselect(
-	  {
-		includeSelectAllOption: true,
-		buttonWidth: '100%', 
-		enableFiltering: true,
-		nonSelectedText: 'Select Instance',
-		enableCaseInsensitiveFiltering:true
-	  });		
+        });	
     });
     </script>
 	<script type="text/javascript">
