@@ -52,7 +52,7 @@ public class ServerController {
     public String updateServer(@ModelAttribute("updateServer") Server server) {
 
     	serverService.updateServer(server);
-        return "redirect:/servers";
+    	return "redirect:/serverdetail?server="+server.getId().toString();
     }
     
     @GetMapping("/addServer")

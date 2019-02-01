@@ -34,8 +34,7 @@
                             <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 <thead>
                                     <tr>
-                                        <th>Support</th>
-										<th>App Instance</th>										
+                                        <th>Support</th>										
                                         <th>Phone</th>
 										<th>Email</th>
 										<th>Note</th>
@@ -54,10 +53,12 @@
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a th:href="@{'/supportdetail?support='+${support.id}}" th:text="${support.supportName}"></a>
-										</td>
-										<td>
-											<a data-toggle="modal" th:if="${support.appInstances.size()>0}" th:text="${support.getInstanceNameWithComma()}" th:data-target="@{${#strings.concat('#',support.id,'instances')}}" style="cursor:pointer"></a>
-										</td>										
+											<p>
+											<a data-toggle="modal" th:if="${support.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',support.id,'instances')}}" style="cursor:pointer">
+											<span class="badge badge-secondary small" th:text="${'App Instances - Total: '+support.appInstances.size()}"></span>
+											</a>
+											</p>
+										</td>									
                                         <td th:text="${support.phone}"></td>
 										<td th:text="${support.email}"></td>
 										<td th:text="${support.note}"></td>
