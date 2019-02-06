@@ -74,7 +74,9 @@
 											<a th:if="${instance.support!=null}"  th:href="@{'/supportdetail?support='+${instance.support.id}}" th:text="${instance.support.supportName}"></a>
 										</td>
 										<td>
-											<span th:if="${instance.company!=null}" th:text="${instance.company.companyName}"></span>
+											<a th:if="${instance.company!=null}" th:href="@{'/companydetail?company='+${instance.company.id}}" 
+											th:text="${instance.company.companyName}">
+											</a>
 										</td>										
 										<td>
 											<a th:if="${instance.department!=null}" th:href="@{'/departmentdetail?id='+${instance.department.id}}" 
@@ -93,7 +95,9 @@
 											</a>											
 										</td>
 										<td>
-											<span th:if="${instance.license!=null}" th:text="${instance.license.licenseNumber}"></span>
+											<a th:if="${instance.license!=null}" th:href="@{'/licensedetail?license='+${instance.license.id}}" 
+											th:text="${instance.license.licenseNumber}">
+											</a>											
 										</td>
 										<td>
 											<span th:if="${instance.desktop!=null}" th:text="${instance.desktop.desktopName}"></span>

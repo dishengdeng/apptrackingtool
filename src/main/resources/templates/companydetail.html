@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" th:text="${company.companyName}"></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-info-circle"></i> Details
+						</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<form action="#" th:action="@{/updateCompany}" method="post">													
+						
+							  <div class="form-group">
+								<label for="companyName">Company Name:</label>
+								<input type="text" class="form-control" th:name="companyName" th:value="${company.companyName}"></input>
+								<input type="hidden" class="form-control" th:name="companyModel" th:value="${company.id}"></input>
+								<input th:if="${company.application!=null}" type="hidden" class="form-control" th:name="application" th:value="${company.application.id}"></input>
+							  </div>														  
+							  <div class="form-group">
+								<label for="description">Address:</label>
+								<input type="text" class="form-control" th:name="address" th:value="${company.address}">
+							  </div>													  
+							  <div class="form-group">
+								<label for="description">Phone:</label>
+								<input type="text" class="form-control" th:name="phone" th:value="${company.phone}">
+							  </div>													  
+							  <div class="form-group">
+								<label for="note">Email:</label>
+								<input type="text" class="form-control" th:name="email" th:value="${company.email}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Contact Name:</label>
+								<input type="text" class="form-control" th:name="contactName" th:value="${company.contactName}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Contact Phone:</label>
+								<input type="text" class="form-control" th:name="contactPhone" th:value="${company.contactPhone}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Manufacturer:</label>
+								<input type="text" class="form-control" th:name="manufacturer" th:value="${company.manufacturer}">
+							  </div>
+							  
+							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							</form>
+						</div>
+							<!-- /.panel-body -->
+					</div>
+				</div>
+			</div>						
+			<!--AppInstance Detail-->
+			<div class="row" th:if="${company.isVendor()}">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-laptop"></i> App Instances
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addInstance'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${company.appInstances.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>App Instance</th>
+								<th>Status</th>
+								<th>Description</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="appinstance: ${#lists.sort(company.appInstances)}">
+									<td>
+										<a th:href="@{'/deleteCompanyInstance?instance='+${appinstance.id}+'&company='+${company.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/instancedetail?id='+${appinstance.id}}" th:text="${appinstance.appInstanceName}"></a>
+									</td>
+									<td th:text="${appinstance.status}"></td>
+									<td th:text="${appinstance.description}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+            <!-- /.row -->
+			<!--Application detail--->
+			<div class="row" th:if="${!company.isVendor()}">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-laptop"></i> Application
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addapplication'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a style="text-decoration: none;color:white;cursor: pointer"
+								th:if="${company.application!=null}" th:href="${#strings.concat('/deleteCompanyApplication?company=',company.id)}"
+								data-title="Are you sure to delete?" 
+								data-toggle="confirmation" 
+								data-singleton="true" 
+								data-popout="true"								
+								>
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${company.application!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">Application:</th><td><a th:href="@{'/applicationdetail?id='+${company.application.id}}" th:text="${company.application.AppName}"></a></td></tr>
+								<tr><th scope="row" style="width:25%">Version:</th><td th:text="${company.application.AppVersion}"></td></tr>
+								<tr><th scope="row" style="width:25%">Decommission Date:</th><td th:text="${company.application.AppDecomminsionDate}"></td></tr>
+							
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>			
+			<!--AppInstance model-->
+			<div class="modal fade" th:id="addInstance" role="dialog" th:if="${company.isVendor()}">
+				<div class="modal-dialog">
+				
+				  <!-- Modal content-->
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					  <h4 class="modal-title" th:text="'Add Or Change Instance - '+${company.companyName}"></h4>													
+					</div>
+					<div class="modal-body">	
+						<form action="#" th:action="@{/addCompanyInstance}"  method="post">
+							<div class="form-group">
+								<label for="instanceselect">App Instance:</label>
+								<input type="hidden" class="form-control" th:name="company" th:value="${company.id}"></input>
+								<select name="appInstances" class="form-control" id="instanceSelect" multiple>
+									<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
+										  <option th:each="instanceEntity : ${appEntity.appInstances}" 
+
+										  th:attr="value = ${instanceEntity.id}"
+										  th:text="${instanceEntity.appInstanceName}">
+										  
+										  </option>
+									</optgroup>
+									<optgroup th:if="${appUnassginedInstances.size()>0}" label="Other">
+										  <option th:each="instanceEntity : ${appUnassginedInstances}" 
+
+										  th:attr="value = ${instanceEntity.id}"
+										  th:text="${instanceEntity.appInstanceName}">
+										  
+										  </option>
+									</optgroup>													
+								</select>
+							</div>
+						  <input class="btn btn-primary" type="submit" value="Submit" />
+						</form>
+					</div>
+				  </div>
+
+				</div>
+			</div>
+			<!--Application model-->
+			<div class="modal fade" th:id="addapplication" role="dialog" th:if="${!company.isVendor()}">
+				<div class="modal-dialog">
+				
+				  <!-- Modal content-->
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					  <h4 class="modal-title" th:text="'Add Or Change Instance - '+${company.companyName}"></h4>													
+					</div>
+					<div class="modal-body">	
+						<form action="#" th:action="@{/addCompanyApplication}"  method="post">
+							<div class="form-group">
+								<label for="instanceselect">Application:</label>
+								<input type="hidden" class="form-control" th:name="company" th:value="${company.id}"></input>
+								<select name="application" class="form-control" id="SelectApp">
+									<option></option>
+									<option th:each="app : ${applications}" 
+
+									  th:attr="value = ${app.id}"
+									  th:text="${app.AppName}">
+									  
+									</option>												
+								</select>
+							</div>
+						  <input class="btn btn-primary" type="submit" value="Submit" />
+						</form>
+					</div>
+				  </div>
+
+				</div>
+			</div>			
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+	$('[id^=instanceSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Instance',
+		enableCaseInsensitiveFiltering:true
+	  });		
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>

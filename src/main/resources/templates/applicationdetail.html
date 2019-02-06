@@ -161,12 +161,13 @@
                         <div th:if="${company!=null}" class="panel-body">
 							<table class="table">
 							  <tbody>
-								<tr><th scope="row" style="width:25%">Manufacturer:</th><td th:text="${company.manufacturer}"></td></tr>
-								<tr><th scope="row" style="width:25%">Address:</th><td th:text="${company.address}"></td></tr>
+								<tr><th scope="row" style="width:25%">Manufacturer:</th><td>
+									<a th:href="@{'/companydetail?company='+${company.id}}" th:text="${company.manufacturer}"></a>
+								</td></tr>
+
 								<tr><th scope="row" style="width:25%">Phone:</th><td th:text="${company.phone}"></td></tr>
 								<tr><th scope="row" style="width:25%">Email:</th><td th:text="${company.email}"></td></tr>
-								<tr><th scope="row" style="width:25%">Contact Name:</th><td th:text="${company.contactName}"></td></tr>
-								<tr><th scope="row" style="width:25%">Contact Phone:</th><td th:text="${company.contactPhone}"></td></tr>								
+								
 							  </tbody>
 							</table>
                         </div>

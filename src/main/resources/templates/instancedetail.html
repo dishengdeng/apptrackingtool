@@ -244,15 +244,14 @@
                         <div th:if="${license!=null}" class="panel-body">
 							<table class="table">
 							  <tbody>
-								<tr><th scope="row" style="width:25%">License Number:</th><td th:text="${license.licenseNumber}"></td></tr>
+								<tr><th scope="row" style="width:25%">License Number:</th><td>
+									<a th:href="@{'/licensedetail?license='+${license.id}}" th:text="${license.licenseNumber}">
+									</a>
+								</td></tr>
 								<tr><th scope="row" style="width:25%">Registration Date:</th><td th:text="${license.registrationDate}"></td></tr>
 								<tr><th scope="row" style="width:25%">Expiry Date:</th><td th:text="${license.expireDate}"></td></tr>
 								<tr><th scope="row" style="width:25%">Note:</th><td th:text="${license.note}"></td></tr>
 								<tr><th scope="row" style="width:25%">Price:</th><td th:text="'$'+${#numbers.formatDecimal(#strings.defaultString(license.price,0),2,2,'COMMA')}"></td></tr>
-								<tr><th scope="row" style="width:25%">Number Of License Required:</th><td th:text="${license.numberoflicenserequired}"></td></tr>
-								<tr><th scope="row" style="width:25%">Renewal Frequency:</th><td th:text="${license.renewalfrequency}"></td></tr>
-								<tr><th scope="row" style="width:25%">Renewal Owner:</th><td th:text="${license.renewalowner}"></td></tr>
-								<tr><th scope="row" style="width:25%">Warrenty:</th><td th:text="${license.warrenty}"></td></tr>
 							  </tbody>
 							</table>
                         </div>
@@ -423,12 +422,12 @@
                         <div th:if="${company!=null}" class="panel-body">
 							<table class="table">
 							  <tbody>
-								<tr><th scope="row" style="width:25%">Vendor:</th><td th:text="${company.companyName}"></td></tr>
-								<tr><th scope="row" style="width:25%">Address:</th><td th:text="${company.address}"></td></tr>
+								<tr><th scope="row" style="width:25%">Vendor:</th><td>
+									<a th:href="@{'/companydetail?company='+${company.id}}" th:text="${company.companyName}"></a>
+								</td></tr>
 								<tr><th scope="row" style="width:25%">Phone:</th><td th:text="${company.phone}"></td></tr>
 								<tr><th scope="row" style="width:25%">Email:</th><td th:text="${company.email}"></td></tr>
-								<tr><th scope="row" style="width:25%">Contact Name:</th><td th:text="${company.contactName}"></td></tr>
-								<tr><th scope="row" style="width:25%">Contact Phone:</th><td th:text="${company.contactPhone}"></td></tr>								
+							
 							  </tbody>
 							</table>
                         </div>

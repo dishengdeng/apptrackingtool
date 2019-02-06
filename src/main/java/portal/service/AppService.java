@@ -13,4 +13,5 @@ public interface AppService {
     Application getByName(String AppName);
     Application updateApp(Application application);
     Application findbyId(Long id);
+    List<Application> getUnassignedApps();
 }

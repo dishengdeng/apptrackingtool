@@ -1,6 +1,8 @@
 package portal.controllers;
 
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 import portal.entity.License;
+import portal.service.AppInstanceService;
 import portal.service.LicenseService;
 
 
@@ -21,11 +24,13 @@ public class LicenseController {
 	@Autowired
 	private LicenseService licenseService;
 	
+	@Autowired
+	private AppInstanceService appInstanceService;
 	
     @GetMapping("/licenses")
     public String licensetable(ModelMap model) {
     	model.addAttribute("licenses", licenseService.getAll());
-    	model.addAttribute("licenseModel", new License());
+
         return "licenses";
     }
     
@@ -40,7 +45,7 @@ public class LicenseController {
     public String updateLicense(@ModelAttribute("licenseModel") License license) {
 
     	licenseService.updateLicense(license);
-        return "redirect:/licenses";
+    	return "redirect:/licensedetail?license="+license.getId();
     }
     
     @GetMapping("/addLicense")
@@ -61,5 +66,27 @@ public class LicenseController {
     	return "redirect:/licenses";
     }
 
+    @GetMapping("/licensedetail")
+    public String licensedetail(@ModelAttribute("license") License license,ModelMap model) {
+    	model.addAttribute("license", license);
+    	model.addAttribute("appInstances", appInstanceService.getAll());
+        return "licensedetail";
+    }
+    
+    //--Instance--    
+    @GetMapping("/deleteLicenseInstance")
+    public String deleteLicenseInstance(@ModelAttribute("license") License license,ModelMap model) {
+    	license.setAppInstance(null);
+    	licenseService.updateLicense(license);
 
+    	return "redirect:/licensedetail?license="+license.getId();
+    }    
+    
+    @PostMapping("/addLicenseInstance")
+    public String addLicenseInstance(ModelMap model,@ModelAttribute("license") License license) {
+
+    	licenseService.updateLicense(license);
+
+    	return "redirect:/licensedetail?license="+license.getId();
+    }      
 }

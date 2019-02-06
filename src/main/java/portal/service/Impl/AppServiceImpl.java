@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import portal.entity.Application;
 import portal.models.App;
@@ -66,6 +67,13 @@ public class AppServiceImpl implements AppService{
 	public Application findbyId(Long id) {
 
 		return appRepository.findOne(id);
+	}
+
+	@Override
+	public List<Application> getUnassignedApps() {
+		List<Application> apps=appRepository.findAll();
+		apps.removeIf(obj->!ObjectUtils.isEmpty(obj.getManufacturer()));
+		return apps;
 	}
 
 }

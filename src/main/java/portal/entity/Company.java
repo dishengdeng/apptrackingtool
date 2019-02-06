@@ -3,7 +3,9 @@ package portal.entity;
 
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -69,7 +71,7 @@ public class Company {
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<AppInstance> appInstances = new ArrayList<AppInstance>();
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "application_id")
@@ -154,14 +156,16 @@ public class Company {
 		return false;
 	}
 
-	public List<AppInstance> getAppInstances() {
+
+	
+	public Set<AppInstance> getAppInstances() {
 		return appInstances;
 	}
 
-	public void setAppInstances(List<AppInstance> appInstances) {
-		this.appInstances = appInstances;
+	public void setAppInstances(Set<AppInstance> appInstances) {
+		this.appInstances.addAll(appInstances);
 	}
-	
+
 	public String getInstanceNameWithComma()
 	{
 		List<String> instanceName=new ArrayList<String>();
