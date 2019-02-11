@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" th:text="${stakeholder.stakeholderName}"></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> Details
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">				
+							<form action="#" th:action="@{/updateStakeholder}" method="post">													
+						
+							  <div class="form-group">
+								<label for="stakeholderName">Stakeholder Name:</label>
+								<input type="text" class="form-control" th:name="stakeholderName" th:value="${stakeholder.stakeholderName}"></input>
+								<input type="hidden" class="form-control" th:name="stakeholderModel" th:value="${stakeholder.id}"></input>
+							  </div>													  
+							  <div class="form-group">
+								<label for="description">First Name:</label>
+								<input type="text" class="form-control" th:name="firstname" th:value="${stakeholder.firstname}">
+							  </div>													  
+							  <div class="form-group">
+								<label for="description">Last Name:</label>
+								<input type="text" class="form-control" th:name="lastname" th:value="${stakeholder.lastname}">
+							  </div>													  
+							  <div class="form-group">
+								<label for="note">Address:</label>
+								<input type="text" class="form-control" th:name="address" th:value="${stakeholder.address}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Phone:</label>
+								<input type="text" class="form-control" th:name="phone" th:value="${stakeholder.phone}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Email:</label>
+								<input type="text" class="form-control" th:name="email" th:value="${stakeholder.email}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Position:</label>
+								<input type="text" class="form-control" th:name="position" th:value="${stakeholder.position}">
+							  </div>													  
+							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>
+            <!-- /.row -->
+			<!--department detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa  fa-building"></i> Department
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#adddepartment'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a style="text-decoration: none;color:white;cursor: pointer"
+								 th:if="${stakeholder.department!=null}" th:href="${#strings.concat('/deleteStakeHolderDepartment?id=',stakeholder.id)}"
+								data-title="Are you sure to delete?" 
+								data-toggle="confirmation" 
+								data-singleton="true" 
+								data-popout="true"
+								 >
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${stakeholder.department!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">Department:</th>
+								<td>
+									<a th:href="@{'/departmentdetail?id='+${stakeholder.department.id}}"><h5 th:text="${stakeholder.department.departmentName}"></h5></a>
+								</td>
+								</tr>
+								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${stakeholder.department.description}"></td></tr>
+
+								<tr><th scope="row" style="width:25%">Attachment:</th>
+								<td>									
+									<a data-toggle="modal"  
+											th:data-target="@{${#strings.concat('#',stakeholder.department.id,'files')}}" 
+											th:text="${stakeholder.department.getFileNameWithComma()}"
+											style="text-decoration: none;cursor: pointer"
+											>
+									</a>
+								</td>
+								</tr>								
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>			
+			</div>
+			<!--role detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa  fa-building"></i> Role
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addrole'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a style="text-decoration: none;color:white;cursor: pointer"
+								 th:if="${stakeholder.role!=null}" th:href="${#strings.concat('/deleteStakeHolderRole?id=',stakeholder.id)}"
+								data-title="Are you sure to delete?" 
+								data-toggle="confirmation" 
+								data-singleton="true" 
+								data-popout="true"
+								 >
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${stakeholder.role!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">Role:</th>
+								<td>
+									<a th:href="@{'/roledetail?id='+${stakeholder.role.id}}"><h5 th:text="${stakeholder.role.SLARoleName}"></h5></a>
+								</td>
+								</tr>
+								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${stakeholder.role.description}"></td></tr>							
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>			
+			</div>			
+				<!--Department model-->
+				<div class="modal fade" th:id="adddepartment" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Department - '+${stakeholder.firstname}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addStakeHolderDepartment}"  method="post">
+								<div class="form-group">
+									<label for="departmentSelect">Department:</label>
+									<input type="hidden" class="form-control" th:name="stakeholder" th:value="${stakeholder.id}"></input>
+									<select name="department" class="form-control" id="departmentSelect">
+									  <option th:selected="${stakeholder.department==null}"></option>
+									  <option th:each="departmentEntity : ${departments}" 
+									  th:text="${departmentEntity.departmentName}" 
+									  th:attr="value = ${departmentEntity.id}" th:selected="${stakeholder.department==null} ? false:${stakeholder.department.getId()==departmentEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>	
+				<!--role model-->
+				<div class="modal fade" th:id="addrole" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Role - '+${stakeholder.firstname}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addStakeHolderRole}"  method="post">
+								<div class="form-group">
+									<label for="roleSelect">Role:</label>
+									<input type="hidden" class="form-control" th:name="stakeholder" th:value="${stakeholder.id}"></input>
+									<select name="role" class="form-control" id="roleSelect">
+									  <option th:selected="${stakeholder.role==null}"></option>
+									  <option th:each="roleEntity : ${roles}" 
+									  th:text="${roleEntity.SLARoleName}" 
+									  th:attr="value = ${roleEntity.id}" th:selected="${stakeholder.role==null} ? false:${stakeholder.role.getId()==roleEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>				
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>

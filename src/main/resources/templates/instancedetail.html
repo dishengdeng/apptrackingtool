@@ -470,12 +470,13 @@
 								</td>
 								</tr>
 								<tr><th scope="row" style="width:25%">Stakeholder:</th><td>
-								<a data-toggle="modal" th:if="${department.stakeholders.size()>0}"  th:data-target="@{${#strings.concat('#',department.id,'stakeholders')}}">
+								
 									<ul style="padding:0" th:if="${department.stakeholders.size()>0}">
-										<li style="list-style-type:none" th:each="stakeholder : ${department.stakeholders}" th:text="${stakeholder.stakeholderName}">
+										<li style="list-style-type:none" th:each="stakeholder : ${department.stakeholders}">
+										<a th:href="@{'/stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
 										</li>
 									</ul>
-								</a>
+
 								</td></tr>
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${department.description}"></td></tr>
 
@@ -527,45 +528,7 @@
 					</div>
 				</div>
 			</div>
-					<!---Department stakeholders detail-->
 
-						<div class="modal fade" th:if="${department!=null}" th:id="${#strings.concat(department.id,'stakeholders')}" stakeholder="dialog" >
-						<!-- Modal content-->
-								<div class="modal-dialog">
-								  <div class="modal-content">
-									<div class="modal-header">
-									  <button type="button" class="close" data-dismiss="modal">&times;</button>
-									  <h4 class="modal-title"> Stakeholders</h4>
-									</div>
-									<div class="modal-body">
-										<table class="table table-striped" id="stakeholdertable">
-										  <thead>
-											<tr>
-											  <th scope="col">Stakeholder</th>
-											  <th scope="col">First Name</th>
-											  <th scope="col">Last Name</th>
-											  <th scope="col">Address</th>
-											  <th scope="col">Phone</th>
-											  <th scope="col">Position</th>
-											  <th scope="col">Email</th>														  
-											</tr>
-										  </thead>
-										  <tbody>
-											<tr th:each="stakholder : ${department.stakeholders}">
-											  <th><h5 th:text="${stakholder.stakeholderName}"></h5></th>
-											  <th><h5 th:text="${stakholder.firstname}"></h5></th>
-											  <th><h5 th:text="${stakholder.lastname}"></h5></th>
-											  <th><h5 th:text="${stakholder.address}"></h5></th>
-											  <th><h5 th:text="${stakholder.phone}"></h5></th>														  
-											  <th><h5 th:text="${stakholder.position}"></h5></th>
-											  <th><h5 th:text="${stakholder.email}"></h5></th>
-											</tr>
-										  </tbody>
-										</table>
-									</div>
-								   </div>
-								 </div>
-						</div>
 
 			<!--Suport Detail-->
 			<div class="row">

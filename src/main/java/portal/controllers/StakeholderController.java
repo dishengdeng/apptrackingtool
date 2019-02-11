@@ -71,6 +71,14 @@ public class StakeholderController {
     	stakeholderService.delete(stakeholder);
     	return "redirect:/stakeholders";
     }
+    
+    @GetMapping("/stakeholderdetail")
+    public String stakeholderdetail(@ModelAttribute("stakeholder") Stakeholder stakeholder,ModelMap model) {
+    	model.addAttribute("stakeholder", stakeholder);
+    	model.addAttribute("departments", departmentService.getAll());
+    	model.addAttribute("roles", slaRoleService.getAll());
+        return "stakeholderdetail";
+    }
 
 
 }
