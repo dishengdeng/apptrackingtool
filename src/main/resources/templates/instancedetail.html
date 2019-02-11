@@ -93,9 +93,10 @@
 								<tr><th scope="row" style="width:25%">Attachment:</th><td>
 									<a data-toggle="modal"  
 										th:data-target="@{${#strings.concat('#',sla.id,'files')}}" 
-										th:text="${sla.getFileNameWithComma()}"
+										th:if="${sla.files.size()>0}"
 										th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 										>
+										<span class="fa fa-paperclip fa-lg"></span>
 									</a>
 								</td></tr>
 							  </tbody>
@@ -172,9 +173,10 @@
 								<td>
 									<a data-toggle="modal"  
 										th:data-target="@{${#strings.concat('#',contract.id,'files')}}" 
-										th:text="${contract.getFileNameWithComma()}"
+										th:if="${contract.files.size()>0}"
 										th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 										>
+										<span class="fa fa-paperclip fa-lg"></span>
 									</a>
 								</td>
 								</tr>
@@ -345,11 +347,11 @@
 									<td th:text="${server.decomminsionDate}"></td>
 									<td>
 										<a data-toggle="modal"  
-											th:data-target="@{${#strings.concat('#',server.id,'files')}}" 
-											th:text="${server.getFileNameWithComma()}"
+											th:data-target="@{${#strings.concat('#',server.id,'files')}}" 										
 											th:if="${server.files.size()>0}"
 											style="text-decoration: none;cursor: pointer"
 											>
+											<span class="fa fa-paperclip fa-lg"></span>
 										</a>
 									</td>
 								</tr>
@@ -484,9 +486,10 @@
 								<td>									
 									<a data-toggle="modal"  
 											th:data-target="@{${#strings.concat('#',department.id,'files')}}" 
-											th:text="${department.getFileNameWithComma()}"
+											th:if="${department.files.size()>0}"
 											th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 											>
+											<span class="fa fa-paperclip fa-lg"></span>
 									</a>
 								</td>
 								</tr>								

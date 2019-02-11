@@ -76,7 +76,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a style="text-decoration: none;color:white;cursor: pointer"
-								 th:if="${stakeholder.department!=null}" th:href="${#strings.concat('/deleteStakeHolderDepartment?id=',stakeholder.id)}"
+								 th:if="${stakeholder.department!=null}" th:href="${#strings.concat('/deleteStakeHolderDepartment?stakeholder=',stakeholder.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 
 								data-singleton="true" 
@@ -101,9 +101,10 @@
 								<td>									
 									<a data-toggle="modal"  
 											th:data-target="@{${#strings.concat('#',stakeholder.department.id,'files')}}" 
-											th:text="${stakeholder.department.getFileNameWithComma()}"
+											th:if="${stakeholder.department.files.size()>0}"
 											style="text-decoration: none;cursor: pointer"
 											>
+											<span class="fa fa-paperclip fa-lg"></span>
 									</a>
 								</td>
 								</tr>								
@@ -119,13 +120,13 @@
 				<div class="col-lg-8">
 					 <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <i class="fa  fa-building"></i> Role
+                            <i class="fa  fa-male"></i> Role
                             <div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addrole'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a style="text-decoration: none;color:white;cursor: pointer"
-								 th:if="${stakeholder.role!=null}" th:href="${#strings.concat('/deleteStakeHolderRole?id=',stakeholder.id)}"
+								 th:if="${stakeholder.role!=null}" th:href="${#strings.concat('/deleteStakeHolderRole?stakeholder=',stakeholder.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 
 								data-singleton="true" 
@@ -213,7 +214,37 @@
 					  </div>
 
 					</div>	
-				</div>				
+				</div>
+				<!--file model -->
+				<div class="modal fade" th:if="${stakeholder.department!=null && stakeholder.department.files.size()>0}" th:id="${#strings.concat(stakeholder.department.id,'files')}" role="dialog" >
+					<!-- Modal content-->
+					<div class="modal-dialog">
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title"> Attachments</h4>
+						</div>
+						<div class="modal-body">
+							<table class="table table-striped" id="filestable">
+							  <thead>
+								<tr>
+								  <th scope="col">File Name</th>
+								  <th scope="col">Created At</th>
+								  <th scope="col">Created By</th>														  
+								</tr>
+							  </thead>
+							  <tbody>
+								<tr th:each="file : ${stakeholder.department.files}">
+								  <th><h5><a th:href="@{'/downloadsla?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+								  <th><h5 th:text="${file.createdat}"></h5></th>
+								  <th><h5 th:text="${file.createdby}"></h5></th>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+					   </div>
+					 </div>
+				</div>								
         </div>
         <!-- /#page-wrapper -->
 

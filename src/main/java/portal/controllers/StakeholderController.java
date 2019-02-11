@@ -32,8 +32,7 @@ public class StakeholderController {
     @GetMapping("/stakeholders")
     public String stakeholdertable(ModelMap model) {
     	model.addAttribute("stakeholders", stakeholderService.getAll());
-    	model.addAttribute("stakeholderModel", new Stakeholder());
-    	model.addAttribute("departments", departmentService.getAll());
+
     	model.addAttribute("roles", slaRoleService.getAll());
         return "stakeholders";
     }
@@ -49,7 +48,7 @@ public class StakeholderController {
     public String updateStakeholder(@ModelAttribute("stakeholderModel") Stakeholder stakeholder) {
 
     	stakeholderService.updateStakeholder(stakeholder);
-        return "redirect:/stakeholders";
+    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
     }
     
     @GetMapping("/addStakeholder")
@@ -80,5 +79,38 @@ public class StakeholderController {
         return "stakeholderdetail";
     }
 
+    //--department--
+    @GetMapping("/deleteStakeHolderDepartment")
+    public String deleteStakeHolderDepartment(@ModelAttribute("stakeholder") Stakeholder stakeholder)
+    {
+    	stakeholder.setDepartment(null);
+    	stakeholderService.updateStakeholder(stakeholder);
+    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
+    }
+    
+    @PostMapping("/addStakeHolderDepartment")
+    public String addStakeHolderDepartment(@ModelAttribute("stakeholder") Stakeholder stakeholder)
+    {
+
+    	stakeholderService.updateStakeholder(stakeholder);
+    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
+    }
+
+    //--role--
+    @GetMapping("/deleteStakeHolderRole")
+    public String deleteStakeHolderRole(@ModelAttribute("stakeholder") Stakeholder stakeholder)
+    {
+    	stakeholder.setRole(null);
+    	stakeholderService.updateStakeholder(stakeholder);
+    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
+    }
+    
+    @PostMapping("/addStakeHolderRole")
+    public String addStakeHolderRole(@ModelAttribute("stakeholder") Stakeholder stakeholder)
+    {
+
+    	stakeholderService.updateStakeholder(stakeholder);
+    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
+    }
 
 }

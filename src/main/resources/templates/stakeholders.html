@@ -57,13 +57,13 @@
 											style="text-decoration: none">
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
-											<a data-toggle="modal" th:data-target="@{'#'+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}" style="cursor:pointer"></a>
+											<a th:href="@{'stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
 										</td>
 										<td>
 											<a data-toggle="modal" th:if="${stakeholder.role!=null}" th:data-target="@{'#'+${#strings.concat(stakeholder.id,stakeholder.role.getId())}}" th:text="${stakeholder.role.SLARoleName}" style="cursor:pointer"></a>											
 										</td>
 										<td>
-											<a data-toggle="modal" th:if="${stakeholder.department!=null}" th:data-target="@{'#'+${#strings.concat(stakeholder.id,stakeholder.department.getId())}}" th:text="${stakeholder.department.departmentName}" style="cursor:pointer"></a>											
+											<a th:href="@{'/departmentdetail?id='+${stakeholder.department.id}}"><h5 th:text="${stakeholder.department.departmentName}"></h5></a>										
 										</td>
 										<td th:text="${stakeholder.firstname}"></td>
 										<td th:text="${stakeholder.lastname}"></td>										
@@ -114,129 +114,8 @@
 											 </div>
 											</div>
 										</div>
-										
-										<!--department Modal-->
-										<div th:if="${stakeholder.department!=null}">
-											<div class="modal fade" th:id="${#strings.concat(stakeholder.id,stakeholder.department.getId())}" role="dialog" >
-											<!-- Modal content-->
-											<div class="modal-dialog">
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${stakeholder.department.departmentName}"></h4>
-												</div>
-												<div class="modal-body">
-														<form>
-														  <div class="form-group">
-															<label for="departmentName">department Name:</label>
-															<input type="text" class="form-control" th:value="${stakeholder.department.departmentName}" readonly></input>
-														  </div>													  
-														  <div class="form-group">
-															<label for="description">Description:</label>
-															<input type="text" class="form-control" th:value="${stakeholder.department.description}" readonly>
-														  </div>													  
-														  <div class="form-group">
-															<label for="description">Purpose:</label>
-															<input type="text" class="form-control"  th:value="${stakeholder.department.purpose}" readonly>
-														  </div>
-														  <div class="form-group">
-															<label for="note">Stragic Plan:</label>
-															<input type="text" class="form-control" th:value="${stakeholder.department.stragicplan}" readonly>
-														  </div>
-														  <div class="form-group">
-															<label for="note">Road Map:</label>
-															<input type="text" class="form-control"  th:value="${stakeholder.department.roadMap}" readonly>
-														  </div>
-														  <div class="form-group">
-															<label for="note">Goal:</label>
-															<input type="text" class="form-control"  th:value="${stakeholder.department.goal}" readonly>
-														  </div>
-														  <div class="form-group">
-															<label for="note">Paint Point:</label>
-															<input type="text" class="form-control"  th:value="${stakeholder.department.painpoint}" readonly>
-														  </div>														  
-														  <div class="form-group">
-															<label for="note">Attachment:</label>
-															<input type="text" class="form-control"  th:value="${stakeholder.department.attachment}" readonly>
-														  </div>
-														</form>
-												</div>
-											   </div>
-											 </div>
-											</div>
-										</div>											
+																		
 
-										  <!-- Modal -->
-										  <div class="modal fade" th:id="${stakeholder.id}" role="dialog">
-											<div class="modal-dialog">
-											
-											  <!-- Modal content-->
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${stakeholder.stakeholderName}"></h4>
-												</div>
-												<div class="modal-body">
-													<form action="#" th:action="@{/updateStakeholder}" th:object="${stakeholderModel}" method="post">													
-												
-													  <div class="form-group">
-														<label for="stakeholderName">Stakeholder Name:</label>
-														<input type="text" class="form-control" th:name="stakeholderName" th:value="${stakeholder.stakeholderName}"></input>
-														<input type="hidden" class="form-control" th:name="id" th:value="${stakeholder.id}"></input>
-													  </div>
-													  <div class="form-group">
-														<label for="roleSelect">Role:</label>
-														<select name="role" class="form-control" id="roleSelect">
-														  <option th:selected="${stakeholder.role==null}"></option>
-														  <option th:each="roleEntity : ${roles}" 
-														  th:text="${roleEntity.SLARoleName}" 
-														  th:attr="value = ${roleEntity.id}" th:selected="${stakeholder.role==null} ? false:${stakeholder.role.getId()==roleEntity.id}">
-														  
-														  </option>
-														</select>
-													  </div>													  
-													  <div class="form-group">
-														<label for="departmentSelect">Department:</label>
-														<select name="department" class="form-control" id="departmentSelect">
-														  <option th:selected="${stakeholder.department==null}"></option>
-														  <option th:each="departmentEntity : ${departments}" 
-														  th:text="${departmentEntity.departmentName}" 
-														  th:attr="value = ${departmentEntity.id}" th:selected="${stakeholder.department==null} ? false:${stakeholder.department.getId()==departmentEntity.id}">
-														  
-														  </option>
-														</select>
-													  </div>													  
-													  <div class="form-group">
-														<label for="description">First Name:</label>
-														<input type="text" class="form-control" th:name="firstname" th:value="${stakeholder.firstname}">
-													  </div>													  
-													  <div class="form-group">
-														<label for="description">Last Name:</label>
-														<input type="text" class="form-control" th:name="lastname" th:value="${stakeholder.lastname}">
-													  </div>													  
-													  <div class="form-group">
-														<label for="note">Address:</label>
-														<input type="text" class="form-control" th:name="address" th:value="${stakeholder.address}">
-													  </div>
-													  <div class="form-group">
-														<label for="note">Phone:</label>
-														<input type="text" class="form-control" th:name="phone" th:value="${stakeholder.phone}">
-													  </div>
-													  <div class="form-group">
-														<label for="note">Email:</label>
-														<input type="text" class="form-control" th:name="email" th:value="${stakeholder.email}">
-													  </div>
-													  <div class="form-group">
-														<label for="note">Position:</label>
-														<input type="text" class="form-control" th:name="position" th:value="${stakeholder.position}">
-													  </div>													  
-													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
-													</form>
-												</div>
-											  </div>
-											  
-											</div>
-										  </div>
                                     </tr>
 
 

@@ -1,11 +1,16 @@
 package portal.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -46,6 +51,14 @@ public class SLARole {
     @Column(name = "raciforsyschanges",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String raciforsyschanges;
+    
+    @OneToMany(
+            mappedBy = "role", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true,
+            fetch=FetchType.EAGER
+        )
+    private Set<Stakeholder> stakeholders = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -101,6 +114,14 @@ public class SLARole {
 
 	public void setRaciforsyschanges(String raciforsyschanges) {
 		this.raciforsyschanges = raciforsyschanges;
+	}
+
+	public Set<Stakeholder> getStakeholders() {
+		return stakeholders;
+	}
+
+	public void setStakeholders(Set<Stakeholder> stakeholders) {
+		this.stakeholders.addAll(stakeholders);
 	} 
     
 
