@@ -60,7 +60,7 @@
 											<a th:href="@{'stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
 										</td>
 										<td>
-											<a data-toggle="modal" th:if="${stakeholder.role!=null}" th:data-target="@{'#'+${#strings.concat(stakeholder.id,stakeholder.role.getId())}}" th:text="${stakeholder.role.SLARoleName}" style="cursor:pointer"></a>											
+											<a th:href="@{'/slaroledetail?slarole='+${stakeholder.role.id}}"  th:text="${stakeholder.role.SLARoleName}"></a>										
 										</td>
 										<td>
 											<a th:href="@{'/departmentdetail?id='+${stakeholder.department.id}}"><h5 th:text="${stakeholder.department.departmentName}"></h5></a>										
@@ -72,48 +72,6 @@
 										<td th:text="${stakeholder.email}"></td>
 										<td th:text="${stakeholder.position}"></td>
 										
-										<!--SLARole Modal-->
-										<div th:if="${stakeholder.role!=null}">
-											<div class="modal fade" th:id="${#strings.concat(stakeholder.id,stakeholder.role.getId())}" stakeholder="dialog" >
-											<!-- Modal content-->
-											<div class="modal-dialog">
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${stakeholder.role.SLARoleName}"></h4>
-												</div>
-												<div class="modal-body">
-														<form>
-														  <div class="form-group">
-															<label for="roleName">Role:</label>
-															<input type="text" class="form-control" th:value="${stakeholder.role.SLARoleName}" readonly></input>
-														  </div>													  
-														  <div class="form-group">
-															<label for="description">Description:</label>
-															<input type="text" class="form-control" th:value="${stakeholder.role.description}" readonly>
-														  </div>													  
-														  <div class="form-group">
-															<label for="description">Responsibility:</label>
-															<input type="text" class="form-control"  th:value="${stakeholder.role.responsibility}" readonly>
-														  </div>													  
-														  <div class="form-group">
-															<label for="note">Influence:</label>
-															<input type="text" class="form-control"  th:value="${stakeholder.role.influence}" readonly>
-														  </div>
-														  <div class="form-group">
-															<label for="note">Interest:</label>
-															<input type="text" class="form-control" th:value="${stakeholder.role.interest}" readonly>
-														  </div>
-														  <div class="form-group">
-															<label for="note">RACI For Sys Changes:</label>
-															<input type="text" class="form-control"  th:value="${stakeholder.role.raciforsyschanges}" readonly>
-														  </div>
-														</form>
-												</div>
-											   </div>
-											 </div>
-											</div>
-										</div>
 																		
 
                                     </tr>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header" th:text="@{'Role - '+${slarole.SLARoleName}}"></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> Details
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+							<form action="#" th:action="@{/updateSLARole}" method="post">													
+						
+							  <div class="form-group">
+								<label for="SLARoleName">Role:</label>
+								<input type="text" class="form-control" th:name="SLARoleName" th:value="${slarole.SLARoleName}"></input>
+								<input type="hidden" class="form-control" th:name="slaroleModel" th:value="${slarole.id}"></input>
+							  </div>													  
+							  <div class="form-group">
+								<label for="description">Description:</label>
+								<input type="text" class="form-control" th:name="description" th:value="${slarole.description}">
+							  </div>	  												  
+							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>
+            <!-- /.row -->
+			<!--stakeholder Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-users"></i> Stakeholders
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addstakeholder'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${slarole.stakeholders.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Stakeholder</th>
+								<th>Email</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="stakeholder: ${slarole.stakeholders}">
+									<td>
+										<a th:href="@{'/deleteSlaroleStakeholder?stakeholder='+${stakeholder.id}+'&slarole='+${slarole.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
+									</td>
+									<td th:text="${stakeholder.email}"></td>
+
+
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>	
+				<!--stakeholder model-->
+				<div class="modal fade" th:id="addstakeholder" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Stakeholders - '+${slarole.SLARoleName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addSlaroleStakeholder}"  method="post">
+								<div class="form-group">
+									<label for="instanceselect">Stakeholders:</label>
+									<input type="hidden" class="form-control" th:name="slarole" th:value="${slarole.id}"></input>
+									<select name="stakeholders" class="form-control" id="stakeholderSelect" multiple>
+
+											  <option th:each="stakeholder : ${stakeholders}" 
+
+											  th:attr="value = ${stakeholder.id}"
+											  th:text="${stakeholder.stakeholderName}">
+											  
+											  </option>
+
+
+											
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>				
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+	  	$('[id^=stakeholderSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Stakeholder',
+		enableCaseInsensitiveFiltering:true
+	  });		
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>

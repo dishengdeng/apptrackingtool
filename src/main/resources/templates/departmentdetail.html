@@ -149,7 +149,7 @@
 										</a>
 										<a th:href="@{'/stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
 									</td>
-									<td th:if="${stakeholder.role!=null}"><a th:href="@{'/roledetail?role='+${stakeholder.role.id}}"  th:text="${stakeholder.role.SLARoleName}"></a></td>
+									<td th:if="${stakeholder.role!=null}"><a th:href="@{'/slaroledetail?slarole='+${stakeholder.role.id}}"  th:text="${stakeholder.role.SLARoleName}"></a></td>
 									<td th:text="${stakeholder.email}"></td>
 
 

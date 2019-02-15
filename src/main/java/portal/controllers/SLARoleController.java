@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+
 import portal.entity.SLARole;
+import portal.entity.Stakeholder;
 import portal.service.SLARoleService;
 import portal.service.StakeholderService;
 
@@ -62,5 +64,27 @@ public class SLARoleController {
     	return "redirect:/slaroles";
     }
 
+    @GetMapping("/slaroledetail")
+    public String DepartmentDetial(@ModelAttribute("slarole") SLARole slarole,ModelMap model) {
+    	model.addAttribute("slarole",slarole);
+    	model.addAttribute("stakeholders",stakeholderService.getAll());
+        return "slaroledetail";
+    }
+    
+    //--Stakeholder--    
+    @GetMapping("/deleteSlaroleStakeholder")
+    public String deleteSlaroleStakeholder(@ModelAttribute("stakeholder") Stakeholder stakeholder,@ModelAttribute("slarole") SLARole slarole) {
+    	stakeholder.setRole(null);
+    	stakeholderService.updateStakeholder(stakeholder);
 
+    	return "redirect:/slaroledetail?slarole="+slarole.getId();
+    }    
+    
+    @PostMapping("/addSlaroleStakeholder")
+    public String addSlaroleStakeholder(@ModelAttribute("slarole") SLARole slarole) {
+
+    	slaroleService.updateSLARole(slarole);
+
+    	return "redirect:/slaroledetail?slarole="+slarole.getId();
+    }    
 }
