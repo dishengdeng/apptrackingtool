@@ -7,14 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import portal.entity.SLARole;
+import portal.entity.Stakeholder;
 import portal.models.SLARoleModel;
 import portal.repository.SLARoleRepository;
+import portal.repository.StakeholderRepository;
 import portal.service.SLARoleService;
 @Service
 public class SLARoleServiceImpl implements SLARoleService{
 
 	@Autowired
 	private SLARoleRepository slaRoleRepository;
+	
+	@Autowired
+	private StakeholderRepository stakeholderRepository;
+	
 	
 	@Override
 	public SLARole addSLARole(SLARole SLARole) {
@@ -70,6 +76,15 @@ public class SLARoleServiceImpl implements SLARoleService{
 	public SLARole updateSLARole(SLARole SLARole) {
 	
 		return slaRoleRepository.saveAndFlush(SLARole);
+	}
+
+	@Override
+	public void updateSLARoleStakeholder(List<Stakeholder> stakeholders, SLARole slarole) {
+		stakeholders.forEach(obj->{
+			obj.setRole(slarole);
+			stakeholderRepository.saveAndFlush(obj);
+		});
+		
 	}
 
 }

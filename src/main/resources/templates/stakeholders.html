@@ -60,10 +60,10 @@
 											<a th:href="@{'stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
 										</td>
 										<td>
-											<a th:href="@{'/slaroledetail?slarole='+${stakeholder.role.id}}"  th:text="${stakeholder.role.SLARoleName}"></a>										
+											<a th:if="${stakeholder.role!=null}" th:href="@{'/slaroledetail?slarole='+${stakeholder.role.id}}"  th:text="${stakeholder.role.SLARoleName}"></a>										
 										</td>
 										<td>
-											<a th:href="@{'/departmentdetail?id='+${stakeholder.department.id}}"><h5 th:text="${stakeholder.department.departmentName}"></h5></a>										
+											<a th:if="${stakeholder.department!=null}" th:href="@{'/departmentdetail?id='+${stakeholder.department.id}}"><h5 th:text="${stakeholder.department.departmentName}"></h5></a>										
 										</td>
 										<td th:text="${stakeholder.firstname}"></td>
 										<td th:text="${stakeholder.lastname}"></td>										

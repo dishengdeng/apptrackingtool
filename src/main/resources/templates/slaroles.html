@@ -35,11 +35,9 @@
                                 <thead>
                                     <tr>
                                         <th>Role</th>
+										<th>Stakeholder</th>
 										<th>Description</th>
-										<th>Responsibility</th>
-                                        <th>Influence</th>
-										<th>Interest</th>
-										<th>RACI For Sys Changes</th>
+
 
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
@@ -55,68 +53,54 @@
 											style="text-decoration: none">
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
-											<a data-toggle="modal" th:data-target="@{'#'+${slarole.id}}" th:text="${slarole.SLARoleName}" style="cursor:pointer"></a>
+											<a th:href="@{'/slaroledetail?slarole='+${slarole.id}}" th:text="${slarole.SLARoleName}"></a>
+										</td>
+										<td>
+											<a data-toggle="modal" th:if="${slarole.stakeholders.size()>0}" th:data-target="@{'#'+${slarole.id}+'stakeholder'}" style="cursor:pointer">
+												<span class="badge badge-secondary small" th:text="${'Stakeholder - Total: '+slarole.stakeholders.size()}"></span>
+											</a>
 										</td>
 										<td th:text="${slarole.description}"></td>
-										<td th:text="${slarole.responsibility}"></td>
-                                        <td th:text="${slarole.influence}"></td>
-                                        <td th:text="${slarole.interest}"></td>
-										<td th:text="${slarole.raciforsyschanges}"></td>
 
-										
 
-										  <!-- Modal -->
-										  <div class="modal fade" th:id="${slarole.id}" role="dialog">
-											<div class="modal-dialog">
-											
-											  <!-- Modal content-->
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${slarole.SLARoleName}"></h4>
-												</div>
-												<div class="modal-body">
-													<form action="#" th:action="@{/updateSLARole}" th:object="${slaroleModel}" method="post">													
-												
-													  <div class="form-group">
-														<label for="SLARoleName">Role:</label>
-														<input type="text" class="form-control" th:name="SLARoleName" th:value="${slarole.SLARoleName}"></input>
-														<input type="hidden" class="form-control" th:name="id" th:value="${slarole.id}"></input>
-													  </div>													  
-													  <div class="form-group">
-														<label for="description">Description:</label>
-														<input type="text" class="form-control" th:name="description" th:value="${slarole.description}">
-													  </div>													  
-													  <div class="form-group">
-														<label for="description">Responsibility:</label>
-														<input type="text" class="form-control" th:name="responsibility" th:value="${slarole.responsibility}">
-													  </div>													  
-													  <div class="form-group">
-														<label for="note">Influence:</label>
-														<input type="text" class="form-control" th:name="influence" th:value="${slarole.influence}">
-													  </div>
-													  <div class="form-group">
-														<label for="note">Interest:</label>
-														<input type="text" class="form-control" th:name="interest" th:value="${slarole.interest}">
-													  </div>
-													  <div class="form-group">
-														<label for="note">RACI For Sys Changes:</label>
-														<input type="text" class="form-control" th:name="raciforsyschanges" th:value="${slarole.raciforsyschanges}">
-													  </div>												  
-													  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
-													</form>
-												</div>
-											  </div>
-											  
-											</div>
-										  </div>
                                     </tr>
 
 
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
+							<!--Model Area-->
+							<div th:each="slarole: ${slaroles}">
+								<div class="modal fade" th:if="${slarole.stakeholders.size()>0}" th:id="${#strings.concat(slarole.id,'stakeholder')}" role="dialog" >
+								<!-- Modal content-->
+										<div class="modal-dialog">
+										  <div class="modal-content">
+											<div class="modal-header">
+											  <button type="button" class="close" data-dismiss="modal">&times;</button>
+											  <h4 class="modal-title"> Stakeholders</h4>
+											</div>
+											<div class="modal-body">
+												<table class="table table-striped" id="instancetable">
+												  <thead>
+													<tr>
+													  <th scope="col">Stakeholder</th>
+													  <th scope="col">Email:</th>
+											  
+													</tr>
+												  </thead>
+												  <tbody>
+													<tr th:each="stakeholder : ${slarole.stakeholders}">
+													  <th><h5><a th:href="@{'/stakeholderdetail?stakeholder='+${stakeholder.id}}"><h5 th:text="${stakeholder.stakeholderName}"></h5></a></th>
+													  <th><h5 th:text="${stakeholder.email}"></h5></th>
 
+													</tr>
+												  </tbody>
+												</table>
+											</div>
+										   </div>
+										 </div>
+								</div>
+							</div>
                         </div>
                         <!-- /.panel-body -->
                     </div>

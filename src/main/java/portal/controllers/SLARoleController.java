@@ -1,6 +1,8 @@
 package portal.controllers;
 
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,7 +32,7 @@ public class SLARoleController {
     @GetMapping("/slaroles")
     public String slaroletable(ModelMap model) {
     	model.addAttribute("slaroles", slaroleService.getAll());
-    	model.addAttribute("slaroleModel", new SLARole());
+
         return "slaroles";
     }
     
@@ -45,7 +47,7 @@ public class SLARoleController {
     public String updateSLARole(@ModelAttribute("slaroleModel") SLARole slarole) {
 
     	slaroleService.updateSLARole(slarole);
-        return "redirect:/slaroles";
+    	return "redirect:/slaroledetail?slarole="+slarole.getId();
     }
     
     @GetMapping("/addSLARole")
@@ -56,7 +58,8 @@ public class SLARoleController {
     
     @GetMapping("/deleteSLARole")
     public String deleteSLARole(@RequestParam(name="id", required=true) String id,@RequestParam(name="slaroleName", required=true) String slaroleName) {
-    	SLARole slarole = slaroleService.getById(Long.valueOf(id));
+    	SLARole slarole = new SLARole();
+    	slarole.setId(Long.valueOf(id));
     	
     	stakeholderService.removeRole(slarole);
     	
@@ -83,7 +86,7 @@ public class SLARoleController {
     @PostMapping("/addSlaroleStakeholder")
     public String addSlaroleStakeholder(@ModelAttribute("slarole") SLARole slarole) {
 
-    	slaroleService.updateSLARole(slarole);
+    	slaroleService.updateSLARoleStakeholder(new ArrayList<>(slarole.getStakeholders()), slarole);
 
     	return "redirect:/slaroledetail?slarole="+slarole.getId();
     }    
