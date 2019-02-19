@@ -6,7 +6,8 @@ public enum FileType {
 	SLA(0),
 	CONTRACT(1),
 	DEPARTMENT(2),
-	SERVER(3);
+	SERVER(3),
+	APPINSTANCE(4);
 	
 	private final int fileCode;
 

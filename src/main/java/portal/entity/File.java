@@ -59,6 +59,10 @@ public class File implements Comparable<File>{
     @JoinColumn(name = "department_id")
     private Department department;
     
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "instance_id")
+    private AppInstance appInstance;   
+    
 	public Long getId() {
 		return id;
 	}
@@ -130,6 +134,14 @@ public class File implements Comparable<File>{
 	public void setCreatedat(String createdat) {
 		this.createdat = createdat;
 	}
+	public AppInstance getAppInstance() {
+		return appInstance;
+	}
+
+	public void setAppInstance(AppInstance appInstance) {
+		this.appInstance = appInstance;
+	}
+
 	@Override
 	public int compareTo(File o) {
 

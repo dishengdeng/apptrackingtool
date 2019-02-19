@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><span class="text-primary">Desktop - </span><span th:text="${desktop.desktopName}"></span></h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+			<div class="col-lg-8">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<i class="fa fa-info-circle"></i> Details
+					</div>
+					<!-- /.panel-heading -->
+					<div class="panel-body">			
+						<form action="#" th:action="@{/updateDesktop}" method="post">													
+					
+						  <div class="form-group">
+							<label for="desktopName">Desktop Name:</label>
+							<input type="text" class="form-control" th:name="desktopName" th:value="${desktop.desktopName}"></input>
+							<input type="hidden" class="form-control" th:name="desktopModel" th:value="${desktop.id}"></input>
+							<input th:if="${desktop.appInstance!=null}" type="hidden" class="form-control" th:name="appInstance" th:value="${desktop.appInstance.id}"></input>
+						  </div>
+						  <div class="form-group">
+							<label for="description">Operation System Version:</label>
+							<input type="text" class="form-control" th:name="osVersion" th:value="${desktop.osVersion}">
+						  </div>													  
+						  <div class="form-group">
+							<label for="description">Description:</label>
+							<input type="text" class="form-control" th:name="description" th:value="${desktop.description}">
+						  </div>													  
+						  <div class="form-group">
+							<label for="note">HW Platform:</label>
+							<input type="text" class="form-control" th:name="hwplatform" th:value="${desktop.hwplatform}">
+						  </div>
+						  <div>
+							<label for="Decomminsion Date">Decomminsion Date:</label>
+							<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
+								<input type="text" class="form-control" th:name="decomminsionDate" th:value="${desktop.decomminsionDate}">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</div>
+
+							</div>
+						  </div>													  
+						  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+						</form>
+					</div>
+					<!-- /.panel-body -->
+				</div>
+			</div>						
+			</div>
+            <!-- /.row -->
+			<!-- Instance -->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-laptop"></i> App Instance
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addinstance'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a style="text-decoration: none;color:white;cursor: pointer"
+								th:if="${desktop.appInstance!=null}" th:href="${#strings.concat('/deleteDesktopInstance?desktop=',desktop.id)}"
+								data-title="Are you sure to delete?" 
+								data-toggle="confirmation" 
+								data-singleton="true" 
+								data-popout="true"								
+								>
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${desktop.appInstance!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">App Instance:</th><td><a th:href="@{'/instancedetail?id='+${desktop.appInstance.id}}" th:text="${desktop.appInstance.appInstanceName}"></a></td></tr>
+								<tr><th scope="row" style="width:25%">Status:</th><td th:text="${desktop.appInstance.status}"></td></tr>
+								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${desktop.appInstance.description}"></td></tr>
+							
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			<!-- Instance Modal-->
+			<div class="modal fade" th:id="addinstance" role="dialog">
+				<div class="modal-dialog">
+				
+				  <!-- Modal content-->
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					  <h4 class="modal-title" th:text="'Add Or Change Instance - '+${desktop.desktopName}"></h4>													
+					</div>
+					<div class="modal-body">	
+						<form action="#" th:action="@{/addDesktopInstance}" method="post">
+							<div class="form-group">
+								<label for="instanceselect">App Instance:</label>
+								<input type="hidden" class="form-control" th:name="desktop" th:value="${desktop.id}"></input>
+								<select name="appInstance" class="form-control" id="instanceSelect">
+								  <option th:selected="${desktop.appInstance==null}"></option>
+								  <option th:each="instance : ${appInstances}" 
+								  th:text="${instance.appInstanceName}" 
+								  th:attr="value = ${instance.id}" th:selected="${desktop.appInstance==null} ? false:${desktop.appInstance.getId()==instance.id}">
+								  
+								  </option>
+								</select>
+							</div>
+						  <input class="btn btn-primary" type="submit" value="Submit" />
+						</form>
+					</div>
+				  </div>
+
+				</div>	
+			</div>				
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>

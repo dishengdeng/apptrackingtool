@@ -97,6 +97,13 @@ public class AppInstance implements Comparable<AppInstance>{
         )
     private Desktop desktop;
     
+    @OneToMany(
+            mappedBy = "appInstance", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private Set<File> files = new HashSet<File>();
+    
 	public Long getId() {
 		return id;
 	}
@@ -240,6 +247,14 @@ public class AppInstance implements Comparable<AppInstance>{
 
 	public void setSla(SLA sla) {
 		this.sla = sla;
+	}
+
+	public Set<File> getFiles() {
+		return files;
+	}
+
+	public void setFiles(Set<File> files) {
+		this.files.addAll(files);
 	}
 	
 }

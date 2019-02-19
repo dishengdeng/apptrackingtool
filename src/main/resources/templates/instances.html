@@ -34,6 +34,7 @@
 								<thead>
 									<tr>
 										<th>App Instance</th>
+										<th><span class="fa fa-paperclip fa-lg"></span></th>
 										<th>Status</th>
 										<th>Descrption</th>										
 										<th>Application</th>
@@ -62,6 +63,15 @@
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
 											<a th:href="@{'/instancedetail?id='+${instance.id}}" th:text="${instance.appInstanceName}"></a>
+										</td>
+										<td>
+											<a data-toggle="modal"  
+												th:data-target="@{${#strings.concat('#',instance.id,'files')}}" 
+												th:if="${instance.files.size()>0}"
+												style="text-decoration: none;cursor: pointer"
+												>
+												<span class="fa fa-paperclip fa-lg"></span>
+											</a>
 										</td>
 										<td th:text="${instance.status}">
 										</td>
@@ -100,7 +110,9 @@
 											</a>											
 										</td>
 										<td>
-											<span th:if="${instance.desktop!=null}" th:text="${instance.desktop.desktopName}"></span>
+											<a th:if="${instance.desktop!=null}" th:href="@{'/desktopdetail?desktop='+${instance.desktop.id}}" 
+											th:text="${instance.desktop.desktopName}">
+											</a>											
 										</td>
 										<td>
 											<ul style="padding:0" th:if="${instance.servers!=null && instance.servers.size()>0}">
@@ -135,8 +147,39 @@
 
 								</tbody>
 							</table>
-							
-						  </div>
+							<!--model area-->
+							<div th:each="instance: ${appinstances}">
+								<div class="modal fade" th:if="${instance.files.size()>0}" th:id="${#strings.concat(instance.id,'files')}" role="dialog" >
+									<!-- Modal content-->
+									<div class="modal-dialog">
+									  <div class="modal-content">
+										<div class="modal-header">
+										  <button type="button" class="close" data-dismiss="modal">&times;</button>
+										  <h4 class="modal-title"> Attachments</h4>
+										</div>
+										<div class="modal-body">
+											<table class="table table-striped" id="filestable">
+											  <thead>
+												<tr>
+												  <th scope="col">File Name</th>
+												  <th scope="col">Created At</th>
+												  <th scope="col">Created By</th>														  
+												</tr>
+											  </thead>
+											  <tbody>
+												<tr th:each="file : ${instance.files}">
+												  <th><h5><a th:href="@{'/downloadappinstance?id='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+												  <th><h5 th:text="${file.createdat}"></h5></th>
+												  <th><h5 th:text="${file.createdby}"></h5></th>
+												</tr>
+											  </tbody>
+											</table>
+										</div>
+									   </div>
+									 </div>
+								</div>
+							</div>
+						 </div>
 						<!-- /.panel-body -->
 					</div>
 					<!-- /.panel -->

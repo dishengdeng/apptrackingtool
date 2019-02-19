@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.Desktop;
+import portal.service.AppInstanceService;
 import portal.service.DesktopService;
 
 
@@ -19,11 +20,13 @@ public class DesktopController {
 	@Autowired
 	private DesktopService desktopService;
 	
+	@Autowired
+	private AppInstanceService appInstanceService;
+	
 	
     @GetMapping("/desktops")
     public String desktoptable(ModelMap model) {
     	model.addAttribute("desktops", desktopService.getAll());
-    	model.addAttribute("desktopModel", new Desktop());
         return "desktops";
     }
     
@@ -38,7 +41,7 @@ public class DesktopController {
     public String updateDesktop(@ModelAttribute("desktopModel") Desktop desktop) {
 
     	desktopService.updateDesktop(desktop);
-        return "redirect:/desktops";
+        return "redirect:/desktopdetail?desktop="+desktop.getId();
     }
     
     @GetMapping("/addDesktop")
@@ -58,6 +61,26 @@ public class DesktopController {
     	desktopService.delete(desktop);
     	return "redirect:/desktops";
     }
+    
+    @GetMapping("/desktopdetail")
+    public String CreateDesktop(@ModelAttribute("desktop") Desktop desktop,ModelMap model) {
+    	model.addAttribute("desktop",desktop);
+    	model.addAttribute("appInstances",appInstanceService.getAll());
+        return "desktopdetail";
+    }    
+//---App instance---
+    @GetMapping("/deleteDesktopInstance")
+    public String deleteDesktopInstance(@ModelAttribute("desktop") Desktop desktop) {
+    	desktop.setAppInstance(null);
+    	desktopService.updateDesktop(desktop);
+        return "redirect:/desktopdetail?desktop="+desktop.getId();
+    } 
+    
+    @PostMapping("/addDesktopInstance")
+    public String addDesktopInstance(@ModelAttribute("desktop") Desktop desktop) {
 
+    	desktopService.updateDesktop(desktop);
+        return "redirect:/desktopdetail?desktop="+desktop.getId();
+    }   
 
 }

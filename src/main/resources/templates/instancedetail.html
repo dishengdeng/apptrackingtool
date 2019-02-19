@@ -289,7 +289,11 @@
                         <div th:if="${desktop!=null}" class="panel-body">
 							<table class="table">
 							  <tbody>
-								<tr><th scope="row" style="width:25%">Desktop:</th><td th:text="${desktop.desktopName}"></td></tr>
+								<tr><th scope="row" style="width:25%">Desktop:</th><td>
+									<a th:href="@{'/desktopdetail?desktop='+${desktop.id}}" 
+									th:text="${desktop.desktopName}">
+									</a>
+								</td></tr>
 								<tr><th scope="row" style="width:25%">Operation System Version:</th><td th:text="${desktop.osVersion}"></td></tr>
 								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${desktop.description}"></td></tr>
 								<tr><th scope="row" style="width:25%">HW Platform:</th><td th:text="${desktop.hwplatform}"></td></tr>
@@ -616,7 +620,61 @@
 				<div class="col-lg-4">
 				</div>
 			</div>
+			<!--file detail-->			
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-paperclip"></i> Attachments
+							<div class="pull-right">
+								<a data-toggle="modal" 
+								th:data-target="@{${#strings.concat('#',appinstance.id,'file')}}" 
+								style="text-decoration: none;cursor: pointer;color:white" 
+								title="Add Files">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<div th:if="${appinstance.files.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>File</th>
+								<th>Created At</th>
+								<th>Created By</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="file: ${#lists.sort(appinstance.files)}">
+									<td>
+										<a  
+											th:href="@{'/deleteappinstancefile?file='+${file.id}+'&appInstance='+${appinstance.id}}" 
+											style="text-decoration: none; margin-right:5px"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										>
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a 	
+											th:href="@{'/downloadappinstance?file='+${file.id}}" 
+											th:text="${file.attachment}"
+										>
+										</a>
+									</td>
+									<td th:text="${file.createdat}"></td>
+									<td th:text="${file.createdby}"></td>
+								</tr>
+							  </tbody>
+							</table>							
+						</div>
+						
+					</div>
 
+										
+
+
+				</div><!-- col-lg-8 -->									
+			</div>
 						
 			<!--Model Areas-->
 				<!--SLA model-->
@@ -899,6 +957,38 @@
 
 					</div>	
 				</div>
+				<!--File model-->
+				<div class="modal fade" th:id="${#strings.concat(appinstance.id,'file')}" role="dialog" >
+						<!-- Modal content-->
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+									  <button type="button" class="close" data-dismiss="modal">&times;</button>
+									  <h4 class="modal-title"> Add Files</h4>
+									</div>
+									<div class="modal-body">
+										<form  id="UploadFileForm"  method="POST" action="/appinstanceupload" enctype="multipart/form-data">
+											<!-- COMPONENT START -->
+											<div class="input-group">
+																
+													<a th:onclick="@{'uploadfile(\''+${appinstance.id}+'\')'}"><input type="text" th:id="@{${appinstance.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+													<div class="input-group-btn">
+													<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
+													</div>
+						
+											</div>
+											<!-- COMPONENT END -->
+											<div class="form-group  pull-center">
+												<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${appinstance.id}+'fileupload'}">
+												<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
+												<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+
+											</div>
+										</form>
+									</div>
+							   </div>
+							</div>
+				</div>				
 				
 				
         </div>
