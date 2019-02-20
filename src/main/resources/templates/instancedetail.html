@@ -29,12 +29,12 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-							<form action="#" th:action="@{/updateAppInstance}" th:object="${appinstance}" method="post">													
+							<form action="#" th:action="@{/updateAppInstance}" method="post">													
 						
 							  <div class="form-group">
 								<label for="appInstanceName">Instance:</label>
 								<input type="text" class="form-control" th:name="appInstanceName" th:value="${appinstance.appInstanceName}"></input>
-								<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+								<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
 							  </div>
 							  <div class="form-group">
 								<label for="appInstanceName">Status:</label>
@@ -334,7 +334,7 @@
 							  <tbody>
 								<tr th:each="server: ${serverSelected}">
 									<td>
-											<a th:href="@{'/deleteInstanceServer?id='+${server.id}}" 
+											<a th:href="@{'/deleteInstanceServer?server='+${server.id}}" 
 											style="text-decoration: none;"  
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -815,10 +815,10 @@
 						  <h4 class="modal-title" th:text="'Add Or Change server - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceServer}" th:object="${appInstance}" method="post">
+							<form action="#" th:action="@{/addInstanceServer}"  method="post">
 								<div class="form-group">
 									<label for="serverSelect">Server:</label>
-									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
 									<select name="servers" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="serverSelect">
 									  <option th:each="serverEntity : ${servers}" 
 									  th:text="${serverEntity.serverName}" 

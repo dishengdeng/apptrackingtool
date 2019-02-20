@@ -1,26 +1,45 @@
 package portal.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Company;
+import portal.entity.File;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.CompanyService;
+import portal.service.DepartmentService;
+import portal.service.FileService;
+import portal.utility.FileType;
 
 @Controller
 public class HomeController {
+	
+	private final String UPLOADED_FOLDER="files//application//";
+	
+	@Autowired
+	private FileService fileService;
+	
 	@Autowired
 	private AppService appService;
+	
+	@Autowired
+	private DepartmentService departmentService;
 	
 	@Autowired
 	private AppInstanceService appInstanceService;
@@ -77,6 +96,10 @@ public class HomeController {
     	//--Manufacturer-----
     	model.addAttribute("company",application.getManufacturer());
     	model.addAttribute("companys",companyService.findApplicationByNotAssigned(application));
+    	
+    	//--Department-----
+    	model.addAttribute("department",application.getDepartment());
+    	model.addAttribute("departments",departmentService.getAll());
 
     	return "applicationdetail";
     } 
@@ -85,7 +108,7 @@ public class HomeController {
     @PostMapping("/addApplicationInstance")
     public String addApplicationInstance(@ModelAttribute("app") Application application) {
     	Application applicationEntity = appService.findbyId(application.getId());
-    	List<AppInstance> appInstances = application.getAppInstances();
+    	List<AppInstance> appInstances = new ArrayList<>(application.getAppInstances());
     	
     	for(AppInstance appInstance:appInstances)
     	{
@@ -128,7 +151,56 @@ public class HomeController {
     	companyService.updateApplication(company.getApplication(), company.getId());//assign it to a new company
         return "redirect:/applicationdetail?id="+company.getApplication().getId();
     }
-  //-----------------------    
-     
+  //-----------------------   
+    
+    //------Department---------------    
+    @GetMapping("/deleteApplicationDepartment")
+    public String deleteApplicationDepartment(@ModelAttribute("application") Application application) {
+
+    	application.setDepartment(null);
+		appService.updateApp(application);
+    	return "redirect:/applicationdetail?id="+application.getId();
+    }
+    
+    @PostMapping("/addApplicationDepartment")
+    public String addOrupdateInstanceDepartment(@ModelAttribute("application") Application application) {
+
+		appService.updateApp(application);
+        return "redirect:/applicationdetail?id="+application.getId();
+    }
+    //------file management----
+    @PostMapping("/applicationupload")
+    public String uploadapplication(@RequestParam("file") MultipartFile file,@ModelAttribute("application") Application application) {
+
+
+    	File fileEntity = new File();
+    	fileEntity.setFiletype(FileType.APPLICATION);
+    	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
+    	fileEntity.setApplication(application);
+
+		fileService.uploadFile(file, UPLOADED_FOLDER,application.getId().toString(),fileEntity);
+		
+		return "redirect:/applicationdetail?id="+application.getId();
+    }
+    
+    @GetMapping("/downloadapplication")
+    public ResponseEntity<Resource> downloadfile(@ModelAttribute("file") File file,HttpServletRequest request)
+    {
+    	
+
+
+    	return fileService.downloadFile(UPLOADED_FOLDER,file.getApplication().getId().toString(),file , request);
+    }
+
+    @GetMapping("/deleteapplicationfile")
+    public String deletefile(@ModelAttribute("file") File file,@ModelAttribute("application") Application application)
+    {
+    	
+
+    	
+		fileService.removeFile(UPLOADED_FOLDER, file.getApplication().getId().toString(),file);
+		return "redirect:/applicationdetail?id="+application.getId();
+    	
+    }    
 
 }

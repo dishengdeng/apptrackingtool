@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
 import portal.entity.Stakeholder;
 import portal.models.DepartmentModel;
+import portal.repository.AppInstanceRepository;
+import portal.repository.AppRepository;
 import portal.repository.DepartmentRepository;
 import portal.service.DepartmentService;
 import portal.service.FileService;
@@ -19,7 +22,13 @@ import portal.service.FileService;
 public class DepartmentServiceImpl implements DepartmentService{
 
 	@Autowired
-	DepartmentRepository departmentRepository;
+	private DepartmentRepository departmentRepository;
+	
+	@Autowired
+	private AppInstanceRepository appServiceRepository;
+	
+	@Autowired
+	private AppRepository applicationRepository;
 	
 	@Autowired
 	private FileService fileService;
@@ -82,13 +91,15 @@ public class DepartmentServiceImpl implements DepartmentService{
 
 	@Override
 	public void updateAppIstanceDepartment(Set<AppInstance> appInstances, Department department) {
-		departmentRepository.removeAllDepartment(department);
+
 		if(appInstances.size()>0)
 		{
-			for(AppInstance appInstance:appInstances)
-			{
-				departmentRepository.updateAppIstanceDepartment(appInstance.getId(), department);
-			}
+
+			List<AppInstance> instances = new ArrayList<>(appInstances);
+			instances.forEach(obj->{
+				obj.setDepartment(department);
+				appServiceRepository.saveAndFlush(obj);
+			});
 		}
 
 		
@@ -120,6 +131,19 @@ public class DepartmentServiceImpl implements DepartmentService{
 		}
 
 		
+		
+	}
+
+	@Override
+	public void updateApplicationDepartment(List<Application> applications, Department department) {
+		
+		if(applications.size()>0)
+		{
+			applications.forEach(obj->{
+				obj.setDepartment(department);
+				applicationRepository.saveAndFlush(obj);
+			});
+		}
 		
 	}
 

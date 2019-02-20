@@ -87,6 +87,14 @@ public class Department {
             orphanRemoval = true,
             fetch=FetchType.EAGER
         )
+    private Set<Application> applications = new HashSet<Application>();
+    
+    @OneToMany(
+            mappedBy = "department", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true,
+            fetch=FetchType.EAGER
+        )
     private Set<File> files = new HashSet<File>();
     
 	public Long getId() {
@@ -180,8 +188,17 @@ public class Department {
 	}
 
 	public void setAppInstances(Set<AppInstance> appInstances) {
-		this.appInstances.retainAll(appInstances);
+		//this.appInstances.retainAll(appInstances);
 		this.appInstances.addAll(appInstances);
+	}
+
+	public Set<Application> getApplications() {
+		return applications;
+	}
+
+	public void setApplications(Set<Application> applications) {
+		//this.applications.retainAll(applications);
+		this.applications.addAll(applications);
 	}
 
 	public Set<File> getFiles() {

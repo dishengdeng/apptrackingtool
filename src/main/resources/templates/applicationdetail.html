@@ -29,12 +29,12 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-							<form action="#" th:action="@{/updateApplication}" th:object="${app}" method="post">													
+							<form action="#" th:action="@{/updateApplication}" method="post">													
 						
 								  <div class="form-group">
 									<label for="AppName">Application Name:</label>
 									<input type="text" class="form-control" th:name="AppName" th:value="${app.AppName}">
-									<input type="hidden" class="form-control" th:name="id" th:value="${app.id}">
+									<input type="hidden" class="form-control" th:name="application" th:value="${app.id}">
 									<select name="appInstances" multiple hidden>
 									  <option th:each="instanceEntity : ${appinstances}" 
 									  th:text="${instanceEntity.appInstanceName}" 
@@ -72,7 +72,7 @@
 									</div>
 								  </div>
 								  <div class="form-group">
-									<label for="description">Comments:</label>
+									<label for="description">Tips&Tricks:</label>
 									<input type="text" class="form-control" th:name="AppComments" th:value="${app.AppComments}">
 								  </div>
 								  <div class="form-group">
@@ -176,8 +176,154 @@
 				</div>
 				<div class="col-lg-4">
 				</div>
-			</div>		
+			</div>
+
+			<!--Department Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa  fa-building"></i> Department
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#adddepartment'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a style="text-decoration: none;color:white;cursor: pointer"
+								 th:if="${department!=null}" th:href="${#strings.concat('/deleteApplicationDepartment?application=',app.id)}"
+								data-title="Are you sure to delete?" 
+								data-toggle="confirmation" 
+								data-singleton="true" 
+								data-popout="true"
+								 >
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${department!=null}" class="panel-body">
+							<table class="table">
+							  <tbody>
+								<tr><th scope="row" style="width:25%">department:</th>
+								<td>
+									<a th:href="@{'/departmentdetail?id='+${department.id}}"><h5 th:text="${department.departmentName}"></h5></a>
+								</td>
+								</tr>
+								<tr><th scope="row" style="width:25%">Stakeholder:</th><td>
+								
+									<ul style="padding:0" th:if="${department.stakeholders.size()>0}">
+										<li style="list-style-type:none" th:each="stakeholder : ${department.stakeholders}">
+										<a th:href="@{'/stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
+										</li>
+									</ul>
+
+								</td></tr>
+								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${department.description}"></td></tr>
+
+								<tr><th scope="row" style="width:25%">Attachment:</th>
+								<td>									
+									<a data-toggle="modal"  
+											th:data-target="@{${#strings.concat('#',department.id,'files')}}" 
+											th:if="${department.files.size()>0}"
+											style="text-decoration: none;cursor: pointer"
+											>
+											<span class="fa fa-paperclip fa-lg"></span>
+									</a>
+								</td>
+								</tr>								
+							  </tbody>
+							</table>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+					<div class="modal fade" th:if="${department!=null && department.files.size()>0}" th:id="${#strings.concat(department.id,'files')}" role="dialog" >
+						<!-- Modal content-->
+						<div class="modal-dialog">
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							  <h4 class="modal-title"> Attachments</h4>
+							</div>
+							<div class="modal-body">
+								<table class="table table-striped" id="filestable">
+								  <thead>
+									<tr>
+									  <th scope="col">File Name</th>
+									  <th scope="col">Created At</th>
+									  <th scope="col">Created By</th>														  
+									</tr>
+								  </thead>
+								  <tbody>
+									<tr th:each="file : ${department.files}">
+									  <th><h5><a th:href="@{'/downloaddepartment?id='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+									  <th><h5 th:text="${file.createdat}"></h5></th>
+									  <th><h5 th:text="${file.createdby}"></h5></th>
+									</tr>
+								  </tbody>
+								</table>
+							</div>
+						   </div>
+						 </div>
+					</div>
+				</div>
+			</div>
+			
+			<!--file detail-->			
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-paperclip"></i> Attachments
+							<div class="pull-right">
+								<a data-toggle="modal" 
+								th:data-target="@{${#strings.concat('#',app.id,'file')}}" 
+								style="text-decoration: none;cursor: pointer;color:white" 
+								title="Add Files">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<div th:if="${app.files.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>File</th>
+								<th>Created At</th>
+								<th>Created By</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="file: ${#lists.sort(app.files)}">
+									<td>
+										<a  
+											th:href="@{'/deleteapplicationfile?file='+${file.id}+'&application='+${app.id}}" 
+											style="text-decoration: none; margin-right:5px"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										>
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a 	
+											th:href="@{'/downloadapplication?file='+${file.id}}" 
+											th:text="${file.attachment}"
+										>
+										</a>
+									</td>
+									<td th:text="${file.createdat}"></td>
+									<td th:text="${file.createdby}"></td>
+								</tr>
+							  </tbody>
+							</table>							
+						</div>
 						
+					</div>
+
+										
+
+
+				</div><!-- col-lg-8 -->									
+			</div>						
 			<!--Model Areas-->
 
 				<!--AppInstance model-->
@@ -224,7 +370,7 @@
 								<div class="form-group">
 									<label for="companySelect">Manufacturer:</label>
 									<input type="hidden" class="form-control" th:name="application" th:value="${app.id}"></input>
-									<select name="id" class="form-control" id="companySelect">
+									<select name="id" class="form-control selectpicker" data-live-search="true" id="companySelect">
 									  <option th:selected="${company==null}"></option>
 									  <option th:each="companyEntity : ${companys}" 
 									  th:text="${companyEntity.companyName}" 
@@ -239,8 +385,72 @@
 					  </div>
 
 					</div>	
-				</div>					
-			
+				</div>
+
+				<!--Department model-->
+				<div class="modal fade" th:id="adddepartment" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Department - '+${app.appName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addApplicationDepartment}" method="post">
+								<div class="form-group">
+									<label for="departmentSelect">Department:</label>
+									<input type="hidden" class="form-control" th:name="application" th:value="${app.id}"></input>
+									<select name="department" class="form-control selectpicker" data-live-search="true" id="departmentSelect">
+									  <option th:selected="${app.department==null}"></option>
+									  <option th:each="departmentEntity : ${departments}" 
+									  th:text="${departmentEntity.departmentName}" 
+									  th:attr="value = ${departmentEntity.id}" th:selected="${app.department==null} ? false:${app.department.getId()==departmentEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+				
+				<!--File model-->
+				<div class="modal fade" th:id="${#strings.concat(app.id,'file')}" role="dialog" >
+						<!-- Modal content-->
+							<div class="modal-dialog">
+								<div class="modal-content">
+									<div class="modal-header">
+									  <button type="button" class="close" data-dismiss="modal">&times;</button>
+									  <h4 class="modal-title"> Add Files</h4>
+									</div>
+									<div class="modal-body">
+										<form  id="UploadFileForm"  method="POST" action="/applicationupload" enctype="multipart/form-data">
+											<!-- COMPONENT START -->
+											<div class="input-group">
+																
+													<a th:onclick="@{'uploadfile(\''+${app.id}+'\')'}"><input type="text" th:id="@{${app.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+													<div class="input-group-btn">
+													<button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i></button>
+													</div>
+						
+											</div>
+											<!-- COMPONENT END -->
+											<div class="form-group  pull-center">
+												<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${app.id}+'fileupload'}">
+												<input type="hidden" class="form-control" th:name="application" th:value="${app.id}"></input>
+												<input type="hidden" class="form-control" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"></input>
+
+											</div>
+										</form>
+									</div>
+							   </div>
+							</div>
+				</div>			
 				
 				
         </div>
@@ -259,6 +469,14 @@
 				enableFiltering: true,
 				nonSelectedText: 'Select Instance'
 			  });
+			  $('#departmentSelect').selectpicker(
+			  {
+				noneSelectedText: 'Select Department'
+			  });
+			  $('#companySelect').selectpicker(
+			  {
+				noneSelectedText: 'Select Manufacturer'
+			  });			  
 			});
 			</script>
 

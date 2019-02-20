@@ -2,17 +2,21 @@ package portal.entity;
 
 
 
-import java.util.ArrayList;
+
 import java.util.Date;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
@@ -87,7 +91,7 @@ public class Application implements Comparable<Application>{
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<AppInstance> appInstances = new ArrayList<AppInstance>();
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
     @OneToOne(
             mappedBy = "application", 
@@ -95,6 +99,17 @@ public class Application implements Comparable<Application>{
             orphanRemoval = true
         )
     private Company manufacturer;
+    
+    @OneToMany(
+            mappedBy = "application", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private Set<File> files = new HashSet<File>();
+    
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "deparment_id",referencedColumnName="id")
+    private Department department;
     
     public Long getId() {
 		return id;
@@ -184,10 +199,12 @@ public class Application implements Comparable<Application>{
 		AppSupportByCapSys = appSupportByCapSys;
 	}
 
-	public List<AppInstance> getAppInstances() {
-		if(this.appInstances.size()>0)
+
+	
+	public Set<AppInstance> getAppInstances() {
+		if(appInstances.size()>0)
 		{
-			return appInstances.stream().sorted().collect(Collectors.toList());
+			return appInstances.stream().sorted().collect(Collectors.toSet());
 		}
 		else
 		{
@@ -196,10 +213,26 @@ public class Application implements Comparable<Application>{
 		
 	}
 
-	public void setAppInstances(List<AppInstance> appInstances) {
-		this.appInstances = appInstances;
+	public void setAppInstances(Set<AppInstance> appInstances) {
+		this.appInstances.addAll(appInstances);
 	}
-	
+
+	public Set<File> getFiles() {
+		return files;
+	}
+
+	public void setFiles(Set<File> files) {
+		this.files.addAll(files);
+	}
+
+	public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{

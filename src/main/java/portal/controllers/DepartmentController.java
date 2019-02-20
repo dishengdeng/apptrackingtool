@@ -7,6 +7,7 @@ package portal.controllers;
 
 
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
 import portal.entity.Stakeholder;
@@ -107,6 +109,23 @@ public class DepartmentController {
     	departmentService.delete(department);
     	return "redirect:/departments";
     }
+  //--application--    
+    @GetMapping("/deleteDepartmentapplication")
+    public String deleteDepartmentapplication(@ModelAttribute("application") Application application,@ModelAttribute("department") Department department,ModelMap model) {
+    	application.setDepartment(null);
+    	appService.updateApp(application);
+
+    	return "redirect:/departmentdetail?id="+department.getId();
+    }    
+    
+    @PostMapping("/addDepartmentapplication")
+    public String addDepartmentapplication(ModelMap model,@ModelAttribute("department") Department department) {
+
+    	departmentService.updateApplicationDepartment(new ArrayList<>(department.getApplications()), department);
+
+    	return "redirect:/departmentdetail?id="+department.getId();
+    }    
+    
 //--Instance--    
     @GetMapping("/deleteDepartmentInstance")
     public String deleteDepartmentInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("department") Department department,ModelMap model) {

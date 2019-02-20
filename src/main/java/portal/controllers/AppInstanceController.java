@@ -94,11 +94,11 @@ public class AppInstanceController {
     
     @PostMapping("/updateAppInstance")
     public String updateAppInstance(@ModelAttribute("appinstance") AppInstance appInstance) {
-    	AppInstance AppinstanceEntity=appInstanceService.getById(appInstance.getId());
-    	appInstance.setApplication(AppinstanceEntity.getApplication());
-    	appInstance.setDepartment(AppinstanceEntity.getDepartment());
-    	appInstance.setSupport(AppinstanceEntity.getSupport());
-    	appInstance.setSites(AppinstanceEntity.getSites());
+//    	AppInstance AppinstanceEntity=appInstanceService.getById(appInstance.getId());
+//    	appInstance.setApplication(AppinstanceEntity.getApplication());
+//    	appInstance.setDepartment(AppinstanceEntity.getDepartment());
+//    	appInstance.setSupport(AppinstanceEntity.getSupport());
+//    	appInstance.setSites(AppinstanceEntity.getSites());
     	appInstanceService.updateAppInstance(appInstance);
         return "redirect:/instancedetail?id="+appInstance.getId();
     }
@@ -261,8 +261,7 @@ public class AppInstanceController {
     
     //------Server---------------    
     @GetMapping("/deleteInstanceServer")
-    public String deleteInstanceServer(@RequestParam(name="id", required=false) String id) {
-    	Server server = serverService.getById(Long.valueOf(id));
+    public String deleteInstanceServer(@ModelAttribute("server") Server server) {
     	Long appInstanceId = server.getAppInstance().getId();
     	server.setAppInstance(null);
     	serverService.updateServer(server);
@@ -272,21 +271,17 @@ public class AppInstanceController {
     }
     
     @PostMapping("/addInstanceServer")
-    public String addOrupdateInstanceServer(@ModelAttribute("appinstance") AppInstance appInstance) {
+    public String addOrupdateInstanceServer(@ModelAttribute("appInstance") AppInstance appInstance) {
 
-
-    	AppInstance appInstanceEntity= appInstanceService.getById(appInstance.getId());   	
 
     	
-    	List<Server> servers=appInstance.getServers();
+    	List<Server> servers= new ArrayList<>(appInstance.getServers());
 
-    	for(Server server:servers)
-    	{
+    	servers.forEach(obj->{
+    		obj.setAppInstance(appInstance);
+    		serverService.updateServer(obj);
+    	});
 
-    		server.setAppInstance(appInstanceEntity);
-    		serverService.updateServer(server);
-    
-    	}
     	
         return "redirect:/instancedetail?id="+appInstance.getId();
     }

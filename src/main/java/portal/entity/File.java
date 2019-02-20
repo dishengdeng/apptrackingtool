@@ -61,7 +61,11 @@ public class File implements Comparable<File>{
     
 	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "instance_id")
-    private AppInstance appInstance;   
+    private AppInstance appInstance;
+	
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "application_id")
+    private Application application;
     
 	public Long getId() {
 		return id;
@@ -140,6 +144,14 @@ public class File implements Comparable<File>{
 
 	public void setAppInstance(AppInstance appInstance) {
 		this.appInstance = appInstance;
+	}
+
+	public Application getApplication() {
+		return application;
+	}
+
+	public void setApplication(Application application) {
+		this.application = application;
 	}
 
 	@Override

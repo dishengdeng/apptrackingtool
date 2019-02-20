@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.Stakeholder;
 import portal.models.DepartmentModel;
@@ -21,6 +22,7 @@ public interface DepartmentService {
     Department updateDepartment(Department department);
     
     void updateAppIstanceDepartment(Set<AppInstance> appInstances,Department department);
+    void updateApplicationDepartment(List<Application> applications,Department department);
     void updateStakeholderDepartment(Set<Stakeholder> stakeholders,Department department);
     void removFiles(String upload_foler,Department department);
 }

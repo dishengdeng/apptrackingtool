@@ -2,9 +2,9 @@ package portal.entity;
 
 
 
-import java.util.ArrayList;
+
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -81,7 +81,7 @@ public class AppInstance implements Comparable<AppInstance>{
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private List<Server> servers = new ArrayList<Server>();
+    private Set<Server> servers = new HashSet<Server>();
     
     @OneToOne(
             mappedBy = "appInstance", 
@@ -174,12 +174,14 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.application = application;
 	}
 
-	public List<Server> getServers() {
+
+
+	public Set<Server> getServers() {
 		return servers;
 	}
 
-	public void setServers(List<Server> servers) {
-		this.servers = servers;
+	public void setServers(Set<Server> servers) {
+		this.servers.addAll(servers);
 	}
 
 	public Contract getContract() {
