@@ -14,7 +14,18 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header">Departments<a href="/addDepartment" data-toggle="tooltip" title="Create Department"><i class="fa fa-plus" style="float:right"></i></a></h1>
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-8 text-muted">
+						<i class="fa fa-building"></i>
+						<span>Departments</span>
+						</div>
+						
+						<div class="col-md-4 text-right">					
+						<a href="/addDepartment" data-toggle="tooltip" title="Create Department"><i class="fa fa-plus"></i></a>
+						</div>
+					</div>						
+					</h1>
 					
                 </div>
 
@@ -128,7 +139,7 @@
 															  </thead>
 															  <tbody>
 																<tr th:each="app : ${department.applications}">
-																  <th><h5><a th:href="@{'/applicationdetail?id='+${app.id}}"><h5 th:text="${app.AppName}"></h5></a></th>
+																  <th><h5><a th:href="@{'/applicationdetail?app='+${app.id}}"><h5 th:text="${app.AppName}"></h5></a></th>
 																  <th><h5 th:text="${#dates.format(app.AppDecomminsionDate,'MMM-dd-yyyy')}"></h5></th>
 																</tr>
 															  </tbody>

@@ -14,7 +14,14 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header" th:text="${app.AppName}"><h1>
+					<h1 class="page-header">
+					<div class="row">
+						<div class="col-md-4 text-primary">
+							<i class="fa fa-windows"></i>
+							<span style="margin-left:10px" th:text="${app.AppName}"></span>
+						</div>
+					</div>
+					</h1>
 					
                 </div>			
 
@@ -177,7 +184,40 @@
 				<div class="col-lg-4">
 				</div>
 			</div>
-
+			<!--Support Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-support"></i> Support
+                            <div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addsupport'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+								<a style="text-decoration: none;color:white;cursor: pointer"
+									th:if="${support!=null}" th:href="${#strings.concat('/deleteApplicationSupport?application=',app.id)}"
+									data-title="Are you sure to delete?" 
+									data-toggle="confirmation" 
+									data-singleton="true" 
+									data-popout="true"									
+									>
+									<i class="fa fa-trash-o fa-lg"></i>
+								</a>
+                            </div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div th:if="${support!=null}" class="panel-body">
+							<div class="row"><div class="col-sm-2"><strong>Support:</strong></div><div class="col-sm-10"><a th:href="@{'/supportdetail?support='+${support.id}}" th:text="${support.supportName}"></a></div></div>
+							<div class="row"><div class="col-sm-2"><strong>Phone:</strong></div><div class="col-sm-10"><span th:text="${support.phone}"></span></div></div>
+							<div class="row"><div class="col-sm-2"><strong>Email:</strong></div><div class="col-sm-10"><span th:text="${support.email}"></span></div></div>
+							<div class="row"><div class="col-sm-2"><strong>Note:</strong></div><div class="col-sm-10"><span th:text="${support.note}"></span></div></div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
 			<!--Department Detail-->
 			<div class="row">
 				<div class="col-lg-8">
@@ -386,7 +426,37 @@
 
 					</div>	
 				</div>
+				<!--Support model-->
+				<div class="modal fade" th:id="addsupport" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Support - '+${app.AppName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addApplicationSupport}" method="post">
+								<div class="form-group">
+									<label for="supportSelect">Support:</label>
+									<input type="hidden" class="form-control" th:name="app" th:value="${app.id}"></input>
+									<select name="support" class="form-control" id="supportSelect">
+									  <option th:selected="${app.support==null}"></option>
+									  <option th:each="supportEntity : ${supports}" 
+									  th:text="${supportEntity.supportName}" 
+									  th:attr="value = ${supportEntity.id}" th:selected="${app.support==null} ? false:${app.support.getId()==supportEntity.id}">
+									  
+									  </option>
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
 
+					</div>	
+				</div>
 				<!--Department model-->
 				<div class="modal fade" th:id="adddepartment" role="dialog">
 					<div class="modal-dialog">

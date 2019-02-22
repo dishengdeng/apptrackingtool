@@ -111,6 +111,10 @@ public class Application implements Comparable<Application>{
     @JoinColumn(name = "deparment_id",referencedColumnName="id")
     private Department department;
     
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "support_id",referencedColumnName="id")
+    private Support support;
+    
     public Long getId() {
 		return id;
 	}
@@ -255,6 +259,14 @@ public class Application implements Comparable<Application>{
 		return this.AppName.compareToIgnoreCase(app.getAppName());
 	}
 
+	public Support getSupport() {
+		return support;
+	}
+
+	public void setSupport(Support support) {
+		this.support = support;
+	}
+
 	public Company getManufacturer() {
 		return manufacturer;
 	}
@@ -262,4 +274,13 @@ public class Application implements Comparable<Application>{
 	public void setManufacturer(Company manufacturer) {
 		this.manufacturer = manufacturer;
 	}
+	
+	public void removeAllInstance()
+	{
+		this.appInstances.forEach(obj->{
+			obj.setApplication(null);
+		});
+		this.appInstances=null;
+	}
+	
 }

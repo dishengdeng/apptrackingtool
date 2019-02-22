@@ -10,10 +10,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import portal.entity.AppInstance;
-
+import portal.entity.Application;
 import portal.entity.Support;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
@@ -60,13 +60,11 @@ public class SupportController {
     }
     
     @GetMapping("/deleteSupport")
-    public String deleteSupport(@RequestParam(name="id", required=true) String id,@RequestParam(name="supportName", required=true) String supportName) {
-    	Support support = new Support();
-    	support.setId(Long.valueOf(id));
-    	support.setSupportName(supportName);
-    	
-    	appInstanceService.removeSupport(support);
-    	
+    public String deleteSupport(@ModelAttribute("support") Support support) {
+
+    	support.removeAllApp();
+    	support.removeAllInstance();
+
     	supportService.delete(support);
     	return "redirect:/supports";
     }
@@ -78,6 +76,23 @@ public class SupportController {
     	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
         return "supportdetail";
     }
+    
+    //--application--    
+    @GetMapping("/deletesupportapplication")
+    public String deletesupportapplication(@ModelAttribute("application") Application application,@ModelAttribute("support") Support support,ModelMap model) {
+    	application.setSupport(null);
+    	appService.updateApp(application);
+
+    	return "redirect:/supportdetail?support="+support.getId();
+    }    
+    
+    @PostMapping("/addsupportapplication")
+    public String addDepartmentapplication(ModelMap model,@ModelAttribute("support") Support support) {
+
+    	supportService.updateApplicationSupport(new ArrayList<>(support.getApplications()), support);
+
+    	return "redirect:/supportdetail?support="+support.getId();
+    }    
     
   //--Instance--    
     @GetMapping("/deleteSupportInstance")

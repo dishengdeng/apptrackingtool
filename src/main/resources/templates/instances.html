@@ -84,7 +84,7 @@
 										<td th:text="${instance.description}">
 										</td>										
 										<td>
-											<a th:if="${instance.application!=null}" th:href="@{'/applicationdetail?id=' + ${instance.application.id}}" th:text="${instance.application.AppName}"></a>
+											<a th:if="${instance.application!=null}" th:href="@{'/applicationdetail?app=' + ${instance.application.id}}" th:text="${instance.application.AppName}"></a>
 										</td>
 										<td>
 											<a th:if="${instance.support!=null}"  th:href="@{'/supportdetail?support='+${instance.support.id}}" th:text="${instance.support.supportName}"></a>
@@ -174,7 +174,7 @@
 											  </thead>
 											  <tbody>
 												<tr th:each="file : ${instance.files}">
-												  <th><h5><a th:href="@{'/downloadappinstance?id='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+												  <th><h5><a th:href="@{'/downloadappinstance?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
 												  <th><h5 th:text="${file.createdat}"></h5></th>
 												  <th><h5 th:text="${file.createdby}"></h5></th>
 												</tr>

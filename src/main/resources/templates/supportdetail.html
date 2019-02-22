@@ -13,7 +13,15 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header" th:text="${support.supportName}"></h1>
+                    <h1 class="page-header" >
+					<div class="row">
+						<div class="col-md-8 text-muted">
+						<i class="fa fa-support"></i>
+						<span th:text="${support.supportName}"></span>
+						</div>
+
+					</div>						
+					</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
@@ -54,6 +62,51 @@
 				</div>
 			</div>
             <!-- /.row -->
+			<!--application Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-windows"></i> Applications
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addapplication'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${support.applications.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>App application</th>
+								<th>Decommission Date</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="app: ${support.applications}">
+									<td>
+										<a th:href="@{'/deletesupportapplication?application='+${app.id}+'&support='+${support.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/applicationdetail?app='+${app.id}}" th:text="${app.AppName}"></a>
+									</td>
+
+									<td th:text="${#dates.format(app.AppDecomminsionDate,'MMM-dd-yyyy')}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>			
 			<!--AppInstance Detail-->
 			<div class="row">
 				<div class="col-lg-8">
@@ -100,7 +153,38 @@
 				<div class="col-lg-4">
 				</div>
 			</div>
+			<!--application model-->
+			<div class="modal fade" th:id="addapplication" role="dialog">
+				<div class="modal-dialog">
+				
+				  <!-- Modal content-->
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					  <h4 class="modal-title" th:text="'Add Or Change application - '+${support.supportName}"></h4>													
+					</div>
+					<div class="modal-body">	
+						<form action="#" th:action="@{/addsupportapplication}"  method="post">
+							<div class="form-group">
+								<label for="appselect">Applications:</label>
+								<input type="hidden" class="form-control" th:name="support" th:value="${support.id}"></input>
+								<select name="applications" class="form-control" id="appSelect" multiple>
+										  <option th:each="appEntity : ${appAssginedInstances}" 
 
+										  th:attr="value = ${appEntity.id}"
+										  th:text="${appEntity.AppName}">
+										  
+										  </option>
+										
+								</select>
+							</div>
+						  <input class="btn btn-primary" type="submit" value="Submit" />
+						</form>
+					</div>
+				  </div>
+
+				</div>	
+			</div>	
 			<!--AppInstance model-->
 			<div class="modal fade" th:id="addInstance" role="dialog">
 				<div class="modal-dialog">
@@ -161,6 +245,14 @@
 		buttonWidth: '100%', 
 		enableFiltering: true,
 		nonSelectedText: 'Select Instance',
+		enableCaseInsensitiveFiltering:true
+	  });
+	  $('[id^=appSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Application',
 		enableCaseInsensitiveFiltering:true
 	  });
     });

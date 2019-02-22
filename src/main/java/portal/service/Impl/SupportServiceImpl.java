@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Support;
 import portal.models.SupportModel;
+import portal.repository.AppRepository;
 import portal.repository.SupportRepository;
 import portal.service.SupportService;
 
@@ -16,6 +18,8 @@ public class SupportServiceImpl implements SupportService{
 	@Autowired
 	private SupportRepository supportRepository;
 	
+	@Autowired
+	private AppRepository appRepository;	
 	@Override
 	public Support addSupport(Support support) {
 
@@ -70,6 +74,18 @@ public class SupportServiceImpl implements SupportService{
 			}
 		}
 
+		
+	}
+
+	@Override
+	public void updateApplicationSupport(List<Application> applications, Support support) {
+		if(applications.size()>0)
+		{
+			applications.forEach(app->{
+				app.setSupport(support);
+				appRepository.saveAndFlush(app);
+			});
+		}
 		
 	}
 

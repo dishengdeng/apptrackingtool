@@ -13,8 +13,19 @@
 
         <div id="page-wrapper">
             <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Supports<a href="/addSupport" data-toggle="tooltip" title="Create Support"><i class="fa fa-plus" style="float:right"></i></a></h1>
+                <div class="col-lg-12">				
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-8 text-muted">
+						<i class="fa fa-support"></i>
+						<span>Supports</span>
+						</div>
+						
+						<div class="col-md-4 text-right">					
+						<a href="/addSupport" data-toggle="tooltip" title="Create Support"><i class="fa fa-plus"></i></a>
+						</div>
+					</div>						
+					</h1>
 					
                 </div>
 
@@ -34,7 +45,9 @@
                             <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 <thead>
                                     <tr>
-                                        <th>Support</th>										
+                                        <th>Support</th>
+                                        <th>Applications</th>
+                                        <th>Instances</th>										
                                         <th>Phone</th>
 										<th>Email</th>
 										<th>Note</th>
@@ -44,7 +57,7 @@
                                 <tbody>
                                     <tr th:each="support: ${supports}">
                                         <td>
-											<a th:href="@{'/deleteSupport?id='+${support.id}+'&supportName='+${support.supportName}}" 
+											<a th:href="@{'/deleteSupport?support='+${support.id}}" 
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -53,12 +66,19 @@
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a th:href="@{'/supportdetail?support='+${support.id}}" th:text="${support.supportName}"></a>
-											<p>
+
+
+										</td>
+										<td>
+											<a data-toggle="modal" th:if="${support.applications.size()>0}" th:data-target="@{${#strings.concat('#',support.id,'applications')}}" style="cursor:pointer">
+											<span class="badge badge-secondary small" th:text="${'Application - Total: '+support.applications.size()}"></span>
+											</a>
+										</td>										
+										<td>
 											<a data-toggle="modal" th:if="${support.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',support.id,'instances')}}" style="cursor:pointer">
 											<span class="badge badge-secondary small" th:text="${'App Instances - Total: '+support.appInstances.size()}"></span>
 											</a>
-											</p>
-										</td>									
+										</td>
                                         <td th:text="${support.phone}"></td>
 										<td th:text="${support.email}"></td>
 										<td th:text="${support.note}"></td>
@@ -105,7 +125,39 @@
 										   </div>
 										 </div>
 								</div>
-							</div>								
+							</div>	
+							<!--applications Modal-->
+							<div th:if="${support.applications.size()>0}">
+								<div class="modal fade" th:id="${#strings.concat(support.id,'applications')}" role="dialog" >
+								<!-- Modal content-->
+										<div class="modal-dialog">
+										  <div class="modal-content">
+											<div class="modal-header">
+											  <button type="button" class="close" data-dismiss="modal">&times;</button>
+											  <h4 class="modal-title"> Applications</h4>
+											</div>
+											<div class="modal-body">
+												<table class="table table-striped" id="instancetable">
+												  <thead>
+													<tr>
+													  <th scope="col">Application</th>
+
+													  <th scope="col">Decommission Date</th>														  
+													</tr>
+												  </thead>
+												  <tbody>
+													<tr th:each="app : ${support.applications}">
+													  <th><a th:href="@{'/applicationdetail?app='+${app.id}}"><h5 th:text="${app.AppName}"></h5></a></th>
+
+													  <th><h5 th:text="${#dates.format(app.AppDecomminsionDate,'MMM-dd-yyyy')}"></h5></th>
+													</tr>
+												  </tbody>
+												</table>
+											</div>
+										   </div>
+										 </div>
+								</div>
+							</div>							
 						</div><!-- Modal -->
                         </div>
                         <!-- /.panel-body -->

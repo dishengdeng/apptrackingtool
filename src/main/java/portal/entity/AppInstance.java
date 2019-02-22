@@ -21,6 +21,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.util.ObjectUtils;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
@@ -210,6 +212,7 @@ public class AppInstance implements Comparable<AppInstance>{
 	
 	public Status getAppStatus()
 	{
+		if(ObjectUtils.isEmpty(this.status)) return Status.Inactive;
 		return Status.valueOf(this.status);
 	}
 

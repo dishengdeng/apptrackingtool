@@ -21,7 +21,7 @@
 							<span style="margin-left:10px">Applications</span>
 						</div>
 						<div class="col-md-8 text-right">
-							<input id="appSearch" type="text" class="input-lg" placeholder="Search..."></input>
+
 							<a href="/addApplication" title="Create Application"><i class="fa fa-plus"></i></a>
 						</div>
 					</div>
@@ -35,45 +35,111 @@
             </div>
             <!-- /.row -->
             <div class="row">
-                <div id="appDiv" class="col-lg-3 col-md-6" th:each="Application: ${Applications}">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-							<div class="row">
-								<div class="small col-xs-10 text-left pull-left">
-									<span th:text="'Decommision Date: '+@{${Application.appDecomminsionDate==null} ? '':${Application.appDecomminsionDate}}"></span>
-								</div>
-								<div class="small col-xs-2 text-right pull-right">
-										<a th:href="@{'/deleteApplication?id='+${Application.id}+'&name='+${Application.appName}}" 
-											style="color:white;text-decoration: none" 
-											data-title="Are you sure to delete this Application?" 
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							Application - Total:<span th:text="${Applications.size()}"></span>
+						</div>
+						<!-- /.panel-heading -->
+						<div class="panel-body">
+							<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+								<thead>
+									<tr>
+										<th>Application</th>
+										<th><span class="fa fa-paperclip fa-lg"></span></th>
+										<th>App Instances</th>
+										<th>Support</th>
+										<th>Manufacturer</th>
+										<th>Department</th>
+										<!--<th class="no-sort">Action</th>-->
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="app: ${Applications}">
+										<td>
+										<a th:href="@{'/deleteApplication?application='+${app.id}}" 
+											style="text-decoration: none;" 
+											data-title="Are you sure to delete this app?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
 											data-popout="true"
+										>
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
-								</div>
-							</div>
-							<div class="row">							
-								<div class="col-xs-12">
-									 <p id="appName" class="h4" th:text="${Application.appName}"></p>
-								</div>
-							</div>
-							<div class="row">
-								<div class="col-xs-12 text-right pull-right">
-									<span th:text="@{'Instances: '+${Application.appInstances.size()}}"></span>
-								</div>
-							</div>
+											<a th:href="@{'/applicationdetail?app=' + ${app.id}}" th:text="${app.AppName}"></a>
+										</td>
+										<td>
+											<a data-toggle="modal"  
+												th:data-target="@{${#strings.concat('#',app.id,'files')}}" 
+												th:if="${app.files.size()>0}"
+												style="text-decoration: none;cursor: pointer"
+												>
+												<span class="fa fa-paperclip fa-lg"></span>
+											</a>
+										</td>
+										<td>
+											<a data-toggle="modal" th:if="${app.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',app.id,'instances')}}" style="cursor:pointer">
+											<span class="badge badge-secondary small" th:text="${'App Instances - Total: '+app.appInstances.size()}"></span>
+											</a>											
+										</td>										
 
-                        </div>
-                        <a th:href="@{'/applicationdetail?id=' + ${Application.id}}">
-                            <div class="panel-footer">
-                                <span class="pull-left">More Details</span>
-                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
-                                <div class="clearfix"></div>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+										<td>
+											<a th:if="${app.support!=null}"  th:href="@{'/supportdetail?support='+${app.support.id}}" th:text="${app.support.supportName}"></a>
+										</td>
+										<td>
+											<a th:if="${app.manufacturer!=null}" th:href="@{'/companydetail?company='+${app.manufacturer.id}}" 
+											th:text="${app.manufacturer.manufacturer}">
+											</a>
+										</td>									
+										<td>
+											<a th:if="${app.department!=null}" th:href="@{'/departmentdetail?id='+${app.department.id}}" 
+											th:text="${app.department.departmentName}">
+											</a>
+										</td>										
+										  <!-- Modal -->
+									 
+									</tr>
+
+
+								</tbody>
+							</table>
+							<!--model area-->
+							<div th:each="app: ${Applications}">
+								<div class="modal fade" th:if="${app.files.size()>0}" th:id="${#strings.concat(app.id,'files')}" role="dialog" >
+									<!-- Modal content-->
+									<div class="modal-dialog">
+									  <div class="modal-content">
+										<div class="modal-header">
+										  <button type="button" class="close" data-dismiss="modal">&times;</button>
+										  <h4 class="modal-title"> Attachments</h4>
+										</div>
+										<div class="modal-body">
+											<table class="table table-striped" id="filestable">
+											  <thead>
+												<tr>
+												  <th scope="col">File Name</th>
+												  <th scope="col">Created At</th>
+												  <th scope="col">Created By</th>														  
+												</tr>
+											  </thead>
+											  <tbody>
+												<tr th:each="file : ${app.files}">
+												  <th><h5><a th:href="@{'/applicationupload?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+												  <th><h5 th:text="${file.createdat}"></h5></th>
+												  <th><h5 th:text="${file.createdby}"></h5></th>
+												</tr>
+											  </tbody>
+											</table>
+										</div>
+									   </div>
+									 </div>
+								</div>
+							</div>
+						 </div>
+						<!-- /.panel-body -->
+					</div>
+					<!-- /.panel -->
+				</div>
             </div>
 
             <!-- /.row -->
@@ -83,27 +149,12 @@
     </div>
     <!-- /#wrapper -->
 <script>
-$("#appSearch").on('change keyup paste', function() {
-	var searchText = $(this).val();
-    $('[id^=appDiv]').each(function(){
-		var isShow=true;
-		//enable search by app name
-		var appName=$(this).find("#appName");
-		
-		if(appName.text().toLowerCase().search(searchText.toLowerCase())>-1)
-		{
-			isShow=true;
-		}
-		else
-		{
-			isShow=false;
-		}
-		
-		
-		//show or hide div
-		isShow? $(this).show():$(this).hide();
-	});
-});
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+			
+    });
 </script>
 	
 	

@@ -13,8 +13,19 @@
 
         <div id="page-wrapper">
             <div class="row">
-                <div class="col-lg-12">
-                    <h1 class="page-header">Companies<a href="/addCompany" data-toggle="tooltip" title="Create Company"><i class="fa fa-plus" style="float:right"></i></a></h1>
+                <div class="col-lg-12">				
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-8 text-muted">
+						<i class="fa fa-building"></i>
+						<span>Companies</span>
+						</div>
+						
+						<div class="col-md-4 text-right">
+						<a href="/addCompany" data-toggle="tooltip" title="Create Company"><i class="fa fa-plus"></i></a>
+						</div>
+					</div>
+					</h1>
 					
                 </div>
 
@@ -68,7 +79,7 @@
 											</a>
 										</td>
 										<td>
-											<a th:if="${company.application!=null}"  th:text="${company.application.AppName}" th:href="@{'/applicationdetail?id='+${company.application.id}}"></a>
+											<a th:if="${company.application!=null}"  th:text="${company.application.AppName}" th:href="@{'/applicationdetail?app='+${company.application.id}}"></a>
 										</td>										
                                         <td th:text="${company.address}"></td>
                                         <td th:text="${company.phone}"></td>

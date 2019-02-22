@@ -13,7 +13,16 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header" th:text="${contract.contractName}"></h1>
+                    <h1 class="page-header" >
+					<div class="row">
+						<div class="col-md-8 text-muted">
+						<i class="fa fa-pencil-square-o"></i>
+						<span th:text="${contract.contractName}"></span>
+						</div>
+						
+
+					</div>						
+					</h1>
                 </div>
                 <!-- /.col-lg-12 -->
             </div>

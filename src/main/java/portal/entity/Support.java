@@ -54,7 +54,14 @@ public class Support {
             cascade = CascadeType.ALL, 
             orphanRemoval = true
         )
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>();    
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>(); 
+    
+    @OneToMany(
+            mappedBy = "support", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true
+        )
+    private Set<Application> applications = new HashSet<Application>();     
 
 	public Long getId() {
 		return id;
@@ -107,6 +114,14 @@ public class Support {
 		this.appInstances.addAll(appInstances);
 	}
 
+	public Set<Application> getApplications() {
+		return applications;
+	}
+
+	public void setApplications(Set<Application> applications) {
+		this.applications.addAll(applications);
+	}
+
 	public String getInstanceNameWithComma()
 	{
 		List<String> instanceName=new ArrayList<String>();
@@ -116,6 +131,25 @@ public class Support {
 		}
 		
 		return instanceName.stream().collect(Collectors.joining(","));
+	}
+	
+	public void removeAllApp()
+	{
+		this.applications.forEach(obj->{
+			obj.setSupport(null);
+		});
+		this.applications=null;
+	}
+	
+	public void removeAllInstance()
+	{
+
+		this.appInstances.forEach(obj->{
+			obj.setSupport(null);
+		});
+		this.appInstances=null;
+		
+
 	}
 	
 }

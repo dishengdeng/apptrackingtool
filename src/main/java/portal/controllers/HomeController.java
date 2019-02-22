@@ -25,6 +25,7 @@ import portal.service.AppService;
 import portal.service.CompanyService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
+import portal.service.SupportService;
 import portal.utility.FileType;
 
 @Controller
@@ -37,6 +38,9 @@ public class HomeController {
 	
 	@Autowired
 	private AppService appService;
+	
+	@Autowired
+	private SupportService supportService;
 	
 	@Autowired
 	private DepartmentService departmentService;
@@ -68,10 +72,13 @@ public class HomeController {
     }
     
     @GetMapping("/deleteApplication")
-    public String DeleteApplication(@RequestParam(name="id", required=true) String id,@RequestParam(name="name", required=true) String name) {
-    	Application application = appService.findbyId(Long.valueOf(id));
-    	appInstanceService.removeApplication(application);
-    	companyService.removeApplication(application);
+    public String DeleteApplication(@ModelAttribute("application") Application application) {
+    	application.setDepartment(null);
+    	application.setSupport(null);
+    	application.setManufacturer(null);
+    	application.removeAllInstance();
+    	//appInstanceService.removeApplication(application);
+    	//companyService.removeApplication(application);
     	appService.delete(application);
     	return "redirect:/";
     }
@@ -83,8 +90,8 @@ public class HomeController {
     }
     
     @GetMapping("/applicationdetail")
-    public String ApplicationDetauk(@RequestParam(name="id", required=true) String id,ModelMap model) {
-    	Application application = appService.findbyId(Long.valueOf(id));
+    public String ApplicationDetauk(@ModelAttribute("app") Application application,ModelMap model) {
+    	//Application application = appService.findbyId(Long.valueOf(id));
     	
     	model.addAttribute("app",application);
     	
@@ -96,6 +103,10 @@ public class HomeController {
     	//--Manufacturer-----
     	model.addAttribute("company",application.getManufacturer());
     	model.addAttribute("companys",companyService.findApplicationByNotAssigned(application));
+    	
+    	//--Support-----
+    	model.addAttribute("support",application.getSupport());
+    	model.addAttribute("supports",supportService.getAll());    	
     	
     	//--Department-----
     	model.addAttribute("department",application.getDepartment());
@@ -152,7 +163,23 @@ public class HomeController {
         return "redirect:/applicationdetail?id="+company.getApplication().getId();
     }
   //-----------------------   
+    //------Support---------------    
+    @GetMapping("/deleteApplicationSupport")
+    public String deleteApplicationSupport(@ModelAttribute("application") Application application) {
+
+    	application.setSupport(null);
+    	appService.updateApp(application);
+
+    	return "redirect:/applicationdetail?id="+application.getId();
+    }
     
+    @PostMapping("/addApplicationSupport")
+    public String addApplicationSupport(@ModelAttribute("app") Application application) {
+
+
+    	appService.updateApp(application);
+    	return "redirect:/applicationdetail?id="+application.getId();
+    }    
     //------Department---------------    
     @GetMapping("/deleteApplicationDepartment")
     public String deleteApplicationDepartment(@ModelAttribute("application") Application application) {

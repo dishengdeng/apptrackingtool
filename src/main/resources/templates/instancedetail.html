@@ -14,8 +14,18 @@
         <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1 class="page-header"><span th:text="${appinstance.appInstanceName}"></span><span th:if="${appinstance.application!=null}"> - (<a th:href="@{'/applicationdetail?id='+${appinstance.application.id}}" th:text="${appinstance.application.AppName}"></a>)</span></h1>
-					
+                    <h1 class="page-header">
+						<div class="row">
+							<div class="col-md-8">
+							<i class="fa fa-android text-primary"></i>
+							<span th:text="${appinstance.appInstanceName}" class="text-primary"></span><span th:if="${appinstance.application!=null}" class="text-muted"> - (<a class="text-muted" th:href="@{'/applicationdetail?app='+${appinstance.application.id}}" th:text="${appinstance.application.AppName}"></a>)
+							</span>
+							</div>
+							<div class="col-md-4 text-right text-primary">
+								<a href="/addAppInstance" title="Create Instance"><i class="fa fa-plus"></i></a>
+							</div>
+						</div>
+					</h1>
                 </div>			
 
                 <!-- /.col-lg-12 -->
@@ -70,7 +80,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" 
-									th:if="${sla!=null}" th:href="${#strings.concat('/deleteInstanceSLA?id=',appinstance.id)}"
+									th:if="${sla!=null}" th:href="${#strings.concat('/deleteInstanceSLA?instance=',appinstance.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
 									data-singleton="true" 
@@ -149,7 +159,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-									th:if="${contract!=null}" th:href="${#strings.concat('/deleteInstanceContract?id=',appinstance.id)}"
+									th:if="${contract!=null}" th:href="${#strings.concat('/deleteInstanceContract?instance=',appinstance.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
 									data-singleton="true" 
@@ -232,7 +242,7 @@
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 									th:if="${license!=null}" 
-									th:href="${#strings.concat('/deleteInstanceLicense?id=',license.id)}"
+									th:href="${#strings.concat('/deleteInstanceLicense?license=',license.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
 									data-singleton="true" 
@@ -275,7 +285,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-									th:if="${desktop!=null}" th:href="${#strings.concat('/deleteInstanceDesktop?id=',desktop.id)}"
+									th:if="${desktop!=null}" th:href="${#strings.concat('/deleteInstanceDesktop?desktop=',desktop.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
 									data-singleton="true" 
@@ -414,7 +424,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-								th:if="${company!=null}" th:href="${#strings.concat('/deleteInstanceCompany?id=',appinstance.id)}"
+								th:if="${company!=null}" th:href="${#strings.concat('/deleteInstanceCompany?instance=',appinstance.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 
 								data-singleton="true" 
@@ -456,7 +466,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-								 th:if="${department!=null}" th:href="${#strings.concat('/deleteInstanceDepartment?id=',appinstance.id)}"
+								 th:if="${department!=null}" th:href="${#strings.concat('/deleteInstanceDepartment?instance=',appinstance.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 
 								data-singleton="true" 
@@ -548,7 +558,7 @@
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-									th:if="${support!=null}" th:href="${#strings.concat('/deleteInstanceSupport?id=',appinstance.id)}"
+									th:if="${support!=null}" th:href="${#strings.concat('/deleteInstanceSupport?instance=',appinstance.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
 									data-singleton="true" 
@@ -688,10 +698,10 @@
 						  <h4 class="modal-title" th:text="'Add Or Change SLA - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceSLA}" th:object="${appinstance}" method="post">
+							<form action="#" th:action="@{/addInstanceSLA}"  method="post">
 								<div class="form-group">
 									<label for="clusterSelect">SLA:</label>
-									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
 									<select name="sla" class="form-control" id="slaSelect">
 									  <option th:selected="${sla==null}"></option>
 									  <option th:each="slaEntity : ${slas}" 
@@ -719,10 +729,10 @@
 						  <h4 class="modal-title" th:text="'Add Or Change Contract - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceContract}" th:object="${appinstance}" method="post">
+							<form action="#" th:action="@{/addInstanceContract}"  method="post">
 								<div class="form-group">
 									<label for="contractSelect">Contract:</label>
-									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
 									<select name="contract" class="form-control" id="contractSelect">
 									  <option th:selected="${contract==null}"></option>
 									  <option th:each="contractEntity : ${contracts}" 
@@ -751,11 +761,11 @@
 						  <h4 class="modal-title" th:text="'Add Or Change License - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceLicense}" th:object="${license}" method="post">
+							<form action="#" th:action="@{/addInstanceLicense}" method="post">
 								<div class="form-group">
 									<label for="licenseSelect">License:</label>
 									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
-									<select name="id" class="form-control" id="licenseSelect">
+									<select name="license" class="form-control" id="licenseSelect">
 									  <option th:selected="${license==null}"></option>
 									  <option th:each="licenseEntity : ${licenses}" 
 									  th:text="${licenseEntity.licenseNumber}" 
@@ -783,11 +793,11 @@
 						  <h4 class="modal-title" th:text="'Add Or Change Desktop - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceDesktop}" th:object="${desktop}" method="post">
+							<form action="#" th:action="@{/addInstanceDesktop}" method="post">
 								<div class="form-group">
 									<label for="desktopSelect">Desktop:</label>
 									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
-									<select name="id" class="form-control" id="desktopSelect">
+									<select name="desktop" class="form-control" id="desktopSelect">
 									  <option th:selected="${desktop==null}"></option>
 									  <option th:each="desktopEntity : ${desktops}" 
 									  th:text="${desktopEntity.desktopName}" 
@@ -844,10 +854,10 @@
 						  <h4 class="modal-title" th:text="'Add Or Change Vendor - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceCompany}" th:object="${appinstance}" method="post">
+							<form action="#" th:action="@{/addInstanceCompany}" method="post">
 								<div class="form-group">
 									<label for="companySelect">Vendor:</label>
-									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
 									<select name="company" class="form-control" id="companySelect">
 									  <option th:selected="${company==null}"></option>
 									  <option th:each="companyEntity : ${companys}" 
@@ -876,10 +886,10 @@
 						  <h4 class="modal-title" th:text="'Add Or Change Department - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceDepartment}" th:object="${appinstance}" method="post">
+							<form action="#" th:action="@{/addInstanceDepartment}" method="post">
 								<div class="form-group">
 									<label for="departmentSelect">Department:</label>
-									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
 									<select name="department" class="form-control" id="departmentSelect">
 									  <option th:selected="${appinstance.department==null}"></option>
 									  <option th:each="departmentEntity : ${departments}" 
@@ -908,10 +918,10 @@
 						  <h4 class="modal-title" th:text="'Add Or Change Support - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceSupport}" th:object="${appinstance}" method="post">
+							<form action="#" th:action="@{/addInstanceSupport}" method="post">
 								<div class="form-group">
 									<label for="supportSelect">Support:</label>
-									<input type="hidden" class="form-control" th:name="id" th:value="${appinstance.id}"></input>
+									<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
 									<select name="support" class="form-control" id="supportSelect">
 									  <option th:selected="${appinstance.support==null}"></option>
 									  <option th:each="supportEntity : ${supports}" 

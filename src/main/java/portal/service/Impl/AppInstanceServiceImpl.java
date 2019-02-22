@@ -90,7 +90,7 @@ public class AppInstanceServiceImpl implements AppInstanceService{
 	@Override
 	public List<AppInstance> findNotAssgined(Application application) {
 		List<AppInstance> appInstances = appInstanceRepository.findAll();
-		appInstances.removeIf(obj->obj.getAppStatus()==Status.Inactive || obj.getApplication()!=null);
+		appInstances.removeIf(obj->(obj.getAppStatus()==Status.Inactive) || obj.getApplication()!=null);
 		return appInstances;
 	}
 

@@ -174,41 +174,37 @@ public class AppInstanceController {
     
 //------SLA---------------    
     @GetMapping("/deleteInstanceSLA")
-    public String deleteInstanceSLA(@RequestParam(name="id", required=false) String id) {
-    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
-    	appInstance.setSla(null);
+    public String deleteInstanceSLA(@ModelAttribute("instance") AppInstance appinstance) {
 
-    	appInstanceService.updateAppInstance(appInstance);
-    	return "redirect:/instancedetail?id="+Long.valueOf(id);
+    	appinstance.setSla(null);
+
+    	appInstanceService.updateAppInstance(appinstance);
+    	return "redirect:/instancedetail?id="+appinstance.getId();
     }
     
     @PostMapping("/addInstanceSLA")
     public String addOrupdateInstanceSLA(@ModelAttribute("appinstance") AppInstance appinstance) {
 
 
-    	AppInstance appinstanceEntity = appInstanceService.getById(appinstance.getId());
-    	appinstanceEntity.setSla(appinstance.getSla());
-    	appInstanceService.updateAppInstance(appinstanceEntity);
+    	appInstanceService.updateAppInstance(appinstance);
         return "redirect:/instancedetail?id="+appinstance.getId();
     }
   //-----------------------
     
   //------Contract---------------    
     @GetMapping("/deleteInstanceContract")
-    public String deleteInstanceContract(@RequestParam(name="id", required=false) String id) {
-    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
-    	appInstance.setContract(null);
-    	appInstanceService.updateAppInstance(appInstance);
+    public String deleteInstanceContract(@ModelAttribute("instance") AppInstance appinstance) {
 
-    	return "redirect:/instancedetail?id="+Long.valueOf(id);
+    	appinstance.setContract(null);
+    	appInstanceService.updateAppInstance(appinstance);
+
+    	return "redirect:/instancedetail?id="+appinstance.getId();
     }
     
     @PostMapping("/addInstanceContract")
     public String addOrupdateInstanceContract(@ModelAttribute("appinstance") AppInstance appinstance) {
 
-    	AppInstance appinstanceEntity = appInstanceService.getById(appinstance.getId());
-    	appinstanceEntity.setContract(appinstance.getContract());
-    	appInstanceService.updateAppInstance(appinstanceEntity);
+    	appInstanceService.updateAppInstance(appinstance);
         return "redirect:/instancedetail?id="+appinstance.getId();
     }
   //----------------------- 
@@ -216,8 +212,8 @@ public class AppInstanceController {
     
     //------License---------------    
     @GetMapping("/deleteInstanceLicense")
-    public String deleteInstanceLicense(@RequestParam(name="id", required=false) String id) {
-    	License license = licenseService.getById(Long.valueOf(id));
+    public String deleteInstanceLicense(@ModelAttribute("license") License license) {
+
     	Long appInstanceId = license.getAppInstance().getId();
     	license.setAppInstance(null);
     	licenseService.updateLicense(license);
@@ -230,8 +226,9 @@ public class AppInstanceController {
     public String addOrupdateInstanceLicense(@ModelAttribute("license") License license) {
 
 
-    	licenseService.removeAppInstance(license.getAppInstance());
-    	licenseService.updateAppInstance(license.getAppInstance(), license.getId());
+//    	licenseService.removeAppInstance(license.getAppInstance());
+//    	licenseService.updateAppInstance(license.getAppInstance(), license.getId());
+    	licenseService.updateLicense(license);
         return "redirect:/instancedetail?id="+license.getAppInstance().getId();
     }
   //----------------------- 
@@ -239,8 +236,8 @@ public class AppInstanceController {
     
     //------Desktop---------------    
     @GetMapping("/deleteInstanceDesktop")
-    public String deleteInstanceDesktop(@RequestParam(name="id", required=false) String id) {
-    	Desktop desktop = desktopService.getById(Long.valueOf(id));
+    public String deleteInstanceDesktop(@ModelAttribute("desktop") Desktop desktop) {
+
     	Long appInstanceId = desktop.getAppInstance().getId();
     	desktop.setAppInstance(null);
     	desktopService.updateDesktop(desktop);
@@ -253,8 +250,7 @@ public class AppInstanceController {
     public String addOrupdateInstanceDesktop(@ModelAttribute("desktop") Desktop desktop) {
 
 
-    	desktopService.removeAppInstance(desktop.getAppInstance());
-    	desktopService.updateAppInstance(desktop.getAppInstance(), desktop.getId());
+    	desktopService.updateDesktop(desktop);
         return "redirect:/instancedetail?id="+desktop.getAppInstance().getId();
     }
   //----------------------- 
@@ -289,20 +285,19 @@ public class AppInstanceController {
     
     //------Vendor---------------    
     @GetMapping("/deleteInstanceCompany")
-    public String deleteInstanceCompany(@RequestParam(name="id", required=false) String id) {
-    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
+    public String deleteInstanceCompany(@ModelAttribute("instance") AppInstance appInstance) {
+
     	appInstance.setCompany(null);
     	appInstanceService.updateAppInstance(appInstance);
 
-    	return "redirect:/instancedetail?id="+Long.valueOf(id);
+    	return "redirect:/instancedetail?id="+appInstance.getId();
     }
     
     @PostMapping("/addInstanceCompany")
     public String addOrupdateInstanceCompany(@ModelAttribute("appinstance") AppInstance appInstance) {
 
-    	AppInstance appInstanceEntity=appInstanceService.getById(appInstance.getId());
-    	appInstanceEntity.setCompany(appInstance.getCompany());
-    	appInstanceService.updateAppInstance(appInstanceEntity);
+
+    	appInstanceService.updateAppInstance(appInstance);
         return "redirect:/instancedetail?id="+appInstance.getId();
     }
   //----------------------- 
@@ -310,38 +305,36 @@ public class AppInstanceController {
     
     //------Department---------------    
     @GetMapping("/deleteInstanceDepartment")
-    public String deleteInstanceDepartment(@RequestParam(name="id", required=false) String id) {
+    public String deleteInstanceDepartment(@ModelAttribute("instance") AppInstance appInstance) {
+    	appInstance.setDepartment(null);
+    	appInstanceService.updateAppInstance(appInstance);
 
-    	appInstanceService.removeDeparmentbyInstanceId(Long.valueOf(id));
-
-    	return "redirect:/instancedetail?id="+id;
+    	return "redirect:/instancedetail?id="+appInstance.getId();
     }
     
     @PostMapping("/addInstanceDepartment")
     public String addOrupdateInstanceDepartment(@ModelAttribute("appinstance") AppInstance appInstance) {
 
-    	AppInstance appInstanceEntity= appInstanceService.getById(appInstance.getId());
-    	appInstanceEntity.setDepartment(appInstance.getDepartment());
-    	appInstanceService.updateAppInstance(appInstanceEntity);
+    	appInstanceService.updateAppInstance(appInstance);
         return "redirect:/instancedetail?id="+appInstance.getId();
     }
   //-----------------------
 
     //------Support---------------    
     @GetMapping("/deleteInstanceSupport")
-    public String deleteInstanceSupport(@RequestParam(name="id", required=false) String id) {
+    public String deleteInstanceSupport(@ModelAttribute("instance") AppInstance appInstance) {
 
-    	appInstanceService.removeSupportbyInstanceId(Long.valueOf(id));
+    	appInstance.setSupport(null);
+    	appInstanceService.updateAppInstance(appInstance);
 
-    	return "redirect:/instancedetail?id="+id;
+    	return "redirect:/instancedetail?id="+appInstance.getId();
     }
     
     @PostMapping("/addInstanceSupport")
     public String addOrupdateInstanceSupport(@ModelAttribute("appinstance") AppInstance appInstance) {
 
-    	AppInstance appInstanceEntity= appInstanceService.getById(appInstance.getId());
-    	appInstanceEntity.setSupport(appInstance.getSupport());
-    	appInstanceService.updateAppInstance(appInstanceEntity);
+
+    	appInstanceService.updateAppInstance(appInstance);
         return "redirect:/instancedetail?id="+appInstance.getId();
     }
   //-----------------------
