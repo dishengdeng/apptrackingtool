@@ -16,5 +16,6 @@ public interface AppService {
     Application findbyId(Long id);
     List<Application> getUnassignedApps();
     void removFiles(String upload_foler,Application application);
-    Application findbyApp(Long id);
+    void saveDetails(Application application);
+ 
 }

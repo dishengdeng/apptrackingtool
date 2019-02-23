@@ -252,11 +252,16 @@ public class Application implements Comparable<Application>{
 		
 		if(this.getClass()!=obj.getClass()) return false;
 		
-		AppInstance other = (AppInstance) obj;
+		Application other = (Application) obj;
 		
 		if(this.getId()!=other.getId()) return false;
 		
 		return true;
+	}
+	
+	@Override
+	public int hashCode() {
+	    return Long.valueOf(this.getId()).hashCode();
 	}
 
 	@Override

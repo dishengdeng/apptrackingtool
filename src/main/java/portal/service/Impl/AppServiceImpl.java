@@ -71,7 +71,7 @@ public class AppServiceImpl implements AppService{
 	@Override
 	public Application findbyId(Long id) {
 
-		return appRepository.getOne(id);
+		return appRepository.findOne(id);
 	}
 
 	@Override
@@ -94,9 +94,18 @@ public class AppServiceImpl implements AppService{
 	}
 
 	@Override
-	public Application findbyApp(Long id) {
+	public void saveDetails(Application application) {
 		
-		return appRepository.findByApp(id);
+		appRepository.saveDetails(application.getAppName(), application.getStatus(), 
+									application.getAppVersion(), application.getAppType(), 
+									application.getAppAliase(), application.getAppPrerequisite(), 
+									application.getAppPurpose(), 
+								ObjectUtils.isEmpty(application.getAppDecomminsionDate())? null:application.getAppDecomminsionDate(), 
+										application.getAppComments(), 
+										application.getAppGovernance(), 
+										application.getAppSupportByCapSys(),application.getId());
 	}
+
+
 
 }

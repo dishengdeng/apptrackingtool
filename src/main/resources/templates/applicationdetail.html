@@ -43,11 +43,6 @@
 									<label for="AppName">Application Name:</label>
 									<input type="text" class="form-control" th:name="AppName" th:value="${app.AppName}">
 									<input type="hidden" class="form-control" th:name="id" th:value="${app.id}">
-									<select name="appInstances" multiple hidden>
-									  <option th:each="instanceEntity : ${appinstances}" 
-									  th:text="${instanceEntity.appInstanceName}" 
-									  th:attr="value = ${instanceEntity.id}" selected>
-									</select>
 								  </div>
 								  <div class="form-group">
 									<label for="appInstanceName">Status:</label>

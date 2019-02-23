@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -89,69 +90,27 @@ public class HomeController {
     	appService.delete(application);
     	return "redirect:/";
     }
+    
     @PostMapping("/updateApplication")
     public String updateApplication(@ModelAttribute("appmodel") Application application,BindingResult bindingResult,ModelMap model) {
 
-        Application appEntity=appService.findbyApp(application.getId());
-        appEntity.setAppName(application.getAppName());
-        appEntity.setAppAliase(application.getAppAliase());
-        appEntity.setAppDecomminsionDate(application.getAppDecomminsionDate().toString());
-        appEntity.setAppGovernance(application.getAppGovernance());
-        appEntity.setAppPrerequisite(application.getAppPrerequisite());
-        appEntity.setAppVersion(application.getAppVersion());
-        appEntity.setAppPurpose(application.getAppPurpose());
-        appEntity.setAppType(application.getAppType());
-        appEntity.setStatus(application.getStatus());
-        appEntity.setAppComments(application.getAppComments());
+        getUpdatedApp(application);
     	
-    	appValidator.validateStatus(appEntity, bindingResult, Action.UPDATE);
+    	appValidator.validateStatus(application, bindingResult, Action.UPDATE);
         if (bindingResult.hasErrors()) {
-        	model.addAttribute("app",appEntity);
-        	
-        	//--appInstance--
-        	model.addAttribute("appinstances",appEntity.getAppInstances());
-
-        	model.addAttribute("instances",appInstanceService.findNotAssgined(application));
-        	
-        	//--Manufacturer-----
-        	model.addAttribute("company",appEntity.getManufacturer());
-        	model.addAttribute("companys",companyService.findApplicationByNotAssigned(application));
-        	
-        	//--Support-----
-        	model.addAttribute("support",appEntity.getSupport());
-        	model.addAttribute("supports",supportService.getAll());    	
-        	
-        	//--Department-----
-        	model.addAttribute("department",appEntity.getDepartment());
-        	model.addAttribute("departments",departmentService.getAll());
+        	setModel(model,application);
             return "applicationdetail";
         }
-        appService.updateApp(application);
+        appService.saveDetails(application);
         return "redirect:/applicationdetail?app="+application.getId();
     }
     
+
+    
     @GetMapping("/applicationdetail")
     public String ApplicationDetauk(@ModelAttribute("app") Application application,ModelMap model) {
-    	//Application application = appService.findbyId(Long.valueOf(id));
-    	model.addAttribute("appmodel",new Application());
-    	model.addAttribute("app",application);
-    	
-    	//--appInstance--
-    	model.addAttribute("appinstances",application.getAppInstances());
 
-    	model.addAttribute("instances",appInstanceService.findNotAssgined(application));
-    	
-    	//--Manufacturer-----
-    	model.addAttribute("company",application.getManufacturer());
-    	model.addAttribute("companys",companyService.findApplicationByNotAssigned(application));
-    	
-    	//--Support-----
-    	model.addAttribute("support",application.getSupport());
-    	model.addAttribute("supports",supportService.getAll());    	
-    	
-    	//--Department-----
-    	model.addAttribute("department",application.getDepartment());
-    	model.addAttribute("departments",departmentService.getAll());
+    	setModel(model,application);
 
     	return "applicationdetail";
     } 
@@ -269,6 +228,42 @@ public class HomeController {
 		fileService.removeFile(UPLOADED_FOLDER, file.getApplication().getId().toString(),file);
 		return "redirect:/applicationdetail?id="+application.getId();
     	
-    }    
+    }
+    
+    //--private methods--
+    private void getUpdatedApp(Application application)
+    {
+        Application appEntity=appService.findbyId(application.getId());
+
+        application.setAppInstances(appEntity.getAppInstances());
+        application.setSupport(appEntity.getSupport());
+        application.setManufacturer(appEntity.getManufacturer());
+        application.setDepartment(appEntity.getDepartment());
+        application.setFiles(appEntity.getFiles());
+ 
+    }
+    
+    private void setModel(ModelMap model,Application appEntity)
+    {
+    	model.addAttribute("appmodel",appEntity);
+    	model.addAttribute("app",appEntity);
+    	
+    	//--appInstance--
+    	model.addAttribute("appinstances",appEntity.getAppInstances());
+
+    	model.addAttribute("instances",appInstanceService.findNotAssgined(appEntity));
+    	
+    	//--Manufacturer-----
+    	model.addAttribute("company",appEntity.getManufacturer());
+    	model.addAttribute("companys",companyService.findApplicationByNotAssigned(appEntity));
+    	
+    	//--Support-----
+    	model.addAttribute("support",appEntity.getSupport());
+    	model.addAttribute("supports",supportService.getAll());    	
+    	
+    	//--Department-----
+    	model.addAttribute("department",appEntity.getDepartment());
+    	model.addAttribute("departments",departmentService.getAll());
+    }
 
 }
