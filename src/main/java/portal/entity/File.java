@@ -153,6 +153,16 @@ public class File implements Comparable<File>{
 	public void setApplication(Application application) {
 		this.application = application;
 	}
+	
+	public void removeAllDependence()
+	{
+		this.setAppInstance(null);
+		this.setApplication(null);
+		this.setSla(null);
+		this.setContract(null);
+		this.setServer(null);
+		this.setDepartment(null);
+	}
 
 	@Override
 	public int compareTo(File o) {

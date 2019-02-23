@@ -25,7 +25,6 @@ import portal.entity.File;
 import portal.entity.License;
 import portal.entity.Server;
 import portal.entity.Site;
-import portal.models.App;
 import portal.service.AppInstanceService;
 import portal.service.CompanyService;
 import portal.service.ContractService;
@@ -105,13 +104,13 @@ public class AppInstanceController {
     
     @GetMapping("/addAppInstance")
     public String CreateAppInstance(ModelMap model) {
-    	model.addAttribute("appinstance", new App());
+    	model.addAttribute("appinstance", new AppInstance());
         return "addAppInstance";
     }
     
     @GetMapping("/deleteAppInstance")
-    public String DeleteAppInstance(@RequestParam(name="id", required=true) String id) {
-    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
+    public String DeleteAppInstance(@ModelAttribute("instance") AppInstance appInstance) {
+//    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
     	//slaService.removeAppInstance(appInstance);
     	licenseService.removeAppInstance(appInstance);
     	desktopService.removeAppInstance(appInstance);
@@ -124,6 +123,9 @@ public class AppInstanceController {
     	appInstance.setContract(null);
     	appInstance.setCompany(null);
     	appInstance.setSla(null);
+
+    	appInstanceService.removFiles(UPLOADED_FOLDER, appInstance);
+    	appInstanceService.updateAppInstance(appInstance);
     	appInstanceService.delete(appInstance);
     	return "redirect:/instances";
     }

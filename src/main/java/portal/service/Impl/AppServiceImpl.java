@@ -8,13 +8,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import portal.entity.Application;
+import portal.entity.File;
 import portal.models.App;
 import portal.repository.AppRepository;
 import portal.service.AppService;
+import portal.service.FileService;
 @Service
 public class AppServiceImpl implements AppService{
     @Autowired
     private AppRepository appRepository;
+    
+	@Autowired
+	private FileService fileService;
 	
 	@Override
 	public Application addApplication(Application application) {
@@ -66,7 +71,7 @@ public class AppServiceImpl implements AppService{
 	@Override
 	public Application findbyId(Long id) {
 
-		return appRepository.findOne(id);
+		return appRepository.getOne(id);
 	}
 
 	@Override
@@ -74,6 +79,24 @@ public class AppServiceImpl implements AppService{
 		List<Application> apps=appRepository.findAll();
 		apps.removeIf(obj->!ObjectUtils.isEmpty(obj.getManufacturer()));
 		return apps;
+	}
+
+	@Override
+	public void removFiles(String upload_foler, Application application) {
+		if(application.getFiles().size()>0)
+		{
+			for(File file:application.getFiles())
+			{
+				fileService.removeFile(upload_foler,application.getId().toString(), file);
+			}			
+		}
+		
+	}
+
+	@Override
+	public Application findbyApp(Long id) {
+		
+		return appRepository.findByApp(id);
 	}
 
 }

@@ -46,19 +46,20 @@
                                 <thead>
                                     <tr>
                                         <th>Contract</th>
+										<th><span class="fa fa-paperclip fa-lg"></span></th>
 										<th>App Instance</th>
 										<th>Expired Date</th>
 										<th>Description</th>
                                         <th>SMA Description</th>
 										<th>SLA Description</th>
-										<th>Attachment</th>
+										
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="contract: ${contracts}">
                                         <td>
-											<a th:href="@{'/deleteContract?id='+${contract.id}+'&contractName='+${contract.contractName}}" 
+											<a th:href="@{'/deleteContract?contract='+${contract.id}}" 
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -68,6 +69,16 @@
 											</a>&nbsp 
 											<a th:href="@{'/contractdetail?contract='+${contract.id}}" th:text="${contract.contractName}"></a>
 										</td>
+										<td>
+											<a data-toggle="modal"  
+												th:data-target="@{${#strings.concat('#',contract.id,'files')}}" 
+												th:if="${contract.files.size()>0}"
+												style="text-decoration: none;cursor: pointer"
+												>
+												<span class="fa fa-paperclip fa-lg"></span>
+											</a>
+
+										</td>										
 										<td>
 											<a data-toggle="modal" 
 											th:if="${contract.appInstances.size()>0}" 
@@ -80,19 +91,7 @@
 										<td th:text="${contract.description}"></td>
                                         <td th:text="${contract.smaDescription}"></td>
                                         <td th:text="${contract.slaDescription}"></td>
-										<td>
 
-											<ul style="padding:0" th:if="${contract.files.size()>0}">
-												<li style="list-style-type:none" th:each="file : ${contract.files}">
-													<a 	
-														th:href="@{'/downloadcontract?id='+${file.id}}" 
-														th:text="${file.attachment}"
-													>
-													</a>
-												</li>
-											</ul>
-
-										</td>
 
                                     </tr>
 
@@ -130,7 +129,37 @@
 												</div>
 											   </div>
 											 </div>
-									</div>	
+									</div>
+
+									<div class="modal fade" th:if="${contract.files.size()>0}" th:id="${#strings.concat(contract.id,'files')}" role="dialog" >
+										<!-- Modal content-->
+										<div class="modal-dialog">
+										  <div class="modal-content">
+											<div class="modal-header">
+											  <button type="button" class="close" data-dismiss="modal">&times;</button>
+											  <h4 class="modal-title"> Attachments</h4>
+											</div>
+											<div class="modal-body">
+												<table class="table table-striped" id="filestable">
+												  <thead>
+													<tr>
+													  <th scope="col">File Name</th>
+													  <th scope="col">Created At</th>
+													  <th scope="col">Created By</th>														  
+													</tr>
+												  </thead>
+												  <tbody>
+													<tr th:each="file : ${contract.files}">
+													  <th><h5><a th:href="@{'/downloadcontract?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+													  <th><h5 th:text="${file.createdat}"></h5></th>
+													  <th><h5 th:text="${file.createdby}"></h5></th>
+													</tr>
+												  </tbody>
+												</table>
+											</div>
+										   </div>
+										 </div>
+									</div>									
 
 							 </div><!-- Modal area-->
                         </div>

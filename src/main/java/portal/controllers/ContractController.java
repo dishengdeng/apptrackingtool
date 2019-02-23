@@ -75,13 +75,11 @@ public class ContractController {
     }
     
     @GetMapping("/deleteContract")
-    public String deleteContract(@RequestParam(name="id", required=true) String id,@RequestParam(name="contractName", required=true) String contractName) {
-    	Contract contract = new Contract();
-    	contract.setId(Long.valueOf(id));
-    	contract.setContractName(contractName);
+    public String deleteContract(@ModelAttribute("contract") Contract contract) {
+
     	
     	contractService.removeAllContract(contract);
-    	
+    	contractService.removFiles(UPLOADED_FOLDER, contract);
     	contractService.delete(contract);
     	return "redirect:/contracts";
     }

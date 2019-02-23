@@ -104,10 +104,9 @@ public class FileServiceImpl implements FileService{
 		File file =  new File(getfileName(UPLOAD_FOLDER,FileTypeId,fileEntity.getAttachment()));
 		if(file.delete())
 		{
-			portal.entity.File emptyFile = new portal.entity.File();
-			emptyFile.setId(fileEntity.getId());
-			fileRepository.saveAndFlush(emptyFile);
-			fileRepository.delete(emptyFile);
+
+			fileEntity.removeAllDependence();
+			fileRepository.delete(fileEntity);
 			return true;
 		}
 		else

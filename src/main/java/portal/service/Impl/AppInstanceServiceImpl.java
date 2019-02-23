@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Department;
+import portal.entity.File;
 import portal.entity.Support;
 import portal.models.AppInstanceModel;
 import portal.repository.AppInstanceRepository;
 import portal.service.AppInstanceService;
+import portal.service.FileService;
 import portal.utility.Status;
 
 @Service
@@ -19,6 +21,9 @@ public class AppInstanceServiceImpl implements AppInstanceService{
 
 	@Autowired
 	private AppInstanceRepository appInstanceRepository;
+	
+	@Autowired
+	private FileService fileService;
 	
 	@Override
 	public AppInstance addAppInstance(AppInstance appInstance) {
@@ -104,6 +109,18 @@ public class AppInstanceServiceImpl implements AppInstanceService{
 	public List<AppInstance> getUnassginedAppInstances() {
 
 		return appInstanceRepository.findUnAssingedAppInstances();
+	}
+
+	@Override
+	public void removFiles(String upload_foler, AppInstance appInstance) {
+		if(appInstance.getFiles().size()>0)
+		{
+			for(File file:appInstance.getFiles())
+			{
+				fileService.removeFile(upload_foler,appInstance.getId().toString(), file);
+			}			
+		}
+		
 	}
 
 }

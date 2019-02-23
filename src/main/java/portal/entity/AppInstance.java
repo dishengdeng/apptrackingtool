@@ -47,6 +47,10 @@ public class AppInstance implements Comparable<AppInstance>{
     @JsonView(Views.Public.class)
 	private String status;
     
+	@Column(name = "version", length = 64)
+    @JsonView(Views.Public.class)
+	private String version;
+    
     @Column(name = "description", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String description;
@@ -261,5 +265,17 @@ public class AppInstance implements Comparable<AppInstance>{
 	public void setFiles(Set<File> files) {
 		this.files.addAll(files);
 	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
+	}
+
+
+	
+
 	
 }

@@ -19,5 +19,5 @@ public interface ContractService {
     Contract updateContract(Contract contract);
     void updateAppInstanceContract(List<AppInstance> appInstances,Contract contract);
     void removeAllContract(Contract contract);
-
+    void removFiles(String upload_foler,Contract contract);
 }

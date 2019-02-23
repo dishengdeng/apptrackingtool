@@ -59,7 +59,7 @@
                                 <tbody>
                                     <tr th:each="sla: ${slas}">
                                         <td>
-											<a th:href="@{'/deleteSLA?id='+${sla.id}+'&slaName='+${sla.slaName}}"
+											<a th:href="@{'/deleteSLA?sla='+${sla.id}}"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 

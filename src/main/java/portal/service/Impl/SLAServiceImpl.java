@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import portal.entity.AppInstance;
+import portal.entity.File;
 import portal.entity.SLA;
 import portal.models.SLAModel;
 import portal.repository.SLARepository;
+import portal.service.FileService;
 import portal.service.SLAService;
 
 @Service
@@ -17,6 +19,9 @@ public class SLAServiceImpl implements SLAService{
 
 	@Autowired
 	private SLARepository slaRepository;
+	
+	@Autowired
+	private FileService fileService;
 	
 	@Override
 	public SLA addSLA(SLA sla) {
@@ -96,6 +101,18 @@ public class SLAServiceImpl implements SLAService{
 	public void removeAllSLA(SLA sla) {
 		
 		slaRepository.removeAllSLA(sla);
+	}
+
+	@Override
+	public void removFiles(String upload_foler, SLA sla) {
+		if(sla.getFiles().size()>0)
+		{
+			for(File file:sla.getFiles())
+			{
+				fileService.removeFile(upload_foler,sla.getId().toString(), file);
+			}			
+		}
+		
 	}
 
 

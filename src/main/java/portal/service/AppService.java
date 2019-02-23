@@ -2,6 +2,7 @@ package portal.service;
 
 import java.util.List;
 
+
 import portal.entity.Application;
 import portal.models.App;
 
@@ -14,4 +15,6 @@ public interface AppService {
     Application updateApp(Application application);
     Application findbyId(Long id);
     List<Application> getUnassignedApps();
+    void removFiles(String upload_foler,Application application);
+    Application findbyApp(Long id);
 }

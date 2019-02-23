@@ -7,15 +7,20 @@ import org.springframework.stereotype.Service;
 
 import portal.entity.AppInstance;
 import portal.entity.Cluster;
+import portal.entity.File;
 import portal.entity.Server;
 import portal.models.ServerModel;
 import portal.repository.ServerRepository;
 import portal.service.AppInstanceService;
+import portal.service.FileService;
 import portal.service.ServerService;
 @Service
 public class ServerServiceImpl implements ServerService{
 	@Autowired
 	private ServerRepository serverRepository;
+	
+	@Autowired
+	private FileService fileService;
 	
 	@Autowired
 	private AppInstanceService appInstanceService;
@@ -101,6 +106,17 @@ public class ServerServiceImpl implements ServerService{
 		List<AppInstance> appInstances=appInstanceService.getAll();
 		appInstances.removeIf(obj->obj.getServers().contains(server));
 		return appInstances;
+	}
+
+	@Override
+	public void removFiles(String upload_foler, Server server) {
+		if(server.getFiles().size()>0)
+		{
+			for(File file:server.getFiles())
+			{
+				fileService.removeFile(upload_foler,server.getId().toString(), file);
+			}			
+		}
 	}
 
 }

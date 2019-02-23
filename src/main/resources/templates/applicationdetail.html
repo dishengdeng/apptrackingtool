@@ -36,18 +36,28 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-							<form action="#" th:action="@{/updateApplication}" method="post">													
-						
+							<form action="#" th:action="@{/updateApplication}" th:object="${appmodel}" method="post">
+							
+									
 								  <div class="form-group">
 									<label for="AppName">Application Name:</label>
 									<input type="text" class="form-control" th:name="AppName" th:value="${app.AppName}">
-									<input type="hidden" class="form-control" th:name="application" th:value="${app.id}">
+									<input type="hidden" class="form-control" th:name="id" th:value="${app.id}">
 									<select name="appInstances" multiple hidden>
 									  <option th:each="instanceEntity : ${appinstances}" 
 									  th:text="${instanceEntity.appInstanceName}" 
 									  th:attr="value = ${instanceEntity.id}" selected>
 									</select>
 								  </div>
+								  <div class="form-group">
+									<label for="appInstanceName">Status:</label>
+									<select name="status" class="form-control" id="statusSelect">
+										<option th:selected="${app.status==null}"></option>
+										<option th:attr="value = 'Active'" th:selected="${app.status==null} ? false:${app.status=='Active'}" th:text="Active"></option>
+										<option th:attr="value = 'Inactive'" th:selected="${app.status==null} ? false:${app.status=='Inactive'}" th:text="Inactive"></option>
+									</select>
+									<p class="text-danger" th:if="${#fields.hasErrors('status')}"><strong  th:errors="*{status}"></strong></p>
+								  </div>								  
 								  <div class="form-group">
 									<label for="description">Version:</label>
 									<input type="text" class="form-control" th:name="AppVersion" th:value="${app.AppVersion}">
@@ -87,6 +97,7 @@
 									<input type="text" class="form-control" th:name="AppGovernance" th:value="${app.AppGovernance}">
 								  </div>													  
 							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							  
 							</form>                            
                         </div>
                         <!-- /.panel-body -->

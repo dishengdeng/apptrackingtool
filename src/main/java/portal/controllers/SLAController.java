@@ -72,12 +72,11 @@ public class SLAController {
     }
     
     @GetMapping("/deleteSLA")
-    public String deleteSLA(@RequestParam(name="id", required=true) String id,@RequestParam(name="slaName", required=true) String slaName) {
-    	SLA sla = new SLA();
-    	sla.setId(id);
-    	sla.setSlaName(slaName);
+    public String deleteSLA(@ModelAttribute("sla") SLA sla) {
+
     	
     	slaService.removeAllSLA(sla);
+    	slaService.removFiles(UPLOADED_FOLDER, sla);
     	slaService.delete(sla);
     	return "redirect:/slas";
     }

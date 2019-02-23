@@ -33,7 +33,11 @@
 						<option th:value="Active" th:text="Active"></option>
 						<option th:value="Inactive" th:text="Inactive"></option>
 					</select>
-				  </div>					
+				  </div>
+				  <div class="form-group">
+					<label for="note">Version:</label>
+					<input type="text" class="form-control" th:name="version" th:value="${appinstance.version}">
+				  </div>				  
 				  <div class="form-group">
 					<label for="note">Description:</label>
 					<input type="text" class="form-control" th:name="description">

@@ -18,5 +18,6 @@ public interface SLAService {
     SLA updateSLA(SLA sla);
     void updateAppIstanceSLA(List<AppInstance> appInstances,SLA sla);
     void removeAllSLA(SLA sla);
+    void removFiles(String upload_foler,SLA sla);
 
 }

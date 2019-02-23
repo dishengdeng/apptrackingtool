@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,8 @@ import portal.service.CompanyService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.SupportService;
+import portal.service.Impl.AppValidator;
+import portal.utility.Action;
 import portal.utility.FileType;
 
 @Controller
@@ -35,6 +38,9 @@ public class HomeController {
 	
 	@Autowired
 	private FileService fileService;
+	
+	@Autowired
+	private AppValidator appValidator;	
 	
 	@Autowired
 	private AppService appService;
@@ -79,20 +85,55 @@ public class HomeController {
     	application.removeAllInstance();
     	//appInstanceService.removeApplication(application);
     	//companyService.removeApplication(application);
+    	appService.removFiles(UPLOADED_FOLDER, application);
     	appService.delete(application);
     	return "redirect:/";
     }
     @PostMapping("/updateApplication")
-    public String updateApplication(@ModelAttribute("application") Application application) {
+    public String updateApplication(@ModelAttribute("appmodel") Application application,BindingResult bindingResult,ModelMap model) {
+
+        Application appEntity=appService.findbyApp(application.getId());
+        appEntity.setAppName(application.getAppName());
+        appEntity.setAppAliase(application.getAppAliase());
+        appEntity.setAppDecomminsionDate(application.getAppDecomminsionDate().toString());
+        appEntity.setAppGovernance(application.getAppGovernance());
+        appEntity.setAppPrerequisite(application.getAppPrerequisite());
+        appEntity.setAppVersion(application.getAppVersion());
+        appEntity.setAppPurpose(application.getAppPurpose());
+        appEntity.setAppType(application.getAppType());
+        appEntity.setStatus(application.getStatus());
+        appEntity.setAppComments(application.getAppComments());
     	
-    	appService.updateApp(application);
-        return "redirect:/applicationdetail?id="+application.getId();
+    	appValidator.validateStatus(appEntity, bindingResult, Action.UPDATE);
+        if (bindingResult.hasErrors()) {
+        	model.addAttribute("app",appEntity);
+        	
+        	//--appInstance--
+        	model.addAttribute("appinstances",appEntity.getAppInstances());
+
+        	model.addAttribute("instances",appInstanceService.findNotAssgined(application));
+        	
+        	//--Manufacturer-----
+        	model.addAttribute("company",appEntity.getManufacturer());
+        	model.addAttribute("companys",companyService.findApplicationByNotAssigned(application));
+        	
+        	//--Support-----
+        	model.addAttribute("support",appEntity.getSupport());
+        	model.addAttribute("supports",supportService.getAll());    	
+        	
+        	//--Department-----
+        	model.addAttribute("department",appEntity.getDepartment());
+        	model.addAttribute("departments",departmentService.getAll());
+            return "applicationdetail";
+        }
+        appService.updateApp(application);
+        return "redirect:/applicationdetail?app="+application.getId();
     }
     
     @GetMapping("/applicationdetail")
     public String ApplicationDetauk(@ModelAttribute("app") Application application,ModelMap model) {
     	//Application application = appService.findbyId(Long.valueOf(id));
-    	
+    	model.addAttribute("appmodel",new Application());
     	model.addAttribute("app",application);
     	
     	//--appInstance--
@@ -127,7 +168,7 @@ public class HomeController {
     		appInstanceService.updateAppInstance(appInstance);
     	}
     	
-        return "redirect:/applicationdetail?id="+applicationEntity.getId();
+    	return "redirect:/applicationdetail?app="+application.getId();
         
     }   
     
@@ -139,7 +180,7 @@ public class HomeController {
     	appInstanceService.updateAppInstance(appInstance);
 
 
-    	return "redirect:/applicationdetail?id="+applicationId;
+    	return "redirect:/applicationdetail?app="+applicationId;
     }     
     
     //------Manufacturer---------------    
@@ -150,7 +191,7 @@ public class HomeController {
     	company.setApplication(null);
     	companyService.updateCompany(company);
  
-    	return "redirect:/applicationdetail?id="+applicationId;
+    	return "redirect:/applicationdetail?app="+applicationId;
 
     }
     
@@ -160,7 +201,7 @@ public class HomeController {
 
     	companyService.removeApplication(company.getApplication());//remove application from previous company
     	companyService.updateApplication(company.getApplication(), company.getId());//assign it to a new company
-        return "redirect:/applicationdetail?id="+company.getApplication().getId();
+        return "redirect:/applicationdetail?app="+company.getApplication().getId();
     }
   //-----------------------   
     //------Support---------------    
@@ -170,7 +211,7 @@ public class HomeController {
     	application.setSupport(null);
     	appService.updateApp(application);
 
-    	return "redirect:/applicationdetail?id="+application.getId();
+    	return "redirect:/applicationdetail?app="+application.getId();
     }
     
     @PostMapping("/addApplicationSupport")
@@ -178,7 +219,7 @@ public class HomeController {
 
 
     	appService.updateApp(application);
-    	return "redirect:/applicationdetail?id="+application.getId();
+    	return "redirect:/applicationdetail?app="+application.getId();
     }    
     //------Department---------------    
     @GetMapping("/deleteApplicationDepartment")
@@ -186,14 +227,14 @@ public class HomeController {
 
     	application.setDepartment(null);
 		appService.updateApp(application);
-    	return "redirect:/applicationdetail?id="+application.getId();
+    	return "redirect:/applicationdetail?app="+application.getId();
     }
     
     @PostMapping("/addApplicationDepartment")
     public String addOrupdateInstanceDepartment(@ModelAttribute("application") Application application) {
 
 		appService.updateApp(application);
-        return "redirect:/applicationdetail?id="+application.getId();
+        return "redirect:/applicationdetail?app="+application.getId();
     }
     //------file management----
     @PostMapping("/applicationupload")
@@ -207,7 +248,7 @@ public class HomeController {
 
 		fileService.uploadFile(file, UPLOADED_FOLDER,application.getId().toString(),fileEntity);
 		
-		return "redirect:/applicationdetail?id="+application.getId();
+		return "redirect:/applicationdetail?app="+application.getId();
     }
     
     @GetMapping("/downloadapplication")

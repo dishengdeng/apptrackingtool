@@ -42,6 +42,7 @@
 										<th>App Instance</th>
 										<th><span class="fa fa-paperclip fa-lg"></span></th>
 										<th>Status</th>
+										<th>Version</th>
 										<th>Descrption</th>										
 										<th>Application</th>
 										<th>Support</th>
@@ -59,7 +60,7 @@
 								<tbody>
 									<tr th:each="instance: ${appinstances}">
 										<td>
-										<a th:href="@{'/deleteAppInstance?id='+${instance.id}}" 
+										<a th:href="@{'/deleteAppInstance?instance='+${instance.id}}" 
 											style="text-decoration: none;" 
 											data-title="Are you sure to delete this Instance?" 
 											data-toggle="confirmation" 
@@ -80,6 +81,8 @@
 											</a>
 										</td>
 										<td th:text="${instance.status}">
+										</td>
+										<td th:text="${instance.version}">
 										</td>
 										<td th:text="${instance.description}">
 										</td>										

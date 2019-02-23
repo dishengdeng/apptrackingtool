@@ -63,11 +63,12 @@ public class ServerController {
     }
     
     @GetMapping("/deleteServer")
-    public String deleteServer(@RequestParam(name="id", required=true) String id,@RequestParam(name="serverName", required=true) String serverName) {
-    	Server server = serverService.getById(Long.valueOf(id));
+    public String deleteServer(@ModelAttribute("server") Server server) {
+
     	server.setAppInstance(null);
     	server.setCluster(null);
-    	serverService.updateServer(server);
+    	//serverService.updateServer(server);
+    	serverService.removFiles(UPLOADED_FOLDER, server);
     	serverService.delete(server);
     	return "redirect:/servers";
     }

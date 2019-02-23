@@ -4,6 +4,7 @@ import java.util.List;
 
 import portal.entity.AppInstance;
 import portal.entity.Application;
+
 import portal.entity.Department;
 import portal.entity.Support;
 import portal.models.AppInstanceModel;
@@ -28,6 +29,6 @@ public interface AppInstanceService {
     List<AppInstance> findNotAssgined(Application application);
     
     void removeApplication(Application application);
-    
+    void removFiles(String upload_foler,AppInstance appInstance);
     List<AppInstance> getUnassginedAppInstances();
 }

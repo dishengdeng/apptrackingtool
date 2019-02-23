@@ -24,10 +24,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.util.ObjectUtils;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
 import portal.utility.Convertor;
+import portal.utility.Status;
 
 /**
  * @author Mike
@@ -46,7 +49,10 @@ public class Application implements Comparable<Application>{
     @Column(name = "AppName", length = 64, unique=true)
     @JsonView(Views.Public.class)
 	private String AppName; 
-
+    
+    @Column(name = "status",columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String status;
 
 	@Column(name = "AppVersion", length = 64)
     @JsonView(Views.Public.class)
@@ -282,5 +288,17 @@ public class Application implements Comparable<Application>{
 		});
 		this.appInstances=null;
 	}
-	
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public Status getAppStatus()
+	{
+		if(ObjectUtils.isEmpty(this.status)) return Status.Inactive;
+		return Status.valueOf(this.status);
+	}	
 }

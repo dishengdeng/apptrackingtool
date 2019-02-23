@@ -8,15 +8,20 @@ import org.springframework.stereotype.Service;
 
 import portal.entity.AppInstance;
 import portal.entity.Contract;
+import portal.entity.File;
 import portal.models.ContractModel;
 import portal.repository.ContractRepository;
 import portal.service.ContractService;
+import portal.service.FileService;
 
 @Service
 public class ContractServiceImpl implements ContractService{
 
 	@Autowired
 	private ContractRepository contractRepository;
+	
+	@Autowired
+	private FileService fileService;
 	
 	@Override
 	public Contract addContract(Contract contract) {
@@ -92,6 +97,18 @@ public class ContractServiceImpl implements ContractService{
 	@Override
 	public void removeAllContract(Contract contract) {
 		contractRepository.removeAllContract(contract);
+		
+	}
+
+	@Override
+	public void removFiles(String upload_foler, Contract contract) {
+		if(contract.getFiles().size()>0)
+		{
+			for(File file:contract.getFiles())
+			{
+				fileService.removeFile(upload_foler,contract.getId().toString(), file);
+			}			
+		}
 		
 	}
 

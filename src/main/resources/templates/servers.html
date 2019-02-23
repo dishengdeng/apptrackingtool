@@ -46,21 +46,22 @@
                                 <thead>
                                     <tr>
                                         <th>Server</th>
+										<th><span class="fa fa-paperclip fa-lg"></span></th>										
 										<th>Cluster</th>
 										<th>App Instance</th>
                                         <th>Description</th>
                                         <th>Address</th>
 										<th>Server Version</th>
 										<th>HW Platform</th>
-										<th>Decomminsion Date</th>
-										<th>Attachment</th>
+										<th>Decommission Date</th>
+
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="server: ${servers}">
                                         <td>
-											<a th:href="@{'/deleteServer?id='+${server.id}+'&serverName='+${server.serverName}}"
+											<a th:href="@{'/deleteServer?server='+${server.id}}"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -72,6 +73,16 @@
 											style="text-decoration: none"> <span th:text="${server.serverName}"></span>
 											</a>
 										</td>
+										<td>
+											<a data-toggle="modal"  
+												th:data-target="@{${#strings.concat('#',server.id,'files')}}" 
+												th:if="${server.files.size()>0}"
+												style="text-decoration: none;cursor: pointer"
+												>
+												<span class="fa fa-paperclip fa-lg"></span>
+											</a>
+
+										</td>											
 										<td>
 											<div th:class="${server.cluster==null}? 'invisible':'panel-group'">
 											  <div class="panel panel-primary">
@@ -104,19 +115,7 @@
 										<td th:text="${server.serverVersion}"></td>
 										<td th:text="${server.hwplatform}"></td>
 										<td th:text="${server.decomminsionDate}"></td>
-										<td>
-											<ul style="padding:0" th:if="${server.files.size()>0}">
-												<li style="list-style-type:none" th:each="file : ${server.files}">
 
-													<a 	
-														th:href="@{'/downloadserver?id='+${file.id}}" 
-														th:text="${file.attachment}"
-													>
-													</a>
-												</li>
-											</ul>
-
-										</td>
 
                                     </tr>
 
@@ -124,6 +123,39 @@
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
+							<!--modal area-->
+							<div th:each="server: ${servers}">
+							<!--file modal-->
+								<div class="modal fade" th:if="${server.files.size()>0}" th:id="${#strings.concat(server.id,'files')}" role="dialog" >
+									<!-- Modal content-->
+									<div class="modal-dialog">
+									  <div class="modal-content">
+										<div class="modal-header">
+										  <button type="button" class="close" data-dismiss="modal">&times;</button>
+										  <h4 class="modal-title"> Attachments</h4>
+										</div>
+										<div class="modal-body">
+											<table class="table table-striped" id="filestable">
+											  <thead>
+												<tr>
+												  <th scope="col">File Name</th>
+												  <th scope="col">Created At</th>
+												  <th scope="col">Created By</th>														  
+												</tr>
+											  </thead>
+											  <tbody>
+												<tr th:each="file : ${server.files}">
+												  <th><h5><a th:href="@{'/downloadcontract?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+												  <th><h5 th:text="${file.createdat}"></h5></th>
+												  <th><h5 th:text="${file.createdby}"></h5></th>
+												</tr>
+											  </tbody>
+											</table>
+										</div>
+									   </div>
+									 </div>
+								</div>
+							</div>
 
                         </div>
                         <!-- /.panel-body -->

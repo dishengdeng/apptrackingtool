@@ -25,6 +25,6 @@ public interface ServerService {
     void updateAppInstance(AppInstance appInstance,Long id);
     
     Server findByAppInstance(AppInstance appInstance);
-    
+    void removFiles(String upload_foler,Server server);
     List<AppInstance> getAppInstancesNotContainServer(Server server);
 }
