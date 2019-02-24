@@ -13,7 +13,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 
@@ -52,7 +54,7 @@ public class Site {
         joinColumns = @JoinColumn(name = "site_id"),
         inverseJoinColumns = @JoinColumn(name = "appInstance_id")
     )
-    private List<AppInstance> appInstances = new ArrayList<AppInstance>();
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
     public void addAppInstance(AppInstance appInstance)
     {
@@ -62,6 +64,7 @@ public class Site {
     public void removeAppInstance(AppInstance appInstance)
     {
     	appInstances.remove(appInstance);
+    	appInstance.getSites().removeIf(obj->obj.equals(this));
     }
     
 	public Long getId() {
@@ -104,12 +107,28 @@ public class Site {
 		this.note = note;
 	}
 
-	public List<AppInstance> getAppInstances() {
+	public Set<AppInstance> getAppInstances() {
 		return appInstances;
 	}
 
-	public void setAppInstances(List<AppInstance> appInstances) {
-		this.appInstances = appInstances;
+	public void setAppInstances(Set<AppInstance> appInstances) {
+		this.appInstances.addAll(appInstances);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this==obj) return true;
+		
+		if(obj==null) return false;
+		
+		if(this.getClass()!=obj.getClass()) return false;
+		
+		Site other = (Site) obj;
+		
+		if(this.getId()!=other.getId()) return false;
+		
+		return true;
 	}
 	
 	

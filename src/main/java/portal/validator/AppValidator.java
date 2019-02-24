@@ -1,4 +1,4 @@
-package portal.service.Impl;
+package portal.validator;
 
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
@@ -50,7 +50,7 @@ public class AppValidator implements Validator{
 				for(AppInstance obj:app.getAppInstances()){
 					if(obj.getAppStatus()==Status.Active)
 					{
-						errors.rejectValue("deletion", "app.deletion");
+						errors.rejectValue("id", "app.deletion");
 					}
 				};
 			}

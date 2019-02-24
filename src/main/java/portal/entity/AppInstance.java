@@ -84,22 +84,19 @@ public class AppInstance implements Comparable<AppInstance>{
     
     @OneToMany(
             mappedBy = "appInstance", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true
+            cascade = CascadeType.ALL 
         )
     private Set<Server> servers = new HashSet<Server>();
     
     @OneToOne(
             mappedBy = "appInstance", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true
+            cascade = CascadeType.ALL
         )
     private License license;
     
     @OneToOne(
             mappedBy = "appInstance", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true
+            cascade = CascadeType.ALL
         )
     private Desktop desktop;
     
@@ -274,7 +271,45 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.version = version;
 	}
 
+	public void removeAllDependence()
+	{
+		if(!ObjectUtils.isEmpty(this.department)) this.department.getAppInstances().removeIf(obj->obj.equals(this));
+		this.setDepartment(null);
+		
+		if(!ObjectUtils.isEmpty(this.support)) this.support.getAppInstances().removeIf(obj->obj.equals(this));
+		this.setSupport(null);
+		
+		if(!ObjectUtils.isEmpty(this.application)) this.application.getAppInstances().removeIf(obj->obj.equals(this));
+		this.setApplication(null);
+		
+		if(sites.size()>0) this.sites.forEach(obj->{
+			obj.removeAppInstance(this);
+		});
+		this.sites=null;
+		
+		if(!ObjectUtils.isEmpty(this.contract)) this.contract.getAppInstances().removeIf(obj->obj.equals(this));
+		this.setContract(null);		
+		
 
+		if(!ObjectUtils.isEmpty(this.company)) this.company.getAppInstances().removeIf(obj->obj.equals(this));
+		this.setCompany(null);
+		
+		if(!ObjectUtils.isEmpty(this.sla)) this.sla.getAppInstances().removeIf(obj->obj.equals(this));
+		this.setSla(null);
+		
+		if(!ObjectUtils.isEmpty(this.license)) this.license.setAppInstance(null);;
+		this.setLicense(null);
+		
+		if(!ObjectUtils.isEmpty(this.desktop)) this.desktop.setAppInstance(null);;
+		this.setDesktop(null);
+		
+		if(servers.size()>0) this.servers.forEach(obj->{
+			obj.setAppInstance(null);
+		});
+		this.servers=null;
+		
+
+	}
 	
 
 	

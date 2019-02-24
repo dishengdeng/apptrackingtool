@@ -111,21 +111,24 @@ public class AppInstanceController {
     @GetMapping("/deleteAppInstance")
     public String DeleteAppInstance(@ModelAttribute("instance") AppInstance appInstance) {
 //    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
-    	//slaService.removeAppInstance(appInstance);
-    	licenseService.removeAppInstance(appInstance);
-    	desktopService.removeAppInstance(appInstance);
-    	serverService.removeAppInstance(appInstance);
-    	//companyService.removeAppInstance(appInstance);
-    	siteService.removeAppInstance(appInstance);
-    	appInstance.setApplication(null);
-    	appInstance.setDepartment(null);
-    	appInstance.setSupport(null);
-    	appInstance.setContract(null);
-    	appInstance.setCompany(null);
-    	appInstance.setSla(null);
-
+//    	//slaService.removeAppInstance(appInstance);
+//    	licenseService.removeAppInstance(appInstance);
+//    	desktopService.removeAppInstance(appInstance);
+//    	serverService.removeAppInstance(appInstance);
+//    	//companyService.removeAppInstance(appInstance);
+//    	siteService.removeAppInstance(appInstance);
+//    	appInstance.setApplication(null);
+//    	appInstance.setDepartment(null);
+//    	appInstance.setSupport(null);
+//    	appInstance.setContract(null);
+//    	appInstance.setCompany(null);
+//    	appInstance.setSla(null);
+//
+//    	appInstanceService.removFiles(UPLOADED_FOLDER, appInstance);
+//    	appInstanceService.updateAppInstance(appInstance);
+    	
+    	appInstance.removeAllDependence();
     	appInstanceService.removFiles(UPLOADED_FOLDER, appInstance);
-    	appInstanceService.updateAppInstance(appInstance);
     	appInstanceService.delete(appInstance);
     	return "redirect:/instances";
     }

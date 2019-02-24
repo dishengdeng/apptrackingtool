@@ -32,9 +32,9 @@ import portal.service.MessageSourceService;
 import portal.service.RoleService;
 import portal.service.SecurityService;
 import portal.service.UserService;
-import portal.service.Impl.UserValidator;
 import portal.utility.Role;
 import portal.utility.messages;
+import portal.validator.UserValidator;
 
 
 @Controller

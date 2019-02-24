@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -27,10 +28,13 @@ import portal.service.AppService;
 import portal.service.CompanyService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
+import portal.service.MessageSourceService;
 import portal.service.SupportService;
-import portal.service.Impl.AppValidator;
 import portal.utility.Action;
 import portal.utility.FileType;
+import portal.utility.Status;
+import portal.utility.messages;
+import portal.validator.AppValidator;
 
 @Controller
 public class HomeController {
@@ -58,6 +62,9 @@ public class HomeController {
 	@Autowired
 	private CompanyService companyService;
 	
+    @Autowired
+    private MessageSourceService messageSourceService;
+	
     @GetMapping("/")
     public String home(ModelMap model) {
     	List<Application> apps = appService.getAll();
@@ -79,11 +86,21 @@ public class HomeController {
     }
     
     @GetMapping("/deleteApplication")
-    public String DeleteApplication(@ModelAttribute("application") Application application) {
-    	application.setDepartment(null);
-    	application.setSupport(null);
-    	application.setManufacturer(null);
-    	application.removeAllInstance();
+    public String DeleteApplication(@ModelAttribute("application") Application application,ModelMap model) {
+    	
+    	for(AppInstance app:application.getAppInstances())
+    	{
+    		if(app.getAppStatus()==Status.Active)
+    		{
+            	model.addAttribute("message",messageSourceService.getMessage(messages.APP_DELETE_ERROR.toString(),new Object[]{application.getAppName()},LocaleContextHolder.getLocale()));
+            	model.addAttribute("Applications",appService.getAll());
+                return "index";
+    		}
+    	}
+    	//application.setDepartment(null);
+    	//application.setSupport(null);
+    	//application.setManufacturer(null);
+    	application.removeAllDependence();
     	//appInstanceService.removeApplication(application);
     	//companyService.removeApplication(application);
     	appService.removFiles(UPLOADED_FOLDER, application);

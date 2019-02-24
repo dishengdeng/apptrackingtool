@@ -94,15 +94,14 @@ public class Application implements Comparable<Application>{
     
     @OneToMany(
             mappedBy = "application", 
-            cascade = CascadeType.ALL, 
+            cascade = CascadeType.ALL,
             orphanRemoval = true
         )
     private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
     @OneToOne(
             mappedBy = "application", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true
+            cascade = CascadeType.ALL
         )
     private Company manufacturer;
     
@@ -212,14 +211,15 @@ public class Application implements Comparable<Application>{
 
 	
 	public Set<AppInstance> getAppInstances() {
-		if(appInstances.size()>0)
-		{
-			return appInstances.stream().sorted().collect(Collectors.toSet());
-		}
-		else
-		{
-			return appInstances;
-		}
+//		if(appInstances.size()>0)
+//		{
+//			return appInstances.stream().sorted().collect(Collectors.toSet());
+//		}
+//		else
+//		{
+//			return appInstances;
+//		}
+		return appInstances;
 		
 	}
 
@@ -286,12 +286,23 @@ public class Application implements Comparable<Application>{
 		this.manufacturer = manufacturer;
 	}
 	
-	public void removeAllInstance()
+	public void removeAllDependence()
 	{
+		if(!ObjectUtils.isEmpty(this.manufacturer)) this.manufacturer.setApplication(null);
+		this.setManufacturer(null);
+		
+		if(!ObjectUtils.isEmpty(this.support)) this.support.getApplications().removeIf(obj->obj.equals(this));
+		this.setSupport(null);
+		
+		if(!ObjectUtils.isEmpty(this.department)) this.department.getApplications().removeIf(obj->obj.equals(this));
+		this.setDepartment(null);
+		
 		this.appInstances.forEach(obj->{
 			obj.setApplication(null);
 		});
 		this.appInstances=null;
+		
+		
 	}
 
 	public String getStatus() {
@@ -305,5 +316,6 @@ public class Application implements Comparable<Application>{
 	{
 		if(ObjectUtils.isEmpty(this.status)) return Status.Inactive;
 		return Status.valueOf(this.status);
-	}	
+	}
+	
 }
