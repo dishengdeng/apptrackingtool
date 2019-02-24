@@ -84,7 +84,8 @@ public class AppInstance implements Comparable<AppInstance>{
     
     @OneToMany(
             mappedBy = "appInstance", 
-            cascade = CascadeType.ALL 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true 
         )
     private Set<Server> servers = new HashSet<Server>();
     
@@ -297,10 +298,10 @@ public class AppInstance implements Comparable<AppInstance>{
 		if(!ObjectUtils.isEmpty(this.sla)) this.sla.getAppInstances().removeIf(obj->obj.equals(this));
 		this.setSla(null);
 		
-		if(!ObjectUtils.isEmpty(this.license)) this.license.setAppInstance(null);;
+		if(!ObjectUtils.isEmpty(this.license)) this.license.setAppInstance(null);
 		this.setLicense(null);
 		
-		if(!ObjectUtils.isEmpty(this.desktop)) this.desktop.setAppInstance(null);;
+		if(!ObjectUtils.isEmpty(this.desktop)) this.desktop.setAppInstance(null);
 		this.setDesktop(null);
 		
 		if(servers.size()>0) this.servers.forEach(obj->{
