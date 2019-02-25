@@ -45,12 +45,24 @@
                             <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
                                 <thead>
                                     <tr>
-                                        <th>Support</th>
+                                        <th>AHS Primary Support</th>
+										<th>AHS Secondary Support</th>
+										<th>Other(AHS) Support</th>
                                         <th>Applications</th>
                                         <th>Instances</th>										
                                         <th>Phone</th>
 										<th>Email</th>
-										<th>Note</th>
+										<th>Application Owner</th>
+										<th>Trainer</th>
+										<th>SME</th>
+										<th>Business Lead names</th>
+										<th>COEs</th>
+										<th>AHS Hours of Support</th>
+										<th>User Admin</th>
+										<th>System Admin</th>
+										<th>Network Support</th>
+										<th>Common Issues</th>
+										<th>Support Notes</th>
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
                                 </thead>
@@ -69,6 +81,8 @@
 
 
 										</td>
+										<td th:text="${support.secondarysupport}"></td>
+										<td th:text="${support.othersupport}"></td>
 										<td>
 											<a data-toggle="modal" th:if="${support.applications.size()>0}" th:data-target="@{${#strings.concat('#',support.id,'applications')}}" style="cursor:pointer">
 											<span class="badge badge-secondary small" th:text="${'Application - Total: '+support.applications.size()}"></span>
@@ -81,6 +95,16 @@
 										</td>
                                         <td th:text="${support.phone}"></td>
 										<td th:text="${support.email}"></td>
+										<td th:text="${support.appowner}"></td>
+										<td th:text="${support.trainer}"></td>
+										<td th:text="${support.sme}"></td>
+										<td th:text="${support.businesslead}"></td>
+										<td th:text="${support.coes}"></td>
+										<td th:text="${support.ahshours}"></td>
+										<td th:text="${support.useradmin}"></td>
+										<td th:text="${support.sysadmin}"></td>
+										<td th:text="${support.networksupport}"></td>
+										<td th:text="${support.commonissue}"></td>
 										<td th:text="${support.note}"></td>
 
                                     </tr>

@@ -59,7 +59,27 @@ public class Company {
 
     @Column(name = "contactPhone", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
-	private String contactPhone;    
+	private String contactPhone;
+    
+    @Column(name = "backupContactName", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String backupContactName;
+
+    @Column(name = "backupContactPhone", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String backupContactPhone;  
+    
+    @Column(name = "sales", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String sales;
+    
+    @Column(name = "pm", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String pm;
+    
+    @Column(name = "mobilephone", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String mobilephone;    
 
     
     @Column(name = "manufacturer", length = 64,columnDefinition="VARCHAR(250)")
@@ -158,6 +178,46 @@ public class Company {
 
 
 	
+	public String getBackupContactName() {
+		return backupContactName;
+	}
+
+	public void setBackupContactName(String backupContactName) {
+		this.backupContactName = backupContactName;
+	}
+
+	public String getBackupContactPhone() {
+		return backupContactPhone;
+	}
+
+	public void setBackupContactPhone(String backupContactPhone) {
+		this.backupContactPhone = backupContactPhone;
+	}
+
+	public String getSales() {
+		return sales;
+	}
+
+	public void setSales(String sales) {
+		this.sales = sales;
+	}
+
+	public String getPm() {
+		return pm;
+	}
+
+	public void setPm(String pm) {
+		this.pm = pm;
+	}
+
+	public String getMobilephone() {
+		return mobilephone;
+	}
+
+	public void setMobilephone(String mobilephone) {
+		this.mobilephone = mobilephone;
+	}
+
 	public Set<AppInstance> getAppInstances() {
 		return appInstances;
 	}

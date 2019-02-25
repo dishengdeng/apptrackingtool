@@ -37,35 +37,56 @@
 							<form action="#" th:action="@{/updateCompany}" method="post">													
 						
 							  <div class="form-group">
-								<label for="companyName">Company Name:</label>
+								<label for="companyName">Vendor:</label>
 								<input type="text" class="form-control" th:name="companyName" th:value="${company.companyName}"></input>
 								<input type="hidden" class="form-control" th:name="companyModel" th:value="${company.id}"></input>
 								<input th:if="${company.application!=null}" type="hidden" class="form-control" th:name="application" th:value="${company.application.id}"></input>
-							  </div>														  
+							  </div>
+							  <div class="form-group">
+								<label for="note">Manufacturer:</label>
+								<input type="text" class="form-control" th:name="manufacturer" th:value="${company.manufacturer}">
+							  </div>							  
 							  <div class="form-group">
 								<label for="description">Address:</label>
 								<input type="text" class="form-control" th:name="address" th:value="${company.address}">
 							  </div>													  
 							  <div class="form-group">
-								<label for="description">Phone:</label>
+								<label for="description">Office Phone:</label>
 								<input type="text" class="form-control" th:name="phone" th:value="${company.phone}">
-							  </div>													  
+							  </div>
+							  <div class="form-group">
+								<label for="description">Mobile Phone:</label>
+								<input type="text" class="form-control" th:name="mobilephone" th:value="${company.mobilephone}">
+							  </div>								  
 							  <div class="form-group">
 								<label for="note">Email:</label>
 								<input type="text" class="form-control" th:name="email" th:value="${company.email}">
 							  </div>
 							  <div class="form-group">
-								<label for="note">Contact Name:</label>
+								<label for="note">Primary Contact Name:</label>
 								<input type="text" class="form-control" th:name="contactName" th:value="${company.contactName}">
 							  </div>
 							  <div class="form-group">
-								<label for="note">Contact Phone:</label>
+								<label for="note">Primary Contact Phone:</label>
 								<input type="text" class="form-control" th:name="contactPhone" th:value="${company.contactPhone}">
 							  </div>
 							  <div class="form-group">
-								<label for="note">Manufacturer:</label>
-								<input type="text" class="form-control" th:name="manufacturer" th:value="${company.manufacturer}">
+								<label for="note">Backup Contact Name:</label>
+								<input type="text" class="form-control" th:name="backupContactName" th:value="${company.backupContactName}">
 							  </div>
+							  <div class="form-group">
+								<label for="note">Backup Contact Phone:</label>
+								<input type="text" class="form-control" th:name="backupContactPhone" th:value="${company.backupContactPhone}">
+							  </div>
+							  
+							  <div class="form-group">
+								<label for="note">Sales:</label>
+								<input type="text" class="form-control" th:name="sales" th:value="${company.sales}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">PM:</label>
+								<input type="text" class="form-control" th:name="pm" th:value="${company.pm}">
+							  </div>							  
 							  
 							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 							</form>

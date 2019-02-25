@@ -22,34 +22,55 @@
 				<form action="#" th:action="@{/addCompany}" th:object="${company}" method="post">													
 			
 				  <div class="form-group">
-					<label for="companyName">Company Name:</label>
+					<label for="companyName">Vendor:</label>
 					<input type="text" class="form-control" th:name="companyName"></input>
 
 				  </div>
+				  <div class="form-group">
+					<label for="note">Manufacturer:</label>
+					<input type="text" class="form-control" th:name="manufacturer">
+				  </div>				  
 				  <div class="form-group">
 					<label for="description">Address:</label>
 					<input type="text" class="form-control" th:name="address">
 				  </div>													  
 				  <div class="form-group">
-					<label for="description">Phone:</label>
+					<label for="description">Office Phone:</label>
 					<input type="text" class="form-control" th:name="phone">
-				  </div>													  
+				  </div>
+				  <div class="form-group">
+					<label for="description">Mobile Phone:</label>
+					<input type="text" class="form-control" th:name="mobilephone">
+				  </div>					  
 				  <div class="form-group">
 					<label for="note">Email:</label>
 					<input type="text" class="form-control" th:name="email">
 				  </div>
 				  <div class="form-group">
-					<label for="note">Contact Name:</label>
+					<label for="note">Primary Contact:</label>
 					<input type="text" class="form-control" th:name="contactName">
 				  </div>
 				  <div class="form-group">
-					<label for="note">Contact Phone:</label>
+					<label for="note">Primary Contact Phone:</label>
+					<input type="text" class="form-control" th:name="backupContactName">
+				  </div>
+				  <div class="form-group">
+					<label for="note">Backup Contact:</label>
+					<input type="text" class="form-control" th:name="backupContactPhone">
+				  </div>
+				  <div class="form-group">
+					<label for="note">Backup Contact Phone:</label>
 					<input type="text" class="form-control" th:name="contactPhone">
 				  </div>
 				  <div class="form-group">
-					<label for="note">Manufacturer:</label>
-					<input type="text" class="form-control" th:name="manufacturer">
-				  </div>													  
+					<label for="note">Sales:</label>
+					<input type="text" class="form-control" th:name="sales">
+				  </div>
+				  <div class="form-group">
+					<label for="note">PM:</label>
+					<input type="text" class="form-control" th:name="pm">
+				  </div>
+				  
 				  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Submit" />
 				</form>
 			</div>
