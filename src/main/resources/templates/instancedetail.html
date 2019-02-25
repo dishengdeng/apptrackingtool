@@ -591,7 +591,7 @@
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
 						<div class="panel-heading">
-							<i class="fa fa-map"></i> Location
+							<i class="fa fa-cubes"></i> Sites
 							<div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addinstancelocation'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -619,7 +619,7 @@
 										   >
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
-										<span th:text="${instancelocation.siteName}"></span>
+										<a th:href="@{'/sitedetail?site='+${instancelocation.id}}" th:text="${instancelocation.siteName}"></a>
 									</td>
 									<td th:text="${instancelocation.zone==null}? '': ${instancelocation.zone.getZoneName()}"></td>
 									<td th:text="${instancelocation.description}"></td>
@@ -1019,7 +1019,7 @@
 				includeSelectAllOption: true,
 				buttonWidth: 300, 
 				enableFiltering: true,
-				nonSelectedText: 'Select Location',
+				nonSelectedText: 'Select Site',
 				enableCaseInsensitiveFiltering:true
 			  });
 			});

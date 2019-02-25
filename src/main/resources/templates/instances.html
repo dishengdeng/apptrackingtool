@@ -53,7 +53,7 @@
 										<th>License</th>
 										<th>Desktop</th>
 										<th>Server</th>
-										<th>Location</th>
+										<th>Site</th>
 										<!--<th class="no-sort">Action</th>-->
 									</tr>
 								</thead>
@@ -143,7 +143,7 @@
 												<li style="list-style-type:none" th:each="site : ${instance.sites}">
 													<div class="panel panel-default">
 													<div class="panel-body">
-													<span th:text="${site.siteName}"></span>
+													<a th:href="@{'/sitedetail?site='+${site.id}}"><span th:text="${site.siteName}"></span></a>
 													</div>
 													</div>
 												</li>

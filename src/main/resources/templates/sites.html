@@ -66,7 +66,7 @@
 											>
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
-											<a data-toggle="modal" th:data-target="@{'#'+${site.id}}" th:text="${site.siteName}" style="cursor:pointer"></a>
+											<a th:href="@{'/sitedetail?site='+${site.id}}" th:text="${site.siteName}"></a>
 										</td>
 										<td>
 											<a data-toggle="modal" th:if="${site.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',site.id,'instances')}}" style="cursor:pointer">App Instances</a>
@@ -101,73 +101,6 @@
 										</td>
                                         <td th:text="${site.description}"></td>
                                         <td th:text="${site.note}"></td>
-                                        <!--<td class="center">
-											<div class="row">
-												<div class="col-xs-3">
-													<a  href="#">Update</a>
-												</div>
-												<div class="col-xs-9">
-													<a  href="#">Delete</a>
-												</div>
-
-											</div>
-										</td>-->
-										  <!-- Modal -->
-										  <div class="modal fade" th:id="${site.id}" role="dialog">
-											<div class="modal-dialog">
-											
-											  <!-- Modal content-->
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${site.siteName}"></h4>
-												</div>
-												<div class="modal-body">
-													<form action="#" th:action="@{/updateSite}" th:object="${updateSite}" method="post">													
-												
-													  <div class="form-group">
-														<label for="siteName">Site Name:</label>
-														<input type="text" class="form-control" th:name="siteName" th:value="${site.siteName}"></input>
-														<input type="hidden" class="form-control" th:name="id" th:value="${site.id}"></input>
-
-															
-
-														
-													  </div>
-													  <div class="form-group">
-														<label for="description">Description:</label>
-														<input type="text" class="form-control" th:name="description" th:value="${site.description}">
-													  </div>
-													   <div class="form-group">
-														<label for="note">Note:</label>
-														<input type="text" class="form-control" th:name="note" th:value="${site.note}">
-													  </div>
-														<div class="form-group">
-															<label for="zoneSelect">Zone:</label>
-															<select name="zone" class="form-control" id="zoneSelect">
-															  <option th:selected="${site.zone==null}"></option>
-															  <option th:each="zoneEntity : ${zones}" 
-															  th:text="${zoneEntity.zoneName}" 
-															  th:attr="value = ${zoneEntity.id}" th:selected="${site.zone==null} ? false:${site.zone.getId()==zoneEntity.id}">
-															  
-															  </option>
-															</select>
-														</div>
-														<select th:if="${site.appInstances.size()>0}" name="appInstances" class="form-control" id="instanceSelect" multiple style="visibility:hidden;height:0">
-
-														  <option th:each="instanceEntity : ${site.appInstances}" 
- 
-														  th:attr="value = ${instanceEntity.id}" selected>
-														  
-														  </option>
-														</select>
-													  <input class="btn btn-primary" type="submit" value="Update" />
-													</form>
-												</div>
-											  </div>
-											  
-											</div>
-										  </div>
                                     </tr>
 
 
