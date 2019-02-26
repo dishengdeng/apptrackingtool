@@ -58,7 +58,19 @@
 							  <div class="form-group">
 								<label for="note">Position:</label>
 								<input type="text" class="form-control" th:name="position" th:value="${stakeholder.position}">
-							  </div>													  
+							  </div>
+							  <div class="form-group">
+								<label for="note">Influence:</label>
+								<input type="text" class="form-control" th:name="influence" th:value="${stakeholder.influence}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">Interest:</label>
+								<input type="text" class="form-control" th:name="interest" th:value="${stakeholder.interest}">
+							  </div>
+							  <div class="form-group">
+								<label for="note">RACI:</label>
+								<input type="text" class="form-control" th:name="raciforsyschanges" th:value="${stakeholder.raciforsyschanges}">
+							  </div>							  
 							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 							</form>
 						</div>

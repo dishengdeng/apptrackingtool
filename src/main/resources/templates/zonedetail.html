@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-8 text-muted">
+						<i class="fa fa-cube"></i>
+						<span th:text="${zone.zoneName}"></span>
+						</div>
+						
+
+					</div>						
+					</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> Details
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" th:action="@{/updateZone}" method="post">													
+					
+						  <div class="form-group">
+							<label for="zoneName">Zone Name:</label>
+							<input type="text" class="form-control" th:name="zoneName" th:value="${zone.zoneName}"></input>
+							<input type="hidden" class="form-control" th:name="zoneModel" th:value="${zone.id}"></input>
+						  </div>
+						  <div class="form-group">
+							<label for="description">Description:</label>
+							<input type="text" class="form-control" th:name="description" th:value="${zone.description}">
+						  </div>
+						   <div class="form-group">
+							<label for="note">Note:</label>
+							<input type="text" class="form-control" th:name="note" th:value="${zone.note}">
+						  </div>
+						  <input class="btn btn-primary" type="submit" value="Update" />
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>
+            <!-- /.row -->
+			<!--site Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-cubes"></i> Sites
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addsite'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${zone.sites.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Site</th>
+								<th>Description</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="site: ${#lists.sort(zone.sites)}">
+									<td>
+										<a th:href="@{'/deleteZoneSite?site='+${site.id}+'&zone='+${zone.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/sitedetail?site='+${site.id}}" th:text="${site.siteName}"></a>
+									</td>
+									<td th:text="${site.siteName}"></td>
+									<td th:text="${site.description}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>	
+
+			<!--AppInstance Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-laptop"></i> App Instances
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addInstance'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${zone.appInstances.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>App Instance</th>
+								<th>Status</th>
+								<th>Description</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="appinstance: ${#lists.sort(zone.appInstances)}">
+									<td>
+										<a th:href="@{'/deleteZoneInstance?instance='+${appinstance.id}+'&zone='+${zone.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/instancedetail?id='+${appinstance.id}}" th:text="${appinstance.appInstanceName}"></a>
+									</td>
+									<td th:text="${appinstance.status}"></td>
+									<td th:text="${appinstance.description}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			
+			
+			<!--site model-->
+			<div class="modal fade" th:id="addsite" role="dialog">
+				<div class="modal-dialog">
+				
+				  <!-- Modal content-->
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					  <h4 class="modal-title" th:text="'Add Or Change Site - '+${zone.zoneName}"></h4>													
+					</div>
+					<div class="modal-body">	
+						<form action="#" th:action="@{/addZoneSite}"  method="post">
+							<div class="form-group">
+								<label for="siteSelect">Sites:</label>
+								<input type="hidden" class="form-control" th:name="zone" th:value="${zone.id}"></input>
+								<select name="sites" class="form-control" id="siteSelect" multiple>
+
+										  <option th:each="siteEntity : ${sites}" 
+
+										  th:attr="value = ${siteEntity.id}"
+										  th:text="${siteEntity.siteName}">
+										  
+										  </option>
+												
+								</select>
+							</div>
+						  <input class="btn btn-primary" type="submit" value="Submit" />
+						</form>
+					</div>
+				  </div>
+
+				</div>
+			</div>			
+
+			<!--AppInstance model-->
+			<div class="modal fade" th:id="addInstance" role="dialog">
+				<div class="modal-dialog">
+				
+				  <!-- Modal content-->
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					  <h4 class="modal-title" th:text="'Add Or Change Instance - '+${zone.zoneName}"></h4>													
+					</div>
+					<div class="modal-body">	
+						<form action="#" th:action="@{/addZoneInstance}"  method="post">
+							<div class="form-group">
+								<label for="instanceselect">App Instance:</label>
+								<input type="hidden" class="form-control" th:name="zone" th:value="${zone.id}"></input>
+								<select name="appInstances" class="form-control" id="instanceSelect" multiple>
+									<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
+										  <option th:each="instanceEntity : ${appEntity.appInstances}" 
+
+										  th:attr="value = ${instanceEntity.id}"
+										  th:text="${instanceEntity.appInstanceName}">
+										  
+										  </option>
+									</optgroup>
+									<optgroup th:if="${appUnassginedInstances.size()>0}" label="Other">
+										  <option th:each="instanceEntity : ${appUnassginedInstances}" 
+
+										  th:attr="value = ${instanceEntity.id}"
+										  th:text="${instanceEntity.appInstanceName}">
+										  
+										  </option>
+									</optgroup>													
+								</select>
+							</div>
+						  <input class="btn btn-primary" type="submit" value="Submit" />
+						</form>
+					</div>
+				  </div>
+
+				</div>
+			</div>
+			
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+		$('[id^=siteSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Site',
+		enableCaseInsensitiveFiltering:true
+	  });
+		$('[id^=instanceSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Instance',
+		enableCaseInsensitiveFiltering:true
+	  });	  
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>

@@ -25,6 +25,7 @@ import portal.entity.File;
 import portal.entity.License;
 import portal.entity.Server;
 import portal.entity.Site;
+import portal.entity.Zone;
 import portal.service.AppInstanceService;
 import portal.service.CompanyService;
 import portal.service.ContractService;
@@ -35,6 +36,7 @@ import portal.service.SLAService;
 import portal.service.ServerService;
 import portal.service.SiteService;
 import portal.service.SupportService;
+import portal.service.ZoneService;
 import portal.utility.FileType;
 import portal.service.DepartmentService;
 
@@ -76,6 +78,9 @@ public class AppInstanceController {
 	@Autowired
 	private SiteService siteService;
 	
+	@Autowired
+	private ZoneService zoneService;
+	
     @GetMapping("/instances")
     public String AppInstance(ModelMap model) {
     	List<AppInstance> appInstances = appInstanceService.getAll();
@@ -106,22 +111,7 @@ public class AppInstanceController {
     
     @GetMapping("/deleteAppInstance")
     public String DeleteAppInstance(@ModelAttribute("instance") AppInstance appInstance) {
-//    	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
-//    	//slaService.removeAppInstance(appInstance);
-//    	licenseService.removeAppInstance(appInstance);
-//    	desktopService.removeAppInstance(appInstance);
-//    	serverService.removeAppInstance(appInstance);
-//    	//companyService.removeAppInstance(appInstance);
-//    	siteService.removeAppInstance(appInstance);
-//    	appInstance.setApplication(null);
-//    	appInstance.setDepartment(null);
-//    	appInstance.setSupport(null);
-//    	appInstance.setContract(null);
-//    	appInstance.setCompany(null);
-//    	appInstance.setSla(null);
-//
-//    	appInstanceService.removFiles(UPLOADED_FOLDER, appInstance);
-//    	appInstanceService.updateAppInstance(appInstance);
+
     	
     	appInstance.removeAllDependence();
     	appInstanceService.removFiles(UPLOADED_FOLDER, appInstance);
@@ -169,6 +159,10 @@ public class AppInstanceController {
     	//--Sites----
     	model.addAttribute("instancelocations",appInstance.getSites());
     	model.addAttribute("sites",siteService.getAll());
+    	
+    	//--Zone-----
+    	model.addAttribute("instancezones",appInstance.getZones());
+    	model.addAttribute("zones",zoneService.getAll());    	
     	
     	return "instancedetail";
     }
@@ -359,18 +353,31 @@ public class AppInstanceController {
 
 
     	
-    	List<Site> sites=new ArrayList<Site>(appInstance.getSites());
+    	appInstanceService.updateAppInstance(appInstance);
     	
-    	sites.forEach(obj->{
-    		if(!obj.getAppInstances().contains(appInstance))
-    		{
-    			Site site=obj;
-	    		site.addAppInstance(appInstance);
-	    		siteService.updateSite(site);
-    		}
-    	});
-    	
+        return "redirect:/instancedetail?id="+appInstance.getId();
+    }
+    
+    //------Zones---------------    
+    @GetMapping("/deleteInstanceZone")
+    public String deleteInstanceZone(@ModelAttribute("zone") Zone zone,@ModelAttribute("appinstance") AppInstance appInstance) {
 
+
+    	
+    	zone.removeAppInstance(appInstance);
+    	zoneService.updateZone(zone);
+    	
+    	
+    	return "redirect:/instancedetail?id="+appInstance.getId();
+    }
+    
+    @PostMapping("/addInstanceZone")
+    public String addInstanceZone(@ModelAttribute("appInstance") AppInstance appInstance) {
+
+
+    	
+    	appInstanceService.updateAppInstance(appInstance);
+    	
         return "redirect:/instancedetail?id="+appInstance.getId();
     }
   //----------------------- 

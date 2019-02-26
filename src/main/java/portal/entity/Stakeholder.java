@@ -64,6 +64,17 @@ public class Stakeholder {
     @JoinColumn(name = "department_id",referencedColumnName="id")
     private Department department;
     
+    @Column(name = "influence",columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String influence;
+    
+    @Column(name = "interest", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String interest;
+
+    @Column(name = "raciforsyschanges",columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String raciforsyschanges;    
     
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "slarole_id",referencedColumnName="id")
@@ -156,6 +167,30 @@ public class Stakeholder {
 
 	public void setRole(SLARole role) {
 		this.role = role;
+	}
+
+	public String getInfluence() {
+		return influence;
+	}
+
+	public void setInfluence(String influence) {
+		this.influence = influence;
+	}
+
+	public String getInterest() {
+		return interest;
+	}
+
+	public void setInterest(String interest) {
+		this.interest = interest;
+	}
+
+	public String getRaciforsyschanges() {
+		return raciforsyschanges;
+	}
+
+	public void setRaciforsyschanges(String raciforsyschanges) {
+		this.raciforsyschanges = raciforsyschanges;
 	}
  
 	

@@ -101,6 +101,10 @@ public class Support {
     @Column(name = "note", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String note;
+ 
+    @Column(name = "location", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String location;
     
     @OneToMany(
             mappedBy = "support", 
@@ -299,6 +303,14 @@ public class Support {
 		this.appInstances=null;
 		
 
+	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
 	}
 	
 }

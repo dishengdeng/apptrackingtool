@@ -47,6 +47,7 @@
                                 <thead>
                                     <tr>
                                         <th>Zone</th>
+										<th>Sites</th>
                                         <th>Description</th>
                                         <th>Note</th>
 										<!--<th class="no-sort">Action</th>-->
@@ -55,7 +56,7 @@
                                 <tbody>
                                     <tr th:each="zone: ${zones}">
                                         <td>
-											<a th:href="@{'/deleteZone?id='+${zone.id}+'&zoneName='+${zone.zoneName}}"
+											<a th:href="@{'/deleteZone?zone='+${zone.id}}"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -64,54 +65,20 @@
 											>
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
-											<a data-toggle="modal" th:data-target="@{'#'+${zone.id}}" th:text="${zone.zoneName}" style="cursor:pointer"></a>
+											<a th:href="@{'/zonedetail?zone='+${zone.id}}" th:text="${zone.zoneName}"></a>
+											<p style="margin-top:10px">
+											<a data-toggle="modal" th:if="${zone.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',zone.id,'instances')}}" style="cursor:pointer">
+											<span class="badge badge-secondary small" th:text="${'App Instances - Total: '+zone.appInstances.size()}"></span>
+											</a>
+											</p>											
+										</td>
+										<td>
+											<a data-toggle="modal" th:if="${zone.sites.size()>0}" th:data-target="@{${#strings.concat('#',zone.id,'sites')}}" style="cursor:pointer">
+											<span class="badge badge-secondary small" th:text="${'Sites - Total: '+zone.sites.size()}"></span>
+											</a>										
 										</td>
                                         <td th:text="${zone.description}"></td>
                                         <td th:text="${zone.note}"></td>
-                                        <!--<td class="center">
-											<div class="row">
-												<div class="col-xs-3">
-													<a  href="#">Update</a>
-												</div>
-												<div class="col-xs-9">
-													<a  href="#">Delete</a>
-												</div>
-
-											</div>
-										</td>-->
-										  <!-- Modal -->
-										  <div class="modal fade" th:id="${zone.id}" role="dialog">
-											<div class="modal-dialog">
-											
-											  <!-- Modal content-->
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title" th:text="${zone.zoneName}"></h4>
-												</div>
-												<div class="modal-body">
-													<form action="#" th:action="@{/updateZone}" th:object="${zoneModel}" method="post">													
-												
-													  <div class="form-group">
-														<label for="zoneName">Zone Name:</label>
-														<input type="text" class="form-control" th:name="zoneName" th:value="${zone.zoneName}"></input>
-														<input type="hidden" class="form-control" th:name="id" th:value="${zone.id}"></input>
-													  </div>
-													  <div class="form-group">
-														<label for="description">Description:</label>
-														<input type="text" class="form-control" th:name="description" th:value="${zone.description}">
-													  </div>
-													   <div class="form-group">
-														<label for="note">Note:</label>
-														<input type="text" class="form-control" th:name="note" th:value="${zone.note}">
-													  </div>
-													  <input class="btn btn-primary" type="submit" value="Update" />
-													</form>
-												</div>
-											  </div>
-											  
-											</div>
-										  </div>
                                     </tr>
 
 
@@ -127,6 +94,73 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+						<div th:each="zone: ${zones}">
+							<!--site Modal-->
+							<div th:if="${zone.sites.size()>0}">
+								<div class="modal fade" th:id="${#strings.concat(zone.id,'sites')}" role="dialog" >
+								<!-- Modal content-->
+										<div class="modal-dialog">
+										  <div class="modal-content">
+											<div class="modal-header">
+											  <button type="button" class="close" data-dismiss="modal">&times;</button>
+											  <h4 class="modal-title"> Sites</h4>
+											</div>
+											<div class="modal-body">
+												<table class="table table-striped" id="instancetable">
+												  <thead>
+													<tr>
+													  <th scope="col">Site</th>
+
+													  <th scope="col">Description</th>														  
+													</tr>
+												  </thead>
+												  <tbody>
+													<tr th:each="site : ${zone.sites}">
+													  <th><a th:href="@{'/sitedetail?site='+${site.id}}"><h5 th:text="${site.siteName}"></h5></a></th>
+	
+													  <th><h5 th:text="${site.description}"></h5></th>
+													</tr>
+												  </tbody>
+												</table>
+											</div>
+										   </div>
+										 </div>
+								</div>
+							</div>
+							<!--App instance Modal-->
+							<div th:if="${zone.appInstances.size()>0}">
+								<div class="modal fade" th:id="${#strings.concat(zone.id,'instances')}" role="dialog" >
+								<!-- Modal content-->
+										<div class="modal-dialog">
+										  <div class="modal-content">
+											<div class="modal-header">
+											  <button type="button" class="close" data-dismiss="modal">&times;</button>
+											  <h4 class="modal-title"> App Instances</h4>
+											</div>
+											<div class="modal-body">
+												<table class="table table-striped" id="instancetable">
+												  <thead>
+													<tr>
+													  <th scope="col">App Instance Name</th>
+													  <th scope="col">Status</th>
+													  <th scope="col">Description</th>														  
+													</tr>
+												  </thead>
+												  <tbody>
+													<tr th:each="appinstance : ${zone.appInstances}">
+													  <th><a th:href="@{'/instancedetail?id='+${appinstance.id}}"><h5 th:text="${appinstance.appInstanceName}"></h5></a></th>
+													  <th><h5 th:text="${appinstance.status}"></h5></th>
+													  <th><h5 th:text="${appinstance.description}"></h5></th>
+													</tr>
+												  </tbody>
+												</table>
+											</div>
+										   </div>
+										 </div>
+								</div>
+							</div>							
+							
+						</div>
 
             <!-- /.row -->
         </div>

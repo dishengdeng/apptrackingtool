@@ -1,11 +1,19 @@
 package portal.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -31,6 +39,20 @@ public class Zone {
     @Column(name = "note",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String note;
+    
+    @OneToMany(
+            mappedBy = "zone", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true 
+        )
+    private Set<Site> sites = new HashSet<Site>();
+    
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "instancezone",
+        joinColumns = @JoinColumn(name = "zone_id"),
+        inverseJoinColumns = @JoinColumn(name = "appInstance_id")
+    )
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>();    
 
 	public Long getId() {
 		return id;
@@ -62,6 +84,70 @@ public class Zone {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public Set<Site> getSites() {
+		return sites;
+	}
+
+	public void setSites(Set<Site> sites) {
+		this.sites.addAll(sites);
+		sites.forEach(site->{
+			site.setZone(this);
+		});
+	}
+	
+	public void removeSite(Site site)
+	{
+		this.sites.remove(site);
+		site.setZone(null);
+	}
+	
+	public void removeAllSite()
+	{
+		this.sites.forEach(site->{
+			site.setZone(null);
+		});
+		
+		this.sites=null;
+	}
+	
+	public Set<AppInstance> getAppInstances() {
+		return appInstances;
+	}
+
+	public void setAppInstances(Set<AppInstance> appInstances) {
+		this.appInstances.addAll(appInstances);
+		appInstances.forEach(instance->{
+			instance.addZone(this);
+		});
+	}
+	
+	public void addappInstance(AppInstance instance)
+	{
+		this.appInstances.add(instance);
+	}
+	
+	public void removeAppInstance(AppInstance instance)
+	{
+		this.appInstances.remove(instance);
+		instance.removeZone(this);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this==obj) return true;
+		
+		if(obj==null) return false;
+		
+		if(this.getClass()!=obj.getClass()) return false;
+		
+		Zone other = (Zone) obj;
+		
+		if(this.getId()!=other.getId()) return false;
+		
+		return true;
 	}
 	
 }

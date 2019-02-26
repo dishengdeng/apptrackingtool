@@ -52,6 +52,9 @@
 										<th>Phone</th>
 										<th>Email</th>
 										<th>Position</th>
+										<th>Influence</th>
+										<th>Interest</th>
+										<th>RACI</th>
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
                                 </thead>
@@ -78,7 +81,9 @@
                                         <td th:text="${stakeholder.phone}"></td>
 										<td th:text="${stakeholder.email}"></td>
 										<td th:text="${stakeholder.position}"></td>
-										
+                                        <td th:text="${stakeholder.influence}"></td>
+										<td th:text="${stakeholder.interest}"></td>
+										<td th:text="${stakeholder.raciforsyschanges}"></td>										
 																		
 
                                     </tr>

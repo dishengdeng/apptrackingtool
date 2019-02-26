@@ -25,7 +25,7 @@ import portal.jsonview.Views;
 
 @Entity
 @Table(name = "Site")
-public class Site {
+public class Site implements Comparable<Site>{
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
 	@Column(name = "id",nullable = false,unique=true)
@@ -63,7 +63,14 @@ public class Site {
     public void removeAppInstance(AppInstance appInstance)
     {
     	appInstances.remove(appInstance);
-    	appInstance.getSites().removeIf(obj->obj.equals(this));
+    	appInstance.removeSite(this);
+    }
+    
+    public void removeAllInstance()
+    {
+    	this.appInstances.forEach(instance->{
+    		removeAppInstance(instance);
+    	});
     }
     
 	public Long getId() {
@@ -128,6 +135,12 @@ public class Site {
 		if(this.getId()!=other.getId()) return false;
 		
 		return true;
+	}
+	
+	@Override
+	public int compareTo(Site o) {
+
+		return this.siteName.compareToIgnoreCase(o.getSiteName());
 	}
 	
 	

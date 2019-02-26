@@ -66,6 +66,12 @@ public class AppInstance implements Comparable<AppInstance>{
 	@ManyToMany(mappedBy = "appInstances")
     private Set<Site> sites = new HashSet<Site>();
 	
+	@ManyToMany(mappedBy = "appInstances")
+    private Set<Zone> zones = new HashSet<Zone>();
+	
+	@ManyToMany(mappedBy = "appInstances")
+    private Set<Project> projects = new HashSet<Project>();
+	
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "application_id",referencedColumnName="id")
     private Application application;
@@ -156,16 +162,6 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.support = support;
 	}
 
-
-
-	public Set<Site> getSites() {
-		return sites;
-	}
-
-	public void setSites(Set<Site> sites) {
-		this.sites.addAll(sites);
-	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -194,6 +190,72 @@ public class AppInstance implements Comparable<AppInstance>{
 
 	public void setContract(Contract contract) {
 		this.contract = contract;
+	}
+	
+	public Set<Site> getSites() {
+		return sites;
+	}
+
+	public void setSites(Set<Site> sites) {
+		this.sites.addAll(sites);
+		sites.forEach(site->{
+			site.addAppInstance(this);
+		});
+		
+	}
+	
+	public Set<Project> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(Set<Project> projects) {
+		this.projects.addAll(projects);
+		projects.forEach(project->{
+			project.addAppInstance(this);
+		});
+	}
+	
+	public void addProject(Project project)
+	{
+		this.projects.add(project);
+	}
+	
+	public void removeProject(Project project)
+	{
+		this.projects.removeIf(obj->obj.equals(project));
+		project.getAppInstances().remove(this);
+	}
+
+	public void addSite(Site site)
+	{
+		this.sites.add(site);
+	}
+	
+	public void removeSite(Site site)
+	{
+		this.sites.removeIf(obj->obj.equals(site));
+	}
+	
+	public Set<Zone> getZones() {
+		return zones;
+	}
+
+	public void setZones(Set<Zone> zones) {
+		this.zones.addAll(zones);
+		zones.forEach(zone->{
+			zone.addappInstance(this);
+		});
+	}
+	
+	public void addZone(Zone zone)
+	{
+		this.zones.add(zone);
+	}
+	
+	public void removeZone(Zone zone)
+	{
+		this.zones.removeIf(obj->obj.equals(zone));
+
 	}
 
 	@Override
@@ -287,6 +349,16 @@ public class AppInstance implements Comparable<AppInstance>{
 			obj.removeAppInstance(this);
 		});
 		this.sites=null;
+		
+		if(zones.size()>0) this.zones.forEach(obj->{
+			obj.removeAppInstance(this);
+		});
+		this.zones=null;
+		
+		if(projects.size()>0) this.projects.forEach(obj->{
+			obj.removeAppInstance(this);
+		});
+		this.projects=null;
 		
 		if(!ObjectUtils.isEmpty(this.contract)) this.contract.getAppInstances().removeIf(obj->obj.equals(this));
 		this.setContract(null);		

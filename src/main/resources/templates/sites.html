@@ -57,7 +57,7 @@
                                 <tbody>
                                     <tr th:each="site: ${sites}">
                                         <td>
-											<a th:href="@{'/deleteSite?id='+${site.id}+'&siteName='+${site.siteName}}"
+											<a th:href="@{'/deleteSite?site='+${site.id}}"
 												data-title="Are you sure to delete?" 
 												data-toggle="confirmation" 
 												data-singleton="true" 
@@ -69,35 +69,12 @@
 											<a th:href="@{'/sitedetail?site='+${site.id}}" th:text="${site.siteName}"></a>
 										</td>
 										<td>
-											<a data-toggle="modal" th:if="${site.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',site.id,'instances')}}" style="cursor:pointer">App Instances</a>
+											<a data-toggle="modal" th:if="${site.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',site.id,'instances')}}" style="cursor:pointer">
+											<span class="badge badge-secondary small" th:text="${'App Instances - Total: '+site.appInstances.size()}"></span>
+											</a>
 										</td>										
 										<td>
-											<div th:class="${site.zone==null}? 'invisible':'panel-group'">
-											  <div class="panel panel-primary">
-												<div class="panel-heading">
-												  <h4 class="panel-title">
-													<a data-toggle="collapse" th:href="${site.zone==null}? '':'#'+${site.id}+${site.zone.getId()}" th:text="${site.zone==null}? '': ${site.zone.getZoneName()}"></a>
-												  </h4>
-												</div>
-												<div th:id="${site.zone==null}? '':${#strings.concat(site.id,site.zone.getId())}" class="panel-collapse collapse">
-												  <div class="panel-body">
-													<p class="text-left" >
-														<strong>Zone Name:</strong>
-														<span th:text="${site.zone==null}? '': ${site.zone.getZoneName()}"></span>
-													</p>
-													<p class="text-left" >
-														<strong>Description:</strong>
-														<span th:text="${site.zone==null}? '': ${site.zone.getDescription()}"></span>
-													</p>
-													<p class="text-left">
-														<strong>Note:</strong>
-														<span  th:text="${site.zone==null}? '': ${site.zone.getNote()}"></span>
-													</p>
-												  </div>
-
-												</div>
-											  </div>
-											</div>
+											<a th:if="${site.zone!=null}" th:href="@{'/zonedetail?zone='+${site.zone.id}}" th:text="${site.zone.zoneName}"></a>
 										</td>
                                         <td th:text="${site.description}"></td>
                                         <td th:text="${site.note}"></td>

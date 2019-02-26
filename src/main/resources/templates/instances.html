@@ -54,6 +54,7 @@
 										<th>Desktop</th>
 										<th>Server</th>
 										<th>Site</th>
+										<th>Zone</th>
 										<!--<th class="no-sort">Action</th>-->
 									</tr>
 								</thead>
@@ -144,6 +145,17 @@
 													<div class="panel panel-default">
 													<div class="panel-body">
 													<a th:href="@{'/sitedetail?site='+${site.id}}"><span th:text="${site.siteName}"></span></a>
+													</div>
+													</div>
+												</li>
+											</ul>
+										</td>
+										<td>
+											<ul style="padding:0" th:if="${instance.zones!=null && instance.zones.size()>0}">
+												<li style="list-style-type:none" th:each="zone : ${instance.zones}">
+													<div class="panel panel-default">
+													<div class="panel-body">
+													<a th:href="@{'/zonedetail?zone='+${zone.id}}"><span th:text="${zone.zoneName}"></span></a>
 													</div>
 													</div>
 												</li>
