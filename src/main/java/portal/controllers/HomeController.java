@@ -243,7 +243,7 @@ public class HomeController {
 
     	
 		fileService.removeFile(UPLOADED_FOLDER, file.getApplication().getId().toString(),file);
-		return "redirect:/applicationdetail?id="+application.getId();
+		return "redirect:/applicationdetail?app="+application.getId();
     	
     }
     
