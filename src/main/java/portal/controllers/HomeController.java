@@ -23,12 +23,14 @@ import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Company;
 import portal.entity.File;
+import portal.entity.Project;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.CompanyService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.MessageSourceService;
+import portal.service.ProjectService;
 import portal.service.SupportService;
 import portal.utility.Action;
 import portal.utility.FileType;
@@ -52,6 +54,9 @@ public class HomeController {
 	
 	@Autowired
 	private SupportService supportService;
+	
+	@Autowired
+	private ProjectService projectService;
 	
 	@Autowired
 	private DepartmentService departmentService;
@@ -97,12 +102,9 @@ public class HomeController {
                 return "index";
     		}
     	}
-    	//application.setDepartment(null);
-    	//application.setSupport(null);
-    	//application.setManufacturer(null);
+
     	application.removeAllDependence();
-    	//appInstanceService.removeApplication(application);
-    	//companyService.removeApplication(application);
+
     	appService.removFiles(UPLOADED_FOLDER, application);
     	appService.delete(application);
     	return "redirect:/";
@@ -157,7 +159,23 @@ public class HomeController {
 
 
     	return "redirect:/applicationdetail?app="+applicationId;
-    }     
+    } 
+    
+    //----project------
+	@GetMapping("/deleteApplicationProject")
+	public String deleteApplicationProject(@ModelAttribute("application") Application application,@ModelAttribute("project") Project project)
+	{
+		project.removeApplication(application);
+		projectService.updateProject(project);
+		return "redirect:/applicationdetail?app="+application.getId();
+	}
+	
+	@PostMapping("/addApplicationProject")
+	public String addProjectApplication(@ModelAttribute("app") Application application)
+	{
+		appService.updateApp(application);
+		return "redirect:/applicationdetail?app="+application.getId();
+	}
     
     //------Manufacturer---------------    
     @GetMapping("/deleteApplicationCompany")
@@ -269,6 +287,10 @@ public class HomeController {
     	model.addAttribute("appinstances",appEntity.getAppInstances());
 
     	model.addAttribute("instances",appInstanceService.findNotAssgined(appEntity));
+    	
+    	//--project---
+    	model.addAttribute("applicationprojects",appEntity.getProjects());
+    	model.addAttribute("projects",projectService.getAll());    	
     	
     	//--Manufacturer-----
     	model.addAttribute("company",appEntity.getManufacturer());

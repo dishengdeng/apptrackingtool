@@ -149,6 +149,55 @@
 				</div>
 			</div>
 
+			<!--Project Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-product-hunt"></i> Projects
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addapplicationproject'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${applicationprojects.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Project</th>
+								<th>Start Date</th>
+								<th>End Date</th>
+
+							  </thead>
+							  <tbody>
+								<tr th:each="appproject: ${applicationprojects}">
+									<td>
+										<a th:href="@{'/deleteApplicationProject?project='+${appproject.id}+'&application='+${app.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/projectdetail?project='+${appproject.id}}" th:text="${appproject.projectname}"></a>
+									</td>
+									<td th:text="${#dates.format(appproject.startdate,'MMM-dd-yyyy')}"></td>
+									<td th:text="${#dates.format(appproject.enddate,'MMM-dd-yyyy')}"></td>
+
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			
 			<!--Manufacturer Detail-->
 			<div class="row">
 				<div class="col-lg-8">
@@ -400,6 +449,37 @@
 
 					</div>	
 				</div>
+
+				<!--project model-->
+				<div class="modal fade" th:id="addapplicationproject" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change project - '+${app.AppName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addApplicationProject}" method="post">
+								<div class="form-group">
+									<label for="clusterSelect">Project:</label>
+									<input type="hidden" class="form-control" th:name="app" th:value="${app.id}"></input>
+									<select name="projects" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="projectselect">
+									  <option th:each="projectEntity : ${projects}" 
+									  th:text="${projectEntity.projectname}" 
+									  th:attr="value = ${projectEntity.id}">
+									</select>
+								</div>
+
+								  <input class="btn btn-primary" type="submit" value="Submit" />
+
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
 				
 				<!--Manufacturer model-->
 				<div class="modal fade" th:id="addcompany" role="dialog">
@@ -545,6 +625,13 @@
 				enableFiltering: true,
 				nonSelectedText: 'Select Instance'
 			  });
+			  $('#projectselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Project'
+			  });			  
 			  $('#departmentSelect').selectpicker(
 			  {
 				noneSelectedText: 'Select Department'

@@ -15,14 +15,14 @@
             <div class="row">
                 <div class="col-lg-12">
                     <h1 class="page-header">
-					<div class="row">
-						<div class="col-md-4 text-primary">
+					<div class="row text-primary">
+						<div class="col-md-4">
 							<i class="fa fa-windows"></i>
 							<span style="margin-left:10px">Applications</span>
 						</div>
 						<div class="col-md-8 text-right">
 
-							<a href="/addApplication" title="Create Application"><i class="fa fa-plus"></i></a>
+							<a href="/addApplication" title="Create Application"><i class="fa fa-plus text-primary"></i></a>
 						</div>
 					</div>
 					</h1>
@@ -50,6 +50,7 @@
 										<th>Application</th>
 										<th><span class="fa fa-paperclip fa-lg"></span></th>
 										<th>App Instances</th>
+										<th>Projects</th>
 										<th>Status</th>
 										<th>Version</th>
 										<th>Support</th>
@@ -84,6 +85,11 @@
 										<td>
 											<a data-toggle="modal" th:if="${app.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',app.id,'instances')}}" style="cursor:pointer">
 											<span class="badge badge-secondary small" th:text="${'Total Instances: '+app.appInstances.size()}"></span>
+											</a>											
+										</td>
+										<td>
+											<a data-toggle="modal" th:if="${app.projects.size()>0}" th:data-target="@{${#strings.concat('#',app.id,'projects')}}" style="cursor:pointer">
+											<span class="badge badge-secondary small" th:text="${'Total Projects: '+app.projects.size()}"></span>
 											</a>											
 										</td>										
 										<td th:text="${app.status}">
@@ -144,7 +150,37 @@
 											 </div>
 									</div>
 								</div>							
-							
+								<!--App Modal-->
+								<div class="modal fade" th:if="${app.projects.size()>0}" th:id="${#strings.concat(app.id,'projects')}" role="dialog" >
+									<!-- Modal content-->
+									<div class="modal-dialog">
+									  <div class="modal-content">
+										<div class="modal-header">
+										  <button type="button" class="close" data-dismiss="modal">&times;</button>
+										  <h4 class="modal-title">Projects</h4>
+										</div>
+										<div class="modal-body">
+											<table class="table table-striped" id="projectstable">
+											  <thead>
+												<tr>
+												  <th scope="col">Project</th>
+												  <th scope="col">Start Date</th>
+												  <th scope="col">End Date</th>														  
+												</tr>
+											  </thead>
+											  <tbody>
+												<tr th:each="project : ${app.projects}">
+												  <th><h5><a th:href="@{'/projectdetail?project='+${project.id}}" th:text="${project.projectname}"></a></h5></th>
+												  <th><h5 th:text="${#dates.format(project.startdate,'MMM-dd-yyyy')}"></h5></th>
+												  <th><h5 th:text="${#dates.format(project.enddate,'MMM-dd-yyyy')}"</h5></th>
+												</tr>
+											  </tbody>
+											</table>
+										</div>
+									   </div>
+									 </div>
+								</div>
+								
 								<div class="modal fade" th:if="${app.files.size()>0}" th:id="${#strings.concat(app.id,'files')}" role="dialog" >
 									<!-- Modal content-->
 									<div class="modal-dialog">

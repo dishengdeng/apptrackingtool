@@ -62,15 +62,16 @@ public class Site implements Comparable<Site>{
     
     public void removeAppInstance(AppInstance appInstance)
     {
-    	appInstances.remove(appInstance);
-    	appInstance.removeSite(this);
+    	appInstances.removeIf(obj->obj.equals(appInstance));
+
     }
     
     public void removeAllInstance()
     {
     	this.appInstances.forEach(instance->{
-    		removeAppInstance(instance);
+    		instance.removeSite(this);
     	});
+    	this.appInstances=null;
     }
     
 	public Long getId() {

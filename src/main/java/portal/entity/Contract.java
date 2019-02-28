@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -23,12 +24,13 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-
+import org.springframework.util.ObjectUtils;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
 import portal.utility.Convertor;
+import portal.utility.Status;
 
 @Entity
 @Table(name = "Contract")
@@ -167,6 +169,22 @@ public class Contract {
 		}
 		
 		return fileName.stream().collect(Collectors.joining(","));
+	}
+	
+	public Status getContractStatus()
+	{
+		Date currentdate= new Date();
+		final int daywarn=90;
+		if(ObjectUtils.isEmpty(this.expireDate)) return Status.GREEN;
+		
+		long diff=this.expireDate.getTime()-currentdate.getTime();
+		long diffday = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+		
+		if(diffday>daywarn) return Status.YELLOW;
+		if(diffday<daywarn && diffday>0) return Status.YELLOW;
+		
+		return Status.RED;
+		
 	}
 
 	

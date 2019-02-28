@@ -23,6 +23,7 @@ import portal.entity.AppInstance;
 import portal.entity.Desktop;
 import portal.entity.File;
 import portal.entity.License;
+import portal.entity.Project;
 import portal.entity.Server;
 import portal.entity.Site;
 import portal.entity.Zone;
@@ -32,6 +33,7 @@ import portal.service.ContractService;
 import portal.service.DesktopService;
 import portal.service.FileService;
 import portal.service.LicenseService;
+import portal.service.ProjectService;
 import portal.service.SLAService;
 import portal.service.ServerService;
 import portal.service.SiteService;
@@ -74,6 +76,9 @@ public class AppInstanceController {
 	
 	@Autowired
 	private SupportService supportService;
+	
+	@Autowired
+	private ProjectService projectService;
 
 	@Autowired
 	private SiteService siteService;
@@ -155,6 +160,10 @@ public class AppInstanceController {
     	//--Support-----
     	model.addAttribute("support",appInstance.getSupport());
     	model.addAttribute("supports",supportService.getAll());
+    	
+    	//--Project----
+    	model.addAttribute("instanceprojects",appInstance.getProjects());    	
+    	model.addAttribute("projects",projectService.getAll());    	
     	
     	//--Sites----
     	model.addAttribute("instancelocations",appInstance.getSites());
@@ -333,6 +342,22 @@ public class AppInstanceController {
         return "redirect:/instancedetail?id="+appInstance.getId();
     }
   //-----------------------
+    
+    //-----project------
+	@GetMapping("/deleteInstanceProject")
+	public String deleteProjectInstance(@ModelAttribute("project") Project project,@ModelAttribute("appinstance") AppInstance appInstance)
+	{
+		project.removeAppInstance(appInstance);
+		projectService.updateProject(project);
+		return "redirect:/instancedetail?id="+appInstance.getId();
+	}
+	
+	@PostMapping("/addInstanceProject")
+	public String addProjectInstance(@ModelAttribute("appInstance") AppInstance appInstance)
+	{
+		appInstanceService.updateAppInstance(appInstance);
+		return "redirect:/instancedetail?id="+appInstance.getId();
+	}
     
     //------Sites---------------    
     @GetMapping("/deleteInstanceSite")

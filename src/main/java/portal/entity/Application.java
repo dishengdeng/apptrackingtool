@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -91,6 +92,9 @@ public class Application implements Comparable<Application>{
     @Column(name = "AppSupportByCapSys",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String AppSupportByCapSys;
+    
+	@ManyToMany(mappedBy = "applications")
+    private Set<Project> projects = new HashSet<Project>();
     
     @OneToMany(
             mappedBy = "application", 
@@ -279,6 +283,17 @@ public class Application implements Comparable<Application>{
 		this.manufacturer = manufacturer;
 	}
 	
+	public Set<Project> getProjects() {
+		return projects;
+	}
+
+	public void setProjects(Set<Project> projects) {
+		this.projects.addAll(projects);
+		projects.forEach(obj->{
+			obj.addApplication(this);
+		});
+	}
+
 	public void removeAllDependence()
 	{
 		if(!ObjectUtils.isEmpty(this.manufacturer)) this.manufacturer.setApplication(null);
@@ -294,6 +309,11 @@ public class Application implements Comparable<Application>{
 			obj.setApplication(null);
 		});
 		this.appInstances=null;
+		
+		this.projects.forEach(obj->{
+			obj.removeApplication(this);
+		});
+		this.projects=null;
 		
 		
 	}

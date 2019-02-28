@@ -223,7 +223,7 @@ public class AppInstance implements Comparable<AppInstance>{
 	public void removeProject(Project project)
 	{
 		this.projects.removeIf(obj->obj.equals(project));
-		project.getAppInstances().remove(this);
+		//project.getAppInstances().remove(this);
 	}
 
 	public void addSite(Site site)

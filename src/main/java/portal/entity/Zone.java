@@ -108,8 +108,8 @@ public class Zone {
 		this.sites.forEach(site->{
 			site.setZone(null);
 		});
-		
 		this.sites=null;
+
 	}
 	
 	public Set<AppInstance> getAppInstances() {
@@ -131,7 +131,15 @@ public class Zone {
 	public void removeAppInstance(AppInstance instance)
 	{
 		this.appInstances.remove(instance);
-		instance.removeZone(this);
+		//instance.removeZone(this);
+	}
+	
+	public void removeAllAppInstance()
+	{
+		this.appInstances.forEach(obj->{
+			obj.removeZone(this);
+		});
+		this.appInstances=null;
 	}
 
 	@Override
