@@ -73,84 +73,6 @@
             </div>
 
             <!-- /.row -->
-			<!--SLA Detail-->
-			<div class="row">
-				<div class="col-lg-8">
-					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
-                        <div class="panel-heading">
-                            <i class="fa fa-file-o"></i> SLA
-                            <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addsla'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
-									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
-								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" 
-									th:if="${sla!=null}" th:href="${#strings.concat('/deleteInstanceSLA?instance=',appinstance.id)}"
-									data-title="Are you sure to delete?" 
-									data-toggle="confirmation" 
-									data-singleton="true" 
-									data-popout="true"
-									
-								>
-									<i class="fa fa-trash-o fa-lg"></i>
-								</a>
-                            </div>
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div th:if="${sla!=null}" class="panel-body">
-							<table class="table">
-							  <tbody>
-								<tr><th scope="row" style="width:25%">Name:</th><td>
-											<a th:href="@{'/sladetail?sla='+${sla.id}}" th:text="${sla.slaName}">
-											</a>
-								</td></tr>
-								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${sla.description}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th><td>
-									<a data-toggle="modal"  
-										th:data-target="@{${#strings.concat('#',sla.id,'files')}}" 
-										th:if="${sla.files.size()>0}"
-										th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-										>
-										<span class="fa fa-paperclip fa-lg"></span>
-									</a>
-								</td></tr>
-							  </tbody>
-							</table>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-				</div>
-				<div class="col-lg-4">
-					<div class="modal fade" th:if="${sla!=null && sla.files.size()>0}" th:id="${#strings.concat(sla.id,'files')}" role="dialog" >
-						<!-- Modal content-->
-						<div class="modal-dialog">
-						  <div class="modal-content">
-							<div class="modal-header">
-							  <button type="button" class="close" data-dismiss="modal">&times;</button>
-							  <h4 class="modal-title"> Attachments</h4>
-							</div>
-							<div class="modal-body">
-								<table class="table table-striped" id="filestable">
-								  <thead>
-									<tr>
-									  <th scope="col">File Name</th>
-									  <th scope="col">Created At</th>
-									  <th scope="col">Created By</th>														  
-									</tr>
-								  </thead>
-								  <tbody>
-									<tr th:each="file : ${sla.files}">
-									  <th><h5><a th:href="@{'/downloadsla?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
-									  <th><h5 th:text="${file.createdat}"></h5></th>
-									  <th><h5 th:text="${file.createdby}"></h5></th>
-									</tr>
-								  </tbody>
-								</table>
-							</div>
-						   </div>
-						 </div>
-					</div>					
-				</div>
-			</div>
 			
 			<!--Contract Detail-->
 			<div class="row">
@@ -786,37 +708,7 @@
 			</div>
 						
 			<!--Model Areas-->
-				<!--SLA model-->
-				<div class="modal fade" th:id="addsla" role="dialog">
-					<div class="modal-dialog">
-					
-					  <!-- Modal content-->
-					  <div class="modal-content">
-						<div class="modal-header">
-						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Or Change SLA - '+${appinstance.appInstanceName}"></h4>													
-						</div>
-						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceSLA}"  method="post">
-								<div class="form-group">
-									<label for="clusterSelect">SLA:</label>
-									<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
-									<select name="sla" class="form-control" id="slaSelect">
-									  <option th:selected="${sla==null}"></option>
-									  <option th:each="slaEntity : ${slas}" 
-									  th:text="${slaEntity.slaName}" 
-									  th:attr="value = ${slaEntity.id}" th:selected="${sla==null} ? false:${sla.getId()==slaEntity.id}">
-									  
-									  </option>
-									</select>
-								</div>
-							  <input class="btn btn-primary" type="submit" value="Submit" />
-							</form>
-						</div>
-					  </div>
-
-					</div>	
-				</div>	
+	
 				<!--Contract model-->
 				<div class="modal fade" th:id="addContract" role="dialog">
 					<div class="modal-dialog">

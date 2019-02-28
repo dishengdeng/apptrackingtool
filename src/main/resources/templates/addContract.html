@@ -27,6 +27,16 @@
 
 				  </div>
 				  <div>
+					<label for="Decomminsion Date">Effective Date:</label>
+					<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
+						<input type="text" class="form-control" th:name="effectivedate">
+						<div class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</div>
+
+					</div>
+				  </div>				  
+				  <div>
 					<label for="Decomminsion Date">Expired Date:</label>
 					<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
 						<input type="text" class="form-control" th:name="expireDate">
@@ -39,7 +49,21 @@
 				  <div class="form-group">
 					<label for="description">Description:</label>
 					<input type="text" class="form-control" th:name="description">
-				  </div>													  
+				  </div>
+				  <div class="form-group">
+					<label for="description">Approver:</label>
+					<input type="text" class="form-control" th:name="approvername" th:value="${contract.approvername}">
+				  </div>
+				  <div>
+					<label for="Decomminsion Date">Approval Date:</label>
+					<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
+						<input type="text" class="form-control" th:name="approvaldate" th:value="${contract.approvaldate}">
+						<div class="input-group-addon">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</div>
+
+					</div>
+				  </div>				  
 				  <div class="form-group">
 					<label for="description">SMA Description:</label>
 					<input type="text" class="form-control" th:name="smaDescription">

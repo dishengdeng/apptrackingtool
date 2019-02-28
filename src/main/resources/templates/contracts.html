@@ -48,8 +48,11 @@
                                         <th>Contract</th>
 										<th><span class="fa fa-paperclip fa-lg"></span></th>
 										<th>App Instance</th>
+										<th>Effective Date</th>
 										<th>Expired Date</th>
 										<th>Description</th>
+										<th>Approver</th>
+										<th>Approval Date</th>
                                         <th>SMA Description</th>
 										<th>SLA Description</th>
 										
@@ -87,8 +90,11 @@
 											style="cursor:pointer">
 											</a>
 										</td>
+										<td th:text="${contract.effectivedate}"></td>
 										<td th:text="${contract.expireDate}"></td>
 										<td th:text="${contract.description}"></td>
+										<td th:text="${contract.approvername}"></td>
+										<td th:text="${contract.approvaldate}"></td>
                                         <td th:text="${contract.smaDescription}"></td>
                                         <td th:text="${contract.slaDescription}"></td>
 

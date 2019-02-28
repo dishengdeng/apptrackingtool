@@ -64,7 +64,19 @@ public class Contract {
     @JsonView(Views.Public.class)
 	private Date expireDate;
 
+    @Column(name = "effectivedate")
+    @Temporal(TemporalType.DATE)
+    @JsonView(Views.Public.class)
+	private Date effectivedate;
 
+    @Column(name = "approvername", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String approvername;
+
+    @Column(name = "approvaldate")
+    @Temporal(TemporalType.DATE)
+    @JsonView(Views.Public.class)
+	private Date approvaldate;
     
     @OneToMany(
             mappedBy = "contract", 
@@ -128,6 +140,32 @@ public class Contract {
 		this.expireDate = Convertor.JavaDate(expireDate);
 	}
 
+
+
+
+	public Date getEffectivedate() {
+		return effectivedate;
+	}
+
+	public void setEffectivedate(String effectivedate) {
+		this.effectivedate = Convertor.JavaDate(effectivedate);
+	}
+
+	public String getApprovername() {
+		return approvername;
+	}
+
+	public void setApprovername(String approvername) {
+		this.approvername = approvername;
+	}
+
+	public Date getApprovaldate() {
+		return approvaldate;
+	}
+
+	public void setApprovaldate(String approvaldate) {
+		this.approvaldate = Convertor.JavaDate(approvaldate);
+	}
 
 
 

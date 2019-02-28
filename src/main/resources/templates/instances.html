@@ -50,7 +50,6 @@
 										<th>Vendor</th>
 										<th>Department</th>
 										<th>Contract</th>
-										<th>SLA</th>
 										<th>License</th>
 										<th>Desktop</th>
 										<th>Server</th>
@@ -122,11 +121,6 @@
 											<a th:if="${instance.contract!=null}" th:href="@{'/contractdetail?contract='+${instance.contract.id}}" 
 											th:text="${instance.contract.contractName}">
 											</a>
-										</td>
-										<td>
-											<a th:if="${instance.sla!=null}" th:href="@{'/sladetail?sla='+${instance.sla.id}}" 
-											th:text="${instance.sla.slaName}">
-											</a>											
 										</td>
 										<td>
 											<a th:if="${instance.license!=null}" th:href="@{'/licensedetail?license='+${instance.license.id}}" 
