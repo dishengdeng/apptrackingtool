@@ -55,6 +55,13 @@ public class Site implements Comparable<Site>{
     )
     private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "appsite",
+        joinColumns = @JoinColumn(name = "site_id"),
+        inverseJoinColumns = @JoinColumn(name = "application_id")
+    )
+    private Set<Application> applications = new HashSet<Application>();
+    
     public void addAppInstance(AppInstance appInstance)
     {
     	appInstances.add(appInstance);
@@ -120,6 +127,38 @@ public class Site implements Comparable<Site>{
 
 	public void setAppInstances(Set<AppInstance> appInstances) {
 		this.appInstances.addAll(appInstances);
+		appInstances.forEach(obj->{
+			obj.addSite(this);
+		});
+	}
+
+	public Set<Application> getApplications() {
+		return applications;
+	}
+
+	public void setApplications(Set<Application> applications) {
+		this.applications.addAll(applications);
+		applications.forEach(obj->{
+			obj.addSite(this);
+		});
+	}
+	
+	public void addApplication(Application application)
+	{
+		this.applications.add(application);
+	}
+	
+	public void removeApplication(Application application)
+	{
+		this.applications.removeIf(obj->obj.equals(application));
+	}
+	
+	public void removeAllApplication()
+	{
+		this.applications.forEach(obj->{
+			obj.removeSite(this);
+		});
+		this.applications=null;
 	}
 
 	@Override

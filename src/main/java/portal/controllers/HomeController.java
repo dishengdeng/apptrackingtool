@@ -24,6 +24,8 @@ import portal.entity.Application;
 import portal.entity.Company;
 import portal.entity.File;
 import portal.entity.Project;
+import portal.entity.Site;
+import portal.entity.Zone;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.CompanyService;
@@ -31,7 +33,9 @@ import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.MessageSourceService;
 import portal.service.ProjectService;
+import portal.service.SiteService;
 import portal.service.SupportService;
+import portal.service.ZoneService;
 import portal.utility.Action;
 import portal.utility.FileType;
 import portal.utility.Status;
@@ -57,6 +61,12 @@ public class HomeController {
 	
 	@Autowired
 	private ProjectService projectService;
+	
+	@Autowired
+	private ZoneService zoneService;
+	
+	@Autowired
+	private SiteService siteService;
 	
 	@Autowired
 	private DepartmentService departmentService;
@@ -176,6 +186,55 @@ public class HomeController {
 		appService.updateApp(application);
 		return "redirect:/applicationdetail?app="+application.getId();
 	}
+	
+    //------Sites---------------    
+    @GetMapping("/deleteAppSite")
+    public String deleteAppSite(@ModelAttribute("site") Site site,@ModelAttribute("app") Application application) {
+
+
+    	
+    	site.removeApplication(application);
+    	
+    	siteService.updateSite(site);
+    	
+    	
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }
+    
+    @PostMapping("/addAppSite")
+    public String addAppSite(@ModelAttribute("app") Application application) {
+
+
+    	
+    	appService.updateApp(application);
+    	
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }
+    
+    //------Zones---------------    
+    @GetMapping("/deleteappzone")
+    public String deleteappzone(@ModelAttribute("zone") Zone zone,@ModelAttribute("app") Application application) {
+
+
+    	
+    	zone.removeApplication(application);
+    	zoneService.updateZone(zone);
+    	
+    	
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }
+    
+    @PostMapping("/addAppZone")
+    public String addAppZone(@ModelAttribute("app") Application application) {
+
+
+    	
+    	appService.updateApp(application);
+    	
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }	
+	
+	
     
     //------Manufacturer---------------    
     @GetMapping("/deleteApplicationCompany")
@@ -290,7 +349,15 @@ public class HomeController {
     	
     	//--project---
     	model.addAttribute("applicationprojects",appEntity.getProjects());
-    	model.addAttribute("projects",projectService.getAll());    	
+    	model.addAttribute("projects",projectService.getAll());  
+    	
+    	//--zone---
+    	model.addAttribute("appzones",appEntity.getZones());
+    	model.addAttribute("zones",zoneService.getAll());
+    	
+    	//--site---
+    	model.addAttribute("appsites",appEntity.getSites());
+    	model.addAttribute("sites",siteService.getAll());
     	
     	//--Manufacturer-----
     	model.addAttribute("company",appEntity.getManufacturer());

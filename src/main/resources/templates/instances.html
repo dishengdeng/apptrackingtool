@@ -94,14 +94,14 @@
 										<td>
 											<a th:if="${instance.application!=null}" th:href="@{'/applicationdetail?app=' + ${instance.application.id}}" th:text="${instance.application.AppName}"></a>
 										</td>
-										<td>
-											<a data-toggle="modal"  
-												th:data-target="@{${#strings.concat('#',instance.id,'projects')}}" 
-												th:if="${instance.projects.size()>0}"
-												style="text-decoration: none;cursor: pointer"
-												>
-												<span class="badge badge-secondary small" th:text="${'Projects: '+instance.projects.size()}"></span>
-											</a>
+										<td style="padding:2px">
+											<ul th:if="${instance.projects.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="project: ${instance.projects}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<a th:href="@{'/projectdetail?zone='+${project.id}}"><span th:text="${project.projectname}"></span></a>
+													</div>
+												</li>
+											</ul>											
 										</td>										
 										<td>
 											<a th:if="${instance.support!=null}"  th:href="@{'/supportdetail?support='+${instance.support.id}}" th:text="${instance.support.supportName}"></a>
@@ -208,35 +208,7 @@
 									 </div>
 								</div>
 								
-								<div class="modal fade" th:if="${instance.projects.size()>0}" th:id="${#strings.concat(instance.id,'projects')}" role="dialog" >
-									<!-- Modal content-->
-									<div class="modal-dialog">
-									  <div class="modal-content">
-										<div class="modal-header">
-										  <button type="button" class="close" data-dismiss="modal">&times;</button>
-										  <h4 class="modal-title">Projects</h4>
-										</div>
-										<div class="modal-body">
-											<table class="table table-striped" id="projectstable">
-											  <thead>
-												<tr>
-												  <th scope="col">Project</th>
-												  <th scope="col">Start Date</th>
-												  <th scope="col">End Date</th>														  
-												</tr>
-											  </thead>
-											  <tbody>
-												<tr th:each="project : ${instance.projects}">
-												  <th><h5><a th:href="@{'/projectdetail?project='+${project.id}}" th:text="${project.projectname}"></a></h5></th>
-												  <th><h5 th:text="${#dates.format(project.startdate,'MMM-dd-yyyy')}"></h5></th>
-												  <th><h5 th:text="${#dates.format(project.enddate,'MMM-dd-yyyy')}"</h5></th>
-												</tr>
-											  </tbody>
-											</table>
-										</div>
-									   </div>
-									 </div>
-								</div>								
+								
 							</div>
 						 </div>
 						<!-- /.panel-body -->

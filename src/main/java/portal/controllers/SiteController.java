@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Site;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
@@ -62,6 +63,7 @@ public class SiteController {
     	site.getZone().removeSite(site);
     	site.setZone(null);
     	site.removeAllInstance();
+    	site.removeAllApplication();
     	siteService.delete(site);
     	return "redirect:/sites";
     }
@@ -73,6 +75,29 @@ public class SiteController {
     	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
     	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
     	return "sitedetail";
+    }
+    
+    //------application---------------    
+    @GetMapping("/deleteSiteApp")
+    public String deleteSiteApp(@ModelAttribute("application") Application application,@ModelAttribute("site") Site site) {
+
+
+    	
+    	site.removeApplication(application);
+    	siteService.updateSite(site);
+    	
+    	
+    	return "redirect:/sitedetail?site="+site.getId();
+    }
+    
+    @PostMapping("/addSiteApp")
+    public String addSiteApp(@ModelAttribute("site") Site site) {
+
+
+    	
+    	siteService.updateSite(site);
+    	
+    	return "redirect:/sitedetail?site="+site.getId();
     }
     
     //------app instance---------------    

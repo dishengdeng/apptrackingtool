@@ -103,13 +103,61 @@
 				<div class="col-lg-4">
 				</div>
 			</div>	
+			
+			<!--App Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-windows"></i> Application
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addApplication'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${zone.applications.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>App Instance</th>
+								<th>Status</th>
+								<th>Version</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="app: ${#lists.sort(zone.applications)}">
+									<td>
+										<a th:href="@{'/deleteZoneApp?application='+${app.id}+'&zone='+${zone.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/applicationdetail?app='+${app.id}}" th:text="${app.AppName}"></a>
+									</td>
+									<td th:text="${app.status}"></td>
+									<td th:text="${app.AppVersion}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>			
+			
 
 			<!--AppInstance Detail-->
 			<div class="row">
 				<div class="col-lg-8">
 					 <div class="panel panel-primary">
 						<div class="panel-heading">
-							<i class="fa fa-laptop"></i> App Instances
+							<i class="fa fa-android"></i> App Instances
 							<div class="pull-right">
 								<a data-toggle="modal" th:data-target="@{'#addInstance'}" style="color:white;cursor:pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -184,8 +232,42 @@
 				  </div>
 
 				</div>
-			</div>			
+			</div>	
+			
+			<!--App model-->
+			<div class="modal fade" th:id="addApplication" role="dialog">
+				<div class="modal-dialog">
+				
+				  <!-- Modal content-->
+				  <div class="modal-content">
+					<div class="modal-header">
+					  <button type="button" class="close" data-dismiss="modal">&times;</button>
+					  <h4 class="modal-title" th:text="'Add Or Change Application - '+${zone.zoneName}"></h4>													
+					</div>
+					<div class="modal-body">	
+						<form action="#" th:action="@{/addZoneApp}"  method="post">
+							<div class="form-group">
+								<label for="appSelect">Application:</label>
+								<input type="hidden" class="form-control" th:name="zone" th:value="${zone.id}"></input>
+								<select name="applications" class="form-control" id="appSelect" multiple>
 
+								  <option th:each="app : ${appAssginedInstances}" 
+
+								  th:attr="value = ${app.id}"
+								  th:text="${app.AppName}">
+								  
+								  </option>
+												
+								</select>
+							</div>
+						  <input class="btn btn-primary" type="submit" value="Submit" />
+						</form>
+					</div>
+				  </div>
+
+				</div>
+			</div>
+			
 			<!--AppInstance model-->
 			<div class="modal fade" th:id="addInstance" role="dialog">
 				<div class="modal-dialog">
@@ -197,7 +279,7 @@
 					  <h4 class="modal-title" th:text="'Add Or Change Instance - '+${zone.zoneName}"></h4>													
 					</div>
 					<div class="modal-body">	
-						<form action="#" th:action="@{/addZoneInstance}"  method="post">
+						<form action="#" th:action="@{/addZoneApp}"  method="post">
 							<div class="form-group">
 								<label for="instanceselect">App Instance:</label>
 								<input type="hidden" class="form-control" th:name="zone" th:value="${zone.id}"></input>
@@ -255,6 +337,14 @@
 		buttonWidth: '100%', 
 		enableFiltering: true,
 		nonSelectedText: 'Select Instance',
+		enableCaseInsensitiveFiltering:true
+	  });
+		$('[id^=appSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Application',
 		enableCaseInsensitiveFiltering:true
 	  });	  
     });

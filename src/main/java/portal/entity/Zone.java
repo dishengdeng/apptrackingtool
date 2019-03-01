@@ -54,6 +54,13 @@ public class Zone {
     )
     private Set<AppInstance> appInstances = new HashSet<AppInstance>();    
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "appzone",
+        joinColumns = @JoinColumn(name = "zone_id"),
+        inverseJoinColumns = @JoinColumn(name = "application_id")
+    )
+    private Set<Application> applications = new HashSet<Application>();
+    
 	public Long getId() {
 		return id;
 	}
@@ -131,7 +138,7 @@ public class Zone {
 	public void removeAppInstance(AppInstance instance)
 	{
 		this.appInstances.remove(instance);
-		//instance.removeZone(this);
+
 	}
 	
 	public void removeAllAppInstance()
@@ -140,6 +147,36 @@ public class Zone {
 			obj.removeZone(this);
 		});
 		this.appInstances=null;
+	}
+
+	public Set<Application> getApplications() {
+		return applications;
+	}
+
+	public void setApplications(Set<Application> applications) {
+		this.applications.addAll(applications);
+		applications.forEach(obj->{
+			obj.addZone(this);
+		});
+		
+	}
+	
+	public void addApplication(Application application)
+	{
+		this.applications.add(application);
+	}
+	
+	public void removeApplication(Application application)
+	{
+		this.applications.removeIf(obj->obj.equals(application));
+	}
+	
+	public void removeAllApplication()
+	{
+		this.applications.forEach(obj->{
+			obj.removeZone(this);
+		});
+		this.applications=null;
 	}
 
 	@Override

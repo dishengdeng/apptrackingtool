@@ -18,6 +18,7 @@ import portal.service.AppService;
 import portal.service.SiteService;
 import portal.service.ZoneService;
 import portal.entity.AppInstance;
+import portal.entity.Application;
 
 
 @Controller
@@ -65,6 +66,7 @@ public class ZoneController {
 
     	zone.removeAllSite();
     	zone.removeAllAppInstance();
+    	zone.removeAllApplication();
     	zoneService.delete(zone);
     	return "redirect:/zones";
     }
@@ -96,6 +98,28 @@ public class ZoneController {
         return "redirect:/zonedetail?zone="+zone.getId();
     } 
     
+    //------application---------------    
+    @GetMapping("/deleteZoneApp")
+    public String deleteappzone(@ModelAttribute("application") Application application,@ModelAttribute("zone") Zone zone) {
+
+
+    	
+    	zone.removeApplication(application);
+    	zoneService.updateZone(zone);
+    	
+    	
+    	return "redirect:/zonedetail?zone="+zone.getId();
+    }
+    
+    @PostMapping("/addZoneApp")
+    public String addAppZone(@ModelAttribute("zone") Zone zone) {
+
+
+    	
+    	zoneService.updateZone(zone);
+    	
+    	return "redirect:/zonedetail?zone="+zone.getId();
+    }    
     
     //---instance--
     @GetMapping("/deleteZoneInstance")

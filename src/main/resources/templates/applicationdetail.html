@@ -197,6 +197,102 @@
 				<div class="col-lg-4">
 				</div>
 			</div>
+			<!--Zone Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-cube"></i> Zones
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addappzone'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${appzones.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Zone</th>
+								<th>Description</th>
+								<th>Note</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="appzone: ${appzones}">
+									<td>
+										<a th:href="@{'/deleteappzone?zone='+${appzone.id}+'&app='+${app.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/zonedetail?zone='+${appzone.id}}" th:text="${appzone.zoneName}"></a>
+									</td>
+									<td th:text="${appzone.description}"></td>
+									<td th:text="${appzone.note}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>	
+
+			<!--Site Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-cubes"></i> Sites
+							<div class="pull-right">
+								<a data-toggle="modal" th:data-target="@{'#addappsite'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${appsites.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th class="pull-center">Site</th>
+								<th>Zone</th>
+								<th>Description</th>
+								<th>Note</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="appsite: ${appsites}">
+									<td>
+										<a th:href="@{'/deleteAppSite?site='+${appsite.id}+'&app='+${app.id}}" 
+											style="margin-right:20px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/sitedetail?site='+${appsite.id}}" th:text="${appsite.siteName}"></a>
+									</td>
+									<td><a th:if="${appsite.zone!=null}" th:href="@{'/zonedetail?zone='+${appsite.zone.id}}" th:text="${appsite.zone.getZoneName()}"></a><td>
+									<td th:text="${appsite.description}"></td>
+									<td th:text="${appsite.note}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+
 			
 			<!--Manufacturer Detail-->
 			<div class="row">
@@ -480,6 +576,65 @@
 
 					</div>	
 				</div>
+
+				<!--Zone model-->
+				<div class="modal fade" th:id="addappzone" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change Zone - '+${app.AppName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addAppZone}" method="post">
+								<div class="form-group">
+									<label for="zoneselect">Zone:</label>
+									<input type="hidden" class="form-control" th:name="app" th:value="${app.id}"></input>
+									<select name="zones" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="zoneselect">
+									  <option th:each="zoneEntity : ${zones}" 
+									  th:text="${zoneEntity.zoneName}" 
+									  th:attr="value = ${zoneEntity.id}">
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+				
+				<!--Site model-->
+				<div class="modal fade" th:id="addappsite" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Or Change site - '+${app.AppName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addAppSite}" method="post">
+								<div class="form-group">
+									<label for="clusterSelect">Site:</label>
+									<input type="hidden" class="form-control" th:name="app" th:value="${app.id}"></input>
+									<select name="sites" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="siteselect">
+									  <option th:each="siteEntity : ${sites}" 
+									  th:text="${siteEntity.siteName}" 
+									  th:attr="value = ${siteEntity.id}">
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>				
+				
 				
 				<!--Manufacturer model-->
 				<div class="modal fade" th:id="addcompany" role="dialog">
@@ -631,7 +786,24 @@
 				buttonWidth: 300, 
 				enableFiltering: true,
 				nonSelectedText: 'Select Project'
+			  });
+			  
+			  $('#zoneselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Zone'
+			  });
+			  
+			  $('#siteselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Site'
 			  });			  
+			  
 			  $('#departmentSelect').selectpicker(
 			  {
 				noneSelectedText: 'Select Department'

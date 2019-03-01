@@ -95,6 +95,12 @@ public class Application implements Comparable<Application>{
     
 	@ManyToMany(mappedBy = "applications")
     private Set<Project> projects = new HashSet<Project>();
+	
+	@ManyToMany(mappedBy = "applications")
+    private Set<Zone> zones = new HashSet<Zone>();
+	
+	@ManyToMany(mappedBy = "applications")
+    private Set<Site> sites = new HashSet<Site>();
     
     @OneToMany(
             mappedBy = "application", 
@@ -224,6 +230,48 @@ public class Application implements Comparable<Application>{
 		this.appInstances.addAll(appInstances);
 	}
 
+	public Set<Zone> getZones() {
+		return zones;
+	}
+
+	public void setZones(Set<Zone> zones) {
+		this.zones.addAll(zones);
+		zones.forEach(obj->{
+			obj.addApplication(this);
+		});
+	}
+	
+	public void addZone(Zone zone)
+	{
+		this.zones.add(zone);
+	}
+	
+	public void removeZone(Zone zone)
+	{
+		this.zones.removeIf(obj->obj.equals(zone));
+	}
+
+	public Set<Site> getSites() {
+		return sites;
+	}
+
+	public void setSites(Set<Site> sites) {
+		this.sites.addAll(sites);
+		sites.forEach(obj->{
+			obj.addApplication(this);
+		});
+	}
+	
+	public void removeSite(Site site)
+	{
+		this.sites.removeIf(obj->obj.equals(site));
+	}
+	
+	public void addSite(Site site)
+	{
+		this.sites.add(site);
+	}
+	
 	public Set<File> getFiles() {
 		return files;
 	}
@@ -315,6 +363,16 @@ public class Application implements Comparable<Application>{
 		});
 		this.projects=null;
 		
+		this.zones.forEach(obj->{
+			obj.removeApplication(this);
+		});
+		this.zones=null;
+		
+		this.sites.forEach(obj->{
+			obj.removeApplication(this);
+		});
+		
+		this.sites=null;
 		
 	}
 
