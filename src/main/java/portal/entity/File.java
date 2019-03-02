@@ -1,5 +1,7 @@
 package portal.entity;
 
+import java.util.Date;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +12,13 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
+import portal.utility.Convertor;
 import portal.utility.FileType;
 
 @Entity
@@ -34,9 +39,10 @@ public class File implements Comparable<File>{
     @JsonView(Views.Public.class)
 	private String createdby;
     
-    @Column(name = "createdat", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "createdat")
+    @Temporal(TemporalType.TIMESTAMP)
     @JsonView(Views.Public.class)
-	private String createdat;
+	private Date createdat;
     
     @Column(name = "filetype", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
@@ -131,12 +137,12 @@ public class File implements Comparable<File>{
 		this.createdby = createdby;
 	}
 
-	public String getCreatedat() {
+	public Date getCreatedat() {
 		return createdat;
 	}
 
 	public void setCreatedat(String createdat) {
-		this.createdat = createdat;
+		this.createdat = Convertor.JavaDateTime(createdat);
 	}
 	public AppInstance getAppInstance() {
 		return appInstance;

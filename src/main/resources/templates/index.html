@@ -168,8 +168,8 @@
 											  </thead>
 											  <tbody>
 												<tr th:each="file : ${app.files}">
-												  <th><h5><a th:href="@{'/applicationupload?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
-												  <th><h5 th:text="${file.createdat}"></h5></th>
+												  <th><h5><a th:href="@{'/downloadapplication?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+												  <th><h5 th:text="${#dates.format(file.createdat,'MMM-dd-yyyy HH:mm')}"></h5></th>
 												  <th><h5 th:text="${file.createdby}"></h5></th>
 												</tr>
 											  </tbody>

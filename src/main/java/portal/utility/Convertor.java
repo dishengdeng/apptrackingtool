@@ -54,6 +54,30 @@ public class Convertor {
 		}
 		
 		@SuppressWarnings("finally")
+		static public java.util.Date JavaDateTime(String dateString)
+		{
+			java.util.Date date=null;
+			
+			try
+			{
+				
+				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				date = dateFormatStr.parse(dateString);
+				
+			}
+			catch(ParseException ex)
+			{
+				//ex.printStackTrace();
+			}
+			finally
+			{
+				return date;
+			}
+			
+
+		}
+		
+		@SuppressWarnings("finally")
 		static public int JavaInt(String intString)
 		{
 			int number = 0;
