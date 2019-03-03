@@ -22,7 +22,7 @@
 						</div>
 						
 						<div class="col-md-4 text-right">					
-						<a href="/addContract" data-toggle="tooltip" title="Create Contract"><i class="fa fa-plus text-muted" ></i></a>
+						<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" href="/addContract" data-toggle="tooltip" title="Create Contract"><i class="fa fa-plus text-muted" ></i></a>
 						</div>
 					</div>						
 					</h1>
@@ -62,7 +62,7 @@
                                 <tbody>
                                     <tr th:each="contract: ${contracts}">
                                         <td>
-											<a th:href="@{'/deleteContract?contract='+${contract.id}}" 
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteContract?contract='+${contract.id}}" 
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 

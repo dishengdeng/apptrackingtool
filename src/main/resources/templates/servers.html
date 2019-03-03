@@ -22,7 +22,7 @@
 						</div>
 						
 						<div class="col-md-4 text-right">					
-						<a href="/addServer" data-toggle="tooltip" title="Create server"><i class="fa fa-plus text-muted" style="float:right"></i></a>
+						<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" href="/addServer" data-toggle="tooltip" title="Create server"><i class="fa fa-plus text-muted" style="float:right"></i></a>
 						</div>
 					</div>	
 					</h1>
@@ -61,7 +61,7 @@
                                 <tbody>
                                     <tr th:each="server: ${servers}">
                                         <td>
-											<a th:href="@{'/deleteServer?server='+${server.id}}"
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteServer?server='+${server.id}}"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 

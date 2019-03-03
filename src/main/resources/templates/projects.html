@@ -22,7 +22,7 @@
 						</div>
 						
 						<div class="col-md-4 text-right">					
-						<a href="/addproject" data-toggle="tooltip" title="Create Project"><i class="fa fa-plus text-muted"></i></a>
+						<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" href="/addproject" data-toggle="tooltip" title="Create Project"><i class="fa fa-plus text-muted"></i></a>
 						</div>
 					</div>						
 					</h1>
@@ -58,7 +58,7 @@
                                 <tbody>
                                     <tr th:each="project: ${projects}">
                                         <td>
-											<a th:href="@{'/deleteproject?project='+${project.id}}" 
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteproject?project='+${project.id}}" 
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 

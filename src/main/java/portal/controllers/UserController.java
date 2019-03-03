@@ -121,7 +121,7 @@ public class UserController{
     private User updatedUser(User pastUser,User formUser)
     {
     	pastUser.setUsername(formUser.getUsername());
-    	pastUser.setStatus(formUser.getStatus());
+    	//pastUser.setStatus(formUser.getStatus());
 
     	if(!StringUtils.isEmpty(formUser.getPasswordchg()))
     	{

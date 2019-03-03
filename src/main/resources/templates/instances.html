@@ -21,7 +21,7 @@
 							<span style="margin-left:10px">App Instances</span>
 							</div>
 							<div class="col-md-8 text-right">
-								<a href="/addAppInstance" title="Create Instance"><i class="fa fa-plus text-primary"></i></a>
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" href="/addAppInstance" title="Create Instance"><i class="fa fa-plus text-primary"></i></a>
 							</div>
 						</div>
 					</h1>
@@ -61,7 +61,7 @@
 								<tbody>
 									<tr th:each="instance: ${appinstances}">
 										<td>
-										<a th:href="@{'/deleteAppInstance?instance='+${instance.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteAppInstance?instance='+${instance.id}}" 
 											style="text-decoration: none;" 
 											data-title="Are you sure to delete this Instance?" 
 											data-toggle="confirmation" 

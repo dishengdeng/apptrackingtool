@@ -22,7 +22,7 @@
 							</span>
 							</div>
 							<div class="col-md-4 text-right text-primary">
-								<a href="/addAppInstance" title="Create Instance"><i class="fa fa-plus"></i></a>
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" href="/addAppInstance" title="Create Instance"><i class="fa fa-plus"></i></a>
 							</div>
 						</div>
 					</h1>
@@ -62,7 +62,7 @@
 								<label for="note">Description:</label>
 								<input type="text" class="form-control" th:name="description" th:value="${appinstance.description}">
 							  </div>													  
-							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 							</form>                           
                         </div>
                         <!-- /.panel-body -->
@@ -81,10 +81,10 @@
                         <div class="panel-heading">
                             <i class="fa fa-pencil-square-o"></i> Contract
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addContract'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addContract'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 									th:if="${contract!=null}" th:href="${#strings.concat('/deleteInstanceContract?instance=',appinstance.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
@@ -163,10 +163,10 @@
                         <div class="panel-heading">
                             <i class="fa fa-leanpub"></i> License
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addlicense'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addlicense'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 									th:if="${license!=null}" 
 									th:href="${#strings.concat('/deleteInstanceLicense?license=',license.id)}"
 									data-title="Are you sure to delete?" 
@@ -207,10 +207,10 @@
                         <div class="panel-heading">
                             <i class="fa fa-laptop"></i> Desktop
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#adddesktop'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#adddesktop'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 									th:if="${desktop!=null}" th:href="${#strings.concat('/deleteInstanceDesktop?desktop=',desktop.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
@@ -251,7 +251,7 @@
                         <div class="panel-heading" id="serverheading">
 							<i class="fa  fa-server"></i> Server
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addserver'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addserver'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
                             </div>
@@ -270,7 +270,7 @@
 							  <tbody>
 								<tr th:each="server: ${serverSelected}">
 									<td>
-											<a th:href="@{'/deleteInstanceServer?server='+${server.id}}" 
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteInstanceServer?server='+${server.id}}" 
 											style="text-decoration: none;"  
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -346,10 +346,10 @@
                         <div class="panel-heading">
                             <i class="fa fa-user"></i> Vendor
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addcompany'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addcompany'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 								th:if="${company!=null}" th:href="${#strings.concat('/deleteInstanceCompany?instance=',appinstance.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 
@@ -388,10 +388,10 @@
                         <div class="panel-heading">
                             <i class="fa  fa-building"></i> Department
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#adddepartment'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#adddepartment'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 								 th:if="${department!=null}" th:href="${#strings.concat('/deleteInstanceDepartment?instance=',appinstance.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 
@@ -480,10 +480,10 @@
                         <div class="panel-heading">
                             <i class="fa fa-support"></i> Support
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addsupport'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addsupport'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
 									th:if="${support!=null}" th:href="${#strings.concat('/deleteInstanceSupport?instance=',appinstance.id)}"
 									data-title="Are you sure to delete?" 
 									data-toggle="confirmation" 
@@ -514,7 +514,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-product-hunt"></i> Projects
 							<div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addinstanceproject'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addinstanceproject'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -531,7 +531,7 @@
 							  <tbody>
 								<tr th:each="instanceproject: ${instanceprojects}">
 									<td>
-										<a th:href="@{'/deleteInstanceProject?project='+${instanceproject.id}+'&appinstance='+${appinstance.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteInstanceProject?project='+${instanceproject.id}+'&appinstance='+${appinstance.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -562,7 +562,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-cubes"></i> Sites
 							<div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addinstancelocation'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addinstancelocation'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -579,7 +579,7 @@
 							  <tbody>
 								<tr th:each="instancelocation: ${instancelocations}">
 									<td>
-										<a th:href="@{'/deleteInstanceSite?site='+${instancelocation.id}+'&appinstance='+${appinstance.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteInstanceSite?site='+${instancelocation.id}+'&appinstance='+${appinstance.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -611,7 +611,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-cube"></i> Zones
 							<div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addinstancezone'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addinstancezone'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -627,7 +627,7 @@
 							  <tbody>
 								<tr th:each="instancezone: ${instancezones}">
 									<td>
-										<a th:href="@{'/deleteInstanceZone?zone='+${instancezone.id}+'&appinstance='+${appinstance.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteInstanceZone?zone='+${instancezone.id}+'&appinstance='+${appinstance.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -658,7 +658,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-paperclip"></i> Attachments
 							<div class="pull-right">
-								<a data-toggle="modal" 
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" 
 								th:data-target="@{${#strings.concat('#',appinstance.id,'file')}}" 
 								style="text-decoration: none;cursor: pointer;color:white" 
 								title="Add Files">
@@ -677,7 +677,7 @@
 								<tr th:each="file: ${#lists.sort(appinstance.files)}">
 									<td>
 										<a  
-											th:href="@{'/deleteappinstancefile?file='+${file.id}+'&appInstance='+${appinstance.id}}" 
+											sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteappinstancefile?file='+${file.id}+'&appInstance='+${appinstance.id}}" 
 											style="text-decoration: none; margin-right:5px"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 

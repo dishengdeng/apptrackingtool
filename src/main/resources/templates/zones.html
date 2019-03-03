@@ -23,7 +23,7 @@
 						
 						<div class="col-md-4 text-right">
 					
-						<a href="/addZone" data-toggle="tooltip" title="Create Zone"><i class="fa fa-plus text-muted"></i></a>
+						<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" href="/addZone" data-toggle="tooltip" title="Create Zone"><i class="fa fa-plus text-muted"></i></a>
 						</div>
 					</div>
 					</h1>
@@ -58,7 +58,7 @@
                                 <tbody>
                                     <tr th:each="zone: ${zones}">
                                         <td>
-											<a th:href="@{'/deleteZone?zone='+${zone.id}}"
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteZone?zone='+${zone.id}}"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 

@@ -71,7 +71,7 @@
 								<label for="note">RACI:</label>
 								<input type="text" class="form-control" th:name="raciforsyschanges" th:value="${stakeholder.raciforsyschanges}">
 							  </div>							  
-							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 							</form>
 						</div>
                         <!-- /.panel-body -->
@@ -86,10 +86,10 @@
                         <div class="panel-heading">
                             <i class="fa  fa-building"></i> Department
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#adddepartment'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#adddepartment'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a style="text-decoration: none;color:white;cursor: pointer"
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="text-decoration: none;color:white;cursor: pointer"
 								 th:if="${stakeholder.department!=null}" th:href="${#strings.concat('/deleteStakeHolderDepartment?stakeholder=',stakeholder.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 
@@ -136,10 +136,10 @@
                         <div class="panel-heading">
                             <i class="fa  fa-male"></i> Role
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addrole'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addrole'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a style="text-decoration: none;color:white;cursor: pointer"
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="text-decoration: none;color:white;cursor: pointer"
 								 th:if="${stakeholder.role!=null}" th:href="${#strings.concat('/deleteStakeHolderRole?stakeholder=',stakeholder.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 

@@ -50,7 +50,7 @@
 							<label for="note">Note:</label>
 							<input type="text" class="form-control" th:name="note" th:value="${zone.note}">
 						  </div>
-						  <input class="btn btn-primary" type="submit" value="Update" />
+						  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" type="submit" value="Update" />
 						</form>
 						</div>
                         <!-- /.panel-body -->
@@ -65,7 +65,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-cubes"></i> Sites
 							<div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addsite'}" style="color:white;cursor:pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addsite'}" style="color:white;cursor:pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -80,7 +80,7 @@
 							  <tbody>
 								<tr th:each="site: ${#lists.sort(zone.sites)}">
 									<td>
-										<a th:href="@{'/deleteZoneSite?site='+${site.id}+'&zone='+${zone.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteZoneSite?site='+${site.id}+'&zone='+${zone.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -111,7 +111,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-windows"></i> Application
 							<div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addApplication'}" style="color:white;cursor:pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addApplication'}" style="color:white;cursor:pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -127,7 +127,7 @@
 							  <tbody>
 								<tr th:each="app: ${#lists.sort(zone.applications)}">
 									<td>
-										<a th:href="@{'/deleteZoneApp?application='+${app.id}+'&zone='+${zone.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteZoneApp?application='+${app.id}+'&zone='+${zone.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -159,7 +159,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-android"></i> App Instances
 							<div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addInstance'}" style="color:white;cursor:pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addInstance'}" style="color:white;cursor:pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -175,7 +175,7 @@
 							  <tbody>
 								<tr th:each="appinstance: ${#lists.sort(zone.appInstances)}">
 									<td>
-										<a th:href="@{'/deleteZoneInstance?instance='+${appinstance.id}+'&zone='+${zone.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteZoneInstance?instance='+${appinstance.id}+'&zone='+${zone.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 

@@ -85,7 +85,7 @@
 								<label for="note">Warrenty:</label>
 								<input type="text" class="form-control" th:name="warrenty" th:value="${license.warrenty}">
 							  </div>													  
-							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 							</form>
 						</div>
                         <!-- /.panel-body -->
@@ -100,10 +100,10 @@
                         <div class="panel-heading">
                             <i class="fa fa-laptop"></i> App Instance
                             <div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addinstance'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addinstance'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a style="text-decoration: none;color:white;cursor: pointer"
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="text-decoration: none;color:white;cursor: pointer"
 								th:if="${license.appInstance!=null}" th:href="${#strings.concat('/deleteLicenseInstance?license=',license.id)}"
 								data-title="Are you sure to delete?" 
 								data-toggle="confirmation" 

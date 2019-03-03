@@ -67,7 +67,7 @@
 							  </div>
 
 						  
-							  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
+							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 
 
 							</form>
@@ -84,7 +84,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-windows"></i> Applications
 							<div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addapplication'}" style="color:white;cursor:pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addapplication'}" style="color:white;cursor:pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -99,7 +99,7 @@
 							  <tbody>
 								<tr th:each="app: ${department.applications}">
 									<td>
-										<a th:href="@{'/deleteDepartmentapplication?application='+${app.id}+'&department='+${department.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteDepartmentapplication?application='+${app.id}+'&department='+${department.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -130,7 +130,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-laptop"></i> App Instances
 							<div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addInstance'}" style="color:white;cursor:pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addInstance'}" style="color:white;cursor:pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -146,7 +146,7 @@
 							  <tbody>
 								<tr th:each="appinstance: ${department.appInstances}">
 									<td>
-										<a th:href="@{'/deleteDepartmentInstance?instance='+${appinstance.id}+'&department='+${department.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteDepartmentInstance?instance='+${appinstance.id}+'&department='+${department.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -176,7 +176,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-users"></i> Stakeholders
 							<div class="pull-right">
-								<a data-toggle="modal" th:data-target="@{'#addstakeholder'}" style="color:white;cursor:pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addstakeholder'}" style="color:white;cursor:pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -192,7 +192,7 @@
 							  <tbody>
 								<tr th:each="stakeholder: ${department.stakeholders}">
 									<td>
-										<a th:href="@{'/deleteDepartmentStakeholder?stakeholder='+${stakeholder.id}+'&department='+${department.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteDepartmentStakeholder?stakeholder='+${stakeholder.id}+'&department='+${department.id}}" 
 											style="margin-right:20px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -224,7 +224,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-paperclip"></i> Attachments
 							<div class="pull-right">
-								<a data-toggle="modal" 
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" 
 								th:data-target="@{${#strings.concat('#',department.id,'file')}}" 
 								style="text-decoration: none;cursor: pointer;color:white" 
 								title="Add Files">
@@ -242,7 +242,7 @@
 							  <tbody>
 								<tr th:each="file: ${department.files}">
 									<td>
-										<a  
+										<a  sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')"
 											th:href="@{'/deletedepartmentfile?file='+${file.id}+'&department='+${department.id}}" 
 											style="text-decoration: none; margin-right:5px"
 											data-title="Are you sure to delete?" 

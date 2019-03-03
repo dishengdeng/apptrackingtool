@@ -32,7 +32,7 @@
 						<input type="hidden" class="form-control" th:name="id" th:value="${user.id}"></input>
 						<input type="hidden" class="form-control" th:name="action" value="UPDATE"></input>
 					  </div>
-					  <div class="form-group">
+					  <div class="form-group" sec:authorize="hasAnyRole('ADMIN','SYSADMIN')">
 						<label for="statusSelect">Status:</label>
 						<select name="status" class="form-control" id="statusSelect">
 							<option></option>
