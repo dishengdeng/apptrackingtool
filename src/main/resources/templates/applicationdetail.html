@@ -501,7 +501,7 @@
 										>
 										</a>
 									</td>
-									<th><h5 th:text="${#dates.format(file.createdat,'MMM-dd-yyyy HH:mm')}"></h5></th>
+									<th><h5 th:text="${#dates.format(file.getCreateDate(),'MMM-dd-yyyy HH:mm')}"></h5></th>
 									<td th:text="${file.createdby}"></td>
 								</tr>
 							  </tbody>

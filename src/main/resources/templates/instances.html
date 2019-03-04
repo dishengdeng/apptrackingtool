@@ -98,7 +98,7 @@
 											<ul th:if="${instance.projects.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="project: ${instance.projects}">
 													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
-													<a th:href="@{'/projectdetail?zone='+${project.id}}"><span th:text="${project.projectname}"></span></a>
+													<a th:href="@{'/projectdetail?project='+${project.id}}"><span th:text="${project.projectname}"></span></a>
 													</div>
 												</li>
 											</ul>											
@@ -198,7 +198,7 @@
 											  <tbody>
 												<tr th:each="file : ${instance.files}">
 												  <th><h5><a th:href="@{'/downloadappinstance?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
-												  <th><h5 th:text="${#dates.format(file.createdat,'MMM-dd-yyyy HH:mm')}"></h5></th>
+												  <th><h5 th:text="${#dates.format(file.getCreateDate(),'MMM-dd-yyyy HH:mm')}"></h5></th>
 												  <th><h5 th:text="${file.createdby}"></h5></th>
 												</tr>
 											  </tbody>

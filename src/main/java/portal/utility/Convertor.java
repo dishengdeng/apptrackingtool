@@ -61,7 +61,8 @@ public class Convertor {
 			try
 			{
 				
-				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				//SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd HH:mm");
+				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				date = dateFormatStr.parse(dateString);
 				
 			}
@@ -104,7 +105,7 @@ public class Convertor {
 		static public String JavaCurrentDate()
 		{
 				java.util.Date date=new java.util.Date();
-				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss a");
+				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				return dateFormatStr.format(date);
 	
 		}

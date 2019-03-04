@@ -12,8 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
+
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -39,10 +38,9 @@ public class File implements Comparable<File>{
     @JsonView(Views.Public.class)
 	private String createdby;
     
-    @Column(name = "createdat")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "createdat", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
-	private Date createdat;
+	private String createdat;
     
     @Column(name = "filetype", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
@@ -137,13 +135,20 @@ public class File implements Comparable<File>{
 		this.createdby = createdby;
 	}
 
-	public Date getCreatedat() {
+
+	public String getCreatedat() {
 		return createdat;
 	}
 
 	public void setCreatedat(String createdat) {
-		this.createdat = Convertor.JavaDateTime(createdat);
+		this.createdat = createdat;
 	}
+	
+	public Date getCreateDate()
+	{
+		return Convertor.JavaDateTime(this.createdat);
+	}
+
 	public AppInstance getAppInstance() {
 		return appInstance;
 	}
