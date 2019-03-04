@@ -133,7 +133,7 @@
 											<ul th:if="${app.sites.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="site: ${app.sites}">
 													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
-													<a th:href="@{'/sitedetail?zone='+${site.id}}"><span th:text="${site.siteName}"></span></a>
+													<a th:href="@{'/sitedetail?site='+${site.id}}"><span th:text="${site.siteName}"></span></a>
 													</div>
 												</li>
 											</ul>
