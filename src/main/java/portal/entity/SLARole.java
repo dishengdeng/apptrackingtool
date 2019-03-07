@@ -122,9 +122,44 @@ public class SLARole {
 
 	public void setStakeholders(Set<Stakeholder> stakeholders) {
 		this.stakeholders.addAll(stakeholders);
+		stakeholders.forEach(obj->{
+			obj.setRole(this);
+		});
 	} 
     
-
+	public void addStakeholder(Stakeholder stakeholder)
+	{
+		this.stakeholders.add(stakeholder);
+	}
+	
+	public void removeStakeholder(Stakeholder stakeholder)
+	{
+		this.stakeholders.remove(stakeholder);
+	}
+	
+	public void removeAllDedenpence()
+	{
+		this.stakeholders.forEach(obj->{
+			obj.setRole(null);
+		});
+		this.stakeholders=null;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this==obj) return true;
+		
+		if(obj==null) return false;
+		
+		if(this.getClass()!=obj.getClass()) return false;
+		
+		SLARole other = (SLARole) obj;
+		
+		if(this.getId()!=other.getId()) return false;
+		
+		return true;
+	}
 
 
 	

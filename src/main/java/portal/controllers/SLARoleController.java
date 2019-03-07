@@ -1,7 +1,7 @@
 package portal.controllers;
 
 
-import java.util.ArrayList;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,7 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 import portal.entity.SLARole;
@@ -57,12 +57,9 @@ public class SLARoleController {
     }
     
     @GetMapping("/deleteSLARole")
-    public String deleteSLARole(@RequestParam(name="id", required=true) String id,@RequestParam(name="slaroleName", required=true) String slaroleName) {
-    	SLARole slarole = new SLARole();
-    	slarole.setId(Long.valueOf(id));
-    	
-    	stakeholderService.removeRole(slarole);
-    	
+    public String deleteSLARole(@ModelAttribute("slarole") SLARole slarole) {
+
+    	slarole.removeAllDedenpence();
     	slaroleService.delete(slarole);
     	return "redirect:/slaroles";
     }
@@ -86,7 +83,7 @@ public class SLARoleController {
     @PostMapping("/addSlaroleStakeholder")
     public String addSlaroleStakeholder(@ModelAttribute("slarole") SLARole slarole) {
 
-    	slaroleService.updateSLARoleStakeholder(new ArrayList<>(slarole.getStakeholders()), slarole);
+    	slaroleService.updateSLARole(slarole);
 
     	return "redirect:/slaroledetail?slarole="+slarole.getId();
     }    

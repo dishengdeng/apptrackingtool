@@ -61,7 +61,7 @@
                                 <tbody>
                                     <tr th:each="stakeholder: ${stakeholders}">
                                         <td>
-											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteStakeholder?id='+${stakeholder.id}+'&stakeholderName='+${stakeholder.stakeholderName}}" 
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteStakeholder?stakeholder='+${stakeholder.id}}" 
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 

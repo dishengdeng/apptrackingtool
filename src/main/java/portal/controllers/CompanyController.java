@@ -10,7 +10,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import portal.entity.AppInstance;
 import portal.entity.Company;
@@ -60,13 +60,10 @@ public class CompanyController {
     }
     
     @GetMapping("/deleteCompany")
-    public String deleteCompany(@RequestParam(name="id", required=true) String id,@RequestParam(name="companyName", required=true) String companyName) {
-    	Company company = new Company();
-    	company.setId(Long.valueOf(id));
-    	company.setCompanyName(companyName);
+    public String deleteCompany(@ModelAttribute("company") Company company) {
+
     	
-    	companyService.removeAllCompany(company);
-    	companyService.updateCompany(company);
+    	company.removeAllDependence();
     	companyService.delete(company);
     	return "redirect:/companys";
     }

@@ -7,7 +7,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import portal.entity.Desktop;
 import portal.service.AppInstanceService;
@@ -51,12 +51,10 @@ public class DesktopController {
     }
     
     @GetMapping("/deleteDesktop")
-    public String deleteDesktop(@RequestParam(name="id", required=true) String id,@RequestParam(name="desktopName", required=true) String desktopName) {
-    	Desktop desktop = new Desktop();
-    	desktop.setId(Long.valueOf(id));
-    	desktop.setDesktopName(desktopName);
-    	
-    	desktopService.updateDesktop(desktop);
+    public String deleteDesktop(@ModelAttribute("desktop") Desktop desktop) {
+
+    	desktop.getAppInstance().setDesktop(null);
+    	desktop.setAppInstance(null);
     	
     	desktopService.delete(desktop);
     	return "redirect:/desktops";

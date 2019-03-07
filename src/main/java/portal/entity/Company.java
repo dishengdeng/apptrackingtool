@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -225,7 +226,28 @@ public class Company {
 	public void setAppInstances(Set<AppInstance> appInstances) {
 		this.appInstances.addAll(appInstances);
 	}
+	
+	public void addAppInstance(AppInstance appInstance)
+	{
+		this.appInstances.add(appInstance);
+	}
+	
+	public void removeAppInstance(AppInstance appInstance)
+	{
+		this.appInstances.removeIf(obj->obj.equals(appInstance));
+	}
 
+	public void removeAllDependence()
+	{
+		if(!ObjectUtils.isEmpty(this.application)) this.application.setManufacturer(null);
+		this.application=null;
+		
+		this.appInstances.forEach(obj->{
+			obj.setCompany(null);
+		});
+		this.appInstances=null;
+	}
+	
 	public String getInstanceNameWithComma()
 	{
 		List<String> instanceName=new ArrayList<String>();

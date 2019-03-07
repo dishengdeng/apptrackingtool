@@ -9,7 +9,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 import portal.entity.License;
@@ -55,13 +55,9 @@ public class LicenseController {
     }
     
     @GetMapping("/deleteLicense")
-    public String deleteLicense(@RequestParam(name="id", required=true) String id,@RequestParam(name="licenseNumber", required=true) String licenseNumber) {
-    	License license = new License();
-    	license.setId(Long.valueOf(id));
-    	license.setLicenseNumber(licenseNumber);
-    	
-    	licenseService.updateLicense(license);
-    	
+    public String deleteLicense(@ModelAttribute("license") License license) {
+
+    	license.removeAllDependence();
     	licenseService.delete(license);
     	return "redirect:/licenses";
     }

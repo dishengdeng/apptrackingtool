@@ -179,8 +179,21 @@ public class Department {
 	}
 
 	public void setStakeholders(Set<Stakeholder> stakeholders) {
-		this.stakeholders.retainAll(stakeholders);
+
 		this.stakeholders.addAll(stakeholders);
+		stakeholders.forEach(obj->{
+			obj.setDepartment(this);
+		});
+	}
+	
+	public void addStakeholder(Stakeholder stakeholder)
+	{
+		this.stakeholders.add(stakeholder);
+	}
+	
+	public void removeStakeholder(Stakeholder stakeholder)
+	{
+		this.stakeholders.removeIf(obj->obj.equals(stakeholder));
 	}
 
 	public Set<AppInstance> getAppInstances() {
@@ -188,8 +201,21 @@ public class Department {
 	}
 
 	public void setAppInstances(Set<AppInstance> appInstances) {
-		//this.appInstances.retainAll(appInstances);
+
 		this.appInstances.addAll(appInstances);
+		appInstances.forEach(obj->{
+			obj.setDepartment(this);
+		});
+	}
+	
+	public void addAppInstance(AppInstance appInstance)
+	{
+		this.appInstances.add(appInstance);
+	}
+	
+	public void RemoveAppInstance(AppInstance appInstance)
+	{
+		this.appInstances.removeIf(obj->obj.equals(appInstance));
 	}
 
 	public Set<Application> getApplications() {
@@ -197,8 +223,21 @@ public class Department {
 	}
 
 	public void setApplications(Set<Application> applications) {
-		//this.applications.retainAll(applications);
+
 		this.applications.addAll(applications);
+		applications.forEach(obj->{
+			obj.setDepartment(this);
+		});
+	}
+	
+	public void addApplication(Application application)
+	{
+		this.applications.add(application);
+	}
+	
+	public void removeApplication(Application application)
+	{
+		this.applications.removeIf(obj->obj.equals(application));
 	}
 
 	public Set<File> getFiles() {
@@ -252,5 +291,23 @@ public class Department {
 		}
 		
 		return fileName.stream().collect(Collectors.joining(","));
-	}	
+	}
+	
+	public void removeAllDependence()
+	{
+		this.stakeholders.forEach(obj->{
+			obj.setDepartment(null);
+		});
+		this.stakeholders=null;
+		
+		this.appInstances.forEach(obj->{
+			obj.setDepartment(null);
+		});
+		this.appInstances=null;
+		
+		this.applications.forEach(obj->{
+			obj.setDepartment(null);
+		});
+		this.applications=null;
+	}
 }

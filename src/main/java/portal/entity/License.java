@@ -15,6 +15,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.util.ObjectUtils;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
@@ -161,5 +163,10 @@ public class License {
 		this.appInstance = appInstance;
 	}
 
+	public void removeAllDependence()
+	{
+		if(!ObjectUtils.isEmpty(this.appInstance)) this.appInstance.setLicense(null);
+		this.setAppInstance(null);
+	}
   
 }
