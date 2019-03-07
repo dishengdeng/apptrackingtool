@@ -56,7 +56,7 @@
                                 <tbody>
                                     <tr th:each="slarole: ${slaroles}">
                                         <td>
-											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteSLARole?id='+${slarole.id}+'&slaroleName='+${slarole.SLARoleName}}"
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteSLARole?slarole='+${slarole.id}}"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 

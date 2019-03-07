@@ -7,7 +7,7 @@ package portal.controllers;
 
 
 
-import java.util.ArrayList;
+
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,11 +99,10 @@ public class DepartmentController {
     }    
     
     @GetMapping("/deleteDepartment")
-    public String deleteDepartment(@RequestParam(name="id", required=true) String id,@RequestParam(name="departmentName", required=true) String departmentName) {
-    	Department department = departmentService.getById(Long.valueOf(id));	
+    public String deleteDepartment(@ModelAttribute("department") Department department) {
 
-    	appInstanceService.removeDeparment(department);   	
-    	stakholderService.removeDepartment(department);   	
+
+    	department.removeAllDependence();
     	departmentService.removFiles(UPLOADED_FOLDER, department);
     	
     	departmentService.delete(department);
@@ -121,7 +120,7 @@ public class DepartmentController {
     @PostMapping("/addDepartmentapplication")
     public String addDepartmentapplication(ModelMap model,@ModelAttribute("department") Department department) {
 
-    	departmentService.updateApplicationDepartment(new ArrayList<>(department.getApplications()), department);
+    	departmentService.updateDepartment(department);
 
     	return "redirect:/departmentdetail?id="+department.getId();
     }    
@@ -138,7 +137,7 @@ public class DepartmentController {
     @PostMapping("/addDepartmentInstance")
     public String addDepartmentInstance(ModelMap model,@ModelAttribute("department") Department department) {
 
-    	departmentService.updateAppIstanceDepartment(department.getAppInstances(), department);
+    	departmentService.updateDepartment(department);
 
     	return "redirect:/departmentdetail?id="+department.getId();
     }    
@@ -156,7 +155,7 @@ public class DepartmentController {
     @PostMapping("/addDepartmentStakeholder")
     public String addDepartmentStakeholder(ModelMap model,@ModelAttribute("department") Department department) {
 
-    	departmentService.updateStakeholderDepartment(department.getStakeholders(), department);
+    	departmentService.updateDepartment(department);
 
     	return "redirect:/departmentdetail?id="+department.getId();
     } 

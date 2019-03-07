@@ -7,7 +7,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 import portal.entity.Stakeholder;
@@ -60,12 +60,9 @@ public class StakeholderController {
     }
     
     @GetMapping("/deleteStakeholder")
-    public String deleteStakeholder(@RequestParam(name="id", required=true) String id,@RequestParam(name="stakeholderName", required=true) String stakeholderName) {
-    	Stakeholder stakeholder = new Stakeholder();
-    	stakeholder.setId(Long.valueOf(id));
-    	stakeholder.setStakeholderName(stakeholderName);
-    	stakeholderService.updateStakeholder(stakeholder);
+    public String deleteStakeholder(@ModelAttribute("stakeholder") Stakeholder stakeholder) {
 
+    	stakeholder.removeAllDependence();
     	
     	stakeholderService.delete(stakeholder);
     	return "redirect:/stakeholders";

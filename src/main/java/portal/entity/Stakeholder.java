@@ -13,6 +13,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.util.ObjectUtils;
+
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
@@ -192,6 +194,29 @@ public class Stakeholder {
 	public void setRaciforsyschanges(String raciforsyschanges) {
 		this.raciforsyschanges = raciforsyschanges;
 	}
- 
 	
+	public void removeAllDependence()
+	{
+		if(!ObjectUtils.isEmpty(this.department)) this.department.removeStakeholder(this);
+		this.department=null;
+		
+		if(!ObjectUtils.isEmpty(this.role)) this.role.removeStakeholder(this);
+		this.role=null;
+	}
+ 
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this==obj) return true;
+		
+		if(obj==null) return false;
+		
+		if(this.getClass()!=obj.getClass()) return false;
+		
+		Stakeholder other = (Stakeholder) obj;
+		
+		if(this.getId()!=other.getId()) return false;
+		
+		return true;
+	}
 }
