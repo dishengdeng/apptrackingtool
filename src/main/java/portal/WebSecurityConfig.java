@@ -6,6 +6,7 @@ package portal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 
 
 
@@ -35,7 +37,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
+        http	
+        		.csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/bootstrap/**",
                     		"/dist/**",
@@ -47,6 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     		"/datatables-responsive/**",
                     		"/favicon.png",
                     		"/registration").permitAll()
+                    .antMatchers(HttpMethod.POST, "/api/login").permitAll()
+                    .and()
+                .authorizeRequests()
                     .antMatchers("/deleteInstanceSLA").hasAnyRole("ADMIN","SYSADMIN","USER")
                     .antMatchers("/addInstanceSLA").hasAnyRole("ADMIN","SYSADMIN","USER")
                     .antMatchers("/deleteInstanceContract").hasAnyRole("ADMIN","SYSADMIN","USER")
@@ -191,6 +197,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .antMatchers("/updateRole").hasRole("SYSADMIN")
                     .antMatchers("/addRole").hasRole("SYSADMIN")
                     .antMatchers("/deleteRole").hasRole("SYSADMIN")
+//rest api
+                    .antMatchers("/api/zones").hasAnyRole("ADMIN","SYSADMIN","INTEGRATION")
+                    .antMatchers("/api/zone/create").hasAnyRole("ADMIN","SYSADMIN","INTEGRATION")
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()

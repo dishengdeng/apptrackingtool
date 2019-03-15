@@ -14,6 +14,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,6 +40,8 @@ import portal.validator.UserValidator;
 
 @Controller
 public class UserController{
+	
+
 	
 
 
@@ -216,6 +219,9 @@ public class UserController{
     
     @GetMapping("/login")
     public String login(ModelMap model, String error, String logout) {
+    	
+
+
         if (error != null)
             model.addAttribute("error", "Invalid Username/Password.");
 

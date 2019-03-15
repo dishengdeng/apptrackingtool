@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import portal.entity.User;
 import portal.service.SecurityService;
@@ -64,6 +65,27 @@ public class SecurityServiceImpl implements SecurityService{
 	public User getCurrentUserProfile() {
 		
 		return userService.findByName(findLoggedInUsername());
+	}
+
+	@Override
+	public String apilogin(String username, String password) {
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(userDetails, password,userDetails.getAuthorities());
+
+        
+        authenticationManager.authenticate(usernamePasswordAuthenticationToken);   
+        
+
+        if (usernamePasswordAuthenticationToken.isAuthenticated()) {
+            
+        	SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        	return RequestContextHolder.currentRequestAttributes().getSessionId();
+        }
+        else
+        {
+    		return null;
+        }	
+
 	}
 	
 

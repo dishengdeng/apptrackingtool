@@ -3,21 +3,22 @@ package portal.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class SiteModel {
-	@JsonProperty("id")
+	
 	private Long id;
 	
-	@JsonProperty("siteName")
+	
 	private  String siteName;
 
-	@JsonProperty("description")
+	
 	private  String description;
 	
-	@JsonProperty("note")
+	
 	private  String note;
 	
-	@JsonProperty("zone")
+	
 	private ZoneModel zone;
-
+	
+	@JsonProperty("id")
 	public Long getId() {
 		return id;
 	}
@@ -25,7 +26,8 @@ public class SiteModel {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
+	@JsonProperty("siteName")
 	public String getSiteName() {
 		return siteName;
 	}
@@ -33,7 +35,8 @@ public class SiteModel {
 	public void setSiteName(String siteName) {
 		this.siteName = siteName;
 	}
-
+	
+	@JsonProperty("description")
 	public String getDescription() {
 		return description;
 	}
@@ -41,7 +44,8 @@ public class SiteModel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	
+	@JsonProperty("note")
 	public String getNote() {
 		return note;
 	}
@@ -49,7 +53,8 @@ public class SiteModel {
 	public void setNote(String note) {
 		this.note = note;
 	}
-
+	
+	@JsonProperty("zone")
 	public ZoneModel getZone() {
 		return zone;
 	}
