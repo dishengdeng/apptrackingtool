@@ -34,5 +34,17 @@ public class ZoneRestController {
 	{
 		return zoneService.addZone(zone);
 	}
+	
+	@RequestMapping(value = "/zone/update", method = RequestMethod.POST)
+	@ResponseStatus(HttpStatus.OK)
+	public Zone updateZone(@RequestBody Zone zone)
+	{
+		Zone zoneEntity= zoneService.getById(zone.getId());
+		zoneEntity.setZoneName(zone.getZoneName());
+		zoneEntity.setNote(zone.getNote());
+		zoneEntity.setDescription(zone.getDescription());
+		zoneService.updateZone(zoneEntity);
+		return zone;
+	}
 
 }
