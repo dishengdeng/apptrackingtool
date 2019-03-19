@@ -4,7 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.handler.annotation.SendTo;
+
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,9 @@ public class ZoneRestController {
 	@Autowired
 	private ZoneService zoneService;
 	
+	@Autowired
+	private SimpMessageSendingOperations messagingTemplate;	
+	
 
 	@RequestMapping(value = "/zones", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
@@ -31,10 +35,11 @@ public class ZoneRestController {
 	
 	@RequestMapping(value = "/zone/create", method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.OK)
-	@SendTo("/subject/messages")
 	public Zone createZone(@RequestBody Zone zone)
 	{
-		return zoneService.addZone(zone);
+		Zone zoneEntity=zoneService.addZone(zone);
+		messagingTemplate.convertAndSend("/subject/messages",zoneEntity);
+		return zoneEntity;
 	}
 	
 	@RequestMapping(value = "/zone/update", method = RequestMethod.POST)

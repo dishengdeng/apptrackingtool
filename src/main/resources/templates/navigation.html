@@ -28,7 +28,7 @@
 					<li class="dropdown">
 						
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<span class="badge badge-warning" style="background: #f7960c;visibility:hidden">Warning</span>
+							<span id="messages" class="badge badge-warning" style="background: #f7960c;visibility:hidden">News</span>
 							<i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
 						</a>
 						<ul class="dropdown-menu dropdown-alerts">
@@ -137,14 +137,19 @@ $( document ).ready(function() {
                 stompClient = Stomp.over(socket);  
                 stompClient.connect({}, function(frame) {
 
-                    //console.log('Connected: ' + frame);
+                    console.log('Connected: ' + frame);
                     stompClient.subscribe('/subject/messages', function(messageOutput) {
-                        console.log("response "+JSON.parse(messageOutput.body));
+                        var response=JSON.parse(messageOutput.body);
+						$("#messages").css("visibility","visible");
+						showMessage(response);
                     });
                 });
 });
 
-
+function showMessage(response)
+{
+	$(".badge badge-warning").css("visibility","visible");
+}
 </script>
 		</div>
 </body>
