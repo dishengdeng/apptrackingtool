@@ -27,20 +27,8 @@
 				    <!-- /.dropdown -->
 					<li class="dropdown">
 						
-						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<span id="messages" class="badge badge-warning" style="background: #f7960c;visibility:hidden">News</span>
-							<i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>
-						</a>
-						<ul class="dropdown-menu dropdown-alerts">
-							<li>
-								<a href="#">
-									<div>
-										<i class="fa fa-comment fa-fw"></i> New Comment
-										<span class="pull-right text-muted small">4 minutes ago</span>
-									</div>
-								</a>
-							</li>
-						</ul>
+					<div id="messages">
+					</div>
 						<!-- /.dropdown-alerts -->
 					</li>
 					<!-- /.dropdown -->
@@ -138,9 +126,9 @@ $( document ).ready(function() {
                 stompClient.connect({}, function(frame) {
 
                     console.log('Connected: ' + frame);
-                    stompClient.subscribe('/subject/messages', function(messageOutput) {
+                    stompClient.subscribe('/subject/zone', function(messageOutput) {
                         var response=JSON.parse(messageOutput.body);
-						$("#messages").css("visibility","visible");
+						
 						showMessage(response);
                     });
                 });
@@ -148,7 +136,11 @@ $( document ).ready(function() {
 
 function showMessage(response)
 {
-	$(".badge badge-warning").css("visibility","visible");
+	var e=$('<div class="alert alert-warning alert-dismissible show" role="alert">'+
+			'<strong>A new zone has been created</strong>'+'<a href="/zonedetail?zone='
+			+response.id+'">'+response.zoneName+'</a>'+'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+			'<span aria-hidden="true">&times;</span>'+'</button></div>')
+	$("#messages").append(e);
 }
 </script>
 		</div>

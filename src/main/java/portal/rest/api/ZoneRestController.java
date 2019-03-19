@@ -38,7 +38,7 @@ public class ZoneRestController {
 	public Zone createZone(@RequestBody Zone zone)
 	{
 		Zone zoneEntity=zoneService.addZone(zone);
-		messagingTemplate.convertAndSend("/subject/messages",zoneEntity);
+		messagingTemplate.convertAndSend("/subject/zone",zoneEntity);
 		return zoneEntity;
 	}
 	
