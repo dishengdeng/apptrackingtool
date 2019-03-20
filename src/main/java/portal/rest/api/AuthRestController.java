@@ -26,14 +26,18 @@ public class AuthRestController {
     @Autowired
     private SecurityService securityService;
 	
-
+	@Autowired
+    private HttpServletRequest request;
+	
+	private final int _maxInactiveTiemout=60;
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public ResponseEntity<JSESSIONID> apilogin(@RequestBody ApiLogin login)
 	{
 		String sessionid=securityService.apilogin(login.getUsername(), login.getPassword());
 		if(!StringUtils.isEmpty(sessionid))
 		{
-
+			request.getSession().setMaxInactiveInterval(_maxInactiveTiemout);
 			return new ResponseEntity<JSESSIONID>(new JSESSIONID(sessionid),HttpStatus.OK);
 		}
 		else
