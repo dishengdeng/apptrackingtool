@@ -201,6 +201,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .antMatchers("/api/zones").hasAnyRole("ADMIN","SYSADMIN","INTEGRATION")
                     .antMatchers("/api/zone/create").hasAnyRole("ADMIN","SYSADMIN","INTEGRATION")
                     .antMatchers("/api/zone/update").hasAnyRole("ADMIN","SYSADMIN","INTEGRATION")
+                    .antMatchers("/api/alert").hasAnyRole("ADMIN","SYSADMIN","INTEGRATION")
                     .anyRequest().authenticated()
                     .and()
                 .formLogin()

@@ -131,6 +131,12 @@ $( document ).ready(function() {
 						
 						showZoneMessage(response);
                     });
+					//alert
+                    stompClient.subscribe('/subject/alert', function(messageOutput) {
+                        var response=JSON.parse(messageOutput.body);
+						
+						showAlertMessage(response);
+                    });					
                 });
 });
 
@@ -143,10 +149,22 @@ function showZoneMessage(response)
 	showMessage(e);
 }
 
-function showMessage(e)
+function showAlertMessage(response)
 {
-	$("#messages").replaceWith(e);
-	e.attr("id","messages");
+	var e=$('<div class="alert alert-warning alert-dismissible show" role="alert">'+
+			'<div class="fixed-top"><button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+			'<span aria-hidden="true">&times;</span></button>'+
+			'</div>'+
+			'<p><strong>'+response.title+'</strong></p>'+'<p>'+response.content+'</p>'+
+			'</div>')
+	showMessage(e);
+}
+
+function showMessage(e)
+{	
+	$("#messages").empty();
+	$("#messages").append(e);
+	//e.attr("id","messages");
 }
 </script>
 		</div>
