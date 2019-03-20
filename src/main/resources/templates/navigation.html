@@ -129,18 +129,24 @@ $( document ).ready(function() {
                     stompClient.subscribe('/subject/zone', function(messageOutput) {
                         var response=JSON.parse(messageOutput.body);
 						
-						showMessage(response);
+						showZoneMessage(response);
                     });
                 });
 });
 
-function showMessage(response)
+function showZoneMessage(response)
 {
 	var e=$('<div class="alert alert-warning alert-dismissible show" role="alert">'+
 			'<strong>A new zone has been created</strong>'+'<a href="/zonedetail?zone='
 			+response.id+'">'+response.zoneName+'</a>'+'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
 			'<span aria-hidden="true">&times;</span>'+'</button></div>')
-	$("#messages").append(e);
+	showMessage(e);
+}
+
+function showMessage(e)
+{
+	$("#messages").replaceWith(e);
+	e.attr("id","messages");
 }
 </script>
 		</div>
