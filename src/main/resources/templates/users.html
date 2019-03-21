@@ -23,6 +23,11 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+			<div class="row">
+				<div class="col-lg-12" style="margin-bottom:10px">
+				<button id="getloggedusers" type="button" class="btn btn-outline-secondary" data-toggle="modal" data-target="#exampleModal">Get Logged Users</button>
+				</div>
+			</div>
             <div class="row">
                 <div class="col-lg-12">
                     <div class="panel panel-default">
@@ -111,6 +116,35 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+			
+			<!-- Modal -->
+			<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			  <div class="modal-dialog" role="document">
+				<div class="modal-content">
+				  <div class="modal-header">
+					<h2 class="modal-title" id="exampleModalLabel">Current Loggin Users</h2>
+				  </div>
+				  <div class="modal-body">
+					<div>
+						<table class="table table-striped" id="filestable">
+						  <thead>
+							<tr>
+							  <th scope="col">User</th>
+							  <th scope="col">Logout</th>													  
+							</tr>
+						  </thead>
+						  <tbody id="loggedusertable">
+								
+						  </tbody>
+						</table>
+					<div>
+				  </div>
+				  <div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				  </div>
+				</div>
+			  </div>
+			</div>
 
             <!-- /.row -->
         </div>
@@ -145,6 +179,42 @@
 			});
 
 		});
+		
+		$("#getloggedusers").click(function(){
+		  $.ajax({url: "/loggedusers", success: function(result){
+			showloggeduser(result);
+		  }});
+		});
+		
+		function showloggeduser(result)
+		{
+			var e='';									
+			for(username in result)
+			{
+				e=e+'<tr id="logged-'+result[username]+'">'
+				e=e+'<th><h5>'+result[username]+'</h5></th>'
+				e=e+'<th><a style="cursor:pointer" onclick="logout(\''+result[username]+'\')">Logout</a></th>'
+				e=e+'</tr>'
+			}
+			var t=$(e);
+			$("#loggedusertable").empty();
+			$("#loggedusertable").append(e);
+		}
+		
+		function logout(username)
+		{
+			$.ajax({url: "/kickoutuser?name="+username, success: function(result){
+				if(result)
+				{
+					 hiddenuser(username)
+				}
+			  }});
+		}
+		
+		function hiddenuser(username)
+		{
+			$("#logged-"+username).remove();
+		}
 	</script>
 </body>
 

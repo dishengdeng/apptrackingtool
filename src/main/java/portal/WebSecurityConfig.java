@@ -12,9 +12,11 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 
 
@@ -34,11 +36,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
         return new BCryptPasswordEncoder();
     }
     
-
+    @Bean
+    public SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+    
+    // Register HttpSessionEventPublisher
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
+    }
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http	
-        		.csrf().disable()
+        http	.csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/bootstrap/**",
                     		"/dist/**",
@@ -209,7 +220,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .permitAll()
                     .and()
                 .logout()
-                    .permitAll();
+                    .permitAll()
+                    .and()
+                .sessionManagement()
+				.maximumSessions(10).maxSessionsPreventsLogin(true).sessionRegistry(sessionRegistry());
     }
 
     @Autowired

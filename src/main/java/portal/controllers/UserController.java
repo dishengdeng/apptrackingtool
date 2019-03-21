@@ -7,6 +7,9 @@ package portal.controllers;
 
 
 
+import java.util.List;
+
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +17,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -189,6 +193,18 @@ public class UserController{
         model.addAttribute("roles", roleService.getAll());
         return "addUser";
     }  
+    
+    @GetMapping("/loggedusers")
+    public ResponseEntity<List<String>> loggedusers() {
+
+        return new ResponseEntity<List<String>>(userService.getAllloggedUsers(),HttpStatus.OK);
+    }
+    
+    @GetMapping("/kickoutuser")
+    public ResponseEntity<Boolean> kickoutuser(@RequestParam(name="name", required=true) String username) {
+
+        return new ResponseEntity<Boolean>(userService.logoutUserSession(username),HttpStatus.OK);
+    }
     
     @PostMapping("/addUser")
     public String registration(@ModelAttribute("user") User userForm, BindingResult bindingResult, ModelMap model) {

@@ -11,5 +11,7 @@ public interface UserService {
 	public List<User> getAll();
 	public void deleteUser(User user);
 	public User findById(Long id);
+	public List<String> getAllloggedUsers();
+	public boolean logoutUserSession(String username);
 
 }

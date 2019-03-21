@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-//import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,8 +24,8 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 	@Autowired
     private UserRepository userRepository;
 	
-//	@Autowired
-//    private HttpServletRequest request;
+	@Autowired
+    private HttpServletRequest request;
 	
 	private final String user_prefix="ROLE_";
 	
@@ -42,7 +42,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 				List<Role> roles=user.getRoles();
 		        for (Role role : roles)
 		        {
-		        	//if(isRejectAPILogin(request.getRequestURI(),role)) throw new org.springframework.security.core.userdetails.UsernameNotFoundException("User Not Found!");
+		        	if(isRejectAPILogin(request.getRequestURI(),role)) throw new org.springframework.security.core.userdetails.UsernameNotFoundException("User Not Found!");
 		            grantedAuthorities.add(new SimpleGrantedAuthority(user_prefix+role.getName()));
 		        }
 				
@@ -61,17 +61,17 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
 	}
 	
-//	private boolean isRejectAPILogin(String URL,Role role)
-//	{
-//		if(URL.equals("/login") && role.getName().equals(portal.utility.Role.INTEGRATION.name()))
-//		{
-//			return true;
-//		}
-//		else
-//		{
-//			return false;
-//		}
-//	}
+	private boolean isRejectAPILogin(String URL,Role role)
+	{
+		if(URL.equals("/login") && role.getName().equals(portal.utility.Role.INTEGRATION.name()))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	
 
 }
