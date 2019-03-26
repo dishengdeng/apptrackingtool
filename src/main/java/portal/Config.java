@@ -7,6 +7,7 @@ package portal;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.sql.DataSource;
 
@@ -51,6 +52,8 @@ public class Config {
 	private static final String PROP_MAIL_SMTP_PORT = "mail.smtp.port";	
 	private static final String PROP_MAIL_SMTP_AUTH = "mail.smtp.auth";
 	private static final String PROP_MAIL_SMTP_STARTTLS_ENABLE = "mail.smtp.starttls.enable";
+	private static final String PROP_MAIL_USERNAME = "mail.username";
+	private static final String PROP_MAIL_PASSWORD = "mail.password";
 	
 	@Resource
 	private Environment env;
@@ -108,8 +111,17 @@ public class Config {
 	@Bean	
 	public Session mailSession()
 	{
-		Session mailSession = Session.getDefaultInstance(getEmailProperties(), null);
-		return mailSession;
+		if(env.getRequiredProperty(PROP_MAIL_SMTP_AUTH).toUpperCase()=="TRUE")
+		{
+			return Session.getDefaultInstance(getEmailProperties(),  new javax.mail.Authenticator() {
+				protected PasswordAuthentication getPasswordAuthentication() {
+					return new PasswordAuthentication(env.getRequiredProperty(PROP_MAIL_USERNAME), env.getRequiredProperty(PROP_MAIL_PASSWORD));
+				}
+			  });
+		}
+
+		return Session.getDefaultInstance(getEmailProperties(), null);
+		
 	}
 
 	
