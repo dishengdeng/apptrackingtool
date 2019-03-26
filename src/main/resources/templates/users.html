@@ -181,8 +181,9 @@
 		});
 		
 		$("#getloggedusers").click(function(){
-		  $.ajax({url: "/loggedusers", success: function(result){
-			showloggeduser(result);
+		  $.ajax({url: "/loggedusers", success: function(result,Status,Header){
+			console.log(Status);
+			if(Status=="success") {showloggeduser(result)};
 		  }});
 		});
 		
@@ -203,8 +204,9 @@
 		
 		function logout(username)
 		{
-			$.ajax({url: "/kickoutuser?name="+username, success: function(result){
-				if(result)
+			$.ajax({url: "/kickoutuser?name="+username, success: function(result,Status,Header){
+			console.log(Status);
+				if(Status=="success" && result)
 				{
 					 hiddenuser(username)
 				}

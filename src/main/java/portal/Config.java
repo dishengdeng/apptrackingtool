@@ -7,6 +7,7 @@ package portal;
 import java.util.Properties;
 
 import javax.annotation.Resource;
+import javax.mail.Session;
 import javax.sql.DataSource;
 
 import org.hibernate.ejb.HibernatePersistence;
@@ -46,6 +47,10 @@ public class Config {
 	private static final String PROP_ENTITYMANAGER_PACKAGES_TO_SCAN = "db.entitymanager.packages.to.scan";
 	private static final String PROP_HIBERNATE_HBM2DDL_AUTO = "hibernate.hbm2ddl.auto";	
 	private static final String PROP_HIBERNATE_AUTO_QUOTED_KEYWORD = "hibernate.auto_quote_keyword";
+	private static final String PROP_MAIL_SMTP_HOST = "mail.smtp.host";
+	private static final String PROP_MAIL_SMTP_PORT = "mail.smtp.port";	
+	private static final String PROP_MAIL_SMTP_AUTH = "mail.smtp.auth";
+	private static final String PROP_MAIL_SMTP_STARTTLS_ENABLE = "mail.smtp.starttls.enable";
 	
 	@Resource
 	private Environment env;
@@ -85,6 +90,7 @@ public class Config {
 		return transactionManager;
 	}	
 	
+
 	
 	private Properties getHibernateProperties() {
 		Properties properties = new Properties();
@@ -98,4 +104,26 @@ public class Config {
 
 		return properties;
 	}
+	
+	@Bean	
+	public Session mailSession()
+	{
+		Session mailSession = Session.getDefaultInstance(getEmailProperties(), null);
+		return mailSession;
+	}
+
+	
+	private Properties getEmailProperties()
+	{
+		Properties properties = new Properties();
+		properties.put(PROP_MAIL_SMTP_HOST, env.getRequiredProperty(PROP_MAIL_SMTP_HOST));
+		properties.put(PROP_MAIL_SMTP_PORT, env.getRequiredProperty(PROP_MAIL_SMTP_PORT));
+		properties.put(PROP_MAIL_SMTP_AUTH, env.getRequiredProperty(PROP_MAIL_SMTP_AUTH));
+		properties.put(PROP_MAIL_SMTP_STARTTLS_ENABLE, env.getRequiredProperty(PROP_MAIL_SMTP_STARTTLS_ENABLE));
+		
+		return properties;
+	}
+	
 }
+	
+

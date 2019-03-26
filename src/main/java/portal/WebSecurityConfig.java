@@ -16,7 +16,10 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+
+import portal.service.Impl.CustomAuthenticationFailureHandler;
 
 
 
@@ -45,6 +48,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
     @Bean
     public HttpSessionEventPublisher httpSessionEventPublisher() {
         return new HttpSessionEventPublisher();
+    }
+    
+    @Bean
+    public AuthenticationFailureHandler customAuthenticationFailureHandler() {
+        return new CustomAuthenticationFailureHandler();
     }
     
     @Override
@@ -220,12 +228,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                 .formLogin()
                     .loginPage("/login")
                     .permitAll()
+                    .failureHandler(customAuthenticationFailureHandler())
+                    .failureUrl("/login?error")
                     .and()
                 .logout()
                     .permitAll()
                     .and()
                 .sessionManagement()
 				.maximumSessions(10).maxSessionsPreventsLogin(true).sessionRegistry(sessionRegistry()).expiredUrl("/login");
+        		
     }
 
     @Autowired
