@@ -34,7 +34,11 @@
 					<!-- /.dropdown -->
 					<li class="dropdown">
 						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-							<i class="fa fa-user fa-fw"></i>
+							<span class="fa-stack fa-1x">
+							  <i class="fa fa-circle fa-stack-2x" style="color:#dc54a4"></i>
+							  <span  class="fa fa-stack-1x" style="color:white" th:text="${#strings.capitalize(#strings.substring(#httpServletRequest.remoteUser,0,1))}"></span>
+							</span>
+							
 							<span th:text="${#httpServletRequest.remoteUser}"></span> 
 							<i class="fa fa-caret-down"></i>
 						</a>
