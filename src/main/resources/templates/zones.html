@@ -63,7 +63,7 @@
 											data-toggle="confirmation" 
 											data-singleton="true" 
 											data-popout="true" 
-											style="text-decoration: none"
+											class="text-non-decoration"
 											>
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
@@ -71,17 +71,17 @@
 									
 										</td>
 										<td>
-											<a data-toggle="modal" th:if="${zone.sites.size()>0}" th:data-target="@{${#strings.concat('#',zone.id,'sites')}}" style="cursor:pointer">
+											<a data-toggle="modal" th:if="${zone.sites.size()>0}" th:data-target="@{${#strings.concat('#',zone.id,'sites')}}" class="cursor-pointer">
 											<span class="badge badge-secondary small" th:text="${'Sites - Total: '+zone.sites.size()}"></span>
 											</a>										
 										</td>
 										<td>
-											<a data-toggle="modal" th:if="${zone.applications.size()>0}" th:data-target="@{${#strings.concat('#',zone.id,'applications')}}" style="cursor:pointer">
+											<a data-toggle="modal" th:if="${zone.applications.size()>0}" th:data-target="@{${#strings.concat('#',zone.id,'applications')}}" class="cursor-pointer">
 											<span class="badge badge-secondary small" th:text="${'Application - Total: '+zone.applications.size()}"></span>
 											</a>										
 										</td>
 										<td>
-											<a data-toggle="modal" th:if="${zone.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',zone.id,'instances')}}" style="cursor:pointer">
+											<a data-toggle="modal" th:if="${zone.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',zone.id,'instances')}}" class="cursor-pointer">
 											<span class="badge badge-secondary small" th:text="${'App Instances - Total: '+zone.appInstances.size()}"></span>
 											</a>										
 										</td>

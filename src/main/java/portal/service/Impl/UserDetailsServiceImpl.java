@@ -61,7 +61,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 				grantedAuthorities.add(new SimpleGrantedAuthority(user_prefix+portal.utility.Role.GENERAL.name()));
 			}
 			
-			emailService.sendEmail(to, username+" Loggin", username+ " has logged in at " + (new Date()).toString(),from);
+			sendEmail(emailService,user);
 			return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
 		}
 		
@@ -80,6 +80,16 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		{
 			return false;
 		}
+	}
+	
+	private void sendEmail(EmailService emailService, User user)
+	{
+		user.getRoles().forEach(role->{
+			if(!role.getName().equals(portal.utility.Role.INTEGRATION.name()))
+			{
+				emailService.sendEmail(to, user.getUsername()+" Loggin", user.getUsername()+ " has logged in at " + (new Date()).toString(),from);
+			}
+		});
 	}
 	
 

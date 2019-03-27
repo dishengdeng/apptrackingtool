@@ -68,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     		"/datatables-plugins/**",
                     		"/datatables-responsive/**",
                     		"/favicon.png",
-                    		"/registration","/websocket/**").permitAll()
+                    		"/registration","/websocket/**","/font/**").permitAll()
                     .antMatchers(HttpMethod.POST, "/api/login").permitAll()
                     .and()
                 .authorizeRequests()
