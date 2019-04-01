@@ -42,7 +42,7 @@
                                 <tbody>
                                     <tr th:each="role: ${roles}">
                                         <td>
-											<a th:href="@{'/deleteRole?id='+${role.id}}"
+											<a th:href="@{'/deleteRole?role='+${role.id}}"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -65,25 +65,17 @@
 												  <h4 class="modal-title" th:text="${role.name}"></h4>
 												</div>
 												<div class="modal-body">
-													<form action="#" th:action="@{/updateRole}" th:object="${roleModel}" method="post">													
+													<form action="#" th:action="@{/updateRole}" method="post">													
 												
 													  <div class="form-group">
 														<label for="name">role Name:</label>
 														<input type="text" class="form-control" th:name="name" th:value="${role.name}"></input>
-														<input type="hidden" class="form-control" th:name="id" th:value="${role.id}"></input>
+														<input type="hidden" class="form-control" th:name="roleModel" th:value="${role.id}"></input>
 													  </div>
 													  <div class="form-group">
 														<label for="description">Description:</label>
 														<input type="text" class="form-control" th:name="description" th:value="${role.description}">
 													  </div>
-													  	<select th:if="${role.users.size()>0}" name="users" class="form-control" id="userSelect" multiple style="visibility:hidden;height:0">
-
-														  <option th:each="userEntity : ${role.users}" 
- 
-														  th:attr="value = ${userEntity.id}" selected>
-														  
-														  </option>
-														</select>
 													  <input class="btn btn-primary" type="submit" value="Update" />
 													</form>
 												</div>

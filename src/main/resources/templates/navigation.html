@@ -140,7 +140,14 @@ $( document ).ready(function() {
                         var response=JSON.parse(messageOutput.body);
 						
 						showAlertMessage(response);
-                    });					
+                    });
+
+					//chat
+					stompClient.subscribe('/user/subject/chat', function(messageOutput) {
+                        var response=JSON.parse(messageOutput.body);
+						
+						showChatMessage(response);
+                    });
                 });
 });
 

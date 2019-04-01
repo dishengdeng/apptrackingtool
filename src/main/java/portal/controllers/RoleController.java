@@ -7,7 +7,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import portal.entity.Role;
 import portal.service.RoleService;
@@ -49,13 +49,9 @@ public class RoleController {
     }
     
     @GetMapping("/deleteRole")
-    public String deleteRole(@RequestParam(name="id", required=true) String id) {
-    	Role role = new Role();
-    	role.setId(Long.valueOf(id));
+    public String deleteRole(@ModelAttribute("role") Role role) {
 
-    	
-    	roleService.updateRole(role);
-    	
+    	role.removeAllDependence();
     	roleService.delete(role);
     	return "redirect:/roles";
     }

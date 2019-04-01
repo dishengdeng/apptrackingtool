@@ -49,7 +49,7 @@
                                 <tbody>
                                     <tr th:each="user: ${users}">
                                         <td>
-											<a th:href="@{'/deleteUser?id='+${user.id}}" 
+											<a th:href="@{'/deleteUser?user='+${user.id}}" 
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -129,8 +129,9 @@
 						<table class="table table-striped" id="filestable">
 						  <thead>
 							<tr>
-							  <th scope="col">User</th>
-							  <th scope="col">Logout</th>													  
+								<th scope="col">User</th>
+								<th scope="col">Logout</th>
+								<th scope="col">Chat</th>							  
 							</tr>
 						  </thead>
 						  <tbody id="loggedusertable">
@@ -195,6 +196,7 @@
 				e=e+'<tr id="logged-'+result[username]+'">'
 				e=e+'<th><h5>'+result[username]+'</h5></th>'
 				e=e+'<th><a style="cursor:pointer" onclick="logout(\''+result[username]+'\')">Logout</a></th>'
+				e=e+'<th><a style="cursor:pointer" href="chat\?chatuser='+result[username]+'">Chat</a></th>'
 				e=e+'</tr>'
 			}
 			var t=$(e);

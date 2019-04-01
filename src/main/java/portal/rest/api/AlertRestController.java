@@ -24,6 +24,7 @@ public class AlertRestController {
 		if(!ObjectUtils.isEmpty(alert.getTitle())) 
 		{
 			this.messagingTemplate.convertAndSend("/subject/alert", alert);
+			//this.messagingTemplate.convertAndSendToUser("kevin","/subject/alert", alert);
 			return new ResponseEntity<Alert>(alert,HttpStatus.OK);
 		}
 		

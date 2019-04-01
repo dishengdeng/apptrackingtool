@@ -1,8 +1,9 @@
 package portal.entity;
 
 import java.util.ArrayList;
-
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -67,7 +68,7 @@ public class User {
     @JoinTable(name = "user_role", 
     joinColumns = @JoinColumn(name = "user_id"), 
     inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles=new ArrayList<Role>();
+    private Set<Role> roles=new HashSet<Role>();
 
 	public Long getId() {
 		return id;
@@ -101,13 +102,26 @@ public class User {
 		this.passwordconfirm = passwordconfirm;
 	}
 
-	public List<Role> getRoles() {
+	public Set<Role> getRoles() {
 		return this.roles;
 	}
 
-	public void setRoles(List<Role> roles) {
+	public void setRoles(Set<Role> roles) {
 		
-		this.roles = roles;
+		this.roles.addAll(roles);
+		roles.forEach(role->{
+			role.addUser(this);
+		});
+	}
+	
+	public void addRole(Role role)
+	{
+		this.roles.add(role);
+	}
+	
+	public void removeRole(Role role)
+	{
+		this.roles.remove(role);
 	}
 
 	public String getPasswordchg() {
@@ -158,6 +172,29 @@ public class User {
 
 	public void setEncodedpassword(String encodedpassword) {
 		this.encodedpassword = encodedpassword;
+	}
+	
+	public void removeAlldependence()
+	{
+		this.roles.forEach(role->{
+			role.removeUser(this);
+		});
+		this.roles=null;
+	}
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this==obj) return true;
+		
+		if(obj==null) return false;
+		
+		if(this.getClass()!=obj.getClass()) return false;
+		
+		User other = (User) obj;
+		
+		if(this.getId()!=other.getId()) return false;
+		
+		return true;
 	}
     
     

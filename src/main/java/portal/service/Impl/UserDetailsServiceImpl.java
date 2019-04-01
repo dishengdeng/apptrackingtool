@@ -1,5 +1,6 @@
 package portal.service.Impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -48,7 +49,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 		{
 			if(user.getRoles().size()>0)
 			{
-				List<Role> roles=user.getRoles();
+				List<Role> roles=new ArrayList<Role>(user.getRoles());
 		        for (Role role : roles)
 		        {
 		        	if(isRejectAPILogin(request.getRequestURI(),role)) throw new org.springframework.security.core.userdetails.UsernameNotFoundException("User Not Found!");

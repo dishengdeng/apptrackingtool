@@ -1,7 +1,7 @@
 package portal.entity;
 
-import java.util.List;
 
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,7 +33,7 @@ public class Role {
 	private String description;    
 
     @ManyToMany(mappedBy = "roles")
-    private List<User> users;
+    private Set<User> users;
 
 	public Long getId() {
 		return id;
@@ -51,12 +51,25 @@ public class Role {
 		this.name = name;
 	}
 
-	public List<User> getUsers() {
+	public Set<User> getUsers() {
 		return users;
 	}
 
-	public void setUsers(List<User> users) {
-		this.users = users;
+	public void setUsers(Set<User> users) {
+		this.users.addAll(users);
+		users.forEach(user->{
+			user.addRole(this);
+		});
+	}
+	
+	public void addUser(User user)
+	{
+		this.users.add(user);
+	}
+	
+	public void removeUser(User user)
+	{
+		this.users.removeIf(obj->obj.equals(user));
 	}
 
 	public String getDescription() {
@@ -65,6 +78,30 @@ public class Role {
 
 	public void setDescription(String description) {
 		this.description = description;
-	}    
+	} 
+	
+	public void removeAllDependence()
+	{
+		this.users.forEach(user->{
+			user.removeRole(this);
+		});
+		this.users=null;
+	}
+	
+	@Override
+	public boolean equals(Object obj)
+	{
+		if(this==obj) return true;
+		
+		if(obj==null) return false;
+		
+		if(this.getClass()!=obj.getClass()) return false;
+		
+		Role other = (Role) obj;
+		
+		if(this.getId()!=other.getId()) return false;
+		
+		return true;
+	}
 
 }

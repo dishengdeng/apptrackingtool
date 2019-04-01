@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+			<div class="row chat-row-padding-top-5">
+				<div class="col-sm-12">
+					<div th:id="${conversation.id}" class="chatbody">
+						<div class="panel panel-default">
+							<div class="panel-heading top-bar">
+								<div class="col-md-8 col-xs-8">
+									<h3 class="panel-title" ><span class="glyphicon glyphicon-comment"></span>
+									<span th:text="@{'Chat - '+${toUser}}"></span>
+									</h3>
+								</div>
+							</div>
+							<div id="messagebody" class="panel-body msg_container_base">
+								<div th:each="chat: ${conversation.chats}" th:if="${conversation.chats.size()>0}">
+									<div class="row msg_container base_sent" th:if="${chat.username==sendUser}">
+										<div class="col-md-10 col-xs-10">
+											<div class="messages msg_sent">
+												<p th:text="${chat.content}"></p>
+												<time th:text="${chat.datechat}"></time>
+											</div>
+										</div>
+										<div class="col-md-2 col-xs-2 avatar">
+											<div class="col-md-1 col-xs-1 avatar">
+											<span class="text-calibri-b lg" th:text="${sendUser}"><span>
+											</div>
+										</div>
+									</div>
+									<div class="row msg_container base_receive" th:if="${chat.username!=sendUser}">
+										<div class="col-md-10 col-xs-10">
+											<div class="messages msg_sent">
+												<p th:text="${chat.content}"></p>
+												<time th:text="${chat.datechat}"></time>
+											</div>
+										</div>
+										<div class="col-md-2 col-xs-2 avatar">
+											<div class="col-md-1 col-xs-1 avatar">
+											<span class="text-calibri-b lg" th:text="${sendUser}"><span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="panel-footer">
+								<div class="input-group">
+									<input id="inputmessage" type="text" class="form-control input-sm chat_input" placeholder="Write your message here..." />
+									<span class="input-group-btn">
+									<button class="btn btn-primary btn-sm" onclick="sendMessage()"><i class="fa fa-send fa-1x" aria-hidden="true"></i></button>
+									</span>
+									<input id="senduser" type="hidden" th:value="${sendUser}" />
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+	
+			</div>
+            <!-- /.row -->
+		</div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+		$('#inputmessage').keypress(function(event){
+			var keycode = (event.keyCode ? event.keyCode : event.which);
+			if(keycode == '13'){
+				sendMessage();
+			}
+		});
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+		function sendMessage() {
+			var conv = document.getElementsByClassName("chatbody")[0].id;
+			var message = document.getElementById('inputmessage').value;
+			var senduser = document.getElementById('senduser').value;
+			stompClient.send("/app/chat", {}, 
+			  JSON.stringify({'conversation':conv, 'message':message,'name':senduser}));
+		}		
+			
+	</script>
+
+</body>
+
+</html>

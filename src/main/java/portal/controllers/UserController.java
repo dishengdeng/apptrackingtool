@@ -225,10 +225,8 @@ public class UserController{
     } 
     
     @GetMapping("/deleteUser")
-    public String DeleteAppInstance(@RequestParam(name="id", required=true) String id) {
-    	User user = new User();
-    	user.setId(Long.valueOf(id));
-    	userService.updateUser(user);
+    public String DeleteAppInstance(@ModelAttribute("user") User user) {
+    	user.removeAlldependence();
     	userService.deleteUser(user);
     	return "redirect:/users";
     }    
