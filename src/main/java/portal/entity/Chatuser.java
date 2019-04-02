@@ -26,20 +26,7 @@ public class Chatuser {
     @JsonView(Views.Public.class)
 	private String username;
 
-//    @ManyToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-//    @JoinTable(name = "user_conv", 
-//    joinColumns = @JoinColumn(name = "chatuser_id"), 
-//    inverseJoinColumns = @JoinColumn(name = "conv_id"))
-//    private Set<Conversation> conversations=new HashSet<Conversation>();
-//    
-//    @OneToMany(
-//            mappedBy = "chatuser", 
-//            cascade = CascadeType.ALL, 
-//            orphanRemoval = true,
-//            fetch=FetchType.EAGER
-//        )
-//    private Set<Chat> chats = new HashSet<Chat>();
-    
+
     
     public Chatuser(String username)
     {
@@ -67,46 +54,6 @@ public class Chatuser {
 		this.username = username;
 	}
 
-//	public void addConversation(Conversation conversation)
-//	{
-//		this.conversations.add(conversation);
-//	}
-//	
-//	public void removeConversation(Conversation conversation)
-//	{
-//		this.conversations.remove(conversation);
-//	}
-//
-//	public Set<Conversation> getConversations() {
-//		return conversations;
-//	}
-//
-//	public void setConversations(Set<Conversation> conversations) {
-//		this.conversations.addAll(conversations);
-//		conversations.forEach(conversation->{
-//		conversation.addChatuser(this);
-//	});
-//	}
-//
-//	public void addChat(Chat chat)
-//	{
-//		this.chats.add(chat);
-//	}
-//	
-//	public void removeChat(Chat chat)
-//	{
-//		this.chats.remove(chat);
-//	}
-//	public Set<Chat> getChats() {
-//		return chats;
-//	}
-//
-//	public void setChats(Set<Chat> chats) {
-//		this.chats.addAll(chats);
-//		chats.forEach(chat->{
-//			chat.setChatuser(this);
-//		});
-//	}
 
     
     

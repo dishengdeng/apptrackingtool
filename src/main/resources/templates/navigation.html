@@ -146,7 +146,7 @@ $( document ).ready(function() {
 					stompClient.subscribe('/user/subject/chat', function(messageOutput) {
                         var response=JSON.parse(messageOutput.body);
 						
-						showChatMessage(response);
+						if(window.location.pathname!='/chat') showChatMessage(response);
                     });
                 });
 });
@@ -170,6 +170,16 @@ function showAlertMessage(response)
 			'</div>')
 	showMessage(e);
 }
+
+function showChatMessage(response)
+{
+	var e=$('<div class="alert alert-warning alert-dismissible show" role="alert">'+
+			'<a href="/chat?conversation='
+			+response.conversation.id+'">'+response.username+' sends you a message'+'</a>'+'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+			'<span aria-hidden="true">&times;</span>'+'</button></div>')
+	showMessage(e);
+}
+
 
 function showMessage(e)
 {	
