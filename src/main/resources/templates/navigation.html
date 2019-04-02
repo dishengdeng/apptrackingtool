@@ -147,6 +147,7 @@ $( document ).ready(function() {
                         var response=JSON.parse(messageOutput.body);
 						
 						if(window.location.pathname!='/chat') showChatMessage(response);
+						if(window.location.pathname =='/chat') processRecevieMsg(response);
                     });
                 });
 });
@@ -174,8 +175,8 @@ function showAlertMessage(response)
 function showChatMessage(response)
 {
 	var e=$('<div class="alert alert-warning alert-dismissible show" role="alert">'+
-			'<a href="/chat?conversation='
-			+response.conversation.id+'">'+response.username+' sends you a message'+'</a>'+'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
+			'<a href="/chat?chatuser='
+			+response.name+'&conversation='+response.conversation+'">'+response.name+' sends you a message'+'</a>'+'<button type="button" class="close" data-dismiss="alert" aria-label="Close">'+
 			'<span aria-hidden="true">&times;</span>'+'</button></div>')
 	showMessage(e);
 }

@@ -24,31 +24,33 @@
 							</div>
 							<div id="messagebody" class="panel-body msg_container_base">
 								<div th:each="chat: ${conversation.chats}" th:if="${conversation.chats.size()>0}">
-									<div class="row msg_container base_sent" th:if="${chat.username==sendUser}">
+									<div class="row msg_container base_sent" th:if="${chat.username==#httpServletRequest.remoteUser}">
 										<div class="col-md-10 col-xs-10">
 											<div class="messages msg_sent">
 												<p th:text="${chat.content}"></p>
 												<time th:text="${chat.datechat}"></time>
 											</div>
 										</div>
-										<div class="col-md-2 col-xs-2 avatar">
+										<div class="col-md-1 col-xs-1 avatar">
 											<div class="col-md-1 col-xs-1 avatar">
-											<span class="text-calibri-b lg" th:text="${sendUser}"><span>
+											<span class="text-calibri-b lg" th:text="${#httpServletRequest.remoteUser}"><span>
 											</div>
 										</div>
 									</div>
-									<div class="row msg_container base_receive" th:if="${chat.username!=sendUser}">
+									<div class="row msg_container base_receive" th:if="${chat.username!=#httpServletRequest.remoteUser}">
+										<div class="col-md-1 col-xs-1 avatar">
+											<div class="col-md-1 col-xs-1 avatar">
+											<span class="text-calibri-b lg" th:text="${chat.username}"><span>
+											</div>
+										</div>									
 										<div class="col-md-10 col-xs-10">
-											<div class="messages msg_sent">
+
+											<div class="messages msg_receive">
 												<p th:text="${chat.content}"></p>
 												<time th:text="${chat.datechat}"></time>
 											</div>
 										</div>
-										<div class="col-md-2 col-xs-2 avatar">
-											<div class="col-md-1 col-xs-1 avatar">
-											<span class="text-calibri-b lg" th:text="${chat.username}"><span>
-											</div>
-										</div>
+
 									</div>
 								</div>
 							</div>
@@ -58,7 +60,7 @@
 									<span class="input-group-btn">
 									<button class="btn btn-primary btn-sm" onclick="sendMessage()"><i class="fa fa-send fa-1x" aria-hidden="true"></i></button>
 									</span>
-									<input id="senduser" type="hidden" th:value="${sendUser}" />
+									<input id="senduser" type="hidden" th:value="${#httpServletRequest.remoteUser}" />
 								</div>
 							</div>
 						</div>
@@ -84,6 +86,7 @@
 			var keycode = (event.keyCode ? event.keyCode : event.which);
 			if(keycode == '13'){
 				sendMessage();
+
 			}
 		});
     });
@@ -100,9 +103,34 @@
 			var conv = document.getElementsByClassName("chatbody")[0].id;
 			var message = document.getElementById('inputmessage').value;
 			var senduser = document.getElementById('senduser').value;
+			var d= new Date();
+			var chatdate=d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes();
 			stompClient.send("/app/chat", {}, 
-			  JSON.stringify({'conversation':conv, 'message':message,'name':senduser}));
-		}		
+			  JSON.stringify({'conversation':conv, 'message':message,'name':senduser,'date':chatdate}));
+			 document.getElementById('inputmessage').value='';
+		}
+
+		function processRecevieMsg(msg)
+		{
+			var e=$('<div class="row msg_container base_receive">'+'<div class="col-md-1 col-xs-1 avatar"><div class="col-md-1 col-xs-1 avatar">'+
+											'<span class="text-calibri-b lg">'+msg.name+'<span>'+
+											'</div></div><div class="col-md-10 col-xs-10"><div class="messages msg_receive"><p>'+
+					msg.message+'</p><time>'+msg.date+'</time></div></div></div>');
+					
+			if(msg.name==document.getElementById('senduser').value)
+			{
+					e=$('<div class="row msg_container base_sent">'+'<div class="col-md-10 col-xs-10"><div class="messages msg_sent"><p>'+
+					msg.message+'</p><time>'+msg.date+'</time></div></div><div class="col-md-1 col-xs-1 avatar"><div class="col-md-1 col-xs-1 avatar">'+
+											'<span class="text-calibri-b lg">'+msg.name+'<span>'+
+											'</div></div></div>');
+			}
+
+											
+			
+			$("#messagebody").append(e);
+			var ele=document.getElementById("messagebody")
+			ele.scrollTop=ele.scrollHeight;
+		}
 			
 	</script>
 

@@ -1,9 +1,9 @@
 package portal.entity;
 
 
-import java.util.Arrays;
+
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -13,10 +13,11 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.apache.commons.lang3.StringUtils;
+
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -35,11 +36,6 @@ public class Conversation {
     @Column(name = "datecov", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String datecov;
-    
-    
-    @Column(name = "chatusers", length = 64,columnDefinition="VARCHAR(250)")
-    @JsonView(Views.Public.class)
-	private String chatusers;   
 
     
     @OneToMany(
@@ -49,6 +45,9 @@ public class Conversation {
             fetch=FetchType.EAGER
         )
     private Set<Chat> chats = new HashSet<Chat>();
+    
+	@ManyToMany(mappedBy = "conversations",fetch=FetchType.EAGER)
+    private Set<Chatuser> chatusers = new HashSet<Chatuser>();
 
 	public Long getId() {
 		return id;
@@ -88,25 +87,29 @@ public class Conversation {
 			chat.setConversation(this);
 		});
 	}
-
-	public String getChatusers() {
+	
+	public void addChatuser(Chatuser chatuser)
+	{
+		this.chatusers.add(chatuser);
+	}
+	
+	public void removeChatuser(Chatuser chatuser)
+	{
+		this.chatusers.remove(chatuser);
+	}
+	
+	public Set<Chatuser> getChatusers() {
 		return chatusers;
 	}
 
-	public void setChatusers(String chatusers) {
-		this.chatusers = chatusers;
+	public void setChatusers(Set<Chatuser> chatusers) {
+		this.chatusers.addAll(chatusers);
+		chatusers.forEach(user->{
+			user.addConversation(this);
+		});
 	}
-	
-	public void addChatUser(String chatuser)
-	{
-		this.chatusers = StringUtils.join(new String[]{this.chatusers,chatuser}, "|");
-	}
-	
-	public List<String> getChatUsers()
-	{
 
-		return Arrays.asList(StringUtils.split(this.chatusers, "|"));
-	}
+
 
 
 }

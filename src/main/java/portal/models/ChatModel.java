@@ -6,6 +6,7 @@ public class ChatModel {
 
 	private String conv;
 	private String message;
+	private String date;
 	private String sendby;
 	
 	@JsonProperty("conversation")
@@ -31,6 +32,14 @@ public class ChatModel {
 	}
 	public void setSendby(String sendby) {
 		this.sendby = sendby;
+	}
+	
+	@JsonProperty("date")
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
 	}
 	
 	

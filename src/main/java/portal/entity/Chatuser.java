@@ -1,13 +1,20 @@
 package portal.entity;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -27,6 +34,12 @@ public class Chatuser {
 	private String username;
 
 
+    @ManyToMany(cascade = CascadeType.ALL,fetch=FetchType.EAGER)
+    @JoinTable(name = "chatuser_conv",
+        joinColumns = @JoinColumn(name = "chatuser_id"),
+        inverseJoinColumns = @JoinColumn(name = "conv_id")
+    )
+    private Set<Conversation> conversations = new HashSet<Conversation>();
     
     public Chatuser(String username)
     {
@@ -53,6 +66,29 @@ public class Chatuser {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+
+	public void addConversation(Conversation conversation)
+	{
+		this.conversations.add(conversation);
+	}
+	
+	public void removeConversation(Conversation conversation)
+	{
+		this.conversations.remove(conversation);
+	}
+	
+	public Set<Conversation> getConversations() {
+		return conversations;
+	}
+
+	public void setConversations(Set<Conversation> conversations) {
+		this.conversations.addAll(conversations);
+		conversations.forEach(conv->{
+			conv.addChatuser(this);
+		});
+	}
+
+
 
 
     
