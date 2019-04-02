@@ -146,8 +146,8 @@ $( document ).ready(function() {
 					stompClient.subscribe('/user/subject/chat', function(messageOutput) {
                         var response=JSON.parse(messageOutput.body);
 						
-						if(window.location.pathname!='/chat') showChatMessage(response);
-						if(window.location.pathname =='/chat') processRecevieMsg(response);
+						if(window.location.pathname!='/chat' || response.conversation!=document.getElementsByClassName("chatbody")[0].id) showChatMessage(response);
+						if(window.location.pathname =='/chat' && response.conversation==document.getElementsByClassName("chatbody")[0].id) processRecevieMsg(response);
                     });
                 });
 });
