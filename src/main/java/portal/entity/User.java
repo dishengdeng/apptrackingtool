@@ -107,7 +107,7 @@ public class User {
 	}
 
 	public void setRoles(Set<Role> roles) {
-		
+		this.roles.retainAll(roles);
 		this.roles.addAll(roles);
 		roles.forEach(role->{
 			role.addUser(this);
