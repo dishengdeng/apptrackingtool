@@ -14,10 +14,11 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
+import portal.utility.Convertor;
 
 @Entity
 @Table(name = "Chat")
-public class Chat {
+public class Chat implements Comparable<Chat>{
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
@@ -80,6 +81,12 @@ public class Chat {
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	@Override
+	public int compareTo(Chat obj) {
+
+		return Convertor.JavaDateTime(this.datechat).compareTo(Convertor.JavaDateTime(obj.getDatechat()));
 	}
 
 

@@ -23,7 +23,7 @@
 								</div>
 							</div>
 							<div id="messagebody" class="panel-body msg_container_base">
-								<div th:each="chat: ${conversation.chats}" th:if="${conversation.chats.size()>0}">
+								<div th:each="chat: ${#lists.sort(conversation.chats)}" th:if="${conversation.chats.size()>0}">
 									<div class="row msg_container base_sent" th:if="${chat.username==#httpServletRequest.remoteUser}">
 										<div class="col-md-10 col-xs-10">
 											<div class="messages msg_sent">
@@ -104,7 +104,7 @@
 			var message = document.getElementById('inputmessage').value;
 			var senduser = document.getElementById('senduser').value;
 			var d= new Date();
-			var chatdate=d.getMonth()+1+'/'+d.getDate()+'/'+d.getFullYear()+' '+d.getHours()+':'+d.getMinutes();
+			var chatdate=d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()+' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
 			stompClient.send("/app/chat", {}, 
 			  JSON.stringify({'conversation':conv, 'message':message,'name':senduser,'date':chatdate}));
 			 document.getElementById('inputmessage').value='';
