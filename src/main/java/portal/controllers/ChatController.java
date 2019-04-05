@@ -44,10 +44,10 @@ public class ChatController {
     		{
         		Conversation conv=convService.saveConversation(new Conversation());
             	
-        		Chatuser toUser=ObjectUtils.isEmpty(chatuserService.findbyname(chatuser))? new Chatuser(chatuser):chatuserService.findbyname(chatuser);
+        		Chatuser toUser=ObjectUtils.isEmpty(chatuserService.findbyname(chatuser))? chatuserService.saveChatuser(new Chatuser(chatuser)):chatuserService.findbyname(chatuser);
         		toUser.addConversation(conv);
         		
-        		Chatuser sentUser=ObjectUtils.isEmpty(chatuserService.findbyname(securityService.findLoggedInUsername()))? new Chatuser(securityService.findLoggedInUsername()):chatuserService.findbyname(securityService.findLoggedInUsername());
+        		Chatuser sentUser=ObjectUtils.isEmpty(chatuserService.findbyname(securityService.findLoggedInUsername()))? chatuserService.saveChatuser(new Chatuser(securityService.findLoggedInUsername())):chatuserService.findbyname(securityService.findLoggedInUsername());
         		sentUser.addConversation(conv);
         		
         		conv.addChatuser(toUser);
