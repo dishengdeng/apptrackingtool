@@ -25,6 +25,7 @@ import portal.entity.Company;
 import portal.entity.File;
 import portal.entity.Project;
 import portal.entity.Site;
+import portal.entity.Support;
 import portal.entity.Zone;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
@@ -259,10 +260,10 @@ public class HomeController {
   //-----------------------   
     //------Support---------------    
     @GetMapping("/deleteApplicationSupport")
-    public String deleteApplicationSupport(@ModelAttribute("application") Application application) {
+    public String deleteApplicationSupport(@ModelAttribute("application") Application application,@ModelAttribute("support") Support support) {
 
-    	application.setSupport(null);
-    	appService.updateApp(application);
+    	support.removeApplication(application);
+    	supportService.updateSupport(support);
 
     	return "redirect:/applicationdetail?app="+application.getId();
     }
@@ -330,7 +331,9 @@ public class HomeController {
         Application appEntity=appService.findbyId(application.getId());
 
         application.setAppInstances(appEntity.getAppInstances());
-        application.setSupport(appEntity.getSupport());
+        application.getSupports().forEach(support->{
+        	application.addSupport(support);
+        });        
         application.setManufacturer(appEntity.getManufacturer());
         application.setDepartment(appEntity.getDepartment());
         application.setFiles(appEntity.getFiles());
@@ -364,7 +367,7 @@ public class HomeController {
     	model.addAttribute("companys",companyService.findApplicationByNotAssigned(appEntity));
     	
     	//--Support-----
-    	model.addAttribute("support",appEntity.getSupport());
+    	model.addAttribute("appsupports",appEntity.getSupports());
     	model.addAttribute("supports",supportService.getAll());    	
     	
     	//--Department-----

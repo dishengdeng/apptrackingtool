@@ -103,8 +103,14 @@
 												</li>
 											</ul>											
 										</td>										
-										<td>
-											<a th:if="${instance.support!=null}"  th:href="@{'/supportdetail?support='+${instance.support.id}}" th:text="${instance.support.supportName}"></a>
+										<td style="padding:2px">
+											<ul th:if="${instance.supports.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="support: ${instance.supports}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<a th:href="@{'/supportdetail?support='+${support.id}}"><span th:text="${support.supportName}"></span></a>
+													</div>
+												</li>
+											</ul>											
 										</td>
 										<td>
 											<a th:if="${instance.company!=null}" th:href="@{'/companydetail?company='+${instance.company.id}}" 

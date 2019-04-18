@@ -1,7 +1,7 @@
 package portal.controllers;
 
 
-import java.util.ArrayList;
+
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,8 +80,8 @@ public class SupportController {
     //--application--    
     @GetMapping("/deletesupportapplication")
     public String deletesupportapplication(@ModelAttribute("application") Application application,@ModelAttribute("support") Support support,ModelMap model) {
-    	application.setSupport(null);
-    	appService.updateApp(application);
+    	support.removeApplication(application);
+    	supportService.updateSupport(support);
 
     	return "redirect:/supportdetail?support="+support.getId();
     }    
@@ -89,7 +89,7 @@ public class SupportController {
     @PostMapping("/addsupportapplication")
     public String addDepartmentapplication(ModelMap model,@ModelAttribute("support") Support support) {
 
-    	supportService.updateApplicationSupport(new ArrayList<>(support.getApplications()), support);
+    	supportService.updateSupport(support);
 
     	return "redirect:/supportdetail?support="+support.getId();
     }    
@@ -97,8 +97,8 @@ public class SupportController {
   //--Instance--    
     @GetMapping("/deleteSupportInstance")
     public String deleteSupportInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("support") Support support,ModelMap model) {
-    	appInstance.setSupport(null);
-    	appInstanceService.updateAppInstance(appInstance);
+    	support.removeInstance(appInstance);
+    	supportService.updateSupport(support);
 
     	return "redirect:/supportdetail?support="+support.getId();
     }    
@@ -106,7 +106,7 @@ public class SupportController {
     @PostMapping("/addSupportInstance")
     public String addSupportInstance(ModelMap model,@ModelAttribute("support") Support support) {
 
-    	supportService.updateAppInstanceSupport(new ArrayList<>(support.getAppInstances()), support);
+    	supportService.updateSupport(support);
 
     	return "redirect:/supportdetail?support="+support.getId();
     }

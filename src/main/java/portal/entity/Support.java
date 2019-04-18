@@ -15,8 +15,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -106,19 +108,19 @@ public class Support {
     @JsonView(Views.Public.class)
 	private String location;
     
-    @OneToMany(
-            mappedBy = "support", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true
-        )
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>(); 
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "instancesupport",
+        joinColumns = @JoinColumn(name = "support_id"),
+        inverseJoinColumns = @JoinColumn(name = "instance_id")
+    )	
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
-    @OneToMany(
-            mappedBy = "support", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true
-        )
-    private Set<Application> applications = new HashSet<Application>();     
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "appsupport",
+        joinColumns = @JoinColumn(name = "support_id"),
+        inverseJoinColumns = @JoinColumn(name = "application_id")
+    )
+    private Set<Application> applications = new HashSet<Application>();   
 
 	public Long getId() {
 		return id;
@@ -161,7 +163,16 @@ public class Support {
 	}
 
 
-   
+	public void addInstance(AppInstance app)
+	{
+		this.appInstances.add(app);		
+	}
+	
+	public void removeInstance(AppInstance app)
+	{
+		this.appInstances.remove(app);
+	}
+	
 	public Set<AppInstance> getAppInstances() {
 		return appInstances;
 	}
@@ -171,12 +182,24 @@ public class Support {
 		this.appInstances.addAll(appInstances);
 	}
 
+	public void addApplication(Application application)
+	{
+		this.applications.add(application);
+	}
+	
+	public void removeApplication(Application application)
+	{
+		this.applications.removeIf(obj->obj.equals(application));
+	}
 	public Set<Application> getApplications() {
 		return applications;
 	}
 
 	public void setApplications(Set<Application> applications) {
 		this.applications.addAll(applications);
+		applications.forEach(application->{
+			application.addSupport(this);
+		});
 	}
 
 	public String getInstanceNameWithComma()
@@ -289,7 +312,7 @@ public class Support {
 	public void removeAllApp()
 	{
 		this.applications.forEach(obj->{
-			obj.setSupport(null);
+			obj.removeSupport(this);
 		});
 		this.applications=null;
 	}
@@ -298,7 +321,7 @@ public class Support {
 	{
 
 		this.appInstances.forEach(obj->{
-			obj.setSupport(null);
+			obj.removeSupport(this);
 		});
 		this.appInstances=null;
 		

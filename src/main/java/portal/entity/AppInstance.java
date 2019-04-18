@@ -59,9 +59,8 @@ public class AppInstance implements Comparable<AppInstance>{
     @JoinColumn(name = "deparment_id",referencedColumnName="id")
     private Department department;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "support_id",referencedColumnName="id")
-    private Support support;
+	@ManyToMany(mappedBy = "appInstances")
+    private Set<Support> supports = new HashSet<Support>();
     
 	@ManyToMany(mappedBy = "appInstances")
     private Set<Site> sites = new HashSet<Site>();
@@ -154,12 +153,24 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.department = department;
 	}
 
-	public Support getSupport() {
-		return support;
+	public void addSupport(Support support)
+	{
+		this.supports.add(support);
 	}
 
-	public void setSupport(Support support) {
-		this.support = support;
+	public void removeSupport(Support support)
+	{
+		this.supports.remove(support);
+	}
+	public Set<Support> getSupports() {
+		return supports;
+	}
+
+	public void setSupports(Set<Support> supports) {
+		this.supports.addAll(supports);
+		supports.forEach(obj->{
+			obj.addInstance(this);
+		});
 	}
 
 	public void setId(Long id) {
@@ -339,8 +350,10 @@ public class AppInstance implements Comparable<AppInstance>{
 		if(!ObjectUtils.isEmpty(this.department)) this.department.getAppInstances().removeIf(obj->obj.equals(this));
 		this.setDepartment(null);
 		
-		if(!ObjectUtils.isEmpty(this.support)) this.support.getAppInstances().removeIf(obj->obj.equals(this));
-		this.setSupport(null);
+		this.supports.forEach(support->{
+			support.removeInstance(this);
+		});
+		this.supports=null;
 		
 		if(!ObjectUtils.isEmpty(this.application)) this.application.getAppInstances().removeIf(obj->obj.equals(this));
 		this.setApplication(null);

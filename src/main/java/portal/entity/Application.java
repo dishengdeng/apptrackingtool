@@ -59,7 +59,7 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private String AppVersion;
     
-    @Column(name = "AppType", length = 64)
+    @Column(name = "AppType", length = 128)
     @JsonView(Views.Public.class)
 	private String AppType;
     
@@ -126,9 +126,8 @@ public class Application implements Comparable<Application>{
     @JoinColumn(name = "deparment_id",referencedColumnName="id")
     private Department department;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "support_id",referencedColumnName="id")
-    private Support support;
+	@ManyToMany(mappedBy = "applications")
+    private Set<Support> supports = new HashSet<Support>();
     
     public Long getId() {
 		return id;
@@ -315,12 +314,24 @@ public class Application implements Comparable<Application>{
 		return this.AppName.compareToIgnoreCase(app.getAppName());
 	}
 
-	public Support getSupport() {
-		return support;
+	public void addSupport(Support support)
+	{
+		this.supports.add(support);
 	}
 
-	public void setSupport(Support support) {
-		this.support = support;
+	public void removeSupport(Support support)
+	{
+		this.supports.removeIf(obj->obj.equals(support));
+	}
+	public Set<Support> getSupports() {
+		return supports;
+	}
+
+	public void setSupports(Set<Support> supports) {
+		this.supports.addAll(supports);
+		supports.forEach(support->{
+			support.addApplication(this);
+		});
 	}
 
 	public Company getManufacturer() {
@@ -347,8 +358,10 @@ public class Application implements Comparable<Application>{
 		if(!ObjectUtils.isEmpty(this.manufacturer)) this.manufacturer.setApplication(null);
 		this.setManufacturer(null);
 		
-		if(!ObjectUtils.isEmpty(this.support)) this.support.getApplications().removeIf(obj->obj.equals(this));
-		this.setSupport(null);
+		this.supports.forEach(support->{
+			support.removeApplication(this);
+		});
+		this.supports=null;
 		
 		if(!ObjectUtils.isEmpty(this.department)) this.department.getApplications().removeIf(obj->obj.equals(this));
 		this.setDepartment(null);

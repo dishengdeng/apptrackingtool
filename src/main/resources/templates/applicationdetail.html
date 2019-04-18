@@ -126,7 +126,7 @@
 								<tr th:each="appinstance: ${appinstances}">
 									<td>
 										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteApplicationInstance?instanceid='+${appinstance.id}+'&applicationid='+${app.id}}" 
-											style="margin-right:20px;text-decoration: none"
+											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -174,7 +174,7 @@
 								<tr th:each="appproject: ${applicationprojects}">
 									<td>
 										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteApplicationProject?project='+${appproject.id}+'&application='+${app.id}}" 
-											style="margin-right:20px;text-decoration: none"
+											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -221,7 +221,7 @@
 								<tr th:each="appzone: ${appzones}">
 									<td>
 										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteappzone?zone='+${appzone.id}+'&app='+${app.id}}" 
-											style="margin-right:20px;text-decoration: none"
+											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -269,7 +269,7 @@
 								<tr th:each="appsite: ${appsites}">
 									<td>
 										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteAppSite?site='+${appsite.id}+'&app='+${app.id}}" 
-											style="margin-right:20px;text-decoration: none"
+											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -335,40 +335,56 @@
 				<div class="col-lg-4">
 				</div>
 			</div>
-			<!--Support Detail-->
+			<!--support Detail-->
 			<div class="row">
 				<div class="col-lg-8">
 					 <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <i class="fa fa-support"></i> Support
-                            <div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addsupport'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+						<div class="panel-heading">
+							<i class="fa fa-cube"></i> Supports
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addappsupport'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="text-decoration: none;color:white;cursor: pointer"
-									th:if="${support!=null}" th:href="${#strings.concat('/deleteApplicationSupport?application=',app.id)}"
-									data-title="Are you sure to delete?" 
-									data-toggle="confirmation" 
-									data-singleton="true" 
-									data-popout="true"									
-									>
-									<i class="fa fa-trash-o fa-lg"></i>
-								</a>
-                            </div>
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div th:if="${support!=null}" class="panel-body">
-							<div class="row"><div class="col-sm-2"><strong>Support:</strong></div><div class="col-sm-10"><a th:href="@{'/supportdetail?support='+${support.id}}" th:text="${support.supportName}"></a></div></div>
-							<div class="row"><div class="col-sm-2"><strong>Phone:</strong></div><div class="col-sm-10"><span th:text="${support.phone}"></span></div></div>
-							<div class="row"><div class="col-sm-2"><strong>Email:</strong></div><div class="col-sm-10"><span th:text="${support.email}"></span></div></div>
-							<div class="row"><div class="col-sm-2"><strong>Note:</strong></div><div class="col-sm-10"><span th:text="${support.note}"></span></div></div>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${appsupports.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Support</th>
+								<th>Support Type</th>
+								<th>Phone</th>
+								<th>Email</th>
+								<th>Note</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="appsupport: ${appsupports}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteApplicationSupport?support='+${appsupport.id}+'&application='+${app.id}}" 
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/supportdetail?support='+${appsupport.id}}" th:text="${appsupport.supportName}"></a>
+									</td>
+									<td th:text="${appsupport.networksupport}"></td>
+									<td th:text="${appsupport.phone}"></td>
+									<td th:text="${appsupport.email}"></td>
+									<td th:text="${appsupport.note}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
 				</div>
 				<div class="col-lg-4">
 				</div>
-			</div>
+			</div>	
 			<!--Department Detail-->
 			<div class="row">
 				<div class="col-lg-8">
@@ -525,7 +541,7 @@
 					  <div class="modal-content">
 						<div class="modal-header">
 						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Or Change Instance - '+${app.AppName}"></h4>													
+						  <h4 class="modal-title" th:text="'Add Instance - '+${app.AppName}"></h4>													
 						</div>
 						<div class="modal-body">	
 							<form action="#" th:action="@{/addApplicationInstance}" th:object="${app}" method="post">
@@ -554,7 +570,7 @@
 					  <div class="modal-content">
 						<div class="modal-header">
 						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Or Change project - '+${app.AppName}"></h4>													
+						  <h4 class="modal-title" th:text="'Add project - '+${app.AppName}"></h4>													
 						</div>
 						<div class="modal-body">	
 							<form action="#" th:action="@{/addApplicationProject}" method="post">
@@ -585,7 +601,7 @@
 					  <div class="modal-content">
 						<div class="modal-header">
 						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Or Change Zone - '+${app.AppName}"></h4>													
+						  <h4 class="modal-title" th:text="'Add Zone - '+${app.AppName}"></h4>													
 						</div>
 						<div class="modal-body">	
 							<form action="#" th:action="@{/addAppZone}" method="post">
@@ -614,7 +630,7 @@
 					  <div class="modal-content">
 						<div class="modal-header">
 						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Or Change site - '+${app.AppName}"></h4>													
+						  <h4 class="modal-title" th:text="'Add site - '+${app.AppName}"></h4>													
 						</div>
 						<div class="modal-body">	
 							<form action="#" th:action="@{/addAppSite}" method="post">
@@ -644,7 +660,7 @@
 					  <div class="modal-content">
 						<div class="modal-header">
 						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Or Change Manufacturer - '+${app.AppName}"></h4>													
+						  <h4 class="modal-title" th:text="'Add Manufacturer - '+${app.AppName}"></h4>													
 						</div>
 						<div class="modal-body">	
 							<form action="#" th:action="@{/addApplicationCompany}" th:object="${company}" method="post">
@@ -667,28 +683,25 @@
 
 					</div>	
 				</div>
-				<!--Support model-->
-				<div class="modal fade" th:id="addsupport" role="dialog">
+				<!--support model-->
+				<div class="modal fade" th:id="addappsupport" role="dialog">
 					<div class="modal-dialog">
 					
 					  <!-- Modal content-->
 					  <div class="modal-content">
 						<div class="modal-header">
 						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Or Change Support - '+${app.AppName}"></h4>													
+						  <h4 class="modal-title" th:text="'Add Support - '+${app.AppName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addApplicationSupport}" method="post">
+							<form th:action="@{/addApplicationSupport}" method="post">
 								<div class="form-group">
-									<label for="supportSelect">Support:</label>
+									<label for="supportselect">Support:</label>
 									<input type="hidden" class="form-control" th:name="app" th:value="${app.id}"></input>
-									<select name="support" class="form-control" id="supportSelect">
-									  <option th:selected="${app.support==null}"></option>
+									<select name="supports" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="supportselect">
 									  <option th:each="supportEntity : ${supports}" 
 									  th:text="${supportEntity.supportName}" 
-									  th:attr="value = ${supportEntity.id}" th:selected="${app.support==null} ? false:${app.support.getId()==supportEntity.id}">
-									  
-									  </option>
+									  th:attr="value = ${supportEntity.id}">
 									</select>
 								</div>
 							  <input class="btn btn-primary" type="submit" value="Submit" />
@@ -706,7 +719,7 @@
 					  <div class="modal-content">
 						<div class="modal-header">
 						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Or Change Department - '+${app.appName}"></h4>													
+						  <h4 class="modal-title" th:text="'Add Department - '+${app.appName}"></h4>													
 						</div>
 						<div class="modal-body">	
 							<form action="#" th:action="@{/addApplicationDepartment}" method="post">
@@ -794,6 +807,14 @@
 				buttonWidth: 300, 
 				enableFiltering: true,
 				nonSelectedText: 'Select Zone'
+			  });
+			  
+			  $('#supportselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Support'
 			  });
 			  
 			  $('#siteselect').multiselect(

@@ -26,6 +26,7 @@ import portal.entity.License;
 import portal.entity.Project;
 import portal.entity.Server;
 import portal.entity.Site;
+import portal.entity.Support;
 import portal.entity.Zone;
 import portal.service.AppInstanceService;
 import portal.service.CompanyService;
@@ -158,7 +159,7 @@ public class AppInstanceController {
     	model.addAttribute("departments",departmentService.getAll());
     	
     	//--Support-----
-    	model.addAttribute("support",appInstance.getSupport());
+    	model.addAttribute("instancesupports",appInstance.getSupports());
     	model.addAttribute("supports",supportService.getAll());
     	
     	//--Project----
@@ -326,10 +327,10 @@ public class AppInstanceController {
 
     //------Support---------------    
     @GetMapping("/deleteInstanceSupport")
-    public String deleteInstanceSupport(@ModelAttribute("instance") AppInstance appInstance) {
+    public String deleteInstanceSupport(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("support") Support support) {
 
-    	appInstance.setSupport(null);
-    	appInstanceService.updateAppInstance(appInstance);
+    	support.removeInstance(appInstance);
+    	supportService.updateSupport(support);
 
     	return "redirect:/instancedetail?id="+appInstance.getId();
     }

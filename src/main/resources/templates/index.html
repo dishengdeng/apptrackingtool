@@ -107,9 +107,15 @@
 										</td>
 										<td th:text="${app.AppVersion}">
 										</td>										
-										<td>
-											<a th:if="${app.support!=null}"  th:href="@{'/supportdetail?support='+${app.support.id}}" th:text="${app.support.supportName}"></a>
-										</td>
+										<td style="padding:2px">
+											<ul th:if="${app.supports.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="support: ${app.supports}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<a th:href="@{'/supportdetail?support='+${support.id}}"><span th:text="${support.supportName}"></span></a>
+													</div>
+												</li>
+											</ul>											
+										</td>										
 										<td>
 											<a th:if="${app.manufacturer!=null}" th:href="@{'/companydetail?company='+${app.manufacturer.id}}" 
 											th:text="${app.manufacturer.manufacturer}">

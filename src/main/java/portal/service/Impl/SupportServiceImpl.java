@@ -4,11 +4,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import portal.entity.AppInstance;
-import portal.entity.Application;
+
+
 import portal.entity.Support;
 import portal.models.SupportModel;
-import portal.repository.AppRepository;
+
 import portal.repository.SupportRepository;
 import portal.service.SupportService;
 
@@ -18,8 +18,6 @@ public class SupportServiceImpl implements SupportService{
 	@Autowired
 	private SupportRepository supportRepository;
 	
-	@Autowired
-	private AppRepository appRepository;	
 	@Override
 	public Support addSupport(Support support) {
 
@@ -62,31 +60,18 @@ public class SupportServiceImpl implements SupportService{
 		return supportRepository.saveAndFlush(support);
 	}
 
-	@Override
-	public void updateAppInstanceSupport(List<AppInstance> appInstances, Support support) {
-		
-		supportRepository.removeAllSupport(support);	
-		if(appInstances.size()>0)
-		{
-			for(AppInstance appInstance:appInstances)
-			{
-				supportRepository.updateAppIstanceSupport(appInstance.getId(), support);
-			}
-		}
 
-		
-	}
 
-	@Override
-	public void updateApplicationSupport(List<Application> applications, Support support) {
-		if(applications.size()>0)
-		{
-			applications.forEach(app->{
-				app.setSupport(support);
-				appRepository.saveAndFlush(app);
-			});
-		}
-		
-	}
+//	@Override
+//	public void updateApplicationSupport(List<Application> applications, Support support) {
+//		if(applications.size()>0)
+//		{
+//			applications.forEach(app->{
+//				app.setSupport(support);
+//				appRepository.saveAndFlush(app);
+//			});
+//		}
+//		
+//	}
 
 }
