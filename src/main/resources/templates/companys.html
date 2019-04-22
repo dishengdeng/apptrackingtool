@@ -87,9 +87,9 @@
 										</td>
 										<td style="padding:2px">
 											<ul th:if="${company.applications.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="application: ${company.applications}">
+												<li th:each="app: ${company.applications}">
 													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
-													<a th:href="@{'/applicationdetail?app='+${application.id}}"><span th:text="${application.AppName}"></span></a>
+													<a th:href="@{'/applicationdetail?app='+${app.id}}"><span th:text="${app.AppName}"></span></a>
 													</div>
 												</li>
 											</ul>											
