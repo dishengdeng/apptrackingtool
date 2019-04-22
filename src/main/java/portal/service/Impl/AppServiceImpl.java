@@ -74,12 +74,7 @@ public class AppServiceImpl implements AppService{
 		return appRepository.findOne(id);
 	}
 
-	@Override
-	public List<Application> getUnassignedApps() {
-		List<Application> apps=appRepository.findAll();
-		apps.removeIf(obj->!ObjectUtils.isEmpty(obj.getManufacturer()));
-		return apps;
-	}
+
 
 	@Override
 	public void removFiles(String upload_foler, Application application) {

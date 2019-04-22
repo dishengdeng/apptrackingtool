@@ -116,11 +116,15 @@
 												</li>
 											</ul>											
 										</td>										
-										<td>
-											<a th:if="${app.manufacturer!=null}" th:href="@{'/companydetail?company='+${app.manufacturer.id}}" 
-											th:text="${app.manufacturer.manufacturer}">
-											</a>
-										</td>									
+										<td style="padding:2px">
+											<ul th:if="${app.manufacturers.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="company: ${app.manufacturers}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<a th:href="@{'/companydetail?company='+${company.id}}"><span th:text="${company.manufacturer}"></span></a>
+													</div>
+												</li>
+											</ul>											
+										</td>										
 										<td>
 											<a th:if="${app.department!=null}" th:href="@{'/departmentdetail?id='+${app.department.id}}" 
 											th:text="${app.department.departmentName}">

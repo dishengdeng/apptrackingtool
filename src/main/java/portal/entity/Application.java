@@ -19,7 +19,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -109,11 +108,8 @@ public class Application implements Comparable<Application>{
         )
     private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
-    @OneToOne(
-            mappedBy = "application", 
-            cascade = CascadeType.ALL
-        )
-    private Company manufacturer;
+	@ManyToMany(mappedBy = "applications")
+    private Set<Company> manufacturers = new HashSet<Company>();
     
     @OneToMany(
             mappedBy = "application", 
@@ -334,14 +330,27 @@ public class Application implements Comparable<Application>{
 		});
 	}
 
-	public Company getManufacturer() {
-		return manufacturer;
-	}
-
-	public void setManufacturer(Company manufacturer) {
-		this.manufacturer = manufacturer;
+	public void AddManufacturer(Company company)
+	{
+		this.manufacturers.add(company);
 	}
 	
+	public void removeManufacturer(Company company)
+	{
+		this.manufacturers.remove(company);
+	}
+	
+	public Set<Company> getManufacturers() {
+		return manufacturers;
+	}
+
+	public void setManufacturers(Set<Company> manufacturers) {
+		this.manufacturers.addAll(manufacturers);
+		manufacturers.forEach(obj->{
+			obj.addApplication(this);
+		});
+	}
+
 	public Set<Project> getProjects() {
 		return projects;
 	}
@@ -355,8 +364,10 @@ public class Application implements Comparable<Application>{
 
 	public void removeAllDependence()
 	{
-		if(!ObjectUtils.isEmpty(this.manufacturer)) this.manufacturer.setApplication(null);
-		this.setManufacturer(null);
+		this.manufacturers.forEach(obj->{
+			obj.removeApplication(this);
+		});
+		this.manufacturers=null;
 		
 		this.supports.forEach(support->{
 			support.removeApplication(this);

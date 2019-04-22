@@ -239,23 +239,20 @@ public class HomeController {
     
     //------Manufacturer---------------    
     @GetMapping("/deleteApplicationCompany")
-    public String deleteApplicationCompany(@RequestParam(name="id", required=false) String id) {
-    	Company company = companyService.getById(Long.valueOf(id));
-    	Long applicationId = company.getApplication().getId();
-    	company.setApplication(null);
+    public String deleteApplicationCompany(@ModelAttribute("company") Company company,@ModelAttribute("application") Application application) {
+    	company.removeApplication(application);
     	companyService.updateCompany(company);
  
-    	return "redirect:/applicationdetail?app="+applicationId;
+    	return "redirect:/applicationdetail?app="+application.getId();
 
     }
     
     @PostMapping("/addApplicationCompany")
-    public String addOrupdateApplicationCompany(@ModelAttribute("company") Company company) {
+    public String addOrupdateApplicationCompany(@ModelAttribute("application") Application application) {
 
 
-    	companyService.removeApplication(company.getApplication());//remove application from previous company
-    	companyService.updateApplication(company.getApplication(), company.getId());//assign it to a new company
-        return "redirect:/applicationdetail?app="+company.getApplication().getId();
+    	appService.updateApp(application);
+        return "redirect:/applicationdetail?app="+application.getId();
     }
   //-----------------------   
     //------Support---------------    
@@ -334,7 +331,7 @@ public class HomeController {
         application.getSupports().forEach(support->{
         	application.addSupport(support);
         });        
-        application.setManufacturer(appEntity.getManufacturer());
+        application.setManufacturers(appEntity.getManufacturers());
         application.setDepartment(appEntity.getDepartment());
         application.setFiles(appEntity.getFiles());
  
@@ -363,8 +360,8 @@ public class HomeController {
     	model.addAttribute("sites",siteService.getAll());
     	
     	//--Manufacturer-----
-    	model.addAttribute("company",appEntity.getManufacturer());
-    	model.addAttribute("companys",companyService.findApplicationByNotAssigned(appEntity));
+    	model.addAttribute("companies",appEntity.getManufacturers());
+    	model.addAttribute("companys",companyService.findAllManufacturer());
     	
     	//--Support-----
     	model.addAttribute("appsupports",appEntity.getSupports());

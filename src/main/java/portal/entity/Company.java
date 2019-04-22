@@ -11,16 +11,17 @@ import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
 import javax.persistence.Table;
 
-import org.springframework.util.ObjectUtils;
+
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -87,16 +88,19 @@ public class Company {
     @JsonView(Views.Public.class)
 	private String manufacturer;
     
-    @OneToMany(
-            mappedBy = "company", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true
-        )
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "instancecompany",
+        joinColumns = @JoinColumn(name = "company_id"),
+        inverseJoinColumns = @JoinColumn(name = "instance_id")
+    )	
     private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "application_id")
-    private Application application;
+	@ManyToMany(cascade = CascadeType.ALL)
+	@JoinTable(name = "appcompany",
+        joinColumns = @JoinColumn(name = "company_id"),
+        inverseJoinColumns = @JoinColumn(name = "app_id")
+    )	
+    private Set<Application> applications = new HashSet<Application>();
     
 	public Long getId() {
 		return id;
@@ -162,12 +166,22 @@ public class Company {
 		this.manufacturer = manufacturer;
 	}
 
-	public Application getApplication() {
-		return application;
+
+	public void addApplication(Application application)
+	{
+		this.applications.add(application);
+	}
+	
+	public void removeApplication(Application application)
+	{
+		this.applications.remove(application);
+	}
+	public Set<Application> getApplications() {
+		return applications;
 	}
 
-	public void setApplication(Application application) {
-		this.application = application;
+	public void setApplications(Set<Application> applications) {
+		this.applications.addAll(applications);
 	}
 
 	public boolean isVendor()
@@ -225,6 +239,9 @@ public class Company {
 
 	public void setAppInstances(Set<AppInstance> appInstances) {
 		this.appInstances.addAll(appInstances);
+		appInstances.forEach(obj->{
+			obj.addCompany(this);
+		});
 	}
 	
 	public void addAppInstance(AppInstance appInstance)
@@ -239,11 +256,13 @@ public class Company {
 
 	public void removeAllDependence()
 	{
-		if(!ObjectUtils.isEmpty(this.application)) this.application.setManufacturer(null);
-		this.application=null;
+		this.applications.forEach(obj->{
+			obj.removeManufacturer(this);
+		});
+		this.applications=null;
 		
 		this.appInstances.forEach(obj->{
-			obj.setCompany(null);
+			obj.removeCompany(this);
 		});
 		this.appInstances=null;
 	}

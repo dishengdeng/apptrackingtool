@@ -85,8 +85,14 @@
 											style="cursor:pointer">
 											</a>
 										</td>
-										<td>
-											<a th:if="${company.application!=null}"  th:text="${company.application.AppName}" th:href="@{'/applicationdetail?app='+${company.application.id}}"></a>
+										<td style="padding:2px">
+											<ul th:if="${company.applications.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="application: ${company.applications}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<a th:href="@{'/applicationdetail?app='+${application.id}}"><span th:text="${application.AppName}"></span></a>
+													</div>
+												</li>
+											</ul>											
 										</td>										
                                         <td th:text="${company.address}"></td>
                                         <td th:text="${company.phone}"></td>

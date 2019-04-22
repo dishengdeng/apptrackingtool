@@ -1,7 +1,8 @@
 package portal.controllers;
 
 
-import java.util.ArrayList;
+
+
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Company;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
@@ -73,13 +75,13 @@ public class CompanyController {
     	model.addAttribute("company", company);
     	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
     	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
-    	model.addAttribute("applications", appService.getUnassignedApps());
+
         return "companydetail";
     }
     //--application--    
     @GetMapping("/deleteCompanyApplication")
-    public String deleteCompanyApplication(@ModelAttribute("company") Company company) {
-    	company.setApplication(null);
+    public String deleteCompanyApplication(@ModelAttribute("company") Company company,@ModelAttribute("application") Application application) {
+    	company.removeApplication(application);
     	companyService.updateCompany(company);
 
     	return "redirect:/companydetail?company="+company.getId();
@@ -95,8 +97,8 @@ public class CompanyController {
     //--Instance--    
     @GetMapping("/deleteCompanyInstance")
     public String deleteCompanyInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("company") Company company,ModelMap model) {
-    	appInstance.setCompany(null);
-    	appInstanceService.updateAppInstance(appInstance);
+    	company.removeAppInstance(appInstance);
+    	companyService.updateCompany(company);
 
     	return "redirect:/companydetail?company="+company.getId();
     }    
@@ -104,7 +106,7 @@ public class CompanyController {
     @PostMapping("/addCompanyInstance")
     public String addCompanyInstance(ModelMap model,@ModelAttribute("company") Company company) {
 
-    	companyService.updateAppIstanceCompany(new ArrayList<>(company.getAppInstances()), company);
+    	companyService.updateCompany(company);
 
     	return "redirect:/companydetail?company="+company.getId();
     }    

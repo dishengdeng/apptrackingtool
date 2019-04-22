@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import portal.entity.AppInstance;
-import portal.entity.Application;
+
+
 import portal.entity.Company;
 import portal.models.CompanyModel;
 import portal.repository.CompanyRepository;
@@ -78,55 +78,10 @@ public class CompanyServiceImpl implements CompanyService{
 	}
 
 
-	@Override
-	public List<Company> findApplicationByNotAssigned(Application application) {
-		List<Company> companys = companyRepository.findAll();
-		companys.removeIf(obj->(obj != null && obj.isVendor()) || (application.equals(obj.getApplication()) || obj.getApplication()!=null));
-	
-		
-		return companys;
-	}
-
-	@Override
-	public void removeApplication(Application application) {
-		companyRepository.removeApplication(application);
-		
-	}
-
-	@Override
-	public void updateApplication(Application application, Long id) {
-		companyRepository.updateApplication(application, id);
-		
-	}
-
-	@Override
-	public Company findByApplication(Application application) {
-
-		return companyRepository.findByApplication(application);
-	}
-
-	@Override
-	public void updateAppIstanceCompany(List<AppInstance> appInstances, Company company) {
-		
-		companyRepository.removeAllCompany(company);
-		if(appInstances.size()>0)
-		{
-			for(AppInstance appInstance:appInstances)
-			{
-				companyRepository.updateAppIstanceCompany(appInstance.getId(), company);
-			}
-		}
 
 
 
-		
-	}
 
-	@Override
-	public void removeAllCompany(Company company) {
-		
-		companyRepository.removeAllCompany(company);
-	}
 
 	@Override
 	public List<Company> findAllVendor() {
@@ -135,5 +90,14 @@ public class CompanyServiceImpl implements CompanyService{
 		companys.removeIf(obj->(!obj.isVendor()));
 		return companys;
 	}
+
+	@Override
+	public List<Company> findAllManufacturer() {
+		List<Company> companys = companyRepository.findAll();
+		companys.removeIf(obj->(obj.isVendor()));
+		return companys;
+	}
+
+
 
 }

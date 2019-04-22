@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.AppInstance;
+import portal.entity.Company;
 import portal.entity.Desktop;
 import portal.entity.File;
 import portal.entity.License;
@@ -151,7 +152,7 @@ public class AppInstanceController {
     	model.addAttribute("servers",serverService.findByNotAssigned(appInstance));  
     	
     	//--Vendor-----
-    	model.addAttribute("company",appInstance.getCompany());
+    	model.addAttribute("companies",appInstance.getCompanys());
     	model.addAttribute("companys",companyService.getAll());     	
 
     	//--Department-----
@@ -290,11 +291,10 @@ public class AppInstanceController {
     
     //------Vendor---------------    
     @GetMapping("/deleteInstanceCompany")
-    public String deleteInstanceCompany(@ModelAttribute("instance") AppInstance appInstance) {
+    public String deleteInstanceCompany(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("company") Company company) {
 
-    	appInstance.setCompany(null);
-    	appInstanceService.updateAppInstance(appInstance);
-
+    	company.removeAppInstance(appInstance);
+    	companyService.updateCompany(company);
     	return "redirect:/instancedetail?id="+appInstance.getId();
     }
     

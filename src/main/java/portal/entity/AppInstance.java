@@ -79,9 +79,8 @@ public class AppInstance implements Comparable<AppInstance>{
     @JoinColumn(name = "contract_id",referencedColumnName="id")
     private Contract contract;
     
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @ManyToMany(mappedBy = "appInstances")
+    private Set<Company> companys = new HashSet<Company>();
     
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "sla_id")
@@ -313,12 +312,25 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.desktop = desktop;
 	}
 
-	public Company getCompany() {
-		return company;
+	public void addCompany(Company company)
+	{
+		this.companys.add(company);
+	}
+	
+	public void removeCompany(Company company)
+	{
+		this.companys.remove(company);
 	}
 
-	public void setCompany(Company company) {
-		this.company = company;
+	public Set<Company> getCompanys() {
+		return companys;
+	}
+
+	public void setCompanys(Set<Company> companys) {
+		this.companys.addAll(companys);
+		companys.forEach(obj->{
+			obj.addAppInstance(this);
+		});
 	}
 
 	public SLA getSla() {
@@ -377,8 +389,10 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.setContract(null);		
 		
 
-		if(!ObjectUtils.isEmpty(this.company)) this.company.getAppInstances().removeIf(obj->obj.equals(this));
-		this.setCompany(null);
+		this.companys.forEach(obj->{
+			obj.removeAppInstance(this);
+		});
+		this.companys=null;
 		
 		if(!ObjectUtils.isEmpty(this.sla)) this.sla.getAppInstances().removeIf(obj->obj.equals(this));
 		this.setSla(null);

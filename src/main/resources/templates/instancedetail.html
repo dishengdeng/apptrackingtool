@@ -346,27 +346,35 @@
 								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addcompany'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-								th:if="${company!=null}" th:href="${#strings.concat('/deleteInstanceCompany?instance=',appinstance.id)}"
-								data-title="Are you sure to delete?" 
-								data-toggle="confirmation" 
-								data-singleton="true" 
-								data-popout="true"								
-								>
-									<i class="fa fa-trash-o fa-lg"></i>
-								</a>
                             </div>
                         </div>
                         <!-- /.panel-heading -->
-                        <div th:if="${company!=null}" class="panel-body">
+                        <div th:if="${companies.size()>0}" class="panel-body">
 							<table class="table">
+							  <thead>
+								<th>Vendor</th>
+								<th>Phone</th>
+								<th>Email</th>
+							  </thead>
 							  <tbody>
-								<tr><th scope="row" style="width:25%">Vendor:</th><td>
-									<a th:href="@{'/companydetail?company='+${company.id}}" th:text="${company.companyName}"></a>
-								</td></tr>
-								<tr><th scope="row" style="width:25%">Phone:</th><td th:text="${company.phone}"></td></tr>
-								<tr><th scope="row" style="width:25%">Email:</th><td th:text="${company.email}"></td></tr>
-							
+								<tr th:each="company: ${companies}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+										th:if="${company!=null}" th:href="@{'/deleteInstanceCompany?instance='+${appinstance.id}+'&company='+${company.id}}"
+										style="margin-right:10px;text-decoration: none"
+										data-title="Are you sure to delete?" 
+										data-toggle="confirmation" 
+										data-singleton="true" 
+										data-popout="true"							
+										>
+											<i class="fa fa-trash-o fa-lg"></i>
+										</a>
+										<a th:href="@{'/companydetail?company='+${company.id}}" th:text="${company.companyName}"></a>
+									</td>
+									<td th:text="${company.phone}"></td>
+									<td th:text="${company.email}"></td>
+
+								</tr>
 							  </tbody>
 							</table>
                         </div>
@@ -862,13 +870,10 @@
 								<div class="form-group">
 									<label for="companySelect">Vendor:</label>
 									<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
-									<select name="company" class="form-control" id="companySelect">
-									  <option th:selected="${company==null}"></option>
+									<select name="companys" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="companySelect">
 									  <option th:each="companyEntity : ${companys}" 
 									  th:text="${companyEntity.companyName}" 
-									  th:attr="value = ${companyEntity.id}" th:selected="${company==null} ? false:${company.getId()==companyEntity.id}">
-									  
-									  </option>
+									  th:attr="value = ${companyEntity.id}">
 									</select>
 								</div>
 							  <input class="btn btn-primary" type="submit" value="Submit" />
@@ -1090,6 +1095,15 @@
 				buttonWidth: 300, 
 				enableFiltering: true,
 				nonSelectedText: 'Select Support',
+				enableCaseInsensitiveFiltering:true
+			  });	
+
+			  $('#companySelect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Vendor',
 				enableCaseInsensitiveFiltering:true
 			  });			  
 			  
