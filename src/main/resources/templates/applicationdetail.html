@@ -342,6 +342,53 @@
 				<div class="col-lg-4">
 				</div>
 			</div>
+			<!--Contract Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-pencil-square-o"></i> Contracts
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addappcontract'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${appcontracts.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Contract</th>
+								<th>Description</th>
+								<th>Expiration Date</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="appcontract: ${appcontracts}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteApplicationContract?contract='+${appcontract.id}+'&application='+${app.id}}" 
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/contractdetail?contract='+${appcontract.id}}" th:text="${appcontract.contractName}"></a>
+									</td>
+									<td th:text="${appcontract.description}"></td>
+									<td th:text="${appcontract.expireDate}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			
 			<!--support Detail-->
 			<div class="row">
 				<div class="col-lg-8">
@@ -687,6 +734,34 @@
 
 					</div>	
 				</div>
+				<!--Contract model-->
+				<div class="modal fade" th:id="addappcontract" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Contract - '+${app.AppName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form th:action="@{/addApplicationContract}" method="post">
+								<div class="form-group">
+									<label for="contractselect">Contract:</label>
+									<input type="hidden" class="form-control" th:name="app" th:value="${app.id}"></input>
+									<select name="contracts" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="contractselect">
+									  <option th:each="contractEntity : ${contracts}" 
+									  th:text="${contractEntity.contractName}" 
+									  th:attr="value = ${contractEntity.id}">
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>				
 				<!--support model-->
 				<div class="modal fade" th:id="addappsupport" role="dialog">
 					<div class="modal-dialog">
@@ -820,6 +895,14 @@
 				enableFiltering: true,
 				nonSelectedText: 'Select Support'
 			  });
+			  
+			  $('#contractselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Contract'
+			  });			  
 			  
 			  $('#siteselect').multiselect(
 			  {

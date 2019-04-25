@@ -53,6 +53,7 @@
 										<th>Projects</th>
 										<th>Status</th>
 										<th>Version</th>
+										<th>Contract</th>
 										<th>Support</th>
 										<th>Manufacturer</th>
 										<th>Department</th>
@@ -106,6 +107,15 @@
 										<td th:text="${app.status}">
 										</td>
 										<td th:text="${app.AppVersion}">
+										</td>
+										<td style="padding:2px">
+											<ul th:if="${app.contracts.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="contract: ${app.contracts}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<a th:href="@{'/contractdetail?contract='+${contract.id}}"><span th:text="${contract.contractName}"></span></a>
+													</div>
+												</li>
+											</ul>											
 										</td>										
 										<td style="padding:2px">
 											<ul th:if="${app.supports.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">

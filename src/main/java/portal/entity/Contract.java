@@ -19,6 +19,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -78,12 +81,19 @@ public class Contract {
     @JsonView(Views.Public.class)
 	private Date approvaldate;
     
-    @OneToMany(
-            mappedBy = "contract", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true
-        )
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "instancecontract",
+        joinColumns = @JoinColumn(name = "contract_id"),
+        inverseJoinColumns = @JoinColumn(name = "instance_id")
+    )	
     private Set<AppInstance> appInstances = new HashSet<AppInstance>();
+    
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "appcontract",
+        joinColumns = @JoinColumn(name = "contract_id"),
+        inverseJoinColumns = @JoinColumn(name = "application_id")
+    )
+    private Set<Application> applications = new HashSet<Application>();    
     
     @OneToMany(
             mappedBy = "contract", 
@@ -167,8 +177,37 @@ public class Contract {
 		this.approvaldate = Convertor.JavaDate(approvaldate);
 	}
 
+	public void removeApplication(Application application)
+	{
+		this.applications.removeIf(obj->obj.equals(application));
+	}
 
+	public void addApplication(Application application)
+	{
+		this.applications.add(application);
+	}
+	
+	public Set<Application> getApplications() {
+		return applications;
+	}
 
+	public void setApplications(Set<Application> applications) {
+		this.applications.addAll(applications);
+		applications.forEach(obj->{
+			obj.addContract(this);
+		});
+	}
+
+	public void addInstance(AppInstance appInstance)
+	{
+		this.appInstances.add(appInstance);
+	}
+	
+	public void removeInstance(AppInstance appInstance)
+	{
+		this.appInstances.remove(appInstance);
+	}
+	
 	public Set<AppInstance> getAppInstances() {
 		return appInstances;
 	}
@@ -198,15 +237,18 @@ public class Contract {
 		this.files.addAll(files);
 	}
 
-	public String getFileNameWithComma()
+	public void removeAllDependence()
 	{
-		List<String> fileName=new ArrayList<String>();
-		for(File file:this.files)
-		{
-			fileName.add(file.getAttachment());
-		}
+		this.appInstances.forEach(obj->{
+			obj.removeContract(this);
+		});
 		
-		return fileName.stream().collect(Collectors.joining(","));
+		this.appInstances=null;
+		
+		this.applications.forEach(obj->{
+			obj.removeContract(this);
+		});
+		this.applications=null;
 	}
 	
 	public Status getContractStatus()

@@ -71,10 +71,7 @@
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
 											<a th:href="@{'/instancedetail?id='+${instance.id}}" th:text="${instance.appInstanceName}"></a>
-											<p th:if="${instance.contract!=null}">
-											<span class="badge badge-warning" style="background:#bbb61f;margin-top:5px" th:if="${instance.contract.getContractStatus().toString()=='YELLOW'}" th:text="@{'Contract will be expired at '+${#dates.format(instance.contract.expireDate,'MMM-dd-yyyy')}}"></span>
-											<span class="badge badge-danger" style="background:red;margin-top:5px" th:if="${instance.contract.getContractStatus().toString()=='RED'}" th:text="@{'Contract expired.'}"></span>
-											</p>
+
 										</td>
 										<td>
 											<a data-toggle="modal"  
@@ -126,12 +123,15 @@
 											th:text="${instance.department.departmentName}">
 											</a>
 										</td>
-
-										<td>
-											<a th:if="${instance.contract!=null}" th:href="@{'/contractdetail?contract='+${instance.contract.id}}" 
-											th:text="${instance.contract.contractName}">
-											</a>
-										</td>
+										<td style="padding:2px">
+											<ul th:if="${instance.contracts.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="contract: ${instance.contracts}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<a th:href="@{'/contractdetail?contract='+${contract.id}}"><span th:text="${contract.contractName}"></span></a>
+													</div>
+												</li>
+											</ul>											
+										</td>										
 										<td>
 											<a th:if="${instance.license!=null}" th:href="@{'/licensedetail?license='+${instance.license.id}}" 
 											th:text="${instance.license.licenseNumber}">

@@ -75,9 +75,8 @@ public class AppInstance implements Comparable<AppInstance>{
     @JoinColumn(name = "application_id",referencedColumnName="id")
     private Application application;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "contract_id",referencedColumnName="id")
-    private Contract contract;
+    @ManyToMany(mappedBy = "appInstances")
+    private Set<Contract> contracts = new HashSet<Contract>();
     
     @ManyToMany(mappedBy = "appInstances")
     private Set<Company> companys = new HashSet<Company>();
@@ -194,14 +193,27 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.servers.addAll(servers);
 	}
 
-	public Contract getContract() {
-		return contract;
-	}
-
-	public void setContract(Contract contract) {
-		this.contract = contract;
+	public void addContract(Contract contract)
+	{
+		this.contracts.add(contract);
 	}
 	
+	public void removeContract(Contract contract)
+	{
+		this.contracts.remove(contract);
+	}
+	
+	public Set<Contract> getContracts() {
+		return contracts;
+	}
+
+	public void setContracts(Set<Contract> contracts) {
+		this.contracts.addAll(contracts);
+		contracts.forEach(obj->{
+			obj.addInstance(this);
+		});
+	}
+
 	public Set<Site> getSites() {
 		return sites;
 	}
@@ -385,10 +397,11 @@ public class AppInstance implements Comparable<AppInstance>{
 		});
 		this.projects=null;
 		
-		if(!ObjectUtils.isEmpty(this.contract)) this.contract.getAppInstances().removeIf(obj->obj.equals(this));
-		this.setContract(null);		
+		this.contracts.forEach(obj->{
+			obj.removeInstance(this);
+		});
+		this.contracts=null;
 		
-
 		this.companys.forEach(obj->{
 			obj.removeAppInstance(this);
 		});

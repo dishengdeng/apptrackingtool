@@ -2,7 +2,7 @@ package portal.controllers;
 
 
 
-import java.util.ArrayList;
+
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.AppInstance;
+import portal.entity.Application;
 import portal.entity.Contract;
 import portal.entity.File;
 import portal.service.AppInstanceService;
@@ -78,7 +79,7 @@ public class ContractController {
     public String deleteContract(@ModelAttribute("contract") Contract contract) {
 
     	
-    	contractService.removeAllContract(contract);
+    	contract.removeAllDependence();
     	contractService.removFiles(UPLOADED_FOLDER, contract);
     	contractService.delete(contract);
     	return "redirect:/contracts";
@@ -92,11 +93,29 @@ public class ContractController {
         return "contractdetail";
     } 
     
+    //------Contract---------------    
+    @GetMapping("/deleteContractApplication")
+    public String deleteApplicationContract(@ModelAttribute("app") Application application,@ModelAttribute("contract") Contract contract) {
+
+    	contract.removeApplication(application);
+    	contractService.updateContract(contract);
+
+    	return "redirect:/contractdetail?contract="+contract.getId();
+    }
+    
+    @PostMapping("/addContractApplication")
+    public String addContractApplication(@ModelAttribute("contract") Contract contract) {
+
+
+    	contractService.updateContract(contract);
+    	return "redirect:/contractdetail?contract="+contract.getId();
+    }
+    
     //--Instance--    
     @GetMapping("/deleteContractInstance")
     public String deleteSupportInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("contract") Contract contract,ModelMap model) {
-    	appInstance.setContract(null);
-    	appInstanceService.updateAppInstance(appInstance);
+    	contract.removeInstance(appInstance);
+    	contractService.updateContract(contract);
 
     	return "redirect:/contractdetail?contract="+contract.getId();
     }    
@@ -104,7 +123,7 @@ public class ContractController {
     @PostMapping("/addContractInstance")
     public String addContractInstance(ModelMap model,@ModelAttribute("contract") Contract contract) {
 
-    	contractService.updateAppInstanceContract(new ArrayList<>(contract.getAppInstances()), contract);
+    	contractService.updateContract(contract);
 
     	return "redirect:/contractdetail?contract="+contract.getId();
     }

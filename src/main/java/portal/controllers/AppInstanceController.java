@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.AppInstance;
 import portal.entity.Company;
+import portal.entity.Contract;
 import portal.entity.Desktop;
 import portal.entity.File;
 import portal.entity.License;
@@ -136,7 +137,7 @@ public class AppInstanceController {
     	model.addAttribute("slas",slaService.getAll());
     	
     	//--Contract-----
-    	model.addAttribute("contract",appInstance.getContract());
+    	model.addAttribute("appcontracts",appInstance.getContracts());
     	model.addAttribute("contracts",contractService.getAll());
     	
     	//--License-----
@@ -199,10 +200,10 @@ public class AppInstanceController {
     
   //------Contract---------------    
     @GetMapping("/deleteInstanceContract")
-    public String deleteInstanceContract(@ModelAttribute("instance") AppInstance appinstance) {
+    public String deleteInstanceContract(@ModelAttribute("instance") AppInstance appinstance,@ModelAttribute("contract") Contract contract) {
 
-    	appinstance.setContract(null);
-    	appInstanceService.updateAppInstance(appinstance);
+    	contract.removeInstance(appinstance);
+    	contractService.updateContract(contract);
 
     	return "redirect:/instancedetail?id="+appinstance.getId();
     }

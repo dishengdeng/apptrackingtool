@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Company;
+import portal.entity.Contract;
 import portal.entity.File;
 import portal.entity.Project;
 import portal.entity.Site;
@@ -30,6 +31,7 @@ import portal.entity.Zone;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.CompanyService;
+import portal.service.ContractService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.MessageSourceService;
@@ -59,6 +61,9 @@ public class HomeController {
 	
 	@Autowired
 	private SupportService supportService;
+	
+	@Autowired
+	private ContractService contractService;
 	
 	@Autowired
 	private ProjectService projectService;
@@ -254,7 +259,25 @@ public class HomeController {
     	appService.updateApp(application);
         return "redirect:/applicationdetail?app="+application.getId();
     }
-  //-----------------------   
+  //----------------------- 
+    //------Contract---------------    
+    @GetMapping("/deleteApplicationContract")
+    public String deleteApplicationContract(@ModelAttribute("application") Application application,@ModelAttribute("contract") Contract contract) {
+
+    	contract.removeApplication(application);
+    	contractService.updateContract(contract);
+
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }
+    
+    @PostMapping("/addApplicationContract")
+    public String addApplicationContract(@ModelAttribute("app") Application application) {
+
+
+    	appService.updateApp(application);
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }    
+    
     //------Support---------------    
     @GetMapping("/deleteApplicationSupport")
     public String deleteApplicationSupport(@ModelAttribute("application") Application application,@ModelAttribute("support") Support support) {
@@ -362,6 +385,10 @@ public class HomeController {
     	//--Manufacturer-----
     	model.addAttribute("companies",appEntity.getManufacturers());
     	model.addAttribute("companys",companyService.findAllManufacturer());
+    	
+    	//--Contract-----
+    	model.addAttribute("appcontracts",appEntity.getContracts());
+    	model.addAttribute("contracts",contractService.getAll());    	
     	
     	//--Support-----
     	model.addAttribute("appsupports",appEntity.getSupports());

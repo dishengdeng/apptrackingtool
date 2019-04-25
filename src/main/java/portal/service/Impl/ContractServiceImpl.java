@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import portal.entity.AppInstance;
+
 import portal.entity.Contract;
 import portal.entity.File;
 import portal.models.ContractModel;
@@ -80,25 +80,7 @@ public class ContractServiceImpl implements ContractService{
 		return contractRepository.saveAndFlush(contract);
 	}
 
-	@Override
-	public void updateAppInstanceContract(List<AppInstance> appInstances, Contract contract) {
-		contractRepository.removeAllContract(contract);
-		if(appInstances.size()>0)
-		{
-			for(AppInstance appInstance:appInstances)
-			{
-				contractRepository.updateAppIstanceContract(appInstance.getId(), contract);
-			}
-		}
 
-
-	}
-
-	@Override
-	public void removeAllContract(Contract contract) {
-		contractRepository.removeAllContract(contract);
-		
-	}
 
 	@Override
 	public void removFiles(String upload_foler, Contract contract) {

@@ -81,37 +81,44 @@
 								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addContract'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-									th:if="${contract!=null}" th:href="${#strings.concat('/deleteInstanceContract?instance=',appinstance.id)}"
-									data-title="Are you sure to delete?" 
-									data-toggle="confirmation" 
-									data-singleton="true" 
-									data-popout="true"
-								>
-									<i class="fa fa-trash-o fa-lg"></i>
-								</a>
+
                             </div>
                         </div>
                         <!-- /.panel-heading -->
-                        <div th:if="${contract!=null}" class="panel-body">
+                        <div th:if="${appcontracts.size()>0}" class="panel-body">
 							<table class="table">
+							  <thead>
+								<th>Contract</th>
+								<th><span class="fa fa-paperclip fa-lg"></span></th>
+								<th>Expiration Date</th>
+								<th>Description</th>
+							  </thead>
 							  <tbody>
-								<tr><th scope="row" style="width:25%">Contract:</th><td>
-											<a th:href="@{'/contractdetail?contract='+${contract.id}}" th:text="${contract.contractName}">
-											</a>
-								</td></tr>
-								<tr><th scope="row" style="width:25%">Expired Date:</th><td th:text="${contract.expireDate}"></td></tr>
-								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${contract.description}"></td></tr>
-								<tr><th scope="row" style="width:25%">Attachment:</th>
-								<td>
-									<a data-toggle="modal"  
-										th:data-target="@{${#strings.concat('#',contract.id,'files')}}" 
-										th:if="${contract.files.size()>0}"
-										th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+								<tr th:each="contract: ${appcontracts}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											th:if="${appcontracts.size()>0}" th:href="@{'/deleteInstanceContract?instance='+${appinstance.id}+'&contract='+${contract.id}}"
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
 										>
-										<span class="fa fa-paperclip fa-lg"></span>
-									</a>
-								</td>
+											<i class="fa fa-trash-o fa-lg"></i>
+										</a>
+										<a th:href="@{'/contractdetail?contract='+${contract.id}}" th:text="${contract.contractName}"></a>
+									</td>
+									<td>
+										<a data-toggle="modal"  
+											th:data-target="@{${#strings.concat('#',contract.id,'files')}}" 
+											th:if="${contract.files.size()>0}"
+											th:style="${appinstance.status=='Active'} ? 'text-decoration: none;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
+											>
+											<span class="fa fa-paperclip fa-lg"></span>
+										</a>
+									</td>
+									<td th:text="${contract.expireDate}"></td>
+									<td th:text="${contract.description}"></td>
 								</tr>
 							  </tbody>
 							</table>
@@ -120,7 +127,8 @@
                     </div>
 				</div>
 				<div class="col-lg-4">
-					<div class="modal fade" th:if="${contract!=null && contract.files.size()>0}" th:id="${#strings.concat(contract.id,'files')}" role="dialog" >
+					<div th:if="${appcontracts.size()>0}" th:each="contract: ${appcontracts}">
+					<div class="modal fade" th:if="${contract.files.size()>0}" th:id="${#strings.concat(contract.id,'files')}" role="dialog" >
 						<!-- Modal content-->
 						<div class="modal-dialog">
 						  <div class="modal-content">
@@ -148,7 +156,8 @@
 							</div>
 						   </div>
 						 </div>
-					</div>					
+					</div>
+					</div>
 				
 				</div>
 			</div>
@@ -745,11 +754,10 @@
 								<div class="form-group">
 									<label for="contractSelect">Contract:</label>
 									<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
-									<select name="contract" class="form-control" id="contractSelect">
-									  <option th:selected="${contract==null}"></option>
-									  <option th:each="contractEntity : ${contracts}" 
-									  th:text="${contractEntity.contractName}" 
-									  th:attr="value = ${contractEntity.id}" th:selected="${contract==null} ? false:${contract.getId()==contractEntity.id}">
+									<select name="contracts" class="form-control" id="contractSelect" multiple>
+									 <option th:each="contractEntity : ${contracts}" 
+										th:text="${contractEntity.contractName}" 
+										th:attr="value = ${contractEntity.id}">
 									  
 									  </option>
 									</select>
@@ -1089,6 +1097,14 @@
 				nonSelectedText: 'Select Zone',
 				enableCaseInsensitiveFiltering:true
 			  });
+			  $('#contractSelect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Contract',
+				enableCaseInsensitiveFiltering:true
+			  });			  
 			  $('#supportSelect').multiselect(
 			  {
 				includeSelectAllOption: true,

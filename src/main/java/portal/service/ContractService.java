@@ -2,7 +2,7 @@ package portal.service;
 
 import java.util.List;
 
-import portal.entity.AppInstance;
+
 import portal.entity.Contract;
 import portal.models.ContractModel;
 
@@ -17,7 +17,6 @@ public interface ContractService {
     Contract getByName(String contractName);
     Contract getById(Long id);
     Contract updateContract(Contract contract);
-    void updateAppInstanceContract(List<AppInstance> appInstances,Contract contract);
-    void removeAllContract(Contract contract);
+
     void removFiles(String upload_foler,Contract contract);
 }
