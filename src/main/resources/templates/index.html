@@ -89,7 +89,7 @@
 										<td style="padding:2px">
 											<ul th:if="${app.appInstances.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="instance: ${app.appInstances}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/instancedetail?id='+${instance.id}}"><span th:text="${instance.appInstanceName}"></span></a>
 													</div>
 												</li>
@@ -98,7 +98,7 @@
 										<td style="padding:2px">
 											<ul th:if="${app.projects.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="project: ${app.projects}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/projectdetail?project='+${project.id}}"><span th:text="${project.projectname}"></span></a>
 													</div>
 												</li>
@@ -111,7 +111,7 @@
 										<td style="padding:2px">
 											<ul th:if="${app.contracts.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="contract: ${app.contracts}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/contractdetail?contract='+${contract.id}}"><span th:text="${contract.contractName}"></span></a>
 													</div>
 												</li>
@@ -120,7 +120,7 @@
 										<td style="padding:2px">
 											<ul th:if="${app.supports.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="support: ${app.supports}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/supportdetail?support='+${support.id}}"><span th:text="${support.supportName}"></span></a>
 													</div>
 												</li>
@@ -129,7 +129,7 @@
 										<td style="padding:2px">
 											<ul th:if="${app.manufacturers.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="company: ${app.manufacturers}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/companydetail?company='+${company.id}}"><span th:text="${company.manufacturer}"></span></a>
 													</div>
 												</li>
@@ -143,7 +143,7 @@
 										<td style="padding:2px">
 											<ul th:if="${app.zones.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="zone: ${app.zones}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/zonedetail?zone='+${zone.id}}"><span th:text="${zone.zoneName}"></span></a>
 													</div>
 												</li>
@@ -152,7 +152,7 @@
 										<td style="padding:2px">
 											<ul th:if="${app.sites.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="site: ${app.sites}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/sitedetail?site='+${site.id}}"><span th:text="${site.siteName}"></span></a>
 													</div>
 												</li>

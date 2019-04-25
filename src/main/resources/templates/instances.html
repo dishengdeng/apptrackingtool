@@ -94,7 +94,7 @@
 										<td style="padding:2px">
 											<ul th:if="${instance.projects.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="project: ${instance.projects}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/projectdetail?project='+${project.id}}"><span th:text="${project.projectname}"></span></a>
 													</div>
 												</li>
@@ -103,7 +103,7 @@
 										<td style="padding:2px">
 											<ul th:if="${instance.supports.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="support: ${instance.supports}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/supportdetail?support='+${support.id}}"><span th:text="${support.supportName}"></span></a>
 													</div>
 												</li>
@@ -112,7 +112,7 @@
 										<td style="padding:2px">
 											<ul th:if="${instance.companys.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="company: ${instance.companys}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/companydetail?company='+${company.id}}"><span th:text="${company.companyName}"></span></a>
 													</div>
 												</li>
@@ -126,7 +126,7 @@
 										<td style="padding:2px">
 											<ul th:if="${instance.contracts.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="contract: ${instance.contracts}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/contractdetail?contract='+${contract.id}}"><span th:text="${contract.contractName}"></span></a>
 													</div>
 												</li>
