@@ -259,7 +259,7 @@
 						<div class="modal-body">	
 							<form action="#" th:action="@{/addContractApplication}"  method="post">
 								<div class="form-group">
-									<label for="instanceselect">App Instance:</label>
+									<label for="instanceselect">Application:</label>
 									<input type="hidden" class="form-control" th:name="contract" th:value="${contract.id}"></input>
 									<select name="applications" class="form-control" id="applicationSelect" multiple>
 									  <option th:each="appEntity : ${appAssginedInstances}" 

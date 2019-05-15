@@ -24,6 +24,7 @@ import portal.entity.Application;
 import portal.entity.Company;
 import portal.entity.Contract;
 import portal.entity.File;
+import portal.entity.License;
 import portal.entity.Project;
 import portal.entity.Site;
 import portal.entity.Support;
@@ -34,6 +35,7 @@ import portal.service.CompanyService;
 import portal.service.ContractService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
+import portal.service.LicenseService;
 import portal.service.MessageSourceService;
 import portal.service.ProjectService;
 import portal.service.SiteService;
@@ -64,6 +66,9 @@ public class HomeController {
 	
 	@Autowired
 	private ContractService contractService;
+	
+	@Autowired
+	private LicenseService licenseService;
 	
 	@Autowired
 	private ProjectService projectService;
@@ -276,7 +281,25 @@ public class HomeController {
 
     	appService.updateApp(application);
     	return "redirect:/applicationdetail?app="+application.getId();
-    }    
+    } 
+    
+    //------License---------------    
+    @GetMapping("/deleteApplicationLicense")
+    public String deleteApplicationLicense(@ModelAttribute("application") Application application,@ModelAttribute("license") License license) {
+
+    	license.removeApplication(application);
+    	licenseService.updateLicense(license);
+
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }
+    
+    @PostMapping("/addApplicationLicense")
+    public String deleteApplicationLicense(@ModelAttribute("app") Application application) {
+
+
+    	appService.updateApp(application);
+    	return "redirect:/applicationdetail?app="+application.getId();
+    } 
     
     //------Support---------------    
     @GetMapping("/deleteApplicationSupport")
@@ -388,7 +411,11 @@ public class HomeController {
     	
     	//--Contract-----
     	model.addAttribute("appcontracts",appEntity.getContracts());
-    	model.addAttribute("contracts",contractService.getAll());    	
+    	model.addAttribute("contracts",contractService.getAll());    
+    	
+    	//--License-----
+    	model.addAttribute("applicenses",appEntity.getLicenses());
+    	model.addAttribute("licenses",licenseService.getAll()); 
     	
     	//--Support-----
     	model.addAttribute("appsupports",appEntity.getSupports());

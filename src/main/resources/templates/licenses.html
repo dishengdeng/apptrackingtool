@@ -46,6 +46,7 @@
                                 <thead>
                                     <tr>
                                         <th>License Number</th>
+										<th>Application</th>										
 										<th>App Instance</th>
 										<th>Registration Date</th>
 										<th>Expiry Date</th>
@@ -72,9 +73,24 @@
 											<a th:href="@{'/licensedetail?license='+${license.id}}" th:text="${license.licenseNumber}">
 											</a>
 										</td>
-										<td>
-											<a th:if="${license.appInstance!=null}"  th:text="${license.appInstance.appInstanceName}" th:href="@{'/instancedetail?id='+${license.appInstance.id}}"></a>
-										</td>									
+										<td style="padding:2px">
+											<ul th:if="${license.applications.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="app: ${license.applications}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<a th:href="@{'/applicationdetail?app='+${app.id}}"><span th:text="${app.AppName}"></span></a>
+													</div>
+												</li>
+											</ul>											
+										</td>										
+										<td style="padding:2px">
+											<ul th:if="${license.appInstances.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="instance: ${license.appInstances}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
+													<a th:href="@{'/instancedetail?id='+${instance.id}}"><span th:text="${instance.appInstanceName}"></span></a>
+													</div>
+												</li>
+											</ul>											
+										</td>										
 										<td th:text="${license.registrationDate}"></td>
 										<td th:text="${license.expireDate}"></td>
                                         <td th:text="${license.note}"></td>

@@ -92,11 +92,8 @@ public class AppInstance implements Comparable<AppInstance>{
         )
     private Set<Server> servers = new HashSet<Server>();
     
-    @OneToOne(
-            mappedBy = "appInstance", 
-            cascade = CascadeType.ALL
-        )
-    private License license;
+    @ManyToMany(mappedBy = "appInstances")
+    private Set<License> licenses = new HashSet<License>();
     
     @OneToOne(
             mappedBy = "appInstance", 
@@ -213,6 +210,27 @@ public class AppInstance implements Comparable<AppInstance>{
 			obj.addInstance(this);
 		});
 	}
+	
+	public void addLicense(License license)
+	{
+		this.licenses.add(license);
+	}
+	
+	public void removeLicense(License license)
+	{
+		this.licenses.remove(license);
+	}
+
+	public Set<License> getLicenses() {
+		return licenses;
+	}
+
+	public void setLicenses(Set<License> licenses) {
+		this.licenses.addAll(licenses);
+		licenses.forEach(obj->{
+			obj.addInstance(this);
+		});
+	}
 
 	public Set<Site> getSites() {
 		return sites;
@@ -308,13 +326,7 @@ public class AppInstance implements Comparable<AppInstance>{
 		return this.appInstanceName.compareToIgnoreCase(o.getAppInstanceName());
 	}
 
-	public License getLicense() {
-		return license;
-	}
 
-	public void setLicense(License license) {
-		this.license = license;
-	}
 
 	public Desktop getDesktop() {
 		return desktop;
@@ -410,8 +422,10 @@ public class AppInstance implements Comparable<AppInstance>{
 		if(!ObjectUtils.isEmpty(this.sla)) this.sla.getAppInstances().removeIf(obj->obj.equals(this));
 		this.setSla(null);
 		
-		if(!ObjectUtils.isEmpty(this.license)) this.license.setAppInstance(null);
-		this.setLicense(null);
+		this.licenses.forEach(obj->{
+			obj.removeInstance(this);
+		});
+		this.licenses=null;
 		
 		if(!ObjectUtils.isEmpty(this.desktop)) this.desktop.setAppInstance(null);
 		this.setDesktop(null);

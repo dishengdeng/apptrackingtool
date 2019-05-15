@@ -388,6 +388,53 @@
 				<div class="col-lg-4">
 				</div>
 			</div>
+
+			<!--License Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-leanpub"></i> Licenses
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addapplicense'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${applicenses.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>License</th>
+								<th>Expiration Date</th>
+								<th>Note</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="applicense: ${applicenses}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteApplicationLicense?license='+${applicense.id}+'&application='+${app.id}}" 
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/licensedetail?license='+${applicense.id}}" th:text="${applicense.licenseNumber}"></a>
+									</td>
+									<td th:text="${applicense.expireDate}"></td>
+									<td th:text="${applicense.note}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
 			
 			<!--support Detail-->
 			<div class="row">
@@ -761,7 +808,37 @@
 					  </div>
 
 					</div>	
-				</div>				
+				</div>	
+
+				<!--License model-->
+				<div class="modal fade" th:id="addapplicense" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add License - '+${app.AppName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form th:action="@{/addApplicationLicense}" method="post">
+								<div class="form-group">
+									<label for="contractselect">License:</label>
+									<input type="hidden" class="form-control" th:name="app" th:value="${app.id}"></input>
+									<select name="licenses" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="licenseselect">
+									  <option th:each="licenseEntity : ${licenses}" 
+									  th:text="${licenseEntity.licenseNumber}" 
+									  th:attr="value = ${licenseEntity.id}">
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+				
 				<!--support model-->
 				<div class="modal fade" th:id="addappsupport" role="dialog">
 					<div class="modal-dialog">
@@ -902,6 +979,14 @@
 				buttonWidth: 300, 
 				enableFiltering: true,
 				nonSelectedText: 'Select Contract'
+			  });
+
+			  $('#licenseselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select License'
 			  });			  
 			  
 			  $('#siteselect').multiselect(

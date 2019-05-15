@@ -127,6 +127,9 @@ public class Application implements Comparable<Application>{
 	
 	@ManyToMany(mappedBy = "applications")
     private Set<Contract> contracts = new HashSet<Contract>();
+	
+	@ManyToMany(mappedBy = "applications")
+    private Set<License> licenses = new HashSet<License>();
     
     public Long getId() {
 		return id;
@@ -386,6 +389,26 @@ public class Application implements Comparable<Application>{
 		});
 	}
 
+	public void addLicense(License license)
+	{
+		this.licenses.add(license);
+	}
+	
+	public void removeLicense(License license)
+	{
+		this.licenses.remove(license);
+	}
+	public Set<License> getLicenses() {
+		return licenses;
+	}
+
+	public void setLicenses(Set<License> licenses) {
+		this.licenses.addAll(licenses);
+		licenses.forEach(obj->{
+			obj.addApplication(this);
+		});
+	}
+
 	public void removeAllDependence()
 	{
 		this.manufacturers.forEach(obj->{
@@ -427,6 +450,12 @@ public class Application implements Comparable<Application>{
 		});
 		
 		this.contracts=null;
+		
+		this.licenses.forEach(obj->{
+			obj.removeApplication(this);
+		});
+		
+		this.licenses=null;
 	}
 
 	public String getStatus() {

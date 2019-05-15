@@ -93,7 +93,7 @@ public class ContractController {
         return "contractdetail";
     } 
     
-    //------Contract---------------    
+    //------Application---------------    
     @GetMapping("/deleteContractApplication")
     public String deleteApplicationContract(@ModelAttribute("app") Application application,@ModelAttribute("contract") Contract contract) {
 

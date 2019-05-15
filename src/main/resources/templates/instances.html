@@ -132,11 +132,15 @@
 												</li>
 											</ul>											
 										</td>										
-										<td>
-											<a th:if="${instance.license!=null}" th:href="@{'/licensedetail?license='+${instance.license.id}}" 
-											th:text="${instance.license.licenseNumber}">
-											</a>											
-										</td>
+										<td style="padding:2px">
+											<ul th:if="${instance.licenses.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="license: ${instance.licenses}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
+													<a th:href="@{'/licensedetail?license='+${license.id}}"><span th:text="${license.licenseNumber}"></span></a>
+													</div>
+												</li>
+											</ul>											
+										</td>										
 										<td>
 											<a th:if="${instance.desktop!=null}" th:href="@{'/desktopdetail?desktop='+${instance.desktop.id}}" 
 											th:text="${instance.desktop.desktopName}">

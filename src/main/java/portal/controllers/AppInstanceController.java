@@ -141,8 +141,8 @@ public class AppInstanceController {
     	model.addAttribute("contracts",contractService.getAll());
     	
     	//--License-----
-    	model.addAttribute("license",appInstance.getLicense());
-    	model.addAttribute("licenses",licenseService.findByNotAssigned(appInstance));
+    	model.addAttribute("instancelicenses",appInstance.getLicenses());
+    	model.addAttribute("licenses",licenseService.getAll());
     	
     	//--Desktop-----
     	model.addAttribute("desktop",appInstance.getDesktop());
@@ -219,24 +219,23 @@ public class AppInstanceController {
     
     //------License---------------    
     @GetMapping("/deleteInstanceLicense")
-    public String deleteInstanceLicense(@ModelAttribute("license") License license) {
+    public String deleteInstanceLicense(@ModelAttribute("license") License license,@ModelAttribute("appinstance") AppInstance appinstance) {
 
-    	Long appInstanceId = license.getAppInstance().getId();
-    	license.setAppInstance(null);
+
+    	license.removeInstance(appinstance);
     	licenseService.updateLicense(license);
 
 
-    	return "redirect:/instancedetail?id="+appInstanceId;
+    	return "redirect:/instancedetail?id="+appinstance.getId();
     }
     
     @PostMapping("/addInstanceLicense")
-    public String addOrupdateInstanceLicense(@ModelAttribute("license") License license) {
+    public String addOrupdateInstanceLicense(@ModelAttribute("appinstance") AppInstance appinstance) {
 
 
-//    	licenseService.removeAppInstance(license.getAppInstance());
-//    	licenseService.updateAppInstance(license.getAppInstance(), license.getId());
-    	licenseService.updateLicense(license);
-        return "redirect:/instancedetail?id="+license.getAppInstance().getId();
+
+    	appInstanceService.updateAppInstance(appinstance);
+        return "redirect:/instancedetail?id="+appinstance.getId();
     }
   //----------------------- 
     

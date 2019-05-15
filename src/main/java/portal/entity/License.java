@@ -1,21 +1,25 @@
 package portal.entity;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.springframework.util.ObjectUtils;
+
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -71,9 +75,20 @@ public class License {
     @JsonView(Views.Public.class)
 	private String warrenty; 
     
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name = "appInstance_id")
-    private AppInstance appInstance;
+    
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "instancelicense",
+        joinColumns = @JoinColumn(name = "license_id"),
+        inverseJoinColumns = @JoinColumn(name = "instance_id")
+    )
+    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
+    
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "applicense",
+        joinColumns = @JoinColumn(name = "license_id"),
+        inverseJoinColumns = @JoinColumn(name = "application_id")
+    )
+    private Set<Application> applications = new HashSet<Application>();
 
     public Long getId() {
 		return id;
@@ -155,18 +170,63 @@ public class License {
 		this.warrenty = warrenty;
 	}
 
-	public AppInstance getAppInstance() {
-		return appInstance;
+	public void addInstance(AppInstance instance)
+	{
+		this.appInstances.add(instance);
+	}
+	
+	public void removeInstance(AppInstance instance)
+	{
+		this.appInstances.remove(instance);
+	}
+	
+	public Set<AppInstance> getAppInstances() {
+		return appInstances;
 	}
 
-	public void setAppInstance(AppInstance appInstance) {
-		this.appInstance = appInstance;
+	public void setAppInstances(Set<AppInstance> appInstances) {
+		this.appInstances.addAll(appInstances);
+		appInstances.forEach(obj->{
+			obj.addLicense(this);
+		});
+	}
+
+	public void addApplication(Application application)
+	{
+		this.applications.add(application);
+	}
+	
+	public void removeApplication(Application application)
+	{
+		this.applications.removeIf(obj->obj.equals(application));
+	}
+	
+	public Set<Application> getApplications() {
+		return applications;
+	}
+
+	public void setApplications(Set<Application> applications) {
+		this.applications.addAll(applications);
+		applications.forEach(obj->{
+			obj.addLicense(this);
+		});
 	}
 
 	public void removeAllDependence()
 	{
-		if(!ObjectUtils.isEmpty(this.appInstance)) this.appInstance.setLicense(null);
-		this.setAppInstance(null);
+
+		
+		this.applications.forEach(obj->{
+			obj.removeLicense(this);
+		});
+		
+		this.applications=null;
+		
+		this.appInstances.forEach(obj->{
+			obj.removeLicense(this);
+		});
+		this.appInstances=null;
+		
 	}
   
 }

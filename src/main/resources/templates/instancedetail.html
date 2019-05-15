@@ -162,7 +162,7 @@
 				</div>
 			</div>
 			
-			<!--license Detail-->
+			<!--License Detail-->
 			<div class="row">
 				<div class="col-lg-8">
 					 <div th:class="${appinstance.status=='Active'} ? 'panel panel-primary' : 'panel panel-default'">
@@ -172,38 +172,42 @@
 								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addlicense'}" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:style="${appinstance.status=='Active'} ? 'text-decoration: none;color:white;cursor: pointer': 'text-decoration: none;color:black;cursor: pointer'"
-									th:if="${license!=null}" 
-									th:href="${#strings.concat('/deleteInstanceLicense?license=',license.id)}"
-									data-title="Are you sure to delete?" 
-									data-toggle="confirmation" 
-									data-singleton="true" 
-									data-popout="true"									
-									>
-									<i class="fa fa-trash-o fa-lg"></i>
-								</a>
+
                             </div>
                         </div>
                         <!-- /.panel-heading -->
-                        <div th:if="${license!=null}" class="panel-body">
+                        <div th:if="${instancelicenses.size()>0}" class="panel-body">
 							<table class="table">
+							  <thead>
+								<th>License</th>
+								<th>Expiration Date</th>
+								<th>Note</th>
+							  </thead>
 							  <tbody>
-								<tr><th scope="row" style="width:25%">License Number:</th><td>
-									<a th:href="@{'/licensedetail?license='+${license.id}}" th:text="${license.licenseNumber}">
-									</a>
-								</td></tr>
-								<tr><th scope="row" style="width:25%">Registration Date:</th><td th:text="${license.registrationDate}"></td></tr>
-								<tr><th scope="row" style="width:25%">Expiry Date:</th><td th:text="${license.expireDate}"></td></tr>
-								<tr><th scope="row" style="width:25%">Note:</th><td th:text="${license.note}"></td></tr>
-								<tr><th scope="row" style="width:25%">Price:</th><td th:text="'$'+${#numbers.formatDecimal(#strings.defaultString(license.price,0),2,2,'COMMA')}"></td></tr>
+								<tr th:each="license: ${instancelicenses}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											th:if="${appcontracts.size()>0}" th:href="@{'/deleteInstanceLicense?appinstance='+${appinstance.id}+'&license='+${license.id}}"
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										>
+											<i class="fa fa-trash-o fa-lg"></i>
+										</a>
+										<a th:href="@{'/licensedetail?license='+${license.id}}" th:text="${license.licenseNumber}"></a>
+									</td>
+									<td th:text="${license.expireDate}"></td>
+									<td th:text="${license.note}"></td>
+								</tr>
 							  </tbody>
 							</table>
                         </div>
                         <!-- /.panel-body -->
                     </div>
 				</div>
-				<div class="col-lg-4">
-				</div>
+
 			</div>
 			
 			<!--desktop Detail-->
@@ -781,15 +785,14 @@
 						  <h4 class="modal-title" th:text="'Add License - '+${appinstance.appInstanceName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addInstanceLicense}" method="post">
+							<form action="#" th:action="@{/addInstanceLicense}"  method="post">
 								<div class="form-group">
-									<label for="licenseSelect">License:</label>
-									<input type="hidden" class="form-control" th:name="appInstance" th:value="${appinstance.id}"></input>
-									<select name="license" class="form-control" id="licenseSelect">
-									  <option th:selected="${license==null}"></option>
-									  <option th:each="licenseEntity : ${licenses}" 
-									  th:text="${licenseEntity.licenseNumber}" 
-									  th:attr="value = ${licenseEntity.id}" th:selected="${license==null} ? false:${license.getId()==licenseEntity.id}">
+									<label for="contractSelect">License:</label>
+									<input type="hidden" class="form-control" th:name="appinstance" th:value="${appinstance.id}"></input>
+									<select name="licenses" class="form-control" id="licenseSelect" multiple>
+									 <option th:each="licenseEntity : ${licenses}" 
+										th:text="${licenseEntity.licenseNumber}" 
+										th:attr="value = ${licenseEntity.id}">
 									  
 									  </option>
 									</select>
@@ -1104,7 +1107,17 @@
 				enableFiltering: true,
 				nonSelectedText: 'Select Contract',
 				enableCaseInsensitiveFiltering:true
-			  });			  
+			  });
+
+			  $('#licenseSelect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select License',
+				enableCaseInsensitiveFiltering:true
+			  });
+			  
 			  $('#supportSelect').multiselect(
 			  {
 				includeSelectAllOption: true,
