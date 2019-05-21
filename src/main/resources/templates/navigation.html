@@ -87,7 +87,7 @@
 										<a href="/companys">Vendor/Manufacturer</a>
 									</li>									
 									<li>
-										<a href="/contracts">Contract</a>
+										<a href="/contracts">Contracts</a>
 									</li>
 									<li>
 										<a href="/departments">Department</a>
@@ -125,7 +125,8 @@
 			</nav>
 <script type="text/javascript">
 $( document ).ready(function() {
-                var socket = new SockJS('/alert');
+                //var socket = new SockJS('/alert');
+				var socket = new SockJS('/appsocket');
                 stompClient = Stomp.over(socket);  
                 stompClient.connect({}, function(frame) {
 

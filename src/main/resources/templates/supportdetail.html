@@ -51,10 +51,11 @@
 							  </div>
 							  <div class="form-group">
 								<label for="description">Support:</label>
-								<select name="networksupport" class="form-control" id="supporttypeSelect">
-									<option th:selected="${support.networksupport==null}"></option>
-									<option th:attr="value = 'Network'" th:selected="${support.networksupport==null} ? false:${support.networksupport=='Network'}" th:text="Network"></option>
-									<option th:attr="value = 'Server'" th:selected="${support.networksupport==null} ? false:${support.networksupport=='Server'}" th:text="Server"></option>
+								<select name="supporttype" class="form-control" id="supporttypeSelect">
+									<option th:selected="${support.supporttype==null}"></option>
+									<option th:attr="value = 'Network'" th:selected="${support.supporttype==null} ? false:${support.supporttype.name()=='Network'}">Network Support</option>
+									<option th:attr="value = 'AppServer'" th:selected="${support.supporttype==null} ? false:${support.supporttype.name()=='AppServer'}">App Server Support</option>
+									<option th:attr="value = 'DBServer'" th:selected="${support.supporttype==null} ? false:${support.supporttype.name()=='DBServer'}">DB Server Support</option>
 								</select>
 							  </div>							  
 							  <div class="form-group">

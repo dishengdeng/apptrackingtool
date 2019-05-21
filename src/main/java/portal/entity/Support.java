@@ -23,6 +23,7 @@ import javax.persistence.JoinColumn;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
+import portal.utility.SupportType;
 
 @Entity
 @Table(name = "Support")
@@ -87,6 +88,10 @@ public class Support {
     @Column(name = "networksupport",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String networksupport;
+    
+    @Column(name = "supporttype")
+    @JsonView(Views.Public.class)
+	private SupportType supporttype;
     
     @Column(name = "commonissue",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
@@ -299,6 +304,14 @@ public class Support {
 
 	public void setNetworksupport(String networksupport) {
 		this.networksupport = networksupport;
+	}
+
+	public SupportType getSupporttype() {
+		return supporttype;
+	}
+
+	public void setSupporttype(SupportType supporttype) {
+		this.supporttype = supporttype;
 	}
 
 	public String getCommonissue() {

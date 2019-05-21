@@ -40,6 +40,18 @@ public class Project {
     @JsonView(Views.Public.class)
 	private String projectcolloquialname;
     
+    @Column(name = "roadmap")
+    @JsonView(Views.Public.class)
+	private Boolean roadmap;
+    
+    @Column(name = "improject")
+    @JsonView(Views.Public.class)
+	private Boolean improject;
+    
+    @Column(name = "imitproject")
+    @JsonView(Views.Public.class)
+	private Boolean imitproject;
+    
     @Column(name = "description",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String description;
@@ -135,6 +147,30 @@ public class Project {
 		this.appInstances.add(appInstance);
 	}
 	
+	public Boolean getRoadmap() {
+		return roadmap;
+	}
+
+	public void setRoadmap(Boolean roadmap) {
+		this.roadmap = roadmap;
+	}
+
+	public Boolean getImproject() {
+		return improject;
+	}
+
+	public void setImproject(Boolean improject) {
+		this.improject = improject;
+	}
+
+	public Boolean getImitproject() {
+		return imitproject;
+	}
+
+	public void setImitproject(Boolean imitproject) {
+		this.imitproject = imitproject;
+	}
+
 	public void removeAllAppInstance()
 	{
 		this.appInstances.forEach(obj->{

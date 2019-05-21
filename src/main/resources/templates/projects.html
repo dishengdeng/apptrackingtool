@@ -51,7 +51,11 @@
 										<th>App Instances</th>
 										<th>Description</th>
                                         <th>Start Date</th>
-                                        <th>End Date</th>										
+                                        <th>End Date</th>
+										<th>Business Unit Initiatives on Roadmap?</th>
+										<th>Involved in IMP Projects?</th>
+										<th>CSHREC/IMIT Projects?</th>
+										
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
                                 </thead>
@@ -84,7 +88,9 @@
                                         <td th:text="${project.description}"></td>
 										<td th:text="${#dates.format(project.startdate,'MMM-dd-yyyy')}"></td>
 										<td th:text="${#dates.format(project.enddate,'MMM-dd-yyyy')}"></td>
-
+										<td th:text="${project.roadmap==true}? 'Yes': (${project.roadmap==false} ? 'No': '')"></td>
+										<td th:text="${project.improject==true}? 'Yes': (${project.improject==false} ? 'No': '')"></td>
+										<td th:text="${project.imitproject==true}? 'Yes': (${project.imitproject==false} ? 'No': '')"></td>
                                     </tr>
 
 
