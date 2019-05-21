@@ -75,6 +75,18 @@ public class Contract {
     @Column(name = "approvername", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String approvername;
+    
+    @Column(name = "clinplace", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String clinplace;
+    
+    @Column(name = "vendorsla", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String vendorsla;
+    
+    @Column(name = "ahsitsla", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String ahsitsla;
 
     @Column(name = "approvaldate")
     @Temporal(TemporalType.DATE)
@@ -189,6 +201,30 @@ public class Contract {
 	
 	public Set<Application> getApplications() {
 		return applications;
+	}
+
+	public String getClinplace() {
+		return clinplace;
+	}
+
+	public void setClinplace(String clinplace) {
+		this.clinplace = clinplace;
+	}
+
+	public String getVendorsla() {
+		return vendorsla;
+	}
+
+	public void setVendorsla(String vendorsla) {
+		this.vendorsla = vendorsla;
+	}
+
+	public String getAhsitsla() {
+		return ahsitsla;
+	}
+
+	public void setAhsitsla(String ahsitsla) {
+		this.ahsitsla = ahsitsla;
 	}
 
 	public void setApplications(Set<Application> applications) {

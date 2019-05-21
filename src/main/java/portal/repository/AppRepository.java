@@ -30,6 +30,7 @@ public interface AppRepository extends JpaRepository<Application, Long>  {
     		+ "t.AppPurpose=:AppPurpose, "
     		+ "t.AppDecomminsionDate=:AppDecomminsionDate, "
     		+ "t.AppComments=:AppComments, "
+    		+ "t.notes=:notes, "    		
     		+ "t.AppGovernance=:AppGovernance, "
     		+ "t.AppSupportByCapSys=:AppSupportByCapSys"
     		+ " where t.id = :id")
@@ -37,7 +38,7 @@ public interface AppRepository extends JpaRepository<Application, Long>  {
     		@Param("AppVersion") String AppVersion,@Param("AppType") String AppType,
     		@Param("AppAliase") String AppAliase,@Param("AppPrerequisite") String AppPrerequisite,
     		@Param("AppPurpose") String AppPurpose,@Param("AppDecomminsionDate") Date AppDecomminsionDate,
-    		@Param("AppComments") String AppComments,@Param("AppGovernance") String AppGovernance,
+    		@Param("AppComments") String AppComments,@Param("notes") String notes,@Param("AppGovernance") String AppGovernance,
     		@Param("AppSupportByCapSys") String AppSupportByCapSys,@Param("id") Long id);
     
 

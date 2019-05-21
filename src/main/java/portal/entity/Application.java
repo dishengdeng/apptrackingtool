@@ -84,6 +84,10 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private String AppComments;
     
+    @Column(name = "notes", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String notes;
+    
     @Column(name = "AppGovernance",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String AppGovernance;
@@ -201,6 +205,14 @@ public class Application implements Comparable<Application>{
 
 	public void setAppComments(String appComments) {
 		AppComments = appComments;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	public String getAppGovernance() {

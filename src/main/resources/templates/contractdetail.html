@@ -71,7 +71,7 @@
 								<label for="description">Approver:</label>
 								<input type="text" class="form-control" th:name="approvername" th:value="${contract.approvername}">
 							  </div>
-							  <div>
+							  <div class="form-group">
 								<label for="Decomminsion Date">Approval Date:</label>
 								<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
 									<input type="text" class="form-control" th:name="approvaldate" th:value="${contract.approvaldate}">
@@ -88,7 +88,23 @@
 							  <div class="form-group">
 								<label for="note">SLA Description:</label>
 								<input type="text" class="form-control" th:name="slaDescription" th:value="${contract.slaDescription}">
-							  </div>									  
+							  </div>
+							  <div class="form-group">
+								<label for="clinplace">contract / Licensing in Place:</label>
+								<select name="clinplace" class="form-control" id="statusSelect">
+									<option th:selected="${contract.clinplace==null}"></option>
+									<option th:attr="value = 'Yes'" th:selected="${contract.clinplace==null} ? false:${contract.clinplace=='Yes'}" th:text="Yes"></option>
+									<option th:attr="value = 'No'" th:selected="${contract.clinplace==null} ? false:${contract.clinplace=='No'}" th:text="No"></option>								
+								</select>
+							  </div>	
+							  <div class="form-group">
+								<label for="vendorsla">Vendor SLA:</label>
+								<input type="text" class="form-control" th:name="vendorsla" th:value="${contract.vendorsla}">
+							  </div>	
+							  <div class="form-group">
+								<label for="ahsitsla">AHS-IT SLA:</label>
+								<input type="text" class="form-control" th:name="ahsitsla" th:value="${contract.ahsitsla}">
+							  </div>								  
 							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 							</form>
 						</div>

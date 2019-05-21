@@ -374,12 +374,17 @@ public class HomeController {
         Application appEntity=appService.findbyId(application.getId());
 
         application.setAppInstances(appEntity.getAppInstances());
-        application.getSupports().forEach(support->{
+        appEntity.getSupports().forEach(support->{
         	application.addSupport(support);
         });        
         application.setManufacturers(appEntity.getManufacturers());
         application.setDepartment(appEntity.getDepartment());
         application.setFiles(appEntity.getFiles());
+        application.setZones(appEntity.getZones());
+        application.setSites(appEntity.getSites());
+        application.setContracts(appEntity.getContracts());
+        application.setLicenses(appEntity.getLicenses());
+        application.setProjects(appEntity.getProjects());
  
     }
     

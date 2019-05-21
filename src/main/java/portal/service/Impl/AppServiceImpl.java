@@ -96,7 +96,8 @@ public class AppServiceImpl implements AppService{
 									application.getAppAliase(), application.getAppPrerequisite(), 
 									application.getAppPurpose(), 
 								ObjectUtils.isEmpty(application.getAppDecomminsionDate())? null:application.getAppDecomminsionDate(), 
-										application.getAppComments(), 
+										application.getAppComments(),
+										application.getNotes(),
 										application.getAppGovernance(), 
 										application.getAppSupportByCapSys(),application.getId());
 	}

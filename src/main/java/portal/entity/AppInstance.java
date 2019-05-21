@@ -55,6 +55,14 @@ public class AppInstance implements Comparable<AppInstance>{
     @JsonView(Views.Public.class)
 	private String description;
     
+    @Column(name = "notes", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String notes;
+    
+    @Column(name = "userbase ", length = 64,columnDefinition="VARCHAR(250)")
+    @JsonView(Views.Public.class)
+	private String userbase;    
+    
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "deparment_id",referencedColumnName="id")
     private Department department;
@@ -140,6 +148,22 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.description = description;
 	}
 	
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+
+	public String getUserbase() {
+		return userbase;
+	}
+
+	public void setUserbase(String userbase) {
+		this.userbase = userbase;
+	}
+
 	public Department getDepartment() {
 		return department;
 	}
