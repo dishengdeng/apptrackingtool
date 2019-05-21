@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Create Rate</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<form action="#" th:action="@{/addZac}" th:object="${zac}" method="post">
+				  <div class="form-group">
+					<label for="rate">Rate:</label>
+					<input type="text" class="form-control" th:field="*{rate}" th:value="${zac.rate}">
+				  </div>
+				  <div class="form-group">
+					<label for="name">Name:</label>
+					<input type="text" class="form-control" th:field="*{name}" th:value="${zac.name}">
+				  </div>
+				  <div class="form-group">
+					<label for="description">Description:</label>
+					<input type="text" class="form-control" th:field="*{description}" th:value="${zac.description}">
+				  </div>
+				  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" type="submit" value="Submit" />
+				</form>
+			</div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>

@@ -126,6 +126,10 @@ public class Application implements Comparable<Application>{
     @JoinColumn(name = "deparment_id",referencedColumnName="id")
     private Department department;
     
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "zac_id",referencedColumnName="id")
+    private Zac zac;
+    
 	@ManyToMany(mappedBy = "applications")
     private Set<Support> supports = new HashSet<Support>();
 	
@@ -301,6 +305,14 @@ public class Application implements Comparable<Application>{
 		this.department = department;
 	}
 
+	public Zac getZac() {
+		return zac;
+	}
+
+	public void setZac(Zac zac) {
+		this.zac = zac;
+	}
+
 	@Override
 	public boolean equals(Object obj)
 	{
@@ -435,6 +447,9 @@ public class Application implements Comparable<Application>{
 		
 		if(!ObjectUtils.isEmpty(this.department)) this.department.getApplications().removeIf(obj->obj.equals(this));
 		this.setDepartment(null);
+		
+		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeApplication(this);
+		this.setZac(null);
 		
 		this.appInstances.forEach(obj->{
 			obj.setApplication(null);
