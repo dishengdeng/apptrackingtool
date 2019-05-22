@@ -59,7 +59,8 @@
 										<th>Manufacturer</th>
 										<th>Department</th>
 										<th>Zone</th>
-										<th>Site</th>										
+										<th>Site</th>
+										<th>ZAC</th>										
 										<!--<th class="no-sort">Action</th>-->
 									</tr>
 								</thead>
@@ -168,7 +169,9 @@
 												</li>
 											</ul>
 										</td>
-									
+										<td>
+											<a th:if="${app.zac!=null}" th:href="@{'/zacdetail?zac=' + ${app.zac.id}}" th:text="${app.zac.rate}"></a>
+										</td>
 										  <!-- Modal -->
 									 
 									</tr>

@@ -40,6 +40,7 @@ import portal.service.MessageSourceService;
 import portal.service.ProjectService;
 import portal.service.SiteService;
 import portal.service.SupportService;
+import portal.service.ZacService;
 import portal.service.ZoneService;
 import portal.utility.Action;
 import portal.utility.FileType;
@@ -75,6 +76,9 @@ public class HomeController {
 	
 	@Autowired
 	private ZoneService zoneService;
+	
+	@Autowired
+	private ZacService zacService;
 	
 	@Autowired
 	private SiteService siteService;
@@ -333,6 +337,30 @@ public class HomeController {
 		appService.updateApp(application);
         return "redirect:/applicationdetail?app="+application.getId();
     }
+    
+    //------Zac---------------    
+    @GetMapping("/deleteAppZac")
+    public String deleteAppZac(@ModelAttribute("application") Application application) {
+
+
+    	
+    	application.setZac(null);
+    	appService.updateApp(application);
+    	
+    	
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }
+    
+    @PostMapping("/addAppZac")
+    public String addAppZac(@ModelAttribute("application") Application application) {
+
+
+    	
+    	appService.updateApp(application);
+    	
+    	
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }
     //------file management----
     @PostMapping("/applicationupload")
     public String uploadapplication(@RequestParam("file") MultipartFile file,@ModelAttribute("application") Application application) {
@@ -385,6 +413,7 @@ public class HomeController {
         application.setContracts(appEntity.getContracts());
         application.setLicenses(appEntity.getLicenses());
         application.setProjects(appEntity.getProjects());
+        application.setZac(appEntity.getZac());
  
     }
     
@@ -405,6 +434,10 @@ public class HomeController {
     	//--zone---
     	model.addAttribute("appzones",appEntity.getZones());
     	model.addAttribute("zones",zoneService.getAll());
+    	
+    	//--zac---
+    	model.addAttribute("zac",appEntity.getZac());
+    	model.addAttribute("zacs",zacService.getAll());
     	
     	//--site---
     	model.addAttribute("appsites",appEntity.getSites());
