@@ -32,6 +32,13 @@ public interface AppRepository extends JpaRepository<Application, Long>  {
     		+ "t.AppComments=:AppComments, "
     		+ "t.notes=:notes, "    		
     		+ "t.AppGovernance=:AppGovernance, "
+    		+ "t.strategicplan=:strategicplan, "
+    		+ "t.operationsplan=:operationsplan, "
+    		+ "t.painpoints=:painpoints, "
+    		+ "t.businessgoals=:businessgoals, "
+    		+ "t.asop=:asop, "
+    		+ "t.rit=:rit, "
+    		+ "t.roe=:roe, "
     		+ "t.AppSupportByCapSys=:AppSupportByCapSys"
     		+ " where t.id = :id")
     void saveDetails(@Param("AppName") String AppName,@Param("status") String status,
@@ -39,7 +46,9 @@ public interface AppRepository extends JpaRepository<Application, Long>  {
     		@Param("AppAliase") String AppAliase,@Param("AppPrerequisite") String AppPrerequisite,
     		@Param("AppPurpose") String AppPurpose,@Param("AppDecomminsionDate") Date AppDecomminsionDate,
     		@Param("AppComments") String AppComments,@Param("notes") String notes,@Param("AppGovernance") String AppGovernance,
-    		@Param("AppSupportByCapSys") String AppSupportByCapSys,@Param("id") Long id);
+    		@Param("strategicplan") String strategicplan,@Param("operationsplan") String operationsplan,@Param("painpoints") String painpoints,
+    		@Param("businessgoals") String businessgoals,@Param("asop") String asop,@Param("rit") String rit,
+    		@Param("roe") String roe,@Param("AppSupportByCapSys") String AppSupportByCapSys,@Param("id") Long id);
     
 
     

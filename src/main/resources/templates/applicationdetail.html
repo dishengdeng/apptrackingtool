@@ -94,7 +94,35 @@
 								  <div class="form-group">
 									<label for="description">Governance:</label>
 									<input type="text" class="form-control" th:name="AppGovernance" th:value="${app.AppGovernance}">
-								  </div>													  
+								  </div>
+								  <div class="form-group">
+									<label for="strategicplan">Strategic Plan:</label>
+									<input type="text" class="form-control" th:name="strategicplan" th:value="${app.strategicplan}">
+								  </div>
+								  <div class="form-group">
+									<label for="operationsplan">Operations Plan:</label>
+									<input type="text" class="form-control" th:name="operationsplan" th:value="${app.operationsplan}">
+								  </div>
+								  <div class="form-group">
+									<label for="painpoints">Pain Points:</label>
+									<input type="text" class="form-control" th:name="painpoints" th:value="${app.painpoints}">
+								  </div>
+								  <div class="form-group">
+									<label for="businessgoals">Business Goals:</label>
+									<input type="text" class="form-control" th:name="businessgoals" th:value="${app.businessgoals}">
+								  </div>
+								  <div class="form-group">
+									<label for="asop">Align with Strategic and Ops Plans:</label>
+									<input type="text" class="form-control" th:name="asop" th:value="${app.asop}">
+								  </div>
+								  <div class="form-group">
+									<label for="rit">Related to IT:</label>
+									<input type="text" class="form-control" th:name="rit" th:value="${app.rit}">
+								  </div>
+								  <div class="form-group">
+									<label for="roe">Request or enhancements:</label>
+									<input type="text" class="form-control" th:name="roe" th:value="${app.roe}">
+								  </div>								  
 							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 							  
 							</form>                            

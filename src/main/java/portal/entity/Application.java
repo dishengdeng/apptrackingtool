@@ -96,6 +96,34 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private String AppSupportByCapSys;
     
+    @Column(name = "strategicplan")
+    @JsonView(Views.Public.class)
+	private String strategicplan;
+    
+    @Column(name = "operationsplan")
+    @JsonView(Views.Public.class)
+	private String operationsplan;
+    
+    @Column(name = "painpoints")
+    @JsonView(Views.Public.class)
+	private String painpoints;
+    
+    @Column(name = "businessgoals")
+    @JsonView(Views.Public.class)
+	private String businessgoals;
+    
+    @Column(name = "asop")
+    @JsonView(Views.Public.class)
+	private String asop;
+    
+    @Column(name = "rit")
+    @JsonView(Views.Public.class)
+	private String rit;
+    
+    @Column(name = "roe")
+    @JsonView(Views.Public.class)
+	private String roe;
+    
 	@ManyToMany(mappedBy = "applications")
     private Set<Project> projects = new HashSet<Project>();
 	
@@ -237,6 +265,62 @@ public class Application implements Comparable<Application>{
 
 
 	
+	public String getStrategicplan() {
+		return strategicplan;
+	}
+
+	public void setStrategicplan(String strategicplan) {
+		this.strategicplan = strategicplan;
+	}
+
+	public String getOperationsplan() {
+		return operationsplan;
+	}
+
+	public void setOperationsplan(String operationsplan) {
+		this.operationsplan = operationsplan;
+	}
+
+	public String getPainpoints() {
+		return painpoints;
+	}
+
+	public void setPainpoints(String painpoints) {
+		this.painpoints = painpoints;
+	}
+
+	public String getBusinessgoals() {
+		return businessgoals;
+	}
+
+	public void setBusinessgoals(String businessgoals) {
+		this.businessgoals = businessgoals;
+	}
+
+	public String getAsop() {
+		return asop;
+	}
+
+	public void setAsop(String asop) {
+		this.asop = asop;
+	}
+
+	public String getRit() {
+		return rit;
+	}
+
+	public void setRit(String rit) {
+		this.rit = rit;
+	}
+
+	public String getRoe() {
+		return roe;
+	}
+
+	public void setRoe(String roe) {
+		this.roe = roe;
+	}
+
 	public Set<AppInstance> getAppInstances() {
 
 		return appInstances;
