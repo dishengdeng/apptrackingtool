@@ -13,6 +13,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -81,12 +84,11 @@ public class Department {
         )
     private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
-    @OneToMany(
-            mappedBy = "department", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true,
-            fetch=FetchType.EAGER
-        )
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "appdepartment",
+        joinColumns = @JoinColumn(name = "department_id"),
+        inverseJoinColumns = @JoinColumn(name = "application_id")
+    )
     private Set<Application> applications = new HashSet<Application>();
     
     @OneToMany(
@@ -96,6 +98,13 @@ public class Department {
             fetch=FetchType.EAGER
         )
     private Set<File> files = new HashSet<File>();
+    
+    @OneToMany(
+            mappedBy = "department", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Zacmap> zacmaps = new HashSet<Zacmap>();
     
 	public Long getId() {
 		return id;
@@ -226,10 +235,29 @@ public class Department {
 
 		this.applications.addAll(applications);
 		applications.forEach(obj->{
-			obj.setDepartment(this);
+			obj.AddDepartment(this);
 		});
 	}
+	public void addZacmap(Zacmap zacmap)
+	{
+		this.zacmaps.add(zacmap);
+	}
 	
+	public void removeZacmap(Zacmap zacmap)
+	{
+		this.zacmaps.remove(zacmap);
+	}
+	
+	public Set<Zacmap> getZacmaps() {
+		return zacmaps;
+	}
+
+	public void setZacmaps(Set<Zacmap> zacmaps) {
+		this.zacmaps.addAll(zacmaps);
+		zacmaps.forEach(obj->{
+			obj.setDepartment(this);
+		});
+	}	
 	public void addApplication(Application application)
 	{
 		this.applications.add(application);
@@ -306,8 +334,13 @@ public class Department {
 		this.appInstances=null;
 		
 		this.applications.forEach(obj->{
-			obj.setDepartment(null);
+			obj.removeDepartment(this);
 		});
 		this.applications=null;
+		
+		this.zacmaps.forEach(obj->{
+			obj.setDepartment(null);
+		});
+		this.zacmaps=null;
 	}
 }

@@ -1,7 +1,10 @@
 package portal.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,6 +48,13 @@ public class Zac {
             fetch=FetchType.EAGER
         )
     private Set<Application> applications = new HashSet<Application>();
+    
+    @OneToMany(
+            mappedBy = "zac", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Zacmap> zacmaps = new HashSet<Zacmap>();
 
 	public Long getId() {
 		return id;
@@ -100,13 +110,52 @@ public class Zac {
 			obj.setZac(this);
 		});
 	}
+	public void addZacmap(Zacmap zacmap)
+	{
+		this.zacmaps.add(zacmap);
+	}
 	
+	public void removeZacmap(Zacmap zacmap)
+	{
+		this.zacmaps.remove(zacmap);
+	}
+	
+	public Set<Zacmap> getZacmaps() {
+		return zacmaps;
+	}
+
+	public void setZacmaps(Set<Zacmap> zacmaps) {
+		this.zacmaps.addAll(zacmaps);
+		zacmaps.forEach(obj->{
+			obj.setZac(this);
+		});
+	}
+	
+	public Set<Application> Applicationlist()
+	{
+		List<Application> apps=new ArrayList<Application>();
+		this.zacmaps.forEach(obj->{			
+			apps.add(obj.getApplication());
+		});
+		return new HashSet<Application>(apps);
+	}
+	
+	public List<Zacmap> getbyApplication(Application application)
+	{
+		return this.zacmaps.stream().filter(obj->obj.getApplication().equals(application)).collect(Collectors.toList());
+		
+	}
 	public void removeAllDependence()
 	{
 		this.applications.forEach(obj->{
 			obj.setZac(null);
 		});
 		this.applications=null;
+		
+		this.zacmaps.forEach(obj->{
+			obj.setZac(null);
+		});
+		this.zacmaps=null;
 	}
     
 

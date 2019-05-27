@@ -67,8 +67,8 @@
 											</a>
 										</td>
 										<td style="padding:2px">
-											<ul th:if="${zac.applications.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="app: ${zac.applications}">
+											<ul th:if="${zac.zacmaps.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="app: ${zac.Applicationlist()}">
 													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
 													<a th:href="@{'/applicationdetail?app='+${app.id}}"><span th:text="${app.AppName}"></span></a>
 													</div>

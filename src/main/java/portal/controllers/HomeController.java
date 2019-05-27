@@ -23,11 +23,13 @@ import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Company;
 import portal.entity.Contract;
+import portal.entity.Department;
 import portal.entity.File;
 import portal.entity.License;
 import portal.entity.Project;
 import portal.entity.Site;
 import portal.entity.Support;
+import portal.entity.Zacmap;
 import portal.entity.Zone;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
@@ -41,6 +43,7 @@ import portal.service.ProjectService;
 import portal.service.SiteService;
 import portal.service.SupportService;
 import portal.service.ZacService;
+import portal.service.ZacmapService;
 import portal.service.ZoneService;
 import portal.utility.Action;
 import portal.utility.FileType;
@@ -92,6 +95,8 @@ public class HomeController {
 	@Autowired
 	private CompanyService companyService;
 	
+	@Autowired
+	private ZacmapService zacmapService;
     @Autowired
     private MessageSourceService messageSourceService;
 	
@@ -324,10 +329,10 @@ public class HomeController {
     }    
     //------Department---------------    
     @GetMapping("/deleteApplicationDepartment")
-    public String deleteApplicationDepartment(@ModelAttribute("application") Application application) {
+    public String deleteApplicationDepartment(@ModelAttribute("application") Application application,@ModelAttribute("department") Department department) {
 
-    	application.setDepartment(null);
-		appService.updateApp(application);
+    	department.removeApplication(application);
+		departmentService.updateDepartment(department);
     	return "redirect:/applicationdetail?app="+application.getId();
     }
     
@@ -360,6 +365,29 @@ public class HomeController {
     	
     	
     	return "redirect:/applicationdetail?app="+application.getId();
+    }
+    
+    //------Zacmap---------------    
+    @GetMapping("/deleteApplicationZacmap")
+    public String deleteApplicationZacmap(@ModelAttribute("zacmap") Zacmap zacmap,@ModelAttribute("application") Application application) {
+
+
+    	
+    	zacmap.removeAllDepedence();
+    	zacmapService.deleteZacmap(zacmap);    	
+    	
+    	return "redirect:/applicationdetail?app="+application.getId();
+    }
+    
+    @PostMapping("/addApplicationZacmap")
+    public String addApplicationZacmap(@ModelAttribute("zacmapModel") Zacmap zacmap) {
+
+
+    	
+    	zacmapService.saveZacmap(zacmap);
+    	
+    	
+    	return "redirect:/applicationdetail?app="+zacmap.getApplication().getId();
     }
     //------file management----
     @PostMapping("/applicationupload")
@@ -406,7 +434,7 @@ public class HomeController {
         	application.addSupport(support);
         });        
         application.setManufacturers(appEntity.getManufacturers());
-        application.setDepartment(appEntity.getDepartment());
+        application.setDepartments(appEntity.getDepartments());
         application.setFiles(appEntity.getFiles());
         application.setZones(appEntity.getZones());
         application.setSites(appEntity.getSites());
@@ -414,6 +442,7 @@ public class HomeController {
         application.setLicenses(appEntity.getLicenses());
         application.setProjects(appEntity.getProjects());
         application.setZac(appEntity.getZac());
+        application.setZacmaps(appEntity.getZacmaps());
  
     }
     
@@ -460,8 +489,12 @@ public class HomeController {
     	model.addAttribute("supports",supportService.getAll());    	
     	
     	//--Department-----
-    	model.addAttribute("department",appEntity.getDepartment());
+    	model.addAttribute("departs",appEntity.getDepartments());
     	model.addAttribute("departments",departmentService.getAll());
+    	
+    	//--Zacmap-----
+    	model.addAttribute("zacmapModel",new Zacmap());
+    	model.addAttribute("zacmaps",appEntity.getZacmaps());
     }
 
 }

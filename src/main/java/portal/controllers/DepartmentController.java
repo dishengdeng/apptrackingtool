@@ -111,9 +111,8 @@ public class DepartmentController {
   //--application--    
     @GetMapping("/deleteDepartmentapplication")
     public String deleteDepartmentapplication(@ModelAttribute("application") Application application,@ModelAttribute("department") Department department,ModelMap model) {
-    	application.setDepartment(null);
-    	appService.updateApp(application);
-
+    	department.removeApplication(application);
+    	departmentService.updateDepartment(department);
     	return "redirect:/departmentdetail?id="+department.getId();
     }    
     

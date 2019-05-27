@@ -136,47 +136,55 @@
 						
 			<!--AppInstance Detail-->
 			<div class="row">
-				<div class="col-lg-8">
-					 <div class="panel panel-primary">
-						<div class="panel-heading">
-							<i class="fa fa-newspaper-o"></i> App Instances
+                <div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            App Instances
 							<div class="pull-right">
 								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addinstanceInstance'}" style="color:white;cursor:pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-							</div>
-						</div>
-						<!-- /.panel-heading -->
-						<div th:if="${appinstances.size()>0}" class="panel-body">
-							<table class="table">
-							  <thead>
-								<th>App Instance</th>
-								<th>Status</th>
-								<th>Description</th>
-							  </thead>
-							  <tbody>
-								<tr th:each="appinstance: ${appinstances}">
-									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteApplicationInstance?instanceid='+${appinstance.id}+'&applicationid='+${app.id}}" 
-											style="margin-right:10px;text-decoration: none"
-											data-title="Are you sure to delete?" 
-											data-toggle="confirmation" 
-											data-singleton="true" 
-											data-popout="true" 
-										   >
-											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-										</a>
-										<a th:href="@{'/instancedetail?id='+${appinstance.id}}" th:text="${appinstance.appInstanceName}"></a>
-									</td>
-									<td th:text="${appinstance.status}"></td>
-									<td th:text="${appinstance.description}"></td>
-								</tr>
-							  </tbody>
-							</table>
-						</div>
-						<!-- /.panel-body -->
-					</div>
-				</div>
+							</div>							
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-instance">
+                                <thead>
+                                    <tr>
+
+									<th>App Instance</th>
+									<th>Status</th>
+									<th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="appinstance: ${appinstances}">
+										<td>
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteApplicationInstance?instanceid='+${appinstance.id}+'&applicationid='+${app.id}}" 
+												style="margin-right:10px;text-decoration: none"
+												data-title="Are you sure to delete?" 
+												data-toggle="confirmation" 
+												data-singleton="true" 
+												data-popout="true" 
+											   >
+												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+											</a>
+											<a th:href="@{'/instancedetail?id='+${appinstance.id}}" th:text="${appinstance.appInstanceName}"></a>
+										</td>
+										<td th:text="${appinstance.status}"></td>
+										<td th:text="${appinstance.description}"></td>
+                                    </tr>
+
+
+                                </tbody>
+                            </table>
+                            <!-- /.table-responsive -->
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
 				<div class="col-lg-4">
 				</div>
 			</div>
@@ -504,7 +512,7 @@
 										</a>
 										<a th:href="@{'/supportdetail?support='+${appsupport.id}}" th:text="${appsupport.supportName}"></a>
 									</td>
-									<td th:text="${appsupport.networksupport}"></td>
+									<td th:text="${appsupport.supporttype==null}?'':(${appsupport.supporttype.name()=='Network'} ? 'Network Support':(${appsupport.supporttype.name()=='DBServer'}?'DB Server Support':'App Server Support'))"></td>
 									<td th:text="${appsupport.phone}"></td>
 									<td th:text="${appsupport.email}"></td>
 									<td th:text="${appsupport.note}"></td>
@@ -522,138 +530,137 @@
 			<div class="row">
 				<div class="col-lg-8">
 					 <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <i class="fa  fa-building"></i> Department
-                            <div class="pull-right">
+						<div class="panel-heading">
+							<i class="fa fa-building"></i> Departments
+							<div class="pull-right">
 								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#adddepartment'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="text-decoration: none;color:white;cursor: pointer"
-								 th:if="${department!=null}" th:href="${#strings.concat('/deleteApplicationDepartment?application=',app.id)}"
-								data-title="Are you sure to delete?" 
-								data-toggle="confirmation" 
-								data-singleton="true" 
-								data-popout="true"
-								 >
-									<i class="fa fa-trash-o fa-lg"></i>
-								</a>
-                            </div>
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div th:if="${department!=null}" class="panel-body">
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${departs.size()>0}" class="panel-body">
 							<table class="table">
+							  <thead>
+								<th>Department</th>
+								<th>Description</th>
+								<th>Attachment</th>
+							  </thead>
 							  <tbody>
-								<tr><th scope="row" style="width:25%">department:</th>
-								<td>
-									<a th:href="@{'/departmentdetail?id='+${department.id}}"><h5 th:text="${department.departmentName}"></h5></a>
-								</td>
-								</tr>
-								<tr><th scope="row" style="width:25%">Stakeholder:</th><td>
-								
-									<ul style="padding:0" th:if="${department.stakeholders.size()>0}">
-										<li style="list-style-type:none" th:each="stakeholder : ${department.stakeholders}">
-										<a th:href="@{'/stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
-										</li>
-									</ul>
-
-								</td></tr>
-								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${department.description}"></td></tr>
-
-								<tr><th scope="row" style="width:25%">Attachment:</th>
-								<td>									
-									<a data-toggle="modal"  
-											th:data-target="@{${#strings.concat('#',department.id,'files')}}" 
-											th:if="${department.files.size()>0}"
-											style="text-decoration: none;cursor: pointer"
-											>
-											<span class="fa fa-paperclip fa-lg"></span>
+								<tr th:each="department: ${departs}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteApplicationDepartment?department='+${department.id}+'&application='+${app.id}}" 
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/departmentdetail?id='+${department.id}}" th:text="${department.departmentName}"></a>
+									</td>
+									<td th:text="${department.description}"></td>
+									<td>
+										<a data-toggle="modal"  
+										th:data-target="@{${#strings.concat('#',department.id,'files')}}" 
+										th:if="${department.files.size()>0}"
+										style="text-decoration: none;cursor: pointer"
+										>
+										<span class="fa fa-paperclip fa-lg"></span>
 									</a>
-								</td>
-								</tr>								
+									</td>
+								</tr>
 							  </tbody>
 							</table>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-				</div>
-				<div class="col-lg-4">
-					<div class="modal fade" th:if="${department!=null && department.files.size()>0}" th:id="${#strings.concat(department.id,'files')}" role="dialog" >
-						<!-- Modal content-->
-						<div class="modal-dialog">
-						  <div class="modal-content">
-							<div class="modal-header">
-							  <button type="button" class="close" data-dismiss="modal">&times;</button>
-							  <h4 class="modal-title"> Attachments</h4>
-							</div>
-							<div class="modal-body">
-								<table class="table table-striped" id="filestable">
-								  <thead>
-									<tr>
-									  <th scope="col">File Name</th>
-									  <th scope="col">Created At</th>
-									  <th scope="col">Created By</th>														  
-									</tr>
-								  </thead>
-								  <tbody>
-									<tr th:each="file : ${department.files}">
-									  <th><h5><a th:href="@{'/downloaddepartment?id='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
-									  <th><h5 th:text="${file.createdat}"></h5></th>
-									  <th><h5 th:text="${file.createdby}"></h5></th>
-									</tr>
-								  </tbody>
-								</table>
-							</div>
-						   </div>
-						 </div>
+						</div>
+						<!-- /.panel-body -->
 					</div>
 				</div>
-			</div>
-
-			<!--Zac Detail-->
+				<div class="col-lg-4">
+					<div th:if="${departs.size()>0}" th:each="department: ${departs}">
+						<div class="modal fade" th:if="${department.files.size()>0}" th:id="${#strings.concat(department.id,'files')}" role="dialog" >
+							<!-- Modal content-->
+							<div class="modal-dialog">
+							  <div class="modal-content">
+								<div class="modal-header">
+								  <button type="button" class="close" data-dismiss="modal">&times;</button>
+								  <h4 class="modal-title"> Attachments</h4>
+								</div>
+								<div class="modal-body">
+									<table class="table table-striped" id="filestable">
+									  <thead>
+										<tr>
+										  <th scope="col">File Name</th>
+										  <th scope="col">Created At</th>
+										  <th scope="col">Created By</th>														  
+										</tr>
+									  </thead>
+									  <tbody>
+										<tr th:each="file : ${department.files}">
+										  <th><h5><a th:href="@{'/downloaddepartment?id='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+										  <th><h5 th:text="${file.createdat}"></h5></th>
+										  <th><h5 th:text="${file.createdby}"></h5></th>
+										</tr>
+									  </tbody>
+									</table>
+								</div>
+							   </div>
+							 </div>
+						</div>	
+					</div>
+				</div>
+			</div>	
+			
+			<!--Zacmap Detail-->
 			<div class="row">
 				<div class="col-lg-8">
 					 <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <i class="fa  fa-thumbs-up"></i> Process Excellence
-                            <div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addzac'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+						<div class="panel-heading">
+							<i class="fa fa-thumbs-up"></i> Zac Map
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addzacmap'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="text-decoration: none;color:white;cursor: pointer"
-								 th:if="${zac!=null}" th:href="${#strings.concat('/deleteAppZac?application=',app.id)}"
-								data-title="Are you sure to delete?" 
-								data-toggle="confirmation" 
-								data-singleton="true" 
-								data-popout="true"
-								 >
-									<i class="fa fa-trash-o fa-lg"></i>
-								</a>
-                            </div>
-                        </div>
-                        <!-- /.panel-heading -->
-                        <div th:if="${zac!=null}" class="panel-body">
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${zacmaps.size()>0}" class="panel-body">
 							<table class="table">
+							  <thead>
+								<th>Rate</th>
+								<th>Department</th>
+								<th>Description</th>
+							  </thead>
 							  <tbody>
-								<tr><th scope="row" style="width:25%">Rate:</th>
-								<td>
-									<a th:href="@{'/zacdetail?zac='+${zac.id}}"><h5 th:text="${zac.rate}"></h5></a>
-								</td>
-								</tr>
-								<tr><th scope="row" style="width:25%">Name:</th><td th:text="${zac.name}">
-								
+								<tr th:each="zacmap: ${zacmaps}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteApplicationZacmap?zacmap='+${zacmap.id}+'&application='+${app.id}}" 
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/zacdetail?zac='+${zacmap.zac.id}}" th:text="@{${zacmap.zac.rate}+' - '+${zacmap.zac.name}}"></a>
+									</td>
+									<td>
+									<a th:href="@{'/departmentdetail?id='+${zacmap.department.id}}" th:text="${zacmap.department.departmentName}"></a>
+									</td>									
+									<td th:text="${zacmap.zac.description}"></td>
 
-								</td></tr>
-								<tr><th scope="row" style="width:25%">Description:</th><td th:text="${zac.description}"></td></tr>
-								
+								</tr>
 							  </tbody>
 							</table>
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
+						</div>
+						<!-- /.panel-body -->
+					</div>
 				</div>
 				<div class="col-lg-4">
 				</div>
-			</div>
+			</div>	
 			
 			<!--file detail-->			
 			<div class="row">
@@ -953,20 +960,17 @@
 					  <div class="modal-content">
 						<div class="modal-header">
 						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Department - '+${app.appName}"></h4>													
+						  <h4 class="modal-title" th:text="'Add Department - '+${app.AppName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addApplicationDepartment}" method="post">
+							<form th:action="@{/addApplicationDepartment}" method="post">
 								<div class="form-group">
 									<label for="departmentSelect">Department:</label>
 									<input type="hidden" class="form-control" th:name="application" th:value="${app.id}"></input>
-									<select name="department" class="form-control selectpicker" data-live-search="true" id="departmentSelect">
-									  <option th:selected="${app.department==null}"></option>
-									  <option th:each="departmentEntity : ${departments}" 
-									  th:text="${departmentEntity.departmentName}" 
-									  th:attr="value = ${departmentEntity.id}" th:selected="${app.department==null} ? false:${app.department.getId()==departmentEntity.id}">
-									  
-									  </option>
+									<select name="departments" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="departmentSelect">
+									  <option th:each="department : ${departments}" 
+									  th:text="${department.departmentName}" 
+									  th:attr="value = ${department.id}">
 									</select>
 								</div>
 							  <input class="btn btn-primary" type="submit" value="Submit" />
@@ -992,7 +996,7 @@
 								<div class="form-group">
 									<label for="departmentSelect">Department:</label>
 									<input type="hidden" class="form-control" th:name="application" th:value="${app.id}"></input>
-									<select name="zac" class="form-control selectpicker" data-live-search="true" id="zacSelect">
+									<select name="zac" class="form-control selectpicker" data-live-search="true" id="zacSelect" required>
 									  <option th:selected="${app.zac==null}"></option>
 									  <option th:each="zacEntity : ${zacs}" 
 									  th:text="@{${zacEntity.rate}+' - '+${zacEntity.name}}" 
@@ -1007,6 +1011,46 @@
 
 					</div>	
 				</div>
+				
+				<!--ZacMap model-->
+				<div class="modal fade" th:id="addzacmap" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Rate - '+${app.AppName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addApplicationZacmap}" th:object="${zacmapModel}" method="post">
+								<input type="hidden" class="form-control" th:name="application" th:value="${app.id}"></input>
+								<div class="form-group">
+									<label for="zmZacSelect">Rate:</label>
+									<select name="zac" class="form-control selectpicker" data-live-search="true" id="zmZacSelect" required>
+									  <option ></option>
+									  <option th:each="zacEntity : ${zacs}" 
+									  th:text="@{${zacEntity.rate}+' - '+${zacEntity.name}}" 
+									  th:attr="value = ${zacEntity.id}">									  
+									  </option>
+									</select>
+								</div>									
+								<div class="form-group">
+									<label for="zmDepartmentSelect">Rate By (Department):</label>
+									<select name="department" class="form-control selectpicker" data-live-search="true" id="zmDepartmentSelect" required>
+									  <option></option>
+									  <option th:each="departmentEntity : ${app.departments}" 
+									  th:text="${departmentEntity.departmentName}" 
+									  th:attr="value = ${departmentEntity.id}">									  
+									  </option>
+									</select>
+								</div>							
+							  <input class="btn btn-primary" type="submit" value="Submit" onClick="validateSelect()"/>
+							</form>
+						</div>
+					  </div>
+					</div>	
+				</div>				
 				
 				<!--File model-->
 				<div class="modal fade" th:id="${#strings.concat(app.id,'file')}" role="dialog" >
@@ -1051,6 +1095,9 @@
 
 			<script>
 			$(document).ready(function() {
+			$('#dataTables-instance').DataTable({
+				responsive: true
+			});
 			  $('#instanceselect').multiselect(
 			  {
 				includeSelectAllOption: true,
@@ -1105,13 +1152,26 @@
 				enableFiltering: true,
 				nonSelectedText: 'Select Site'
 			  });			  
+
+			  $('#departmentSelect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Department'
+			  });
 			  
-			  $('#departmentSelect').selectpicker(
+			  $('#zacSelect').selectpicker(
+			  {
+				noneSelectedText: 'Select Rate'
+			  });
+			  
+			  $('#zmDepartmentSelect').selectpicker(
 			  {
 				noneSelectedText: 'Select Department'
 			  });
 			  
-			  $('#zacSelect').selectpicker(
+			  $('#zmZacSelect').selectpicker(
 			  {
 				noneSelectedText: 'Select Rate'
 			  });
@@ -1124,6 +1184,26 @@
 				nonSelectedText: 'Select Manufacturer'
 			  });			  
 			});
+			function validateSelect()
+			{
+				if( $('button[data-id="zmZacSelect"]').attr("title")=="Select Rate")
+				{
+					$('button[data-id="zmZacSelect"]').css("background-color","red");
+				}
+				else
+				{
+					$('button[data-id="zmZacSelect"]').css("background-color","white");
+				}
+				
+				if( $('button[data-id="zmDepartmentSelect"]').attr("title")=="Select Department")
+				{
+					$('button[data-id="zmDepartmentSelect"]').css("background-color","red");
+				}
+				else
+				{
+					$('button[data-id="zmDepartmentSelect"]').css("background-color","white");
+				}
+			}
 			</script>
 
 	

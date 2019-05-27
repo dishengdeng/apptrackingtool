@@ -59,8 +59,7 @@
 										<th>Manufacturer</th>
 										<th>Department</th>
 										<th>Zone</th>
-										<th>Site</th>
-										<th>ZAC</th>										
+										<th>Site</th>										
 										<!--<th class="no-sort">Action</th>-->
 									</tr>
 								</thead>
@@ -146,11 +145,16 @@
 												</li>
 											</ul>											
 										</td>										
-										<td>
-											<a th:if="${app.department!=null}" th:href="@{'/departmentdetail?id='+${app.department.id}}" 
-											th:text="${app.department.departmentName}">
-											</a>
-										</td>
+										<td style="padding:2px">
+											<ul th:if="${app.departments.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="department: ${app.departments}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
+													<a th:href="@{'/departmentdetail?id='+${department.id}}"><span th:text="${department.departmentName}"></span></a>
+													</div>
+												</li>
+											</ul>
+										</td>										
+										
 										<td style="padding:2px">
 											<ul th:if="${app.zones.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="zone: ${app.zones}">
@@ -169,9 +173,7 @@
 												</li>
 											</ul>
 										</td>
-										<td>
-											<a th:if="${app.zac!=null}" th:href="@{'/zacdetail?zac=' + ${app.zac.id}}" th:text="${app.zac.rate}"></a>
-										</td>
+
 										  <!-- Modal -->
 									 
 									</tr>

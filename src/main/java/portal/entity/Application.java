@@ -140,6 +140,13 @@ public class Application implements Comparable<Application>{
         )
     private Set<AppInstance> appInstances = new HashSet<AppInstance>();
     
+    @OneToMany(
+            mappedBy = "application", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Zacmap> zacmaps = new HashSet<Zacmap>();
+    
 	@ManyToMany(mappedBy = "applications")
     private Set<Company> manufacturers = new HashSet<Company>();
     
@@ -150,9 +157,8 @@ public class Application implements Comparable<Application>{
         )
     private Set<File> files = new HashSet<File>();
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "deparment_id",referencedColumnName="id")
-    private Department department;
+	@ManyToMany(mappedBy = "applications")
+    private Set<Department> departments = new HashSet<Department>();
     
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "zac_id",referencedColumnName="id")
@@ -381,12 +387,25 @@ public class Application implements Comparable<Application>{
 		this.files.addAll(files);
 	}
 
-	public Department getDepartment() {
-		return department;
+	public void AddDepartment(Department department)
+	{
+		this.departments.add(department);
+	}
+	
+	public void removeDepartment(Department department)
+	{
+		this.departments.remove(department);
 	}
 
-	public void setDepartment(Department department) {
-		this.department = department;
+	public Set<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(Set<Department> departments) {
+		this.departments.addAll(departments);
+		departments.forEach(obj->{
+			obj.addApplication(this);
+		});
 	}
 
 	public Zac getZac() {
@@ -517,6 +536,27 @@ public class Application implements Comparable<Application>{
 		});
 	}
 
+	public void addZacmap(Zacmap zacmap)
+	{
+		this.zacmaps.add(zacmap);
+	}
+	
+	public void removeZacmap(Zacmap zacmap)
+	{
+		this.zacmaps.remove(zacmap);
+	}
+	
+	public Set<Zacmap> getZacmaps() {
+		return zacmaps;
+	}
+
+	public void setZacmaps(Set<Zacmap> zacmaps) {
+		this.zacmaps.addAll(zacmaps);
+		zacmaps.forEach(obj->{
+			obj.setApplication(this);
+		});
+	}
+
 	public void removeAllDependence()
 	{
 		this.manufacturers.forEach(obj->{
@@ -529,8 +569,10 @@ public class Application implements Comparable<Application>{
 		});
 		this.supports=null;
 		
-		if(!ObjectUtils.isEmpty(this.department)) this.department.getApplications().removeIf(obj->obj.equals(this));
-		this.setDepartment(null);
+		this.departments.forEach(obj->{
+			obj.removeApplication(this);
+		});
+		this.departments=null;
 		
 		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeApplication(this);
 		this.setZac(null);
@@ -539,6 +581,11 @@ public class Application implements Comparable<Application>{
 			obj.setApplication(null);
 		});
 		this.appInstances=null;
+		
+		this.zacmaps.forEach(obj->{
+			obj.setApplication(this);
+		});
+		this.zacmaps=null;
 		
 		this.projects.forEach(obj->{
 			obj.removeApplication(this);
