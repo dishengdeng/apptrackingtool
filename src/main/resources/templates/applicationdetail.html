@@ -1039,7 +1039,7 @@
 									<label for="zmDepartmentSelect">Rate By (Department):</label>
 									<select name="department" class="form-control selectpicker" data-live-search="true" id="zmDepartmentSelect" required>
 									  <option></option>
-									  <option th:each="departmentEntity : ${app.departments}" 
+									  <option th:each="departmentEntity : ${departments}" 
 									  th:text="${departmentEntity.departmentName}" 
 									  th:attr="value = ${departmentEntity.id}">									  
 									  </option>

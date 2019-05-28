@@ -73,6 +73,7 @@ public class ZacController {
     @GetMapping("/zacdetail")
     public String zacdetail(@ModelAttribute("zac") Zac zac,ModelMap model) {
     	model.addAttribute("zac",zac);
+    	model.addAttribute("zacmapModel",new Zacmap());
     	model.addAttribute("applications",appService.getAll());
     	model.addAttribute("departments",departmentService.getAll());
  	
@@ -121,13 +122,13 @@ public class ZacController {
     }
     
     @PostMapping("/addZacZacmap")
-    public String addZacZacmap(@ModelAttribute("zac") Zac zac) {
+    public String addZacZacmap(@ModelAttribute("zacmapModel") Zacmap zacmap) {
 
 
     	
-    	zacService.updateZac(zac);
+    	zacmapService.saveZacmap(zacmap);
     	
     	
-    	return "redirect:/zacdetail?zac="+zac.getId();
+    	return "redirect:/zacdetail?zac="+zacmap.getZac().getId();
     } 
 }

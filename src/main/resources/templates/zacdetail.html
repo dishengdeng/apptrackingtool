@@ -79,6 +79,7 @@
 
 										<th>Application</th>										
 										<th>Department</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -92,7 +93,7 @@
 											style="text-decoration: none">
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
-											<a th:href="@{'/applicationdetial?app='+${app.id}}" th:text="${app.AppName}">
+											<a th:href="@{'/applicationdetail?app='+${app.id}}" th:text="${app.AppName}">
 											</a>
 										</td>
 
@@ -100,11 +101,12 @@
 											<ul style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="zacmap: ${zac.getbyApplication(app)}">
 													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
-													<a th:href="@{'/departmentdetial?id='+${zacmap.department.id}}" th:text="${zacmap.department.departmentName}">
+													<a th:href="@{'/departmentdetail?id='+${zacmap.department.id}}" th:text="${zacmap.department.departmentName}">
 													</div>
 												</li>
 											</ul>
 										</td>
+
                                     </tr>
 
 
@@ -222,6 +224,7 @@
 
 		});
 	</script>
+
 
 </body>
 

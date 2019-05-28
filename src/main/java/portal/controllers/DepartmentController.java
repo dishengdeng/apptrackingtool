@@ -29,11 +29,14 @@ import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
 import portal.entity.Stakeholder;
+import portal.entity.Zacmap;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.StakeholderService;
+import portal.service.ZacService;
+import portal.service.ZacmapService;
 import portal.utility.FileType;
 
 
@@ -56,6 +59,12 @@ public class DepartmentController {
 	
 	@Autowired
 	private FileService fileService;
+	
+	@Autowired
+	private ZacService zacService;
+	
+	@Autowired
+	private ZacmapService zacmapService;
 	
 	private final String UPLOADED_FOLDER="files//department//";
 	
@@ -91,10 +100,15 @@ public class DepartmentController {
     
     @GetMapping("/departmentdetail")
     public String DepartmentDetial(@RequestParam(name="id", required=true) String id,ModelMap model) {
-    	model.addAttribute("department",departmentService.getById(Long.valueOf(id)));
+    	Department department=departmentService.getById(Long.valueOf(id));
+    	model.addAttribute("department",department);
     	model.addAttribute("stakeholders",stakholderService.getUnassginedStakeholders());
     	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
     	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+    	//--Zacmap-----
+    	model.addAttribute("zacmapModel",new Zacmap());
+    	model.addAttribute("zacmaps",department.getZacmaps());
+    	model.addAttribute("zacs",zacService.getAll());
         return "departmentdetail";
     }    
     
@@ -141,6 +155,28 @@ public class DepartmentController {
     	return "redirect:/departmentdetail?id="+department.getId();
     }    
 
+    //------Zacmap---------------    
+    @GetMapping("/deleteDepartmentZacmap")
+    public String deleteApplicationZacmap(@ModelAttribute("zacmap") Zacmap zacmap,@ModelAttribute("department") Department department) {
+
+
+    	
+    	zacmap.removeAllDepedence();
+    	zacmapService.deleteZacmap(zacmap);    	
+    	
+    	return "redirect:/departmentdetail?id="+department.getId();
+    }
+    
+    @PostMapping("/addDepartmentZacmap")
+    public String addDepartmentZacmap(@ModelAttribute("zacmapModel") Zacmap zacmap) {
+
+
+    	
+    	zacmapService.saveZacmap(zacmap);
+    	
+    	
+    	return "redirect:/departmentdetail?id="+zacmap.getDepartment().getId();
+    }
     
   //--Stakeholder--    
     @GetMapping("/deleteDepartmentStakeholder")
