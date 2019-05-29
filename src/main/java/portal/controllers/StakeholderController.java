@@ -4,6 +4,7 @@ package portal.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import portal.entity.Stakeholder;
 import portal.service.DepartmentService;
 import portal.service.SLARoleService;
 import portal.service.StakeholderService;
+import portal.validator.StakeholderValidator;
 
 
 
@@ -28,6 +30,9 @@ public class StakeholderController {
 	
 	@Autowired
 	private SLARoleService slaRoleService;
+	
+	@Autowired
+	private StakeholderValidator stakeholderValidator;
 	
     @GetMapping("/stakeholders")
     public String stakeholdertable(ModelMap model) {
@@ -45,9 +50,18 @@ public class StakeholderController {
     }
  
     @PostMapping("/updateStakeholder")
-    public String updateStakeholder(@ModelAttribute("stakeholderModel") Stakeholder stakeholder) {
-
-    	stakeholderService.updateStakeholder(stakeholder);
+    public String updateStakeholder(@ModelAttribute("stakeholderModel") Stakeholder stakeholder,BindingResult bindingResult,ModelMap model) {
+    	
+    	getUpdatedStakeholder(stakeholder);
+    	
+    	stakeholderValidator.validate(stakeholder, bindingResult);
+    	if (bindingResult.hasErrors()) {
+    		setModel(model,stakeholder);
+    		return "stakeholderdetail";
+    	}
+    	
+    	
+    	stakeholderService.updateDetail(stakeholder);
     	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
     }
     
@@ -70,9 +84,8 @@ public class StakeholderController {
     
     @GetMapping("/stakeholderdetail")
     public String stakeholderdetail(@ModelAttribute("stakeholder") Stakeholder stakeholder,ModelMap model) {
-    	model.addAttribute("stakeholder", stakeholder);
-    	model.addAttribute("departments", departmentService.getAll());
-    	model.addAttribute("roles", slaRoleService.getAll());
+    	
+    	setModel(model,stakeholder);
         return "stakeholderdetail";
     }
 
@@ -109,5 +122,17 @@ public class StakeholderController {
     	stakeholderService.updateStakeholder(stakeholder);
     	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
     }
-
+    private void getUpdatedStakeholder(Stakeholder stakeholder)
+    {
+    	Stakeholder holderEntity=stakeholderService.getById(stakeholder.getId());
+    	stakeholder.setRole(holderEntity.getRole());
+    	stakeholder.setDepartment(holderEntity.getDepartment());
+    }
+    private void setModel(ModelMap model,Stakeholder stakeholder)
+    {
+    	model.addAttribute("stakeholderModel", stakeholder);
+    	model.addAttribute("stakeholder", stakeholder);
+    	model.addAttribute("departments", departmentService.getAll());
+    	model.addAttribute("roles", slaRoleService.getAll());
+    }
 }

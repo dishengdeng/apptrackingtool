@@ -100,4 +100,15 @@ public class StakeholderServiceImpl implements StakeholderService{
 		 return stakeholders;
 	}
 
+	@Override
+	public void updateDetail(Stakeholder stakeholder) {
+		stakeholderRepository.updateDetail(stakeholder.getStakeholderName(),stakeholder.getNote(), 
+				stakeholder.getFirstname(), stakeholder.getLastname(), 
+				stakeholder.getAddress(), stakeholder.getPhone(), 
+				stakeholder.getPosition(), stakeholder.getPosition(), 
+				stakeholder.getInfluence(), stakeholder.getInterest(), 
+				stakeholder.getRaciforsyschanges(), stakeholder.getId());
+		
+	}
+
 }

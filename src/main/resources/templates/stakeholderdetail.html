@@ -36,12 +36,12 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">				
-							<form action="#" th:action="@{/updateStakeholder}" method="post">													
+							<form action="#" th:action="@{/updateStakeholder}" th:object="${stakeholderModel}" method="post">													
 						
 							  <div class="form-group">
 								<label for="stakeholderName">Stakeholder Name:</label>
 								<input type="text" class="form-control" th:name="stakeholderName" th:value="${stakeholder.stakeholderName}"></input>
-								<input type="hidden" class="form-control" th:name="stakeholderModel" th:value="${stakeholder.id}"></input>
+								<input type="hidden" class="form-control" th:name="id" th:value="${stakeholder.id}"></input>
 							  </div>													  												  
 							  <div class="form-group">
 								<label for="note">Location(Site):</label>
@@ -50,6 +50,7 @@
 							  <div class="form-group">
 								<label for="note">Phone:</label>
 								<input type="text" class="form-control" th:name="phone" th:value="${stakeholder.phone}">
+								<p class="text-danger" th:if="${#fields.hasErrors('phone')}"><strong  th:errors="*{phone}"></strong></p>
 							  </div>
 							  <div class="form-group">
 								<label for="note">Email:</label>

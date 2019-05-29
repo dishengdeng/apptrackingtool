@@ -23,4 +23,5 @@ public interface StakeholderService {
     List<Stakeholder> getUnassginedStakeholders();
     public void removeDepartment(Department department);    
     public void removeRole(SLARole role);
+    public void updateDetail(Stakeholder stakeholder);
 }

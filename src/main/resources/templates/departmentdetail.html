@@ -591,7 +591,7 @@
 		
 	function validateSelect()
 	{
-		if( $('button[data-id="zmZacSelect"]').attr("title")=="Select Rate")
+		if( $('button[data-id="zmZacSelect"]').attr("title")=="Select Rate" || $('button[data-id="zmZacSelect"]').attr("title")=="Nothing selected")
 		{
 			$('button[data-id="zmZacSelect"]').css("background-color","red");
 		}
@@ -600,7 +600,7 @@
 			$('button[data-id="zmZacSelect"]').css("background-color","white");
 		}
 		
-		if( $('button[data-id="zmApplicationSelect"]').attr("title")=="Select Application")
+		if( $('button[data-id="zmApplicationSelect"]').attr("title")=="Select Application" || $('button[data-id="zmApplicationSelect"]').attr("title")=="Nothing selected")
 		{
 			$('button[data-id="zmApplicationSelect"]').css("background-color","red");
 		}

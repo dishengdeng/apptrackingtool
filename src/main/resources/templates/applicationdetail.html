@@ -1186,7 +1186,7 @@
 			});
 			function validateSelect()
 			{
-				if( $('button[data-id="zmZacSelect"]').attr("title")=="Select Rate")
+				if( $('button[data-id="zmZacSelect"]').attr("title")=="Select Rate" || $('button[data-id="zmZacSelect"]').attr("title")=="Nothing selected")
 				{
 					$('button[data-id="zmZacSelect"]').css("background-color","red");
 				}
@@ -1195,7 +1195,7 @@
 					$('button[data-id="zmZacSelect"]').css("background-color","white");
 				}
 				
-				if( $('button[data-id="zmDepartmentSelect"]').attr("title")=="Select Department")
+				if( $('button[data-id="zmDepartmentSelect"]').attr("title")=="Select Department" || $('button[data-id="zmDepartmentSelect"]').attr("title")=="Nothing selected")
 				{
 					$('button[data-id="zmDepartmentSelect"]').css("background-color","red");
 				}

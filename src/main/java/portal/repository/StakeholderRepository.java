@@ -30,4 +30,27 @@ public interface StakeholderRepository  extends JpaRepository<Stakeholder, Long>
     @Modifying    
     @Query("update Stakeholder t set t.role=null where t.role = :role")
     void removeRole(@Param("role") SLARole role);
+    
+    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+    @Modifying    
+    @Query("update Stakeholder t "
+    		+ "set t.stakeholderName=:stakeholderName, "
+    		+ "t.note=:note, "
+    		+ "t.firstname=:firstname, "
+    		+ "t.lastname=:lastname, "
+    		+ "t.address=:address, "
+    		+ "t.phone=:phone, "
+    		+ "t.position=:position, "
+    		+ "t.email=:email, "
+    		+ "t.influence=:influence, "
+    		+ "t.interest=:interest, "
+    		+ "t.raciforsyschanges=:raciforsyschanges "
+    		+ "where t.id = :id")    
+    void updateDetail(@Param("stakeholderName") String stakeholderName,@Param("note") String note,
+    		@Param("firstname") String firstname,@Param("lastname") String lastname,
+    		@Param("address") String address,@Param("phone") String phone,
+    		@Param("position") String position,@Param("email") String email,
+    		@Param("influence") String influence,@Param("interest") String interest,
+    		@Param("raciforsyschanges") String raciforsyschanges, @Param("id") Long id	
+    		);
 }
