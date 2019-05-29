@@ -7,10 +7,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import portal.entity.Stakeholder;
+
+import portal.entity.Support;
 
 @Component
-public class StakeholderValidator implements Validator{
+public class SupportValidator implements Validator{
 	
 	private final String phonenumPattern="\\d{10}";
 	
@@ -19,19 +20,19 @@ public class StakeholderValidator implements Validator{
 	@Override
 	public boolean supports(Class<?> clazz) {
 		
-		return Stakeholder.class.equals(clazz);
+		return Support.class.equals(clazz);
 	}
 
 	@Override
 	public void validate(Object target, Errors errors) {
-		Stakeholder stakeholder=(Stakeholder)target;
+		Support support=(Support)target;
 		
-		if(!StringUtils.isEmpty(stakeholder.getPhone()) && !Pattern.compile(phonenumPattern).matcher(stakeholder.getPhone()).matches())
+		if(!StringUtils.isEmpty(support.getPhone()) && !Pattern.compile(phonenumPattern).matcher(support.getPhone()).matches())
 		{
 			errors.rejectValue("phone", "error.phone");
 		}
 		
-		if(!StringUtils.isEmpty(stakeholder.getEmail()) && !Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE).matcher(stakeholder.getEmail()).matches())
+		if(!StringUtils.isEmpty(support.getEmail()) && !Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE).matcher(support.getEmail()).matches())
 		{
 			errors.rejectValue("email", "error.email");
 		}

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import portal.entity.Support;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.SupportService;
+import portal.validator.SupportValidator;
 
 
 
@@ -33,6 +35,9 @@ public class SupportController {
 	@Autowired
 	private AppService appService;
 	
+	@Autowired
+	private SupportValidator supportValidator;
+	
     @GetMapping("/supports")
     public String supporttable(ModelMap model) {
     	model.addAttribute("supports", supportService.getAll());
@@ -47,9 +52,16 @@ public class SupportController {
     }
  
     @PostMapping("/updateSupport")
-    public String updateSupport(@ModelAttribute("supportModel") Support support) {
-
-    	supportService.updateSupport(support);
+    public String updateSupport(@ModelAttribute("supportModel") Support support,BindingResult bindingResult,ModelMap model) {
+    	getUpdatedSupport(support);
+    	supportValidator.validate(support, bindingResult);
+    	if (bindingResult.hasErrors())
+    	{
+    		setModel(support,model);
+    		return "supportdetail";
+    	}
+    	
+    	supportService.updateDetail(support);
     	return "redirect:/supportdetail?support="+support.getId();
     }
     
@@ -71,9 +83,7 @@ public class SupportController {
     
     @GetMapping("/supportdetail")
     public String supportdetail(@ModelAttribute("support") Support support,ModelMap model) {
-    	model.addAttribute("support",support);
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+    	setModel(support,model);
         return "supportdetail";
     }
     
@@ -111,4 +121,18 @@ public class SupportController {
     	return "redirect:/supportdetail?support="+support.getId();
     }
 
+    private void getUpdatedSupport(Support support)
+    {
+    	Support supportEntity=supportService.getById(support.getId());
+    	support.setAppInstances(supportEntity.getAppInstances());
+    	support.setApplications(supportEntity.getApplications());
+    }
+    
+    private void setModel(Support support,ModelMap model)
+    {
+    	model.addAttribute("support",support);
+    	model.addAttribute("supportModel",support);
+    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+    }
 }

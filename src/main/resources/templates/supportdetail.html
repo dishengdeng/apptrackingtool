@@ -34,12 +34,12 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">	
-							<form action="#" th:action="@{/updateSupport}" method="post">													
+							<form action="#" th:action="@{/updateSupport}" th:object="${supportModel}" method="post">													
 						
 							  <div class="form-group">
 								<label for="supportName">AHS Primary Support:</label>
 								<input type="text" class="form-control" th:name="supportName" th:value="${support.supportName}"></input>
-								<input type="hidden" class="form-control" th:name="supportModel" th:value="${support.id}"></input>
+								<input type="hidden" class="form-control" th:name="id" th:value="${support.id}"></input>
 							  </div>
 							  <div class="form-group">
 								<label for="description">AHS Secondary Support:</label>
@@ -60,11 +60,13 @@
 							  </div>							  
 							  <div class="form-group">
 								<label for="description">Phone:</label>
-								<input type="text" class="form-control" th:name="phone" th:value="${support.phone}">
+								<input type="text" th:class="@{${#fields.hasErrors('phone')?'form-control border-red':'form-control'}}" th:name="phone" th:value="${support.phone}">
+								<p class="text-danger" th:if="${#fields.hasErrors('phone')}"><strong  th:errors="*{phone}"></strong></p>
 							  </div>													  
 							  <div class="form-group">
 								<label for="note">Email:</label>
-								<input type="text" class="form-control" th:name="email" th:value="${support.email}">
+								<input type="text" th:class="@{${#fields.hasErrors('email')?'form-control border-red':'form-control'}}" th:name="email" th:value="${support.email}">
+								<p class="text-danger" th:if="${#fields.hasErrors('email')}"><strong  th:errors="*{email}"></strong></p>
 							  </div>
 							  <div class="form-group">
 								<label for="note">Location:</label>

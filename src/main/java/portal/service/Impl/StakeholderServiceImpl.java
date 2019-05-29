@@ -105,7 +105,7 @@ public class StakeholderServiceImpl implements StakeholderService{
 		stakeholderRepository.updateDetail(stakeholder.getStakeholderName(),stakeholder.getNote(), 
 				stakeholder.getFirstname(), stakeholder.getLastname(), 
 				stakeholder.getAddress(), stakeholder.getPhone(), 
-				stakeholder.getPosition(), stakeholder.getPosition(), 
+				stakeholder.getPosition(), stakeholder.getEmail(), 
 				stakeholder.getInfluence(), stakeholder.getInterest(), 
 				stakeholder.getRaciforsyschanges(), stakeholder.getId());
 		

@@ -60,6 +60,21 @@ public class SupportServiceImpl implements SupportService{
 		return supportRepository.saveAndFlush(support);
 	}
 
+	@Override
+	public void updateDetail(Support support) {
+		supportRepository.updateDetail(
+							support.getSupportName(), support.getSecondarysupport(), 
+							support.getOthersupport(), support.getAppowner(), 
+							support.getTrainer(), support.getSme(), support.getBusinesslead(), 
+							support.getCoes(), support.getAhshours(), 
+							support.getUseradmin(), support.getSysadmin(), 
+							support.getNetworksupport(), support.getSupporttype(), 
+							support.getCommonissue(), support.getPhone(), 
+							support.getEmail(), support.getNote(), 
+							support.getLocation(), support.getId());
+		
+	}
+
 
 
 //	@Override

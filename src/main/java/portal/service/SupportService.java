@@ -17,7 +17,7 @@ public interface SupportService {
     Support getByName(String supportName);
     Support getById(Long id);
     Support updateSupport(Support support);
-    
+    public void updateDetail(Support support);
 
     //void updateApplicationSupport(List<Application> applications,Support support);
 }
