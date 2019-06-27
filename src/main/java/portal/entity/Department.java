@@ -67,7 +67,10 @@ public class Department {
     @Column(name = "attachment",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String attachment;
-    
+
+	@ManyToMany(mappedBy = "departments")
+    private Set<Question> questions = new HashSet<Question>();
+	
     @OneToMany(
             mappedBy = "department", 
             cascade = CascadeType.ALL, 
@@ -183,6 +186,27 @@ public class Department {
 
 
 	
+	public Set<Question> getQuestions() {
+		return questions;
+	}
+
+	public void setQuestions(Set<Question> questions) {
+		this.questions.addAll(questions);
+		questions.forEach(obj->{
+			obj.addDepartment(this);
+		});
+	}
+	
+	public void addQuestion(Question question)
+	{
+		this.questions.add(question);
+	}
+	
+	public void removeQuestion(Question question)
+	{
+		this.questions.remove(question);
+	}
+
 	public Set<Stakeholder> getStakeholders() {
 		return stakeholders;
 	}
@@ -342,5 +366,10 @@ public class Department {
 			obj.setDepartment(null);
 		});
 		this.zacmaps=null;
+		
+		this.questions.forEach(obj->{
+			obj.removeDepartment(this);
+		});
+		this.questions=null;
 	}
 }
