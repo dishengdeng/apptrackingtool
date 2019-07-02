@@ -68,8 +68,12 @@ public class Department {
     @JsonView(Views.Public.class)
 	private String attachment;
 
-	@ManyToMany(mappedBy = "departments")
-    private Set<Question> questions = new HashSet<Question>();
+    @OneToMany(
+            mappedBy = "department", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Answer> answers = new HashSet<Answer>(); 
 	
     @OneToMany(
             mappedBy = "department", 
@@ -184,27 +188,25 @@ public class Department {
 	}
 
 
-
+	public void AddAnswer(Answer answer)
+	{
+		this.answers.add(answer);
+	}
 	
-	public Set<Question> getQuestions() {
-		return questions;
+	public void RemoveAnswer(Answer answer)
+	{
+		this.answers.remove(answer);
 	}
 
-	public void setQuestions(Set<Question> questions) {
-		this.questions.addAll(questions);
-		questions.forEach(obj->{
-			obj.addDepartment(this);
+	public Set<Answer> getAnswers() {
+		return answers;
+	}
+
+	public void setAnswers(Set<Answer> answers) {
+		this.answers.addAll(answers);
+		answers.forEach(obj->{
+			obj.setDepartment(this);
 		});
-	}
-	
-	public void addQuestion(Question question)
-	{
-		this.questions.add(question);
-	}
-	
-	public void removeQuestion(Question question)
-	{
-		this.questions.remove(question);
 	}
 
 	public Set<Stakeholder> getStakeholders() {
@@ -367,9 +369,10 @@ public class Department {
 		});
 		this.zacmaps=null;
 		
-		this.questions.forEach(obj->{
-			obj.removeDepartment(this);
+		this.answers.forEach(obj->{
+			obj.setDepartment(null);
 		});
-		this.questions=null;
+		this.answers=null;
+
 	}
 }

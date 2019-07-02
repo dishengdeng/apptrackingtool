@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-8 text-muted">
+						<i class="fa fa-question-circle"></i>
+						<span th:text="${question.questionName}"></span>
+						</div>
+						
+
+					</div>						
+					</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-info-circle"></i> Details
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" th:action="@{/updateQuestion}" method="post">													
+					
+						  <div class="form-group">
+							<label for="zoneName">Question:</label>
+							<input type="text" class="form-control" th:name="questionName" th:value="${question.questionName}"></input>
+							<input type="hidden" class="form-control" th:name="questionModel" th:value="${question.id}"></input>
+						  </div>
+						  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" type="submit" value="Update" />
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>
+            <!-- /.row -->
+			<!--Department Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-building"></i> Departments
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#adddepartment'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${question.answers.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Department</th>
+								<th>Answer</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="answer: ${question.answers}" th:if="${answer.department!=null}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteQuestionDepartment?answer='+${answer.id}+'&question='+${question.id}}" 
+											style="margin-right:5px;text-decoration: none;"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											data-toggle="modal" th:data-target="@{'#adddepartment'+${answer.id}}"  title="Edit Answer"
+											style="margin-right:5px;text-decoration: none;cursor:pointer"
+										   >
+											<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+										</a>										
+										<a th:href="@{'/departmentdetail?id='+${answer.department.id}}" th:text="${answer.department.departmentName}"></a>
+									</td>
+									<td th:text="${answer.text}">
+									</td>
+
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>	
+
+				<!--Department Creation model-->
+				<div class="modal fade" th:id="@{'adddepartment'}" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title">Add Department</h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addQeustionDepartment}" th:object="${answer}" method="post">
+								<div class="form-group">
+									<label for="departmentSelect">Department:</label>			
+									<input type="hidden" class="form-control" th:name="question" th:value="${question.id}"></input>
+									<select name="department" class="form-control" id="departmentSelect">
+											<option></option>
+											  <option th:each="departmentEntity : ${departments}" 
+	
+											  th:attr="value = ${departmentEntity.id}"
+											  th:text="${departmentEntity.departmentName}"
+											  >
+											  
+											  </option>
+													
+									</select>
+								</div>
+							<div class="form-group">
+								<label for="zoneName">Answer:</label>
+								<input type="text" class="form-control" th:name="text"></input>	
+							</div>							
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+	
+					</div>
+				</div>
+			
+			<!--Department model-->
+			<div th:each="answer: ${question.answers}" th:if="${question.answers.size()>0}">
+				<div class="modal fade" th:id="@{'adddepartment'+${answer.id}}" role="dialog" th:if="${answer.department!=null}">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="@{'Edit Answer - '+${answer.department.departmentName}}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addQeustionDepartment}"  method="post">
+								<div class="form-group">
+									<label for="departmentSelect">Question:</label>
+									<input type="hidden" class="form-control" th:name="answer" th:value="${answer.id}"></input>
+									<input type="hidden" class="form-control" th:name="question" th:value="${question.id}"></input>
+									<input type="hidden" class="form-control" th:name="department" th:value="${answer.department.id}"></input>
+									<p th:text="${question.questionName}"></p>
+								</div>
+							<div class="form-group">
+								<label for="zoneName">Answer:</label>
+								<input type="text" class="form-control" th:name="text" th:value="${answer.text}"></input>	
+							</div>							
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+	
+					</div>
+				</div>
+			</div>
+			
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+	  $('#departmentSelect').selectpicker(
+	  {
+		noneSelectedText: 'Select Department'
+	  });	  
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>

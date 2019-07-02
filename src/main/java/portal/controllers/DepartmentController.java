@@ -24,16 +24,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import portal.entity.Answer;
 import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
 import portal.entity.Stakeholder;
 import portal.entity.Zacmap;
+import portal.service.AnswerService;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
+import portal.service.QuestionService;
 import portal.service.StakeholderService;
 import portal.service.ZacService;
 import portal.service.ZacmapService;
@@ -50,6 +53,12 @@ public class DepartmentController {
 	
 	@Autowired
 	private StakeholderService stakholderService;
+	
+	@Autowired
+	private AnswerService answerService;
+	
+	@Autowired
+	private QuestionService questionService;
 	
 	@Autowired
 	private AppInstanceService appInstanceService;
@@ -108,7 +117,8 @@ public class DepartmentController {
     	//--Zacmap-----
     	model.addAttribute("zacmapModel",new Zacmap());
     	model.addAttribute("zacmaps",department.getZacmaps());
-    	model.addAttribute("zacs",zacService.getAll());
+    	model.addAttribute("zacs",zacService.getAll());  	
+    	model.addAttribute("questions", questionService.getAllQuestion());
         return "departmentdetail";
     }    
     
@@ -122,6 +132,31 @@ public class DepartmentController {
     	departmentService.delete(department);
     	return "redirect:/departments";
     }
+    
+    //------Question---------------    
+    @GetMapping("/deleteDepartmentQuestion")
+    public String deleteDepartmentQuestion(@ModelAttribute("answer") Answer answer,@ModelAttribute("department") Department department) {
+
+
+    	
+    	answer.removeAllDependence();
+    	answerService.DeleteAnswer(answer);
+    	
+    	
+    	return "redirect:/departmentdetail?id="+department.getId();
+    }
+    
+    @PostMapping("/addDepartmentQeustion")
+    public String addDepartmentQeustion(@ModelAttribute("answer") Answer answer) {
+
+
+    	
+    	answerService.UpdateAnswer(answer);
+    	
+    	
+    	return "redirect:/departmentdetail?id="+answer.getDepartment().getId();
+    }     
+    
   //--application--    
     @GetMapping("/deleteDepartmentapplication")
     public String deleteDepartmentapplication(@ModelAttribute("application") Application application,@ModelAttribute("department") Department department,ModelMap model) {

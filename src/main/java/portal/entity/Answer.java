@@ -34,6 +34,10 @@ public class Answer {
     @JoinColumn(name = "question_id")
     private Question question;
 	
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id")
+    private Department department;
+	
 	public Long getId() {
 		return id;
 	}
@@ -58,9 +62,20 @@ public class Answer {
 		this.question = question;
 	}
     
-    public void removeAllDependence()
+    public Department getDepartment() {
+		return department;
+	}
+
+	public void setDepartment(Department department) {
+		this.department = department;
+	}
+
+	public void removeAllDependence()
     {
     	if(!ObjectUtils.isEmpty(this.question)) this.question.removeAnswer(this);
     	this.setQuestion(null);
+    	
+    	if(!ObjectUtils.isEmpty(this.department)) this.department.RemoveAnswer(this);
+    	this.setDepartment(null);   	
     }
 }

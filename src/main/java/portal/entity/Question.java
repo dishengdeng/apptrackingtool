@@ -9,11 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.JoinColumn;
+
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -48,12 +47,6 @@ public class Question {
 		this.questionName = questionName;
 	}
 	
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "question_department",
-        joinColumns = @JoinColumn(name = "question_id"),
-        inverseJoinColumns = @JoinColumn(name = "department_id")
-    )
-    private Set<Department> departments = new HashSet<Department>();
 
     @OneToMany(
             mappedBy = "question", 
@@ -62,26 +55,7 @@ public class Question {
         )
     private Set<Answer> answers = new HashSet<Answer>();    
     
-	public Set<Department> getDepartments() {
-		return departments;
-	}
 
-	public void setDepartments(Set<Department> departments) {
-		this.departments.addAll(departments);
-		departments.forEach(obj->{
-			obj.addQuestion(this);
-		});
-	}
-    
-    public void addDepartment(Department department)
-    {
-    	this.departments.add(department);
-    }
-    
-    public void removeDepartment(Department department)
-    {
-    	this.departments.remove(department);
-    }
 
     
     
@@ -108,10 +82,7 @@ public class Question {
 
 	public void removeAllDepandence()
     {
-    	this.departments.forEach(obj->{
-    		obj.removeQuestion(this);
-    	});
-    	this.departments=null;
+
     	
     	this.answers.forEach(obj->{
     		obj.setQuestion(null);
