@@ -6,3 +6,4 @@
 .text-non-decoration{text-decoration: none}
 .cursor-pointer{cursor:pointer}
 .border-red{border:1px solid #d9534f}
+.non-textarea{border:0;resize:none;overflow:hidden}
