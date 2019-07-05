@@ -25,7 +25,7 @@ public interface AppInstanceService {
     
 
     
-    List<AppInstance> findNotAssgined(Application application);
+    List<AppInstance> findNotAssgined();
     
     void removeApplication(Application application);
     void removFiles(String upload_foler,AppInstance appInstance);

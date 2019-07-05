@@ -1,16 +1,20 @@
 package portal.validator;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 import portal.entity.AppInstance;
 import portal.entity.Application;
+import portal.service.AppService;
 import portal.utility.Action;
 import portal.utility.Status;
 @Component
 public class AppValidator implements Validator{
 
+	@Autowired
+	private AppService appService;
 	@Override
 	public boolean supports(Class<?> clazz) {
 		// TODO Auto-generated method stub
@@ -25,13 +29,15 @@ public class AppValidator implements Validator{
 	
 	public void validateStatus(Object o, Errors errors,Action action) {
 		Application app = (Application) o;
+		
+		Application appEntity=appService.findbyId(app.getId());
 		if(action==Action.UPDATE)
 		{
 			
-			if(app.getAppStatus()==Status.Inactive && app.getAppInstances().size()>0)
+			if(app.getAppStatus()==Status.Inactive && appEntity.getAppInstances().size()>0)
 			{
 				boolean rejected=false;
-				for(AppInstance obj:app.getAppInstances())
+				for(AppInstance obj:appEntity.getAppInstances())
 				{
 					if(obj.getAppStatus()==Status.Active && !rejected)
 					{
@@ -45,9 +51,9 @@ public class AppValidator implements Validator{
 		}
 		else if(action==Action.DELETE)			
 		{	
-			if(app.getAppInstances().size()>0)
+			if(appEntity.getAppInstances().size()>0)
 			{
-				for(AppInstance obj:app.getAppInstances()){
+				for(AppInstance obj:appEntity.getAppInstances()){
 					if(obj.getAppStatus()==Status.Active)
 					{
 						errors.rejectValue("id", "app.deletion");

@@ -142,11 +142,12 @@ public class HomeController {
     
     @PostMapping("/updateApplication")
     public String updateApplication(@ModelAttribute("appmodel") Application application,BindingResult bindingResult,ModelMap model) {
+    	
 
-        getUpdatedApp(application);
     	
     	appValidator.validateStatus(application, bindingResult, Action.UPDATE);
         if (bindingResult.hasErrors()) {
+        	
         	setModel(model,application);
             return "applicationdetail";
         }
@@ -424,37 +425,18 @@ public class HomeController {
     	
     }
     
-    //--private methods--
-    private void getUpdatedApp(Application application)
-    {
-        Application appEntity=appService.findbyId(application.getId());
 
-        application.setAppInstances(appEntity.getAppInstances());
-        appEntity.getSupports().forEach(support->{
-        	application.addSupport(support);
-        });        
-        application.setManufacturers(appEntity.getManufacturers());
-        application.setDepartments(appEntity.getDepartments());
-        application.setFiles(appEntity.getFiles());
-        application.setZones(appEntity.getZones());
-        application.setSites(appEntity.getSites());
-        application.setContracts(appEntity.getContracts());
-        application.setLicenses(appEntity.getLicenses());
-        application.setProjects(appEntity.getProjects());
-        application.setZac(appEntity.getZac());
-        application.setZacmaps(appEntity.getZacmaps());
- 
-    }
     
-    private void setModel(ModelMap model,Application appEntity)
+    private void setModel(ModelMap model,Application application)
     {
-    	model.addAttribute("appmodel",appEntity);
+    	Application appEntity=appService.findbyId(application.getId());
+    	model.addAttribute("appmodel",application);
     	model.addAttribute("app",appEntity);
-    	
+
     	//--appInstance--
     	model.addAttribute("appinstances",appEntity.getAppInstances());
 
-    	model.addAttribute("instances",appInstanceService.findNotAssgined(appEntity));
+    	model.addAttribute("instances",appInstanceService.findNotAssgined());
     	
     	//--project---
     	model.addAttribute("applicationprojects",appEntity.getProjects());
