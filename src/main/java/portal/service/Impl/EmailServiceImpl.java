@@ -3,8 +3,10 @@ package portal.service.Impl;
 import java.util.Date;
 
 import javax.mail.Message;
+
 import javax.mail.Session;
 import javax.mail.Transport;
+
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -21,10 +23,9 @@ public class EmailServiceImpl implements EmailService{
 
 
 	@Override
-	public void sendEmail(String to, String subject, String text,String from) {
+	public void sendEmail(String to, String subject, String text,String from) throws Exception {
 
-		try
-		{
+
 
 			Message message = new MimeMessage(mailSession);
 			
@@ -41,11 +42,7 @@ public class EmailServiceImpl implements EmailService{
 			
 			Transport.send(message);
 
-		}
-		catch(Exception ex)
-		{
-			ex.printStackTrace();
-		}
+
 
 	}
 
