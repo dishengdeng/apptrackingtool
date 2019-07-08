@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Create Report</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<form action="#" th:action="@{/addreport}" th:object="${report}" method="post">
+				  <div class="form-group">
+					<label for="reportName">Report:</label>
+					<input type="text" class="form-control" th:field="*{reportName}">
+				  </div>
+				  <div class="form-group">
+					<label for="reportlevels">Report Levels:</label>
+					<select name="reportlevels" class="form-control" multiple id="reportLevelSelect">
+						<option th:each="reportlevel :${reportlevels}" th:value="${reportlevel.id}" th:text="${reportlevel.reportLevelType}"></option>
+					</select>
+				  </div>				  
+				  <div class="form-group">
+					<label for="description">Description:</label>
+					<input type="text" class="form-control" th:field="*{description}">
+				  </div>
+				  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" type="submit" value="Submit" />
+				</form>
+			</div>
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+	  $('#reportLevelSelect').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: 300, 
+		enableFiltering: true,
+		nonSelectedText: 'Select Report Level'
+	  });
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>

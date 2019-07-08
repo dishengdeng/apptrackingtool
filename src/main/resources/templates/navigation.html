@@ -112,6 +112,12 @@
 									</li>
 									<li>
 										<a href="/questions">Questions</a>
+									</li>
+									<li>
+										<a href="/reports">Reports</a>
+									</li>
+									<li sec:authorize="hasAnyRole('ADMIN','SYSADMIN')">
+										<a href="/reportlevels">Report Level</a>
 									</li>									
 									<li sec:authorize="hasAnyRole('ADMIN','SYSADMIN')">
 										<a href="/users">System Users</a>

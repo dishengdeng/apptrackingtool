@@ -42,6 +42,13 @@ public class QuestionController {
         return "redirect:/questions";
     }
     
+    @PostMapping("/updateQuestion")
+    public String updateQuestion(@ModelAttribute("questionModel") Question question) {
+
+    	questionService.UpdateQuestion(question);
+    	return "redirect:/questiondetail?question="+question.getId();
+    }
+    
     @GetMapping("/addQuestion")
     public String createZac(ModelMap model) {
     	model.addAttribute("question", new Question());
