@@ -2,6 +2,7 @@ package portal.service;
 
 import java.util.List;
 
+
 import portal.entity.Report;
 
 public interface ReportService {
@@ -10,4 +11,5 @@ public interface ReportService {
 	public Report update(Report report);
 	public void delete(Report report);
 	public Report getReport(Report report);
+	public void removeFile(String upload_foler, Report report);
 }

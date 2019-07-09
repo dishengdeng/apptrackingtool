@@ -11,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 
@@ -70,6 +71,10 @@ public class File implements Comparable<File>{
 	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "application_id")
     private Application application;
+	
+	@OneToOne(cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+	@JoinColumn(name = "report_id", referencedColumnName = "id")
+	private Report report;
     
 	public Long getId() {
 		return id;
@@ -164,7 +169,17 @@ public class File implements Comparable<File>{
 	public void setApplication(Application application) {
 		this.application = application;
 	}
+
+
 	
+	public Report getReport() {
+		return report;
+	}
+
+	public void setReport(Report report) {
+		this.report = report;
+	}
+
 	public void removeAllDependence()
 	{
 		this.setAppInstance(null);
@@ -173,6 +188,7 @@ public class File implements Comparable<File>{
 		this.setContract(null);
 		this.setServer(null);
 		this.setDepartment(null);
+		this.setReport(null);
 	}
 
 	@Override

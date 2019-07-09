@@ -2,6 +2,9 @@ package portal.entity;
 
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
@@ -82,7 +86,9 @@ public class Stakeholder {
     @JoinColumn(name = "slarole_id",referencedColumnName="id")
     private SLARole role;    
     
-
+    @ManyToMany(mappedBy = "stakeholders")
+    private Set<Report> reports= new HashSet<Report>();
+    
 	public Long getId() {
 		return id;
 	}
@@ -195,6 +201,27 @@ public class Stakeholder {
 		this.raciforsyschanges = raciforsyschanges;
 	}
 	
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<Report> reports) {
+		this.reports.addAll(reports);
+		this.reports.forEach(obj->{
+			obj.addStakeholder(this);
+		});
+	}
+	
+	public void addReport(Report report)
+	{
+		this.reports.add(report);
+	}
+	
+	public void removeReport(Report report)
+	{
+		this.reports.remove(report);
+	}
+	
 	public void removeAllDependence()
 	{
 		if(!ObjectUtils.isEmpty(this.department)) this.department.removeStakeholder(this);
@@ -202,8 +229,17 @@ public class Stakeholder {
 		
 		if(!ObjectUtils.isEmpty(this.role)) this.role.removeStakeholder(this);
 		this.role=null;
+		
+		this.reports.forEach(obj->{
+			obj.removeStakeholder(this);
+		});
+		this.reports=null;
 	}
- 
+
+	
+	
+
+
 	@Override
 	public boolean equals(Object obj)
 	{

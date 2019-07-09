@@ -8,7 +8,8 @@ public enum FileType {
 	DEPARTMENT(2),
 	SERVER(3),
 	APPINSTANCE(4),
-	APPLICATION(5);
+	APPLICATION(5),
+	REPORT(6);
 	
 	private final int fileCode;
 

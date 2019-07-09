@@ -13,10 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
+import portal.utility.ReportLevelType;
 
 
 @Entity
@@ -41,7 +43,17 @@ public class Report {
         joinColumns = @JoinColumn(name = "report_id"),
         inverseJoinColumns = @JoinColumn(name = "level_id")
     )
-    private Set<ReportLevel> reportlevels = new HashSet<ReportLevel>();   
+    private Set<ReportLevel> reportlevels = new HashSet<ReportLevel>(); 
+    
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "reportstakeholder",
+        joinColumns = @JoinColumn(name = "report_id"),
+        inverseJoinColumns = @JoinColumn(name = "stakeholder_id")
+    )
+    private Set<Stakeholder> stakeholders = new HashSet<Stakeholder>();
+    
+    @OneToOne(mappedBy = "report")
+    private File tempate;
 
 	public Long getId() {
 		return id;
@@ -87,12 +99,60 @@ public class Report {
 	{
 		this.reportlevels.remove(reportLevel);
 	}
-    
+ 
+
+	public File getTempate() {
+		return tempate;
+	}
+
+	public void setTempate(File tempate) {
+		this.tempate = tempate;
+	}
+
+	public Set<Stakeholder> getStakeholders() {
+		return stakeholders;
+	}
+
+	public void setStakeholders(Set<Stakeholder> stakeholders) {
+		this.stakeholders.addAll(stakeholders);
+		stakeholders.forEach(obj->{
+			obj.addReport(this);
+		});
+	}
+	
+	public void addStakeholder(Stakeholder stakeholder)
+	{
+		this.stakeholders.add(stakeholder);
+	}
+
+	public void removeStakeholder(Stakeholder stakeholder)
+	{
+		this.stakeholders.remove(stakeholder);
+	}
+	
 	public void removeAlldependence()
 	{
 		this.reportlevels.forEach(obj->{
 			obj.deleteReport(this);
 		});
 		this.reportlevels=null;
+		
+		this.stakeholders.forEach(obj->{
+			obj.removeReport(this);
+		});
+		this.stakeholders=null;
+	}
+	
+	public boolean isContainReportLevel(ReportLevelType reportLevelType)
+	{
+		boolean result=false;
+		
+		for(ReportLevel obj : this.reportlevels)
+		{
+			if(obj.getReportLevelType().equals(reportLevelType)) result = true;
+		}
+			
+		
+		return result;
 	}
 }
