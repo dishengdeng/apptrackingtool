@@ -2,6 +2,8 @@ package portal.controllers;
 
 
 
+
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import portal.entity.File;
 import portal.entity.Report;
 import portal.entity.Stakeholder;
+import portal.models.ReportModel;
 import portal.service.FileService;
 import portal.service.ReportLevelService;
 import portal.service.ReportService;
@@ -89,11 +92,10 @@ public class ReportController {
     }
     
     //---get report model
-    @GetMapping(value="/reportmodel",produces = "application/json")
-    @ResponseBody
-    public ResponseEntity<Report> addQeustionDepartmentByJQuery(@ModelAttribute("report") Report report) {
+    @GetMapping(value="/reportmodel")
+    public @ResponseBody ResponseEntity<ReportModel> addQeustionDepartmentByJQuery(@ModelAttribute("report") Report report) {
 
-    	return new ResponseEntity<Report>(report,HttpStatus.OK);
+    	return new ResponseEntity<ReportModel>(reportService.getReportModel(report),HttpStatus.OK);
     }    
     
     //-----stakeholder------

@@ -20,7 +20,7 @@
 						<span th:text="${report.reportName}"></span>
 						</div>
 						<div class="col-md-4 text-right">						
-						<a  class="btn btn-primary" th:href="@{'/reportmodel?report='+${report.id}}" role="button" data-toggle="tooltip" title="Get Report Data Modal"></a>
+						<a th:href="@{'/reportmodel?report='+${report.id}}" role="button" data-toggle="tooltip" title="Get Data Modal"><i class="fa fa-download text-muted" ></i></a>
 						</div>						
 
 					</div>						

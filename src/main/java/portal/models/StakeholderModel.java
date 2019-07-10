@@ -2,44 +2,51 @@ package portal.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import portal.entity.SLARole;
+
 
 public class StakeholderModel {
 	
-	@JsonProperty("id")
+	
 	private Long id;
 
-	@JsonProperty("stakeholderName")
+	
 	private String stakeholderName;
 	
-	@JsonProperty("note")
+	
 	private String note;
     
 
-	@JsonProperty("firstname")
+	
 	private String firstname;
     
-	@JsonProperty("lastname")
+	
 	private String lastname;
     
-	@JsonProperty("address")
+	
 	private String address;
 
-	@JsonProperty("phone")
+	
 	private String phone;
 	
-	@JsonProperty("position")	
+		
 	private String position; 
     
-	@JsonProperty("email")
+	
+	private String influence;
+	
+	private String interest;
+	
+	private String raciforsyschanges;
+	
 	private String email;
 
-	@JsonProperty("department")
+	
 	private DepartmentModel departmentModel;
 
-	@JsonProperty("role")
-	private SLARole slaRole;
-
+	
+	private SLARoleModel slaRole;
+	
+	@JsonProperty("id")
 	public Long getId() {
 		return id;
 	}
@@ -47,7 +54,8 @@ public class StakeholderModel {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
+	@JsonProperty("stakeholderName")
 	public String getStakeholderName() {
 		return stakeholderName;
 	}
@@ -55,7 +63,9 @@ public class StakeholderModel {
 	public void setStakeholderName(String stakeholderName) {
 		this.stakeholderName = stakeholderName;
 	}
-
+	
+	
+	@JsonProperty("note")
 	public String getNote() {
 		return note;
 	}
@@ -63,7 +73,8 @@ public class StakeholderModel {
 	public void setNote(String note) {
 		this.note = note;
 	}
-
+	
+	@JsonProperty("firstname")
 	public String getFirstname() {
 		return firstname;
 	}
@@ -71,7 +82,8 @@ public class StakeholderModel {
 	public void setFirstname(String firstname) {
 		this.firstname = firstname;
 	}
-
+	
+	@JsonProperty("lastname")
 	public String getLastname() {
 		return lastname;
 	}
@@ -79,7 +91,8 @@ public class StakeholderModel {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-
+	
+	@JsonProperty("address")
 	public String getAddress() {
 		return address;
 	}
@@ -87,7 +100,8 @@ public class StakeholderModel {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-
+	
+	@JsonProperty("phone")
 	public String getPhone() {
 		return phone;
 	}
@@ -95,7 +109,8 @@ public class StakeholderModel {
 	public void setPhone(String phone) {
 		this.phone = phone;
 	}
-
+	
+	@JsonProperty("position")
 	public String getPosition() {
 		return position;
 	}
@@ -103,7 +118,8 @@ public class StakeholderModel {
 	public void setPosition(String position) {
 		this.position = position;
 	}
-
+	
+	@JsonProperty("email")
 	public String getEmail() {
 		return email;
 	}
@@ -111,7 +127,8 @@ public class StakeholderModel {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
+	
+	@JsonProperty("department")
 	public DepartmentModel getDepartmentModel() {
 		return departmentModel;
 	}
@@ -119,13 +136,39 @@ public class StakeholderModel {
 	public void setDepartmentModel(DepartmentModel departmentModel) {
 		this.departmentModel = departmentModel;
 	}
+	
 
-	public SLARole getSlaRole() {
+	@JsonProperty("influence")
+	public String getInfluence() {
+		return influence;
+	}
+	@JsonProperty("role")
+	public SLARoleModel getSlaRole() {
 		return slaRole;
 	}
 
-	public void setSlaRole(SLARole slaRole) {
+	public void setSlaRole(SLARoleModel slaRole) {
 		this.slaRole = slaRole;
+	}
+
+	public void setInfluence(String influence) {
+		this.influence = influence;
+	}
+	@JsonProperty("interest")
+	public String getInterest() {
+		return interest;
+	}
+
+	public void setInterest(String interest) {
+		this.interest = interest;
+	}
+	@JsonProperty("raciforsyschanges")
+	public String getRaciforsyschanges() {
+		return raciforsyschanges;
+	}
+
+	public void setRaciforsyschanges(String raciforsyschanges) {
+		this.raciforsyschanges = raciforsyschanges;
 	}
  
 	

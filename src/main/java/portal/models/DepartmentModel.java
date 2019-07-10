@@ -4,35 +4,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DepartmentModel {
 	
-	@JsonProperty("id")
+	
 	private Long id;
 
-	@JsonProperty("departmentName")
+	
 	private String departmentName;
 	
-	@JsonProperty("description")
+	
 	private String description; 
 
-	@JsonProperty("purpose")	
+		
 	private String purpose;
     
 
     
-	@JsonProperty("stragicplan")
+	
 	private String stragicplan;
 
-	@JsonProperty("roadMap")	
+		
 	private String roadMap;   
 
-	@JsonProperty("goal")
+	
 	private String goal; 
     
-	@JsonProperty("painpoint")
+	
 	private String painpoint;
  
-	@JsonProperty("attachment")
-	private String attachment;
-    
+	
+	@JsonProperty("id")   
 	public Long getId() {
 		return id;
 	}
@@ -40,7 +39,8 @@ public class DepartmentModel {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	
+	@JsonProperty("departmentName")
 	public String getDepartmentName() {
 		return departmentName;
 	}
@@ -48,7 +48,8 @@ public class DepartmentModel {
 	public void setDepartmentName(String departmentName) {
 		this.departmentName = departmentName;
 	}
-
+	
+	@JsonProperty("description")
 	public String getDescription() {
 		return description;
 	}
@@ -56,7 +57,8 @@ public class DepartmentModel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
+	
+	@JsonProperty("purpose")
 	public String getPurpose() {
 		return purpose;
 	}
@@ -65,7 +67,7 @@ public class DepartmentModel {
 		this.purpose = purpose;
 	}
 
-
+	@JsonProperty("stragicplan")
 	public String getStragicplan() {
 		return stragicplan;
 	}
@@ -73,7 +75,8 @@ public class DepartmentModel {
 	public void setStragicplan(String stragicplan) {
 		this.stragicplan = stragicplan;
 	}
-
+	
+	@JsonProperty("roadMap")
 	public String getRoadMap() {
 		return roadMap;
 	}
@@ -81,7 +84,8 @@ public class DepartmentModel {
 	public void setRoadMap(String roadMap) {
 		this.roadMap = roadMap;
 	}
-
+	
+	@JsonProperty("goal")
 	public String getGoal() {
 		return goal;
 	}
@@ -89,7 +93,8 @@ public class DepartmentModel {
 	public void setGoal(String goal) {
 		this.goal = goal;
 	}
-
+	
+	@JsonProperty("painpoint")
 	public String getPainpoint() {
 		return painpoint;
 	}
@@ -97,14 +102,8 @@ public class DepartmentModel {
 	public void setPainpoint(String painpoint) {
 		this.painpoint = painpoint;
 	}
+	
 
-	public String getAttachment() {
-		return attachment;
-	}
-
-	public void setAttachment(String attachment) {
-		this.attachment = attachment;
-	}
 
 	
 }
