@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+
+
 public class ReportModel {
+
 	
 	private Long id;
 	
@@ -29,6 +32,7 @@ public class ReportModel {
 	}
 
 	public void setReportname(String reportname) {
+
 		this.reportname = reportname;
 	}
 	@JsonProperty("Description")
@@ -37,6 +41,7 @@ public class ReportModel {
 	}
 
 	public void setDescription(String description) {
+
 		this.description = description;
 	}
 	@JsonProperty("ReportLevels")

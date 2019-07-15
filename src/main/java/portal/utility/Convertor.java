@@ -4,6 +4,8 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import org.apache.commons.lang.StringUtils;
+
 public class Convertor {
 
 		@SuppressWarnings("finally")
@@ -108,6 +110,13 @@ public class Convertor {
 				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 				return dateFormatStr.format(date);
 	
+		}
+		
+		
+		static public String setEmptyIfNull(String str)
+		{
+			if(StringUtils.isEmpty(str)) str="";
+			return str;
 		}
 		
 

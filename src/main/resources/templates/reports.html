@@ -67,7 +67,17 @@
 										</td>										
 										<td th:text="${report.description}"></td>
 										<td>
-											<a class="btn btn-primary btn-w40" th:href="@{'/getreport?report='+${report.id}}" role="button">Run</a>
+											<form method="get" th:action="@{/getreport}">
+												<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
+												<div class="form-group">
+													<label for="reportformat">Format:</label>
+													<select name="reportformat" class="form-control">
+														<option value="PDF" selected>PDF</option>
+														<option value="EXCEL" selected>EXCEL</option>
+													</select>
+												</div>
+											<input  class="btn btn-primary btn-w40" type="submit" value="Run" />
+											</form>
 										</td>
                                     </tr>
 

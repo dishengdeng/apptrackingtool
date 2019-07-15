@@ -4,11 +4,14 @@ package portal.controllers;
 
 
 
+
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -16,18 +19,23 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+
 import org.springframework.web.multipart.MultipartFile;
+
+
 
 import portal.entity.File;
 import portal.entity.Report;
 import portal.entity.Stakeholder;
-import portal.models.ReportModel;
+
+import portal.report.ReportManager;
 import portal.service.FileService;
 import portal.service.ReportLevelService;
 import portal.service.ReportService;
+import portal.service.JsonWriter;
 import portal.service.StakeholderService;
 import portal.utility.FileType;
+import portal.utility.ReportFormat;
 
 @Controller
 public class ReportController {
@@ -38,10 +46,16 @@ public class ReportController {
 	private ReportLevelService reportLevelService;
 	
 	@Autowired
+	private JsonWriter jsonWriter;
+	
+	@Autowired
 	private StakeholderService stakeholderService;
 	
 	@Autowired
 	private FileService fileService;
+	
+	@Autowired
+	private ReportManager reportManager;
 	
 	
 	private final String UPLOADED_FOLDER="reports//";
@@ -93,9 +107,14 @@ public class ReportController {
     
     //---get report model
     @GetMapping(value="/reportmodel")
-    public @ResponseBody ResponseEntity<ReportModel> addQeustionDepartmentByJQuery(@ModelAttribute("report") Report report) {
+    public void addQeustionDepartmentByJQuery(@ModelAttribute("report") Report report,HttpServletResponse response) throws Exception {
 
-    	return new ResponseEntity<ReportModel>(reportService.getReportModel(report),HttpStatus.OK);
+
+    	jsonWriter.writeJsonWithNoNull(reportService.getReportModel(report)).writeTo(response.getOutputStream());
+    	response.setContentType("application/json");
+    	response.setHeader("Content-Disposition", "attachment; filename="+report.getReportName()+".json");
+    	response.flushBuffer();
+   
     }    
     
     //-----stakeholder------
@@ -124,9 +143,9 @@ public class ReportController {
     	fileEntity.setFiletype(FileType.REPORT);
     	fileEntity.setAttachment(fileService.getFileName(file.getOriginalFilename()));
     	fileEntity.setReport(report);
-    	fileEntity=fileService.uploadFile(file, UPLOADED_FOLDER,report.getId().toString(),fileEntity);
-    	
 
+    	
+    	reportManager.compileTemplate(fileService.uploadFile(file, UPLOADED_FOLDER,report.getId().toString(),fileEntity), UPLOADED_FOLDER);
 
     	return "redirect:/reportdetail?report="+report.getId();
     }
@@ -152,4 +171,12 @@ public class ReportController {
     	return "redirect:/reportdetail?report="+report.getId();
     	
     }	
+ //--Run report   
+    @GetMapping("/getreport")
+    public void downloadfile(@ModelAttribute("report") Report report,HttpServletResponse response,@ModelAttribute("reportformat") String reportFormat)
+    {
+    	
+    	reportManager.runreport(report, UPLOADED_FOLDER,response,ReportFormat.valueOf(reportFormat));
+    	
+    }
 }

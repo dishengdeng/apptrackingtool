@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 
 
+
+
 public class StakeholderModel {
 	
 	
@@ -61,6 +63,7 @@ public class StakeholderModel {
 	}
 
 	public void setStakeholderName(String stakeholderName) {
+
 		this.stakeholderName = stakeholderName;
 	}
 	
@@ -71,6 +74,7 @@ public class StakeholderModel {
 	}
 
 	public void setNote(String note) {
+
 		this.note = note;
 	}
 	
