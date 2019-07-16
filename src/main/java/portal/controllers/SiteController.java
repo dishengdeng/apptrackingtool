@@ -60,10 +60,7 @@ public class SiteController {
     
     @GetMapping("/deleteSite")
     public String deleteSite(@ModelAttribute("site") Site site) {
-    	site.getZone().removeSite(site);
-    	site.setZone(null);
-    	site.removeAllInstance();
-    	site.removeAllApplication();
+    	site.removeAllDependence();
     	siteService.delete(site);
     	return "redirect:/sites";
     }

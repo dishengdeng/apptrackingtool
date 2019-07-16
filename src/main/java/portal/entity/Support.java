@@ -126,6 +126,9 @@ public class Support {
         inverseJoinColumns = @JoinColumn(name = "application_id")
     )
     private Set<Application> applications = new HashSet<Application>();   
+    
+	@ManyToMany(mappedBy = "supports")
+    private Set<Report> reports = new HashSet<Report>();
 
 	public Long getId() {
 		return id;
@@ -322,24 +325,9 @@ public class Support {
 		this.commonissue = commonissue;
 	}
 
-	public void removeAllApp()
-	{
-		this.applications.forEach(obj->{
-			obj.removeSupport(this);
-		});
-		this.applications=null;
-	}
+
 	
-	public void removeAllInstance()
-	{
 
-		this.appInstances.forEach(obj->{
-			obj.removeSupport(this);
-		});
-		this.appInstances=null;
-		
-
-	}
 
 	public String getLocation() {
 		return location;
@@ -349,4 +337,44 @@ public class Support {
 		this.location = location;
 	}
 	
+	
+	
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<Report> reports) {
+		this.reports.addAll(reports);
+		reports.forEach(obj->{
+			obj.addSupport(this);
+		});
+	}
+	
+	public void addReport(Report report)
+	{
+		this.reports.add(report);
+	}
+	
+	public void removeReport(Report report)
+	{
+		this.reports.remove(report);
+	}
+
+	public void removeAllDependence()
+	{
+		this.applications.forEach(obj->{
+			obj.removeSupport(this);
+		});
+		this.applications=null;
+		
+		this.appInstances.forEach(obj->{
+			obj.removeSupport(this);
+		});
+		this.appInstances=null;
+		
+		this.reports.forEach(obj->{
+			obj.removeSupport(this);
+		});
+		this.reports=null;
+	}
 }

@@ -13,6 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -55,6 +56,9 @@ public class Zac {
             orphanRemoval = true
         )
     private Set<Zacmap> zacmaps = new HashSet<Zacmap>();
+    
+	@ManyToMany(mappedBy = "zacs")
+    private Set<Report> reports = new HashSet<Report>();
 
 	public Long getId() {
 		return id;
@@ -145,6 +149,29 @@ public class Zac {
 		return this.zacmaps.stream().filter(obj->obj.getApplication().equals(application)).collect(Collectors.toList());
 		
 	}
+	
+	
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<Report> reports) {
+		this.reports.addAll(reports);
+		reports.forEach(obj->{
+			obj.addZac(this);
+		});
+	}
+	
+	public void addReport(Report report)
+	{
+		this.reports.add(report);
+	}
+	
+	public void removeReport(Report report)
+	{
+		this.reports.remove(report);
+	}
+
 	public void removeAllDependence()
 	{
 		this.applications.forEach(obj->{
@@ -156,6 +183,11 @@ public class Zac {
 			obj.setZac(null);
 		});
 		this.zacmaps=null;
+		
+		this.reports.forEach(obj->{
+			obj.removeZac(this);
+		});
+		this.reports=null;
 	}
     
 

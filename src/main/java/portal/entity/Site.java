@@ -12,6 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.springframework.util.ObjectUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -62,6 +63,9 @@ public class Site implements Comparable<Site>{
     )
     private Set<Application> applications = new HashSet<Application>();
     
+	@ManyToMany(mappedBy = "sites")
+    private Set<Report> reports = new HashSet<Report>();
+    
     public void addAppInstance(AppInstance appInstance)
     {
     	appInstances.add(appInstance);
@@ -73,13 +77,7 @@ public class Site implements Comparable<Site>{
 
     }
     
-    public void removeAllInstance()
-    {
-    	this.appInstances.forEach(instance->{
-    		instance.removeSite(this);
-    	});
-    	this.appInstances=null;
-    }
+
     
 	public Long getId() {
 		return id;
@@ -153,14 +151,48 @@ public class Site implements Comparable<Site>{
 		this.applications.removeIf(obj->obj.equals(application));
 	}
 	
-	public void removeAllApplication()
+	
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<Report> reports) {
+		this.reports.addAll(reports);
+		reports.forEach(obj->{
+			obj.addSite(this);
+		});
+	}
+	
+	public void addReport(Report report)
+	{
+		this.reports.add(report);
+	}
+	
+	public void removeReport(Report report)
+	{
+		this.reports.remove(report);
+	}
+	
+	public void removeAllDependence()
 	{
 		this.applications.forEach(obj->{
 			obj.removeSite(this);
 		});
 		this.applications=null;
+		
+    	this.appInstances.forEach(instance->{
+    		instance.removeSite(this);
+    	});
+    	this.appInstances=null;
+    	
+    	if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeSite(this);
+    	this.setZone(null);
+    	
+    	this.reports.forEach(obj->{
+    		obj.removeSite(this);
+    	});
+    	this.reports=null;
 	}
-
 	@Override
 	public boolean equals(Object obj)
 	{

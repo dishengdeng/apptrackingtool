@@ -22,12 +22,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.multipart.MultipartFile;
 
-
-
+import portal.entity.AppInstance;
+import portal.entity.Application;
+import portal.entity.Company;
+import portal.entity.Contract;
+import portal.entity.Department;
 import portal.entity.File;
+import portal.entity.License;
 import portal.entity.Report;
+import portal.entity.Server;
+import portal.entity.Site;
 import portal.entity.Stakeholder;
-
+import portal.entity.Support;
+import portal.entity.Zac;
+import portal.entity.Zone;
 import portal.report.ReportManager;
 import portal.service.FileService;
 import portal.service.ReportLevelService;
@@ -111,6 +119,7 @@ public class ReportController {
 
 
     	jsonWriter.writeJsonWithNoNull(reportService.getReportModel(report)).writeTo(response.getOutputStream());
+    
     	response.setContentType("application/json");
     	response.setHeader("Content-Disposition", "attachment; filename="+report.getReportName()+".json");
     	response.flushBuffer();
@@ -132,6 +141,182 @@ public class ReportController {
 		reportService.update(report);
 		return "redirect:/reportdetail?report="+report.getId();
 	}
+	
+	
+	 //-----application------
+	@GetMapping("/deletereportapplication")
+	public String deletereportapplication(@ModelAttribute("app") Application application,@ModelAttribute("report") Report report)
+	{
+		report.removeApplication(application);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportapplication")
+	public String addreportapplication(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	 //----- appinstance------
+	@GetMapping("/deletereportappinstance")
+	public String deletereportappinstance(@ModelAttribute("appinstance")  AppInstance  appinstance,@ModelAttribute("report") Report report)
+	{
+		report.removeAppInstance(appinstance);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportappinstance")
+	public String addreportappinstance(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	 //----- department------
+	@GetMapping("/deletereportdepartment")
+	public String deletereportdepartment(@ModelAttribute("department")  Department  department,@ModelAttribute("report") Report report)
+	{
+		report.removeDepartment(department);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportdepartment")
+	public String addreportdepartment(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	 //----- zone------
+	@GetMapping("/deletereportzone")
+	public String deletereportzone(@ModelAttribute("zone")  Zone  zone,@ModelAttribute("report") Report report)
+	{
+		report.removeZone(zone);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportzone")
+	public String addreportzone(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	 //----- site------
+	@GetMapping("/deletereportsite")
+	public String deletereportsite(@ModelAttribute("site")  Site  site,@ModelAttribute("report") Report report)
+	{
+		report.removeSite(site);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportsite")
+	public String addreportsite(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	 //----- company------
+	@GetMapping("/deletereportcompany")
+	public String deletereportcompany(@ModelAttribute("company")  Company  company,@ModelAttribute("report") Report report)
+	{
+		report.removeCompany(company);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportcompany")
+	public String addreportcompany(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	 //----- contract------
+	@GetMapping("/deletereportcontract")
+	public String deletereportcontract(@ModelAttribute("contract")  Contract  contract,@ModelAttribute("report") Report report)
+	{
+		report.removeContract(contract);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportcontract")
+	public String addreportcontract(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	 //----- license------
+	@GetMapping("/deletereportlicense")
+	public String deletereportlicense(@ModelAttribute("license")  License  license,@ModelAttribute("report") Report report)
+	{
+		report.removeLicense(license);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportlicense")
+	public String addreportlicense(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	 //----- server------
+	@GetMapping("/deletereportserver")
+	public String deletereportserver(@ModelAttribute("server")  Server  server,@ModelAttribute("report") Report report)
+	{
+		report.removeServer(server);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportserver")
+	public String addreportserver(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	 //----- support------
+	@GetMapping("/deletereportsupport")
+	public String deletereportsupport(@ModelAttribute("support")  Support  support,@ModelAttribute("report") Report report)
+	{
+		report.removeSupport(support);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportsupport")
+	public String addreportsupport(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	 //----- zac------
+	@GetMapping("/deletereportzac")
+	public String deletereportzac(@ModelAttribute("zac")  Zac  zac,@ModelAttribute("report") Report report)
+	{
+		report.removeZac(zac);
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}
+	
+	@PostMapping("/addreportzac")
+	public String addreportzac(@ModelAttribute("report") Report report)
+	{
+		reportService.update(report);
+		return "redirect:/reportdetail?report="+report.getId();
+	}	
 	
 	//------report template management----
     @PostMapping("/reporttemplateupload")

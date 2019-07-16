@@ -105,7 +105,10 @@ public class Contract {
         joinColumns = @JoinColumn(name = "contract_id"),
         inverseJoinColumns = @JoinColumn(name = "application_id")
     )
-    private Set<Application> applications = new HashSet<Application>();    
+    private Set<Application> applications = new HashSet<Application>();
+    
+	@ManyToMany(mappedBy = "contracts")
+    private Set<Report> reports = new HashSet<Report>();
     
     @OneToMany(
             mappedBy = "contract", 
@@ -272,6 +275,29 @@ public class Contract {
 	public void setFiles(Set<File> files) {
 		this.files.addAll(files);
 	}
+	
+	
+
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<Report> reports) {
+		this.reports.addAll(reports);
+		reports.forEach(obj->{
+			obj.addContract(this);
+		});
+	}
+	
+	public void addReport(Report report)
+	{
+		this.reports.add(report);
+	}
+	
+	public void removeReport(Report report)
+	{
+		this.reports.remove(report);
+	}
 
 	public void removeAllDependence()
 	{
@@ -285,6 +311,11 @@ public class Contract {
 			obj.removeContract(this);
 		});
 		this.applications=null;
+		
+		this.reports.forEach(obj->{
+			obj.removeContract(this);
+		});
+		this.reports=null;
 	}
 	
 	public Status getContractStatus()

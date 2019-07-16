@@ -64,9 +64,7 @@ public class ZoneController {
     @GetMapping("/deleteZone")
     public String deleteZone(@ModelAttribute("zone") Zone zone) {
 
-    	zone.removeAllSite();
-    	zone.removeAllAppInstance();
-    	zone.removeAllApplication();
+    	zone.removeAllDependence();
     	zoneService.delete(zone);
     	return "redirect:/zones";
     }

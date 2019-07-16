@@ -89,6 +89,9 @@ public class AppInstance implements Comparable<AppInstance>{
     @ManyToMany(mappedBy = "appInstances")
     private Set<Company> companys = new HashSet<Company>();
     
+	@ManyToMany(mappedBy = "appInstances")
+    private Set<Report> reports = new HashSet<Report>();
+    
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name = "sla_id")
     private SLA sla;
@@ -212,6 +215,19 @@ public class AppInstance implements Comparable<AppInstance>{
 
 	public void setServers(Set<Server> servers) {
 		this.servers.addAll(servers);
+		servers.forEach(obj->{
+			obj.setAppInstance(this);
+		});
+	}
+	
+	public void addServer(Server server)
+	{
+		this.servers.add(server);
+	}
+	
+	public void removeServer(Server server)
+	{
+		this.servers.remove(server);
 	}
 
 	public void addContract(Contract contract)
@@ -405,6 +421,29 @@ public class AppInstance implements Comparable<AppInstance>{
 		this.version = version;
 	}
 
+	
+	
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<Report> reports) {
+		this.reports.addAll(reports);
+		reports.forEach(obj->{
+			obj.addAppInstance(this);
+		});
+	}
+	
+	public void addReport(Report report)
+	{
+		this.reports.add(report);
+	}
+	
+	public void removeReport(Report report)
+	{
+		this.reports.remove(report);
+	}
+
 	public void removeAllDependence()
 	{
 		if(!ObjectUtils.isEmpty(this.department)) this.department.getAppInstances().removeIf(obj->obj.equals(this));
@@ -459,6 +498,10 @@ public class AppInstance implements Comparable<AppInstance>{
 		});
 		this.servers=null;
 		
+		this.reports.forEach(obj->{
+			obj.removeAppInstance(this);
+		});
+		this.reports=null;
 
 	}
 	

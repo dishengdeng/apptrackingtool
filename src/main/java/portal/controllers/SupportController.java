@@ -74,8 +74,8 @@ public class SupportController {
     @GetMapping("/deleteSupport")
     public String deleteSupport(@ModelAttribute("support") Support support) {
 
-    	support.removeAllApp();
-    	support.removeAllInstance();
+    	support.removeAllDependence();
+
 
     	supportService.delete(support);
     	return "redirect:/supports";

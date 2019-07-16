@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.DefaultSerializerProvider;
 
+
 import portal.models.ReportModel;
 import portal.service.JsonWriter;
 
@@ -55,5 +56,6 @@ public class JsonWriterImpl implements JsonWriter{
 		ByteArrayInputStream input= new ByteArrayInputStream(getMapper().writeValueAsBytes(reportModel));
 		return input;
 	}
+
 
 }

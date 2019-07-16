@@ -113,6 +113,9 @@ public class Department {
         )
     private Set<Zacmap> zacmaps = new HashSet<Zacmap>();
     
+	@ManyToMany(mappedBy = "departments")
+    private Set<Report> reports = new HashSet<Report>();
+    
 	public Long getId() {
 		return id;
 	}
@@ -336,6 +339,30 @@ public class Department {
 		this.files.remove(file);
 	}
 
+	
+	
+	
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<Report> reports) {
+		this.reports.addAll(reports);
+		reports.forEach(obj->{
+			obj.addDepartment(this);
+		});
+	}
+	
+	public void addReport(Report report)
+	{
+		this.reports.add(report);
+	}
+	
+	public void removeReport(Report report)
+	{
+		this.reports.remove(report);
+	}
+
 	public String getFileNameWithComma()
 	{
 		List<String> fileName=new ArrayList<String>();
@@ -373,6 +400,11 @@ public class Department {
 			obj.setDepartment(null);
 		});
 		this.answers=null;
+		
+		this.reports.forEach(obj->{
+			obj.removeDepartment(this);
+		});
+		this.reports=null;
 
 	}
 }

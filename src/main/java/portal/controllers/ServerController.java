@@ -65,9 +65,7 @@ public class ServerController {
     @GetMapping("/deleteServer")
     public String deleteServer(@ModelAttribute("server") Server server) {
 
-    	server.setAppInstance(null);
-    	server.setCluster(null);
-    	//serverService.updateServer(server);
+    	server.removeAlldependence();
     	serverService.removFiles(UPLOADED_FOLDER, server);
     	serverService.delete(server);
     	return "redirect:/servers";

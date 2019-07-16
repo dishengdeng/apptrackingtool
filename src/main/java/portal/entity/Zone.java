@@ -61,6 +61,9 @@ public class Zone {
     )
     private Set<Application> applications = new HashSet<Application>();
     
+	@ManyToMany(mappedBy = "zones")
+    private Set<Report> reports = new HashSet<Report>();
+    
 	public Long getId() {
 		return id;
 	}
@@ -108,16 +111,8 @@ public class Zone {
 	{
 		this.sites.remove(site);
 		site.setZone(null);
-	}
-	
-	public void removeAllSite()
-	{
-		this.sites.forEach(site->{
-			site.setZone(null);
-		});
-		this.sites=null;
+	}	
 
-	}
 	
 	public Set<AppInstance> getAppInstances() {
 		return appInstances;
@@ -141,13 +136,7 @@ public class Zone {
 
 	}
 	
-	public void removeAllAppInstance()
-	{
-		this.appInstances.forEach(obj->{
-			obj.removeZone(this);
-		});
-		this.appInstances=null;
-	}
+
 
 	public Set<Application> getApplications() {
 		return applications;
@@ -171,12 +160,50 @@ public class Zone {
 		this.applications.removeIf(obj->obj.equals(application));
 	}
 	
-	public void removeAllApplication()
+
+	
+	public Set<Report> getReports() {
+		return reports;
+	}
+
+	public void setReports(Set<Report> reports) {
+		this.reports.addAll(reports);
+		reports.forEach(obj->{
+			obj.addZone(this);
+		});
+	}
+
+	public void addReport(Report report)
+	{
+		this.reports.add(report);
+	}
+	
+	public void removeReport(Report report)
+	{
+		this.reports.remove(report);
+	}
+	
+	public void removeAllDependence()
 	{
 		this.applications.forEach(obj->{
 			obj.removeZone(this);
 		});
 		this.applications=null;
+		
+		this.appInstances.forEach(obj->{
+			obj.removeZone(this);
+		});
+		this.appInstances=null;
+		
+		this.sites.forEach(site->{
+			site.setZone(null);
+		});
+		this.sites=null;
+		
+		this.reports.forEach(obj->{
+			obj.removeZone(this);
+		});
+		this.reports=null;
 	}
 
 	@Override
