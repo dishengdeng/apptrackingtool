@@ -137,7 +137,8 @@ public class ReportController {
     @PostMapping("/reporttemplateupload")
     public String departmentupload(@RequestParam("file") MultipartFile file,ModelMap model,@ModelAttribute("report") Report report) {
 
-    	
+    	//remove the original one, in case of upload a file with different name
+    	reportService.removeFile(UPLOADED_FOLDER, report);
 
     	File fileEntity = new File();
     	fileEntity.setFiletype(FileType.REPORT);
