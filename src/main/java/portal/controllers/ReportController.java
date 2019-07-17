@@ -37,6 +37,7 @@ import portal.entity.Support;
 import portal.entity.Zac;
 import portal.entity.Zone;
 import portal.report.ReportManager;
+import portal.service.AppService;
 import portal.service.FileService;
 import portal.service.ReportLevelService;
 import portal.service.ReportService;
@@ -61,6 +62,9 @@ public class ReportController {
 	
 	@Autowired
 	private FileService fileService;
+	
+	@Autowired
+	private AppService appService;
 	
 	@Autowired
 	private ReportManager reportManager;
@@ -110,6 +114,7 @@ public class ReportController {
     public String reportdetail(@ModelAttribute("report") Report report,ModelMap model) {
     	model.addAttribute("report",report);
     	model.addAttribute("stakeholders", stakeholderService.getAll());
+    	model.addAttribute("apps", appService.getAll());
         return "reportdetail";
     }
     
