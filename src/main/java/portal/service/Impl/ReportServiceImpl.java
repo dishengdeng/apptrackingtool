@@ -2,7 +2,7 @@ package portal.service.Impl;
 
 
 import java.util.List;
-import org.json.JSONObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -13,6 +13,7 @@ import portal.repository.ReportRepository;
 import portal.service.FileService;
 import portal.service.JsonWriter;
 import portal.service.ReportService;
+import portal.utility.JSONObjectWithEmpty;
 import portal.utility.ReportLevelType;
 
 @Service
@@ -63,8 +64,8 @@ public class ReportServiceImpl implements ReportService{
 	}
 
 	@Override
-	public JSONObject getReportModel(Report report) throws Exception{
-		JSONObject reportObj= new JSONObject();
+	public JSONObjectWithEmpty getReportModel(Report report) throws Exception{
+		JSONObjectWithEmpty reportObj= new JSONObjectWithEmpty();
 		reportObj.put("id",report.getId());
 		reportObj.put("ReportName",report.getReportName());
 		reportObj.put("Description", report.getDescription());

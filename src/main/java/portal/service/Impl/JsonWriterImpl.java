@@ -2,12 +2,15 @@ package portal.service.Impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+
 import java.util.Set;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
+import portal.utility.JSONObjectWithEmpty;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+
+
 
 import portal.entity.Answer;
 import portal.entity.AppInstance;
@@ -31,7 +34,7 @@ public class JsonWriterImpl implements JsonWriter{
 
 
 	@Override
-	public ByteArrayOutputStream writeJsonWithNoNull(JSONObject reportModel) throws Exception{
+	public ByteArrayOutputStream writeJsonWithNoNull(JSONObjectWithEmpty reportModel) throws Exception{
 
     	ByteArrayOutputStream output=new ByteArrayOutputStream();
     	output.write(reportModel.toString().getBytes());
@@ -49,7 +52,7 @@ public class JsonWriterImpl implements JsonWriter{
 //	       jgen.writeString("");
 //	   }
 //	}
-	
+//	
 //	private ObjectMapper getMapper()
 //	{
 //		DefaultSerializerProvider.Impl sp = new DefaultSerializerProvider.Impl();
@@ -60,7 +63,7 @@ public class JsonWriterImpl implements JsonWriter{
 //	}
 
 	@Override
-	public ByteArrayInputStream writeJsonWithNoNullIn(JSONObject reportModel) throws Exception {
+	public ByteArrayInputStream writeJsonWithNoNullIn(JSONObjectWithEmpty reportModel) throws Exception {
 		ByteArrayInputStream input= new ByteArrayInputStream(reportModel.toString().getBytes());
 		return input;
 	}
@@ -72,7 +75,7 @@ public class JsonWriterImpl implements JsonWriter{
 		{
 			boolean isNoProperty=true;
 			
-			JSONObject stakeholderObj= new JSONObject();
+			JSONObjectWithEmpty stakeholderObj= new JSONObjectWithEmpty();
 			stakeholderObj.put("id",stakeholder.getId());
 			stakeholderObj.put("stakeholderName",stakeholder.getStakeholderName());
 			stakeholderObj.put("note", stakeholder.getNote());
@@ -84,7 +87,7 @@ public class JsonWriterImpl implements JsonWriter{
 			stakeholderObj.put("email", stakeholder.getEmail());
 			
 			isNoProperty=ObjectUtils.isEmpty(stakeholder.getDepartment());			
-			JSONObject departObj= new JSONObject();
+			JSONObjectWithEmpty departObj= new JSONObjectWithEmpty();
 			departObj.put("departmentName", isNoProperty ? "":stakeholder.getDepartment().getDepartmentName());
 			departObj.put("description", isNoProperty ? "":stakeholder.getDepartment().getDescription());
 			stakeholderObj.put("department", departObj);
@@ -92,7 +95,7 @@ public class JsonWriterImpl implements JsonWriter{
 			stakeholderObj.put("influence", stakeholder.getInfluence());
 			
 			isNoProperty=ObjectUtils.isEmpty(stakeholder.getRole());
-			JSONObject roleObj= new JSONObject();
+			JSONObjectWithEmpty roleObj= new JSONObjectWithEmpty();
 			roleObj.put("slaroleName", isNoProperty ? "":stakeholder.getRole().getSLARoleName());
 			roleObj.put("description", isNoProperty ? "":stakeholder.getRole().getDescription());
 			
@@ -114,7 +117,7 @@ public class JsonWriterImpl implements JsonWriter{
 		{
 
 			
-			JSONObject appObj= new JSONObject();
+			JSONObjectWithEmpty appObj= new JSONObjectWithEmpty();
 			appObj.put("id",application.getId());
 			appObj.put("ApplicationName",application.getAppName());
 			appObj.put("status", application.getStatus());
@@ -142,7 +145,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray projArray=new JSONArray();
 			for(Project project:application.getProjects())
 			{
-				JSONObject projObj= new JSONObject();
+				JSONObjectWithEmpty projObj= new JSONObjectWithEmpty();
 				projObj.put("id", project.getId());
 				projObj.put("ProjectName", project.getProjectname());
 				projObj.put("projectcolloquialname", project.getProjectcolloquialname());
@@ -156,7 +159,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray zoneArray=new JSONArray();
 			for(Zone zone:application.getZones())
 			{
-				JSONObject zoneObj= new JSONObject();
+				JSONObjectWithEmpty zoneObj= new JSONObjectWithEmpty();
 				zoneObj.put("id", zone.getId());
 				zoneObj.put("ZoneName", zone.getZoneName());
 
@@ -167,7 +170,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray siteArray=new JSONArray();
 			for(Site site:application.getSites())
 			{
-				JSONObject siteObj= new JSONObject();
+				JSONObjectWithEmpty siteObj= new JSONObjectWithEmpty();
 				siteObj.put("id", site.getId());
 				siteObj.put("SiteName", site.getSiteName());
 
@@ -179,7 +182,7 @@ public class JsonWriterImpl implements JsonWriter{
 			for(Zacmap zacMap:application.getZacmaps())
 			{
 				boolean isNoProperty=true;
-				JSONObject zacmapObj= new JSONObject();
+				JSONObjectWithEmpty zacmapObj= new JSONObjectWithEmpty();
 				isNoProperty =ObjectUtils.isEmpty(zacMap.getZac());
 				zacmapObj.put("id", zacMap.getId());
 				zacmapObj.put("rate", isNoProperty?"":zacMap.getZac().getRate());
@@ -193,7 +196,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray vendorArray=new JSONArray();
 			for(Company vendor:application.getManufacturers())
 			{
-				JSONObject vendorObj= new JSONObject();
+				JSONObjectWithEmpty vendorObj= new JSONObjectWithEmpty();
 				vendorObj.put("id", vendor.getId());
 				vendorObj.put("Vendor", vendor.getManufacturer());
 				vendorObj.put("CompanyName", vendor.getCompanyName());
@@ -205,7 +208,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray departmentArray=new JSONArray();
 			for(Department deparment:application.getDepartments())
 			{
-				JSONObject deparmentObj= new JSONObject();
+				JSONObjectWithEmpty deparmentObj= new JSONObjectWithEmpty();
 				deparmentObj.put("id", deparment.getId());
 				deparmentObj.put("DepartmentName", deparment.getDepartmentName());
 
@@ -216,7 +219,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray supportArray=new JSONArray();
 			for(Support support:application.getSupports())
 			{
-				JSONObject supportsObj= new JSONObject();
+				JSONObjectWithEmpty supportsObj= new JSONObjectWithEmpty();
 				supportsObj.put("id", support.getId());
 				supportsObj.put("Support", support.getSupportName());
 				supportsObj.put("SupportType", support.getSupporttype());
@@ -228,7 +231,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray contractArray=new JSONArray();
 			for(Contract contract:application.getContracts())
 			{
-				JSONObject contractObj= new JSONObject();
+				JSONObjectWithEmpty contractObj= new JSONObjectWithEmpty();
 				contractObj.put("id", contract.getId());
 				contractObj.put("ContractName", contract.getContractName());
 				contractObj.put("ExpireDate", contract.getExpireDate());
@@ -240,7 +243,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray licenseArray=new JSONArray();
 			for(License license:application.getLicenses())
 			{
-				JSONObject licenseObj= new JSONObject();
+				JSONObjectWithEmpty licenseObj= new JSONObjectWithEmpty();
 				licenseObj.put("id", license.getId());
 				licenseObj.put("LicenseNumber", license.getLicenseNumber());
 				licenseObj.put("ExpireDate", license.getExpireDate());
@@ -252,7 +255,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray instanceArray=new JSONArray();
 			for(AppInstance instance:application.getAppInstances())
 			{
-				JSONObject instanceObj= new JSONObject();
+				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
 				instanceObj.put("id", instance.getId());
 				instanceObj.put("AppInstance", instance.getAppInstanceName());
 				instanceObj.put("Status", instance.getStatus());
@@ -273,7 +276,7 @@ public class JsonWriterImpl implements JsonWriter{
 		JSONArray instanceArray=new JSONArray();
 		for(AppInstance instance:appInstances)
 		{
-			JSONObject instanceObj= new JSONObject();
+			JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
 			instanceObj.put("id", instance.getId());
 			instanceObj.put("Instance", instance.getAppInstanceName());
 			instanceObj.put("Status", instance.getStatus());
@@ -284,7 +287,7 @@ public class JsonWriterImpl implements JsonWriter{
 			boolean isNoProperty=true;
 			
 			isNoProperty=ObjectUtils.isEmpty(instance.getDepartment());
-			JSONObject departmentObj= new JSONObject();
+			JSONObjectWithEmpty departmentObj= new JSONObjectWithEmpty();
 			departmentObj.put("id", isNoProperty?"":instance.getDepartment().getId());
 			departmentObj.put("departmentName", isNoProperty?"":instance.getDepartment().getDepartmentName());
 			departmentObj.put("Description", isNoProperty?"":instance.getDepartment().getDescription());
@@ -293,7 +296,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray supportArray=new JSONArray();
 			for(Support support:instance.getSupports())
 			{
-				JSONObject supportsObj= new JSONObject();
+				JSONObjectWithEmpty supportsObj= new JSONObjectWithEmpty();
 				supportsObj.put("id", support.getId());
 				supportsObj.put("Support", support.getSupportName());
 				supportsObj.put("SupportType", support.getSupporttype());
@@ -305,7 +308,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray siteArray=new JSONArray();
 			for(Site site:instance.getSites())
 			{
-				JSONObject siteObj= new JSONObject();
+				JSONObjectWithEmpty siteObj= new JSONObjectWithEmpty();
 				siteObj.put("id", site.getId());
 				siteObj.put("SiteName", site.getSiteName());
 
@@ -316,7 +319,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray zoneArray=new JSONArray();
 			for(Zone zone:instance.getZones())
 			{
-				JSONObject zoneObj= new JSONObject();
+				JSONObjectWithEmpty zoneObj= new JSONObjectWithEmpty();
 				zoneObj.put("id", zone.getId());
 				zoneObj.put("ZoneName", zone.getZoneName());
 
@@ -327,7 +330,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray projArray=new JSONArray();
 			for(Project project:instance.getProjects())
 			{
-				JSONObject projObj= new JSONObject();
+				JSONObjectWithEmpty projObj= new JSONObjectWithEmpty();
 				projObj.put("id", project.getId());
 				projObj.put("ProjectName", project.getProjectname());
 				projObj.put("projectcolloquialname", project.getProjectcolloquialname());
@@ -339,7 +342,7 @@ public class JsonWriterImpl implements JsonWriter{
 			instanceObj.put("projects",projArray);
 			
 			isNoProperty=ObjectUtils.isEmpty(instance.getApplication());
-			JSONObject appObj= new JSONObject();
+			JSONObjectWithEmpty appObj= new JSONObjectWithEmpty();
 			appObj.put("id", isNoProperty?"":instance.getApplication().getId());
 			appObj.put("Application", isNoProperty?"":instance.getApplication().getAppName());
 			appObj.put("Status", isNoProperty?"":instance.getApplication().getStatus());
@@ -349,7 +352,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray contractArray=new JSONArray();
 			for(Contract contract:instance.getContracts())
 			{
-				JSONObject contractObj= new JSONObject();
+				JSONObjectWithEmpty contractObj= new JSONObjectWithEmpty();
 				contractObj.put("id", contract.getId());
 				contractObj.put("ContractName", contract.getContractName());
 				contractObj.put("ExpireDate", contract.getExpireDate());
@@ -361,7 +364,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray vendorArray=new JSONArray();
 			for(Company vendor:instance.getCompanys())
 			{
-				JSONObject vendorObj= new JSONObject();
+				JSONObjectWithEmpty vendorObj= new JSONObjectWithEmpty();
 				vendorObj.put("id", vendor.getId());
 				vendorObj.put("Vendor", vendor.getManufacturer());
 				vendorObj.put("CompanyName", vendor.getCompanyName());
@@ -371,7 +374,7 @@ public class JsonWriterImpl implements JsonWriter{
 			instanceObj.put("vendors",vendorArray);
 			
 			isNoProperty=ObjectUtils.isEmpty(instance.getSla());
-			JSONObject slaObj= new JSONObject();
+			JSONObjectWithEmpty slaObj= new JSONObjectWithEmpty();
 			slaObj.put("id", isNoProperty?"":instance.getSla().getId());
 			slaObj.put("SLA", isNoProperty?"":instance.getSla().getSlaName());
 			slaObj.put("Description", isNoProperty?"":instance.getSla().getDescription());
@@ -382,7 +385,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray serverArray=new JSONArray();
 			for(Server server:instance.getServers())
 			{
-				JSONObject serverObj= new JSONObject();
+				JSONObjectWithEmpty serverObj= new JSONObjectWithEmpty();
 				serverObj.put("id", server.getId());
 				serverObj.put("Description", server.getDescription());
 				serverObj.put("ServerName", server.getServerName());
@@ -394,7 +397,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray licenseArray=new JSONArray();
 			for(License license:instance.getLicenses())
 			{
-				JSONObject licenseObj= new JSONObject();
+				JSONObjectWithEmpty licenseObj= new JSONObjectWithEmpty();
 				licenseObj.put("id", license.getId());
 				licenseObj.put("LicenseNumber", license.getLicenseNumber());
 				licenseObj.put("ExpireDate", license.getExpireDate());
@@ -404,7 +407,7 @@ public class JsonWriterImpl implements JsonWriter{
 			instanceObj.put("licenses",licenseArray);	
 			
 			isNoProperty=ObjectUtils.isEmpty(instance.getDesktop());
-			JSONObject desktopObj= new JSONObject();
+			JSONObjectWithEmpty desktopObj= new JSONObjectWithEmpty();
 			desktopObj.put("id", isNoProperty?"":instance.getDesktop().getId());
 			desktopObj.put("Desktop", isNoProperty?"":instance.getDesktop().getDesktopName());
 			desktopObj.put("Description", isNoProperty?"":instance.getDesktop().getDescription());
@@ -423,7 +426,7 @@ public class JsonWriterImpl implements JsonWriter{
 		JSONArray departmentArray=new JSONArray();
 		for(Department department:departments)
 		{
-			JSONObject departmentObj= new JSONObject();
+			JSONObjectWithEmpty departmentObj= new JSONObjectWithEmpty();
 			departmentObj.put("id", department.getId());
 			departmentObj.put("Department", department.getDepartmentName());
 			departmentObj.put("Description", department.getDescription());
@@ -437,7 +440,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray answersArray=new JSONArray();
 			for(Answer answer:department.getAnswers())
 			{
-				JSONObject answerObj= new JSONObject();
+				JSONObjectWithEmpty answerObj= new JSONObjectWithEmpty();
 				answerObj.put("id", answer.getId());
 				answerObj.put("answer", answer.getText());
 				isNoProperty=ObjectUtils.isEmpty(answer.getQuestion());
@@ -449,7 +452,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray stakeholderArray=new JSONArray();
 			for(Stakeholder stakeholder:department.getStakeholders())
 			{
-				JSONObject stakeholderObj= new JSONObject();
+				JSONObjectWithEmpty stakeholderObj= new JSONObjectWithEmpty();
 				stakeholderObj.put("id", stakeholder.getId());
 				stakeholderObj.put("Stakeholder", stakeholder.getStakeholderName());
 				stakeholderArray.put(stakeholderObj);
@@ -459,7 +462,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray applicationArray=new JSONArray();
 			for(Application application:department.getApplications())
 			{
-				JSONObject applicationObj= new JSONObject();
+				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
 				applicationObj.put("id", application.getId());
 				applicationObj.put("Application", application.getAppName());
 				applicationArray.put(applicationObj);
@@ -469,7 +472,7 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONArray instanceArray=new JSONArray();
 			for(AppInstance instance:department.getAppInstances())
 			{
-				JSONObject instanceObj= new JSONObject();
+				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
 				instanceObj.put("id", instance.getId());
 				instanceObj.put("AppInstance", instance.getAppInstanceName());
 				instanceObj.put("Status", instance.getStatus());
@@ -482,7 +485,7 @@ public class JsonWriterImpl implements JsonWriter{
 			for(Zacmap zacMap:department.getZacmaps())
 			{
 
-				JSONObject zacmapObj= new JSONObject();
+				JSONObjectWithEmpty zacmapObj= new JSONObjectWithEmpty();
 				isNoProperty =ObjectUtils.isEmpty(zacMap.getZac());
 				zacmapObj.put("id", zacMap.getId());
 				zacmapObj.put("rate", isNoProperty?"":zacMap.getZac().getRate());

@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang.StringUtils;
 
+
 public class Convertor {
 
 		@SuppressWarnings("finally")
@@ -119,7 +120,11 @@ public class Convertor {
 			return str;
 		}
 		
-
+		static public Object getEmpty(Object obj)
+		{
+			if(obj==null) return "";
+			return obj;
+		}
 
 
 
