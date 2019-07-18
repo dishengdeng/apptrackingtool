@@ -6,6 +6,8 @@ package portal.controllers;
 
 
 
+import java.util.stream.Collectors;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,7 +39,9 @@ import portal.entity.Support;
 import portal.entity.Zac;
 import portal.entity.Zone;
 import portal.report.ReportManager;
+import portal.service.AppInstanceService;
 import portal.service.AppService;
+import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.ReportLevelService;
 import portal.service.ReportService;
@@ -65,6 +69,12 @@ public class ReportController {
 	
 	@Autowired
 	private AppService appService;
+	
+	@Autowired
+	private DepartmentService departmentService;
+	
+	@Autowired
+	private AppInstanceService instanceService;
 	
 	@Autowired
 	private ReportManager reportManager;
@@ -114,7 +124,10 @@ public class ReportController {
     public String reportdetail(@ModelAttribute("report") Report report,ModelMap model) {
     	model.addAttribute("report",report);
     	model.addAttribute("stakeholders", stakeholderService.getAll());
+    	model.addAttribute("departments", departmentService.getAll());
     	model.addAttribute("apps", appService.getAll());
+    	model.addAttribute("appUnassginedInstances",instanceService.getUnassginedAppInstances());
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList())); 
         return "reportdetail";
     }
     

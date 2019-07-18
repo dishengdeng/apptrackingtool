@@ -9,12 +9,15 @@ import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import portal.entity.Answer;
+import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Company;
 import portal.entity.Contract;
 import portal.entity.Department;
 import portal.entity.License;
 import portal.entity.Project;
+import portal.entity.Server;
 import portal.entity.Site;
 import portal.entity.Stakeholder;
 import portal.entity.Support;
@@ -246,11 +249,253 @@ public class JsonWriterImpl implements JsonWriter{
 			}
 			appObj.put("licenses",licenseArray);
 			
+			JSONArray instanceArray=new JSONArray();
+			for(AppInstance instance:application.getAppInstances())
+			{
+				JSONObject instanceObj= new JSONObject();
+				instanceObj.put("id", instance.getId());
+				instanceObj.put("AppInstance", instance.getAppInstanceName());
+				instanceObj.put("Status", instance.getStatus());
+				instanceObj.put("Description", instance.getDescription());
+				instanceArray.put(instanceObj);
+			}
+			appObj.put("AppInstances",instanceArray);			
+			
 			appArray.put(appObj);
 			
 		}
 		
 		return appArray;
+	}
+
+	@Override
+	public JSONArray getInstances(Set<AppInstance> appInstances) throws Exception {
+		JSONArray instanceArray=new JSONArray();
+		for(AppInstance instance:appInstances)
+		{
+			JSONObject instanceObj= new JSONObject();
+			instanceObj.put("id", instance.getId());
+			instanceObj.put("Instance", instance.getAppInstanceName());
+			instanceObj.put("Status", instance.getStatus());
+			instanceObj.put("Version", instance.getVersion());
+			instanceObj.put("Description", instance.getDescription());
+			instanceObj.put("Notes", instance.getNotes());
+			instanceObj.put("Userbase", instance.getUserbase());
+			boolean isNoProperty=true;
+			
+			isNoProperty=ObjectUtils.isEmpty(instance.getDepartment());
+			JSONObject departmentObj= new JSONObject();
+			departmentObj.put("id", isNoProperty?"":instance.getDepartment().getId());
+			departmentObj.put("departmentName", isNoProperty?"":instance.getDepartment().getDepartmentName());
+			departmentObj.put("Description", isNoProperty?"":instance.getDepartment().getDescription());
+			instanceObj.put("Department", departmentObj);
+			
+			JSONArray supportArray=new JSONArray();
+			for(Support support:instance.getSupports())
+			{
+				JSONObject supportsObj= new JSONObject();
+				supportsObj.put("id", support.getId());
+				supportsObj.put("Support", support.getSupportName());
+				supportsObj.put("SupportType", support.getSupporttype());
+				supportsObj.put("SecondarySupport", support.getSecondarysupport());
+				supportArray.put(supportsObj);
+			}
+			instanceObj.put("supports",supportArray);
+			
+			JSONArray siteArray=new JSONArray();
+			for(Site site:instance.getSites())
+			{
+				JSONObject siteObj= new JSONObject();
+				siteObj.put("id", site.getId());
+				siteObj.put("SiteName", site.getSiteName());
+
+				siteArray.put(siteObj);
+			}
+			instanceObj.put("sites",siteArray);
+			
+			JSONArray zoneArray=new JSONArray();
+			for(Zone zone:instance.getZones())
+			{
+				JSONObject zoneObj= new JSONObject();
+				zoneObj.put("id", zone.getId());
+				zoneObj.put("ZoneName", zone.getZoneName());
+
+				zoneArray.put(zoneObj);
+			}
+			instanceObj.put("zones",zoneArray);			
+
+			JSONArray projArray=new JSONArray();
+			for(Project project:instance.getProjects())
+			{
+				JSONObject projObj= new JSONObject();
+				projObj.put("id", project.getId());
+				projObj.put("ProjectName", project.getProjectname());
+				projObj.put("projectcolloquialname", project.getProjectcolloquialname());
+				projObj.put("Description", project.getDescription());
+				projObj.put("StartDate", project.getStartdate());
+				projObj.put("EndDate", project.getEnddate());
+				projArray.put(projObj);
+			}
+			instanceObj.put("projects",projArray);
+			
+			isNoProperty=ObjectUtils.isEmpty(instance.getApplication());
+			JSONObject appObj= new JSONObject();
+			appObj.put("id", isNoProperty?"":instance.getApplication().getId());
+			appObj.put("Application", isNoProperty?"":instance.getApplication().getAppName());
+			appObj.put("Status", isNoProperty?"":instance.getApplication().getStatus());
+			appObj.put("Version", isNoProperty?"":instance.getApplication().getAppVersion());
+			instanceObj.put("Application", appObj);
+			
+			JSONArray contractArray=new JSONArray();
+			for(Contract contract:instance.getContracts())
+			{
+				JSONObject contractObj= new JSONObject();
+				contractObj.put("id", contract.getId());
+				contractObj.put("ContractName", contract.getContractName());
+				contractObj.put("ExpireDate", contract.getExpireDate());
+				contractObj.put("Description", contract.getDescription());
+				contractArray.put(contractObj);
+			}
+			instanceObj.put("contracts",contractArray);
+			
+			JSONArray vendorArray=new JSONArray();
+			for(Company vendor:instance.getCompanys())
+			{
+				JSONObject vendorObj= new JSONObject();
+				vendorObj.put("id", vendor.getId());
+				vendorObj.put("Vendor", vendor.getManufacturer());
+				vendorObj.put("CompanyName", vendor.getCompanyName());
+				vendorObj.put("Email", vendor.getEmail());
+				vendorArray.put(vendorObj);
+			}
+			instanceObj.put("vendors",vendorArray);
+			
+			isNoProperty=ObjectUtils.isEmpty(instance.getSla());
+			JSONObject slaObj= new JSONObject();
+			slaObj.put("id", isNoProperty?"":instance.getSla().getId());
+			slaObj.put("SLA", isNoProperty?"":instance.getSla().getSlaName());
+			slaObj.put("Description", isNoProperty?"":instance.getSla().getDescription());
+			slaObj.put("EffectiveDate", isNoProperty?"":instance.getSla().getEffectivedate());
+			slaObj.put("TerminationDate", isNoProperty?"":instance.getSla().getTerminationdate());
+			instanceObj.put("SLA", slaObj);
+			
+			JSONArray serverArray=new JSONArray();
+			for(Server server:instance.getServers())
+			{
+				JSONObject serverObj= new JSONObject();
+				serverObj.put("id", server.getId());
+				serverObj.put("Description", server.getDescription());
+				serverObj.put("ServerName", server.getServerName());
+				serverObj.put("Address", server.getAddress());
+				serverArray.put(serverObj);
+			}
+			instanceObj.put("servers",serverArray);
+			
+			JSONArray licenseArray=new JSONArray();
+			for(License license:instance.getLicenses())
+			{
+				JSONObject licenseObj= new JSONObject();
+				licenseObj.put("id", license.getId());
+				licenseObj.put("LicenseNumber", license.getLicenseNumber());
+				licenseObj.put("ExpireDate", license.getExpireDate());
+				licenseObj.put("RegistrationDate", license.getRegistrationDate());
+				licenseArray.put(licenseObj);
+			}
+			instanceObj.put("licenses",licenseArray);	
+			
+			isNoProperty=ObjectUtils.isEmpty(instance.getDesktop());
+			JSONObject desktopObj= new JSONObject();
+			desktopObj.put("id", isNoProperty?"":instance.getDesktop().getId());
+			desktopObj.put("Desktop", isNoProperty?"":instance.getDesktop().getDesktopName());
+			desktopObj.put("Description", isNoProperty?"":instance.getDesktop().getDescription());
+			desktopObj.put("DecomminsionDate", isNoProperty?"":instance.getDesktop().getDecomminsionDate());
+			instanceObj.put("Desktop", desktopObj);
+			
+			instanceArray.put(instanceObj);
+		}
+		return instanceArray;
+	}
+	
+	
+
+	@Override
+	public JSONArray getDepartment(Set<Department> departments) throws Exception {
+		JSONArray departmentArray=new JSONArray();
+		for(Department department:departments)
+		{
+			JSONObject departmentObj= new JSONObject();
+			departmentObj.put("id", department.getId());
+			departmentObj.put("Department", department.getDepartmentName());
+			departmentObj.put("Description", department.getDescription());
+			departmentObj.put("Purpose", department.getPurpose());
+			departmentObj.put("Stragicplan", department.getStragicplan());
+			departmentObj.put("RoadMap", department.getRoadMap());
+			departmentObj.put("Goal", department.getGoal());
+			departmentObj.put("Painpoint", department.getPainpoint());
+			boolean isNoProperty=true;
+			
+			JSONArray answersArray=new JSONArray();
+			for(Answer answer:department.getAnswers())
+			{
+				JSONObject answerObj= new JSONObject();
+				answerObj.put("id", answer.getId());
+				answerObj.put("answer", answer.getText());
+				isNoProperty=ObjectUtils.isEmpty(answer.getQuestion());
+				answerObj.put("Question", isNoProperty?"":answer.getQuestion().getQuestionName());
+				answersArray.put(answerObj);
+			}
+			departmentObj.put("ProcessExcellent",answersArray);
+			
+			JSONArray stakeholderArray=new JSONArray();
+			for(Stakeholder stakeholder:department.getStakeholders())
+			{
+				JSONObject stakeholderObj= new JSONObject();
+				stakeholderObj.put("id", stakeholder.getId());
+				stakeholderObj.put("Stakeholder", stakeholder.getStakeholderName());
+				stakeholderArray.put(stakeholderObj);
+			}
+			departmentObj.put("stakeholders",stakeholderArray);
+			
+			JSONArray applicationArray=new JSONArray();
+			for(Application application:department.getApplications())
+			{
+				JSONObject applicationObj= new JSONObject();
+				applicationObj.put("id", application.getId());
+				applicationObj.put("Application", application.getAppName());
+				applicationArray.put(applicationObj);
+			}
+			departmentObj.put("applications",applicationArray);
+			
+			JSONArray instanceArray=new JSONArray();
+			for(AppInstance instance:department.getAppInstances())
+			{
+				JSONObject instanceObj= new JSONObject();
+				instanceObj.put("id", instance.getId());
+				instanceObj.put("AppInstance", instance.getAppInstanceName());
+				instanceObj.put("Status", instance.getStatus());
+				instanceObj.put("Description", instance.getDescription());
+				instanceArray.put(instanceObj);
+			}
+			departmentObj.put("AppInstances",instanceArray);
+			
+			JSONArray zacmapArray=new JSONArray();
+			for(Zacmap zacMap:department.getZacmaps())
+			{
+
+				JSONObject zacmapObj= new JSONObject();
+				isNoProperty =ObjectUtils.isEmpty(zacMap.getZac());
+				zacmapObj.put("id", zacMap.getId());
+				zacmapObj.put("rate", isNoProperty?"":zacMap.getZac().getRate());
+				zacmapObj.put("name", isNoProperty?"":zacMap.getZac().getName());
+				isNoProperty =ObjectUtils.isEmpty(zacMap.getApplication());
+				zacmapObj.put("Application", isNoProperty?"":zacMap.getApplication().getAppName());
+				zacmapArray.put(zacmapObj);
+			}
+			departmentObj.put("zacmap",zacmapArray);			
+			
+			departmentArray.put(departmentObj);
+		}
+		return departmentArray;
 	}
 
 

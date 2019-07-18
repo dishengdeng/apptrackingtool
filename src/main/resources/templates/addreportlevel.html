@@ -24,8 +24,10 @@
 					<label for="reportLevelType">Report Level:</label>
 					<select name="reportLevelType" class="form-control" id="supporttypeSelect">
 						<option></option>
-						<option th:value="APPLICATION">APPLICATION</option>
-						<option th:value="STAKEHOLDER">STAKEHOLDER</option>
+						<option th:each="ReportLevelType : ${T(portal.utility.ReportLevelType).values()}"
+								th:value="${ReportLevelType}"
+								th:text="${ReportLevelType}">
+						</option>
 					</select>
 				  </div>
 

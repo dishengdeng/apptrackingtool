@@ -206,8 +206,103 @@
 				</div>
 				<div class="col-lg-4">
 				</div>
-			</div>			
+			</div>
 			
+			<!--instance Detail-->
+			<div class="row" th:if="${report.reportlevels.size()>0 and report.isContainReportLevel(T(portal.utility.ReportLevelType).APPINSTANCE)}">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-android"></i> App Instances
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportinstance'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${report.appInstances.size()>0}" class="panel-body">
+							<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-app">
+							  <thead>
+								<tr>
+									<th>App Instance</th>
+									<th>Status</th>
+									<th>Description</th>
+								</tr>
+							  </thead>
+							  <tbody>
+								<tr th:each="instance: ${report.appInstances}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportappinstance?appinstance='+${instance.id}+'&report='+${report.id}}" 
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/instancedetail?id='+${instance.id}}" th:text="${instance.appInstanceName}"></a>
+									</td>
+									<td th:text="${instance.status}"></td>
+									<td th:text="${instance.description}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			<!--department Detail-->
+			<div class="row" th:if="${report.reportlevels.size()>0 and report.isContainReportLevel(T(portal.utility.ReportLevelType).DEPARTMENT)}">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-building"></i> Department
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportdepartment'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${report.departments.size()>0}" class="panel-body">
+							<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-app">
+							  <thead>
+								<tr>
+									<th>Department</th>
+									<th>Description</th>
+								</tr>
+							  </thead>
+							  <tbody>
+								<tr th:each="department: ${report.departments}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportdepartment?department='+${department.id}+'&report='+${report.id}}" 
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/departmentdetail?id='+${department.id}}" th:text="${department.departmentName}"></a>
+									</td>
+									<td th:text="${department.description}"></td>
+
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>			
 				<!--stakeholder model-->
 				<div class="modal fade" th:id="addreportstakeholder" role="dialog">
 					<div class="modal-dialog">
@@ -269,6 +364,79 @@
 
 					</div>	
 				</div>				
+				<!--department model-->
+				<div class="modal fade" th:id="addreportdepartment" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Applications - '+${report.reportName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addreportdepartment}" method="post">
+								<div class="form-group">
+									<label for="clusterSelect">Departments:</label>
+									<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
+									<select name="departments" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="departmentselect">
+									  <option th:each="departmentEntity : ${departments}" 
+									  th:text="${departmentEntity.departmentName}" 
+									  th:attr="value = ${departmentEntity.id}">
+									</select>
+								</div>
+
+								  <input class="btn btn-primary" type="submit" value="Submit" />
+
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>	
+				<!--instance model-->
+				<div class="modal fade" th:id="addreportinstance" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Instances - '+${report.reportName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addreportappinstance}" method="post">
+								<div class="form-group">
+									<label for="clusterSelect">App Instances:</label>
+									<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
+									<select name="appInstances" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="instanceselect">
+									<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
+										  <option th:each="instanceEntity : ${appEntity.appInstances}" 
+
+										  th:attr="value = ${instanceEntity.id}"
+										  th:text="${instanceEntity.appInstanceName}">
+										  
+										  </option>
+									</optgroup>
+									<optgroup th:if="${appUnassginedInstances.size()>0}" label="Other">
+										  <option th:each="instanceEntity : ${appUnassginedInstances}" 
+
+										  th:attr="value = ${instanceEntity.id}"
+										  th:text="${instanceEntity.appInstanceName}">
+										  
+										  </option>
+									</optgroup>	
+									</select>
+								</div>
+
+								  <input class="btn btn-primary" type="submit" value="Submit" />
+
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
 				
 				<!--File model-->
 				<div class="modal fade" id="reporttemplatefile" role="dialog" >
@@ -320,6 +488,7 @@
 				responsive: true
 			});
 
+
 			  $('#stakeholderselect').multiselect(
 			  {
 				includeSelectAllOption: true,
@@ -334,6 +503,20 @@
 				enableFiltering: true,
 				nonSelectedText: 'Select Application'
 			  });
+			  $('#instanceselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Instance'
+			  });
+			  $('#departmentselect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select Department'
+			  });			  
 
     });
     </script>
