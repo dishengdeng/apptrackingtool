@@ -501,6 +501,145 @@ public class JsonWriterImpl implements JsonWriter{
 		return departmentArray;
 	}
 
+	
+	@Override
+	public JSONArray getZones(Set<Zone> zones) throws Exception {
+		JSONArray zoneArray=new JSONArray();
+		for(Zone zone:zones)
+		{
+			JSONObjectWithEmpty zoneObj= new JSONObjectWithEmpty();
+			zoneObj.put("id", zone.getId());
+			zoneObj.put("Zone", zone.getZoneName());
+			zoneObj.put("Description", zone.getDescription());
+			zoneObj.put("Note", zone.getNote());
+			
+			JSONArray siteArray=new JSONArray();
+			for(Site site:zone.getSites())
+			{
+				JSONObjectWithEmpty siteObj= new JSONObjectWithEmpty();
+				siteObj.put("id", site.getId());
+				siteObj.put("SiteName", site.getSiteName());
+
+				siteArray.put(siteObj);
+			}
+			zoneObj.put("sites",siteArray);
+			
+			JSONArray applicationArray=new JSONArray();
+			for(Application application:zone.getApplications())
+			{
+				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
+				applicationObj.put("id", application.getId());
+				applicationObj.put("Application", application.getAppName());
+				applicationArray.put(applicationObj);
+			}
+			zoneObj.put("applications",applicationArray);
+			
+			JSONArray instanceArray=new JSONArray();
+			for(AppInstance instance:zone.getAppInstances())
+			{
+				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
+				instanceObj.put("id", instance.getId());
+				instanceObj.put("AppInstance", instance.getAppInstanceName());
+				instanceObj.put("Status", instance.getStatus());
+				instanceObj.put("Description", instance.getDescription());
+				instanceArray.put(instanceObj);
+			}
+			zoneObj.put("AppInstances",instanceArray);			
+			
+			zoneArray.put(zoneObj);
+		}
+		return zoneArray;
+	}
+
+	@Override
+	public JSONArray getSites(Set<Site> sites) throws Exception {
+		JSONArray siteArray=new JSONArray();
+		for(Site site:sites)
+		{
+			JSONObjectWithEmpty siteObj= new JSONObjectWithEmpty();
+			siteObj.put("id", site.getId());
+			siteObj.put("Site", site.getSiteName());
+			siteObj.put("Description", site.getDescription());
+			siteObj.put("Note", site.getNote());
+			boolean isNoProperty=true;
+			
+			isNoProperty=ObjectUtils.isEmpty(site.getZone());
+			siteObj.put("Zone", isNoProperty?"":site.getZone().getZoneName());
+			
+			JSONArray applicationArray=new JSONArray();
+			for(Application application:site.getApplications())
+			{
+				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
+				applicationObj.put("id", application.getId());
+				applicationObj.put("Application", application.getAppName());
+				applicationArray.put(applicationObj);
+			}
+			siteObj.put("applications",applicationArray);
+			
+			JSONArray instanceArray=new JSONArray();
+			for(AppInstance instance:site.getAppInstances())
+			{
+				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
+				instanceObj.put("id", instance.getId());
+				instanceObj.put("AppInstance", instance.getAppInstanceName());
+				instanceObj.put("Status", instance.getStatus());
+				instanceObj.put("Description", instance.getDescription());
+				instanceArray.put(instanceObj);
+			}
+			siteObj.put("AppInstances",instanceArray);				
+			
+			siteArray.put(siteObj);
+		}
+		return siteArray;
+	}
+
+	@Override
+	public JSONArray getVendors(Set<Company> vendors) throws Exception {
+		JSONArray vendorArray=new JSONArray();
+		for(Company vendor:vendors)
+		{
+			JSONObjectWithEmpty vendorObj= new JSONObjectWithEmpty();
+			vendorObj.put("id", vendor.getId());
+			vendorObj.put("Vendor", vendor.getCompanyName());
+			vendorObj.put("Address", vendor.getAddress());
+			vendorObj.put("Phone", vendor.getPhone());
+			vendorObj.put("Email", vendor.getEmail());
+			vendorObj.put("ContactName", vendor.getContactName());
+			vendorObj.put("ContactPhone", vendor.getContactPhone());
+			vendorObj.put("BackupContactName", vendor.getBackupContactName());
+			vendorObj.put("BackupContactPhone", vendor.getBackupContactPhone());
+			vendorObj.put("Sales", vendor.getSales());
+			vendorObj.put("PM", vendor.getPm());
+			vendorObj.put("MobilePhone", vendor.getMobilephone());
+			vendorObj.put("Manufacturer", vendor.getManufacturer());
+			
+			JSONArray applicationArray=new JSONArray();
+			for(Application application:vendor.getApplications())
+			{
+				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
+				applicationObj.put("id", application.getId());
+				applicationObj.put("Application", application.getAppName());
+				applicationArray.put(applicationObj);
+			}
+			vendorObj.put("applications",applicationArray);
+			
+			JSONArray instanceArray=new JSONArray();
+			for(AppInstance instance:vendor.getAppInstances())
+			{
+				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
+				instanceObj.put("id", instance.getId());
+				instanceObj.put("AppInstance", instance.getAppInstanceName());
+				instanceObj.put("Status", instance.getStatus());
+				instanceObj.put("Description", instance.getDescription());
+				instanceArray.put(instanceObj);
+			}
+			vendorObj.put("AppInstances",instanceArray);				
+			
+			vendorArray.put(vendorObj);
+		}
+		return vendorArray;
+	}
+
 
 
 

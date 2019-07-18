@@ -41,12 +41,15 @@ import portal.entity.Zone;
 import portal.report.ReportManager;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
+import portal.service.CompanyService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.ReportLevelService;
 import portal.service.ReportService;
+import portal.service.SiteService;
 import portal.service.JsonWriter;
 import portal.service.StakeholderService;
+import portal.service.ZoneService;
 import portal.utility.FileType;
 import portal.utility.ReportFormat;
 
@@ -69,6 +72,15 @@ public class ReportController {
 	
 	@Autowired
 	private AppService appService;
+	
+	@Autowired
+	private ZoneService zoneService;
+	
+	@Autowired
+	private CompanyService companyService;
+	
+	@Autowired
+	private SiteService siteService;
 	
 	@Autowired
 	private DepartmentService departmentService;
@@ -127,7 +139,10 @@ public class ReportController {
     	model.addAttribute("departments", departmentService.getAll());
     	model.addAttribute("apps", appService.getAll());
     	model.addAttribute("appUnassginedInstances",instanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList())); 
+    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+    	model.addAttribute("zones", zoneService.getAll());
+    	model.addAttribute("sites", siteService.getAll());
+    	model.addAttribute("vendors", companyService.getAll());
         return "reportdetail";
     }
     

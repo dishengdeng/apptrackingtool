@@ -74,6 +74,9 @@ public class ReportServiceImpl implements ReportService{
 		if(report.isContainReportLevel(ReportLevelType.APPLICATION)) reportObj.put("Applications", jsonWriter.getApplications(report.getApplications()));
 		if(report.isContainReportLevel(ReportLevelType.APPINSTANCE)) reportObj.put("AppInstances", jsonWriter.getInstances(report.getAppInstances()));
 		if(report.isContainReportLevel(ReportLevelType.DEPARTMENT)) reportObj.put("Departments", jsonWriter.getDepartment(report.getDepartments()));
+		if(report.isContainReportLevel(ReportLevelType.ZONE)) reportObj.put("Zones", jsonWriter.getZones(report.getZones()));
+		if(report.isContainReportLevel(ReportLevelType.SITE)) reportObj.put("Sites", jsonWriter.getSites(report.getSites()));
+		if(report.isContainReportLevel(ReportLevelType.VENDOR)) reportObj.put("Vendors", jsonWriter.getVendors(report.getCompanys()));
 		return reportObj;
 		
 		
