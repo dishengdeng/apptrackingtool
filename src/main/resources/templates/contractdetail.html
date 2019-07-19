@@ -90,7 +90,7 @@
 								<input type="text" class="form-control" th:name="slaDescription" th:value="${contract.slaDescription}">
 							  </div>
 							  <div class="form-group">
-								<label for="clinplace">contract / Licensing in Place:</label>
+								<label for="clinplace">Contract / Licensing in Place:</label>
 								<select name="clinplace" class="form-control" id="statusSelect">
 									<option th:selected="${contract.clinplace==null}"></option>
 									<option th:attr="value = 'Yes'" th:selected="${contract.clinplace==null} ? false:${contract.clinplace=='Yes'}" th:text="Yes"></option>

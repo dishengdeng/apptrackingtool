@@ -10,9 +10,13 @@ import org.json.JSONArray;
 import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Company;
+import portal.entity.Contract;
 import portal.entity.Department;
+import portal.entity.License;
+import portal.entity.Server;
 import portal.entity.Site;
 import portal.entity.Stakeholder;
+import portal.entity.Support;
 import portal.entity.Zone;
 import portal.utility.JSONObjectWithEmpty;
 
@@ -28,4 +32,8 @@ public interface JsonWriter {
 	public JSONArray getZones(Set<Zone> zones) throws Exception;
 	public JSONArray getSites(Set<Site> sites) throws Exception;
 	public JSONArray getVendors(Set<Company> vendors) throws Exception;
+	public JSONArray getContracts(Set<Contract> contracts) throws Exception;
+	public JSONArray getLicense(Set<License> licenses) throws Exception;
+	public JSONArray getServers(Set<Server> servers) throws Exception;
+	public JSONArray getSupports(Set<Support> supports) throws Exception;
 }

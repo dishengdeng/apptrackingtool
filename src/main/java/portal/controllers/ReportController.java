@@ -42,13 +42,17 @@ import portal.report.ReportManager;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.CompanyService;
+import portal.service.ContractService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.ReportLevelService;
 import portal.service.ReportService;
+import portal.service.ServerService;
 import portal.service.SiteService;
 import portal.service.JsonWriter;
+import portal.service.LicenseService;
 import portal.service.StakeholderService;
+import portal.service.SupportService;
 import portal.service.ZoneService;
 import portal.utility.FileType;
 import portal.utility.ReportFormat;
@@ -74,7 +78,19 @@ public class ReportController {
 	private AppService appService;
 	
 	@Autowired
+	private SupportService supportService;
+	
+	@Autowired
+	private ContractService contractService;
+	
+	@Autowired
 	private ZoneService zoneService;
+	
+	@Autowired
+	private ServerService serverService;
+	
+	@Autowired
+	private LicenseService licenseService;
 	
 	@Autowired
 	private CompanyService companyService;
@@ -143,6 +159,10 @@ public class ReportController {
     	model.addAttribute("zones", zoneService.getAll());
     	model.addAttribute("sites", siteService.getAll());
     	model.addAttribute("vendors", companyService.getAll());
+    	model.addAttribute("contracts", contractService.getAll());
+    	model.addAttribute("licenses", licenseService.getAll());
+    	model.addAttribute("servers", serverService.getAll());
+    	model.addAttribute("supports", supportService.getAll());
         return "reportdetail";
     }
     

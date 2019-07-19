@@ -640,6 +640,174 @@ public class JsonWriterImpl implements JsonWriter{
 		return vendorArray;
 	}
 
+	@Override
+	public JSONArray getContracts(Set<Contract> contracts) throws Exception {
+		JSONArray contractArray=new JSONArray();
+		for(Contract contract:contracts)
+		{
+			JSONObjectWithEmpty contractObj= new JSONObjectWithEmpty();
+			contractObj.put("id", contract.getId());
+			contractObj.put("Contract", contract.getContractName());
+			contractObj.put("Description", contract.getDescription());
+			contractObj.put("SMADescription", contract.getSmaDescription());
+			contractObj.put("SLADescription", contract.getSlaDescription());
+			contractObj.put("ExpireDate", contract.getExpireDate());
+			contractObj.put("EffectiveDate", contract.getEffectivedate());
+			contractObj.put("ApprovalDate", contract.getApprovaldate());
+			contractObj.put("ApproverName", contract.getApprovername());
+			contractObj.put("ContractLicensing in Place", contract.getClinplace());
+			contractObj.put("Vendor SLA", contract.getVendorsla());
+			contractObj.put("AHS-IT SLA", contract.getAhsitsla());
+			
+			JSONArray applicationArray=new JSONArray();
+			for(Application application:contract.getApplications())
+			{
+				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
+				applicationObj.put("id", application.getId());
+				applicationObj.put("Application", application.getAppName());
+				applicationArray.put(applicationObj);
+			}
+			contractObj.put("applications",applicationArray);
+			
+			JSONArray instanceArray=new JSONArray();
+			for(AppInstance instance:contract.getAppInstances())
+			{
+				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
+				instanceObj.put("id", instance.getId());
+				instanceObj.put("AppInstance", instance.getAppInstanceName());
+				instanceObj.put("Status", instance.getStatus());
+				instanceObj.put("Description", instance.getDescription());
+				instanceArray.put(instanceObj);
+			}
+			contractObj.put("AppInstances",instanceArray);	
+			
+			contractArray.put(contractObj);
+		}
+		return contractArray;
+	}
+
+	@Override
+	public JSONArray getLicense(Set<License> licenses) throws Exception {
+		JSONArray licenseArray=new JSONArray();
+		for(License license:licenses)
+		{
+			JSONObjectWithEmpty licenseObj= new JSONObjectWithEmpty();
+			licenseObj.put("id", license.getId());
+			licenseObj.put("LicenseNumber", license.getLicenseNumber());
+			licenseObj.put("RegistrationDate", license.getRegistrationDate());
+			licenseObj.put("Note", license.getNote());
+			licenseObj.put("Price", license.getPrice());
+			licenseObj.put("ExpireDate", license.getExpireDate());
+			licenseObj.put("NumberofLicenseRequired", license.getNumberoflicenserequired());
+			licenseObj.put("ExpireDate", license.getExpireDate());
+			licenseObj.put("RenewalFrequency", license.getRenewalfrequency());
+			licenseObj.put("RenewalOwner", license.getRenewalowner());
+			licenseObj.put("Warrenty", license.getWarrenty());
+			
+			JSONArray applicationArray=new JSONArray();
+			for(Application application:license.getApplications())
+			{
+				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
+				applicationObj.put("id", application.getId());
+				applicationObj.put("Application", application.getAppName());
+				applicationArray.put(applicationObj);
+			}
+			licenseObj.put("applications",applicationArray);
+			
+			JSONArray instanceArray=new JSONArray();
+			for(AppInstance instance:license.getAppInstances())
+			{
+				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
+				instanceObj.put("id", instance.getId());
+				instanceObj.put("AppInstance", instance.getAppInstanceName());
+				instanceObj.put("Status", instance.getStatus());
+				instanceObj.put("Description", instance.getDescription());
+				instanceArray.put(instanceObj);
+			}
+			licenseObj.put("AppInstances",instanceArray);
+			
+			licenseArray.put(licenseObj);
+		}
+		return licenseArray;
+	}
+
+	@Override
+	public JSONArray getServers(Set<Server> servers) throws Exception {
+		JSONArray serverArray=new JSONArray();
+		for(Server server:servers)
+		{
+			JSONObjectWithEmpty serverObj= new JSONObjectWithEmpty();
+			serverObj.put("id", server.getId());
+			serverObj.put("ServerName", server.getServerName());
+			serverObj.put("Description", server.getDescription());
+			serverObj.put("Address", server.getAddress());
+			serverObj.put("ServerVersion", server.getServerVersion());
+			serverObj.put("ServerVersion", server.getServerVersion());
+			serverObj.put("HWplatform", server.getHwplatform());
+			serverObj.put("DecomminsionDate", server.getDecomminsionDate());
+			boolean isNoProperty=true;
+			isNoProperty=ObjectUtils.isEmpty(server.getCluster());
+			serverObj.put("Cluster", isNoProperty?"":server.getCluster().getClusterName());
+			isNoProperty=ObjectUtils.isEmpty(server.getAppInstance());
+			serverObj.put("Cluster", isNoProperty?"":server.getAppInstance().getAppInstanceName());
+			serverArray.put(serverObj);
+		}
+		return serverArray;
+	}
+
+	@Override
+	public JSONArray getSupports(Set<Support> supports) throws Exception {
+		JSONArray supportArray=new JSONArray();
+		for(Support support:supports)
+		{
+			JSONObjectWithEmpty supportObj= new JSONObjectWithEmpty();
+			supportObj.put("id", support.getId());
+			supportObj.put("SupportName", support.getSupportName());
+			supportObj.put("SecondarySupport", support.getSecondarysupport());
+			supportObj.put("OtherSupport", support.getOthersupport());
+			supportObj.put("AppOwner", support.getAppowner());
+			supportObj.put("Trainer", support.getTrainer());
+			supportObj.put("SME", support.getSme());
+			supportObj.put("BusinessLead", support.getBusinesslead());
+			supportObj.put("COES", support.getCoes());
+			supportObj.put("AHSHours", support.getAhshours());
+			supportObj.put("UserAdmin", support.getUseradmin());
+			supportObj.put("SysAdmin", support.getSysadmin());
+			supportObj.put("NetworkSupport", support.getNetworksupport());
+			supportObj.put("SupportType", support.getSupporttype());
+			supportObj.put("CommonIssue", support.getCommonissue());
+			supportObj.put("Phone", support.getPhone());
+			supportObj.put("Email", support.getEmail());
+			supportObj.put("Note", support.getNote());
+			supportObj.put("Location", support.getLocation());
+			
+			JSONArray applicationArray=new JSONArray();
+			for(Application application:support.getApplications())
+			{
+				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
+				applicationObj.put("id", application.getId());
+				applicationObj.put("Application", application.getAppName());
+				applicationArray.put(applicationObj);
+			}
+			supportObj.put("applications",applicationArray);
+			
+			JSONArray instanceArray=new JSONArray();
+			for(AppInstance instance:support.getAppInstances())
+			{
+				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
+				instanceObj.put("id", instance.getId());
+				instanceObj.put("AppInstance", instance.getAppInstanceName());
+				instanceObj.put("Status", instance.getStatus());
+				instanceObj.put("Description", instance.getDescription());
+				instanceArray.put(instanceObj);
+			}
+			supportObj.put("AppInstances",instanceArray);			
+			
+			supportArray.put(supportObj);
+		}
+		return supportArray;
+	}
+
 
 
 
