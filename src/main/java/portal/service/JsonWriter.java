@@ -17,6 +17,7 @@ import portal.entity.Server;
 import portal.entity.Site;
 import portal.entity.Stakeholder;
 import portal.entity.Support;
+import portal.entity.Zac;
 import portal.entity.Zone;
 import portal.utility.JSONObjectWithEmpty;
 
@@ -36,4 +37,5 @@ public interface JsonWriter {
 	public JSONArray getLicense(Set<License> licenses) throws Exception;
 	public JSONArray getServers(Set<Server> servers) throws Exception;
 	public JSONArray getSupports(Set<Support> supports) throws Exception;
+	public JSONArray getZacs(Set<Zac> zacs) throws Exception;
 }

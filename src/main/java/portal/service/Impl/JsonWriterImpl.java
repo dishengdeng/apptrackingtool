@@ -24,6 +24,7 @@ import portal.entity.Server;
 import portal.entity.Site;
 import portal.entity.Stakeholder;
 import portal.entity.Support;
+import portal.entity.Zac;
 import portal.entity.Zacmap;
 import portal.entity.Zone;
 import portal.service.JsonWriter;
@@ -806,6 +807,45 @@ public class JsonWriterImpl implements JsonWriter{
 			supportArray.put(supportObj);
 		}
 		return supportArray;
+	}
+
+	@Override
+	public JSONArray getZacs(Set<Zac> zacs) throws Exception {
+		JSONArray zacArray=new JSONArray();
+		for(Zac zac:zacs)
+		{
+			JSONObjectWithEmpty zacObj= new JSONObjectWithEmpty();
+			zacObj.put("id", zac.getId());
+			zacObj.put("rate", zac.getRate());
+			zacObj.put("name", zac.getName());
+			zacObj.put("description", zac.getDescription());
+			boolean isNoProperty=true;
+			JSONArray applicationArray=new JSONArray();
+			for(Application application:zac.getApplications())
+			{
+				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
+				applicationObj.put("id", application.getId());
+				applicationObj.put("Application", application.getAppName());
+				applicationArray.put(applicationObj);
+			}
+			zacObj.put("applications",applicationArray);
+			
+			JSONArray zacmapArray=new JSONArray();
+			for(Zacmap zacmap:zac.getZacmaps())
+			{
+				JSONObjectWithEmpty zacmapObj= new JSONObjectWithEmpty();
+				zacmapObj.put("id", zacmap.getId());
+				isNoProperty=ObjectUtils.isEmpty(zacmap.getApplication());
+				zacmapObj.put("Application", isNoProperty?"":zacmap.getApplication().getAppName());
+				isNoProperty=ObjectUtils.isEmpty(zacmap.getDepartment());
+				zacmapObj.put("Department", isNoProperty?"":zacmap.getDepartment().getDepartmentName());				
+				zacmapArray.put(zacmapObj);
+			}
+			zacObj.put("zacmaps",zacmapArray);			
+			
+			zacArray.put(zacObj);
+		}
+		return zacArray;
 	}
 
 

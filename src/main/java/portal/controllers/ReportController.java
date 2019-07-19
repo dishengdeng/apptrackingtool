@@ -53,6 +53,7 @@ import portal.service.JsonWriter;
 import portal.service.LicenseService;
 import portal.service.StakeholderService;
 import portal.service.SupportService;
+import portal.service.ZacService;
 import portal.service.ZoneService;
 import portal.utility.FileType;
 import portal.utility.ReportFormat;
@@ -91,6 +92,9 @@ public class ReportController {
 	
 	@Autowired
 	private LicenseService licenseService;
+	
+	@Autowired
+	private ZacService zacService;
 	
 	@Autowired
 	private CompanyService companyService;
@@ -163,6 +167,7 @@ public class ReportController {
     	model.addAttribute("licenses", licenseService.getAll());
     	model.addAttribute("servers", serverService.getAll());
     	model.addAttribute("supports", supportService.getAll());
+    	model.addAttribute("zacs", zacService.getAll());
         return "reportdetail";
     }
     
