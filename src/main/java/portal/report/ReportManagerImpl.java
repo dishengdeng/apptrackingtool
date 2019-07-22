@@ -62,14 +62,14 @@ public class ReportManagerImpl implements ReportManager{
 	}
 
 	@Override
-	public void runreport(Report report, String templatepath,HttpServletResponse response,ReportFormat reportFormat) {
+	public void runreport(Report report, String templatepath,HttpServletResponse response) {
 		
 		try {
 
 			
-			if(reportFormat.equals(ReportFormat.EXCEL)) exportToExcel(report,templatepath,response);
+			if(report.getReportformat().equals(ReportFormat.EXCEL)) exportToExcel(report,templatepath,response);
 			
-			if(reportFormat.equals(ReportFormat.PDF)) exportToPDF(report,templatepath,response);
+			if(report.getReportformat().equals(ReportFormat.PDF)) exportToPDF(report,templatepath,response);
 
 			
 

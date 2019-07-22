@@ -6,6 +6,7 @@ package portal.controllers;
 
 
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -31,6 +32,7 @@ import portal.entity.Contract;
 import portal.entity.Department;
 import portal.entity.File;
 import portal.entity.License;
+import portal.entity.Parameter;
 import portal.entity.Report;
 import portal.entity.Server;
 import portal.entity.Site;
@@ -38,6 +40,7 @@ import portal.entity.Stakeholder;
 import portal.entity.Support;
 import portal.entity.Zac;
 import portal.entity.Zone;
+import portal.models.ParamConditionModel;
 import portal.report.ReportManager;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
@@ -51,12 +54,14 @@ import portal.service.ServerService;
 import portal.service.SiteService;
 import portal.service.JsonWriter;
 import portal.service.LicenseService;
+import portal.service.ParameterService;
 import portal.service.StakeholderService;
 import portal.service.SupportService;
 import portal.service.ZacService;
 import portal.service.ZoneService;
 import portal.utility.FileType;
-import portal.utility.ReportFormat;
+import portal.utility.ParameterType;
+
 
 @Controller
 public class ReportController {
@@ -111,6 +116,8 @@ public class ReportController {
 	@Autowired
 	private ReportManager reportManager;
 	
+	@Autowired
+	private ParameterService parameterService;
 	
 	private final String UPLOADED_FOLDER="reports//";
 	
@@ -417,10 +424,41 @@ public class ReportController {
     }	
  //--Run report   
     @GetMapping("/getreport")
-    public void downloadfile(@ModelAttribute("report") Report report,HttpServletResponse response,@ModelAttribute("reportformat") String reportFormat)
+    public void downloadfile(@ModelAttribute("report") Report report,HttpServletResponse response)
     {
-    	
-    	reportManager.runreport(report, UPLOADED_FOLDER,response,ReportFormat.valueOf(reportFormat));
+
+    	reportManager.runreport(report, UPLOADED_FOLDER,response);
     	
     }
+    
+    //--parameter
+	@GetMapping("/deletereportparemeter")
+	public String deletereportparemeter(@ModelAttribute("parameter")  Parameter  parameter)
+	{
+		long reporid=parameter.getReport().getId();
+		parameter.removeAlldependence();
+		parameterService.delete(parameter);
+		return "redirect:/reportdetail?report="+reporid;
+	}
+	
+	@PostMapping("/addreportparameter")
+	public String addreportparameter(@ModelAttribute("parameter") Parameter  parameter)
+	{
+		parameterService.save(parameter);
+		return "redirect:/reportdetail?report="+parameter.getReport().getId();
+	} 
+	
+	@PostMapping("/updatereportparameter")
+	public String updatereportparameter(@ModelAttribute("parameter") Parameter  parameter)
+	{
+		parameterService.update(parameter);
+		return "redirect:/reportdetail?report="+parameter.getReport().getId();
+	} 
+	
+	@GetMapping("/getparemetercondition")
+	public ResponseEntity<List<ParamConditionModel>> getparemetercondition(@RequestParam("parameter")  String  parameter)
+	{
+
+		return new ResponseEntity<List<ParamConditionModel>>(parameterService.getConditionsByType(ParameterType.valueOf(parameter)),HttpStatus.OK);
+	}
 }

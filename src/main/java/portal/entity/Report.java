@@ -6,18 +6,21 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
+import portal.utility.ReportFormat;
 import portal.utility.ReportLevelType;
 
 
@@ -37,6 +40,10 @@ public class Report {
     @Column(name = "description",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String description;
+    
+    @Column(name = "reportformat")
+    @JsonView(Views.Public.class)
+	private ReportFormat reportformat;
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "reportlevelrel",
@@ -130,6 +137,15 @@ public class Report {
         inverseJoinColumns = @JoinColumn(name = "zac_id")
     )
     private Set<Zac> zacs = new HashSet<Zac>();
+ 
+    
+    @OneToMany(
+            mappedBy = "report", 
+            cascade = CascadeType.ALL, 
+            fetch = FetchType.LAZY,
+            orphanRemoval = true
+        )
+    private Set<Parameter> parameters = new HashSet<Parameter>();  
     
     @OneToOne(mappedBy = "report")
     private File tempate;
@@ -460,6 +476,35 @@ public class Report {
 		this.zacs.remove(zac);
 	}	
 
+	public ReportFormat getReportformat() {
+		return reportformat;
+	}
+
+	public void setReportformat(ReportFormat reportformat) {
+		this.reportformat = reportformat;
+	}
+
+	public Set<Parameter> getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(Set<Parameter> parameters) {
+		this.parameters.addAll(parameters);
+		parameters.forEach(obj->{
+			obj.setReport(this);
+		});
+	}
+
+	public void addParameter(Parameter parameter)
+	{
+		this.parameters.add(parameter);
+	}
+	
+	public void removeParameter(Parameter parameter)
+	{
+		this.parameters.remove(parameter);
+	}
+	
 	public void removeAlldependence()
 	{
 		this.reportlevels.forEach(obj->{

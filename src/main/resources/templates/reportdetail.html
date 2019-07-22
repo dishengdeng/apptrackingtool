@@ -108,6 +108,60 @@
 					</div>
 				</div><!-- col-lg-8 -->									
 			</div>
+			<!--parameter detail-->			
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-question-circle"></i> Report Parameters
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" 
+								th:data-target="@{'#reportparamentercreate'}" 
+								style="text-decoration: none;cursor: pointer;color:white" 
+								title="Add Files">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>								
+							</div>
+						</div>
+						<div th:if="${report.parameters.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Name</th>
+								<th>Type</th>
+								<th>Condition</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="parameter: ${report.parameters}">
+									<td>
+										<a  sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')"
+											th:href="@{'/deletereportparemeter?parameter='+${parameter.id}}" 
+											style="text-decoration: none; margin-right:5px"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										>
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											data-toggle="modal" th:data-target="@{'#reportparamenter'+${parameter.id}}"  title="Edit Parameter"
+											style="margin-right:5px;text-decoration: none;cursor:pointer"
+										   >
+											<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+										</a>										
+										<span th:text="${parameter.name}">
+										</span>
+									</td>
+									<td th:text="${parameter.type}"></td>
+									<td th:text="${parameter.condition.getConditiontext()}"></td>
+								</tr>
+							  </tbody>
+							</table>							
+						</div>
+						
+					</div>
+				</div><!-- col-lg-8 -->									
+			</div>			
 			<!--stakeholder Detail-->
 			<div class="row" th:if="${report.reportlevels.size()>0 and report.isContainReportLevel(T(portal.utility.ReportLevelType).STAKEHOLDER)}">
 				<div class="col-lg-8">
@@ -1089,7 +1143,98 @@
 							   </div>
 							</div>
 				</div>				
-			
+				<!--parameter creation model-->
+				<div class="modal fade" th:id="reportparamentercreate" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Parameter - '+${report.reportName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addreportparameter}" method="post">
+								<div class="form-group">
+									<label for="clusterSelect">Name:</label>
+									<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
+									<input type="hidden" class="form-control" th:name="parameter"></input>
+									<input type="text" name="name" class="form-control"></input>
+								</div>
+								<div class="form-group">
+									<label for="clusterSelect">Type:</label>
+									<select name="type" class="form-control" th:onchange="@{'getCollection(this.value,'+${report.id}+',1)'}">
+										<option></option>
+										<option th:each="paramentertype : ${T(portal.utility.ParameterType).values()}"
+												th:value="${paramentertype}"
+												th:text="${paramentertype}">
+										</option>
+									</select>
+								</div>
+								<div class="form-group">
+									<label for="clusterSelect">Condition:</label>
+									<select name="condition" class="form-control" th:id="@{'condition1'+${report.id}}">
+										<option></option>
+									</select>
+								</div>
+								  <input class="btn btn-primary" type="submit" value="Submit" />
+
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+				<!--parameter edit model-->
+				<div th:if="${report.parameters.size()>0}" th:each="parameter: ${report.parameters}">
+					<div class="modal fade" th:id="@{'reportparamenter'+${parameter.id}}" role="dialog">
+						<div class="modal-dialog">
+						
+						  <!-- Modal content-->
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							  <h4 class="modal-title" th:text="'Edit Parameter - '+${parameter.name}"></h4>													
+							</div>
+							<div class="modal-body">	
+								<form action="#" th:action="@{/updatereportparameter}" method="post">
+									<div class="form-group">
+										<label for="clusterSelect">Name:</label>
+										<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
+										<input type="hidden" class="form-control" th:name="parameter" th:value="${parameter.id}"></input>
+										<input type="text" name="name" th:value="${parameter.name}" class="form-control"></input>
+									</div>
+									<div class="form-group">
+										<label for="clusterSelect">Type:</label>
+										<select name="type" class="form-control" th:onchange="@{'getCollection(this.value,'+${parameter.id}+',2)'}">
+											<option></option>
+											<option th:each="paramentertype : ${T(portal.utility.ParameterType).values()}"
+													th:value="${paramentertype}"
+													th:text="${paramentertype}"
+													th:selected="${paramentertype==parameter.type}?True:False">
+											</option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label for="clusterSelect">Condition:</label>
+										<select name="condition" class="form-control" th:id="@{'condition2'+${parameter.id}}">
+											<option></option>
+											<option th:each="paramcondition : ${T(portal.utility.ParameterCondition).getCategoryByType(parameter.type)}"
+													th:value="${paramcondition.name}"
+													th:text="${paramcondition.value}"
+													th:selected="${paramcondition.name==parameter.condition.name()}?True:False">
+											</option>											
+										</select>
+									</div>
+									  <input class="btn btn-primary" type="submit" value="Submit" />
+
+								</form>
+							</div>
+						  </div>
+
+						</div>	
+					</div>
+				</div>				
         </div>
         <!-- /#page-wrapper -->
 
@@ -1191,8 +1336,31 @@
 				buttonWidth: 300, 
 				enableFiltering: true,
 				nonSelectedText: 'Select Zac'
-			  });			  
+			  });
+
+		  
     });
+	function getCollection(typeselect, conditionselect,mode)
+	{
+
+		var conditionselectid='#condition'+mode+conditionselect
+
+					
+					$.get( "/getparemetercondition?parameter="+typeselect, function( data ) {
+						if (data !== undefined || data.length !== 0)
+						{
+							$( conditionselectid ).empty();
+							$( conditionselectid ).append("<option></option>");
+							for(var key in data)
+							{
+								var el="<option value='"+data[key].name+"'>"+data[key].value+"</option>";								
+								$( conditionselectid ).append(el);
+							}
+							
+						}
+					});
+
+	}
     </script>
 	<script type="text/javascript">
 		$(function () {
