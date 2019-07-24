@@ -7,7 +7,8 @@ public enum Role {
 	GENERAL(1),
 	SYSADMIN(2),
 	USER(3),
-	INTEGRATION(4);
+	INTEGRATION(4),
+	DEVELOPER(5);
 	
 	private final int roleCode;
 
