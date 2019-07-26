@@ -15,12 +15,16 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+
+
 import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
-import portal.utility.ReportFormat;
+import portal.models.ParameterModel;
+import portal.models.RunReportModel;
 import portal.utility.ReportLevelType;
 
 
@@ -41,9 +45,7 @@ public class Report {
     @JsonView(Views.Public.class)
 	private String description;
     
-    @Column(name = "reportformat")
-    @JsonView(Views.Public.class)
-	private ReportFormat reportformat;
+
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "reportlevelrel",
@@ -476,13 +478,6 @@ public class Report {
 		this.zacs.remove(zac);
 	}	
 
-	public ReportFormat getReportformat() {
-		return reportformat;
-	}
-
-	public void setReportformat(ReportFormat reportformat) {
-		this.reportformat = reportformat;
-	}
 
 	public Set<Parameter> getParameters() {
 		return parameters;
@@ -584,5 +579,24 @@ public class Report {
 			
 		
 		return result;
+	}
+	
+	public RunReportModel<Set<ParameterModel>> getParametersArray()
+	{
+		RunReportModel<Set<ParameterModel>> reportmodel=new  RunReportModel<Set<ParameterModel>>();
+		reportmodel.setId(this.id);
+		Set<ParameterModel> parameters=new HashSet<ParameterModel>();
+		for(Parameter parameter:this.parameters)
+		{
+			ParameterModel model=new ParameterModel();
+			model.setId(parameter.getId());
+			model.setName(parameter.getName());
+			model.setType(parameter.getType());
+			model.setValue("");
+			parameters.add(model);
+		}
+		reportmodel.setParameters(parameters);
+		return reportmodel;
+		
 	}
 }

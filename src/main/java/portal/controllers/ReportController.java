@@ -6,7 +6,10 @@ package portal.controllers;
 
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +24,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +45,8 @@ import portal.entity.Support;
 import portal.entity.Zac;
 import portal.entity.Zone;
 import portal.models.ParamConditionModel;
+import portal.models.ParameterModel;
+import portal.models.RunReportModel;
 import portal.report.ReportManager;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
@@ -59,8 +65,10 @@ import portal.service.StakeholderService;
 import portal.service.SupportService;
 import portal.service.ZacService;
 import portal.service.ZoneService;
+import portal.utility.Convertor;
 import portal.utility.FileType;
 import portal.utility.ParameterType;
+import portal.utility.ReportFormat;
 
 
 @Controller
@@ -141,6 +149,13 @@ public class ReportController {
     	model.addAttribute("report", new Report());
     	model.addAttribute("reportlevels", reportLevelService.getReportLevels());
         return "addreport";
+    }
+    
+    @GetMapping("/reportrun")
+    public String createZac(@ModelAttribute("report") Report report,ModelMap model) {
+    	model.addAttribute("report", report);
+
+        return "reportrun";
     }
     
     @GetMapping("/deletereport")
@@ -424,10 +439,26 @@ public class ReportController {
     }	
  //--Run report   
     @GetMapping("/getreport")
-    public void downloadfile(@ModelAttribute("report") Report report,HttpServletResponse response)
+    public void downloadfile(@ModelAttribute("report") Report report,@ModelAttribute("reportformat") ReportFormat reportFormat,HttpServletResponse response)
     {
 
-    	reportManager.runreport(report, UPLOADED_FOLDER,response);
+    	reportManager.runreport(report, reportFormat,UPLOADED_FOLDER,response,Optional.empty());
+    	
+    }
+    
+    @PostMapping("/runreportwithparameters")
+    public void runreportwithparameters(@RequestBody RunReportModel<Set<ParameterModel>> reportModel,HttpServletResponse response)
+    {
+    	HashMap<String, Object> parameters = new HashMap<String, Object>();
+    	for(ParameterModel model:reportModel.getParameters())
+    	{
+    		if(model.getType().equals(ParameterType.String)) parameters.put(model.getName(), model.getValue());
+    		if(model.getType().equals(ParameterType.Number)) parameters.put(model.getName(), Double.valueOf(model.getValue()));
+    		if(model.getType().equals(ParameterType.Boolean)) parameters.put(model.getName(), Boolean.valueOf(model.getValue()));
+    		if(model.getType().equals(ParameterType.Date)) parameters.put(model.getName(), Convertor.JavaDate(model.getValue()));
+    	}
+    	
+    	reportManager.runreport(reportService.getById(reportModel.getId()), reportModel.getReportFormat(),UPLOADED_FOLDER,response,Optional.of(parameters));
     	
     }
     

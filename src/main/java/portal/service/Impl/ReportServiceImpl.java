@@ -88,6 +88,12 @@ public class ReportServiceImpl implements ReportService{
 
 	}
 
+	@Override
+	public Report getById(Long id) {
+
+		return reportRepository.findOne(id);
+	}
+
 
 	
 	

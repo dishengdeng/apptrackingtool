@@ -4,7 +4,8 @@ package portal.report;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
-
+import java.util.HashMap;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -62,14 +63,14 @@ public class ReportManagerImpl implements ReportManager{
 	}
 
 	@Override
-	public void runreport(Report report, String templatepath,HttpServletResponse response) {
+	public void runreport(Report report, ReportFormat reportFormat,String templatepath,HttpServletResponse response,Optional<HashMap<String, Object>> parmeters) {
 		
 		try {
 
 			
-			if(report.getReportformat().equals(ReportFormat.EXCEL)) exportToExcel(report,templatepath,response);
+			if(reportFormat.equals(ReportFormat.EXCEL)) exportToExcel(report,templatepath,response,parmeters);
 			
-			if(report.getReportformat().equals(ReportFormat.PDF)) exportToPDF(report,templatepath,response);
+			if(reportFormat.equals(ReportFormat.PDF)) exportToPDF(report,templatepath,response,parmeters);
 
 			
 
@@ -83,14 +84,14 @@ public class ReportManagerImpl implements ReportManager{
 	}
 	
 
-	private void exportToExcel(Report report, String templatepath,HttpServletResponse response) throws Exception
+	private void exportToExcel(Report report, String templatepath,HttpServletResponse response,Optional<HashMap<String, Object>> parmeters) throws Exception
 	{
 		JRXlsxExporter exporter = new JRXlsxExporter();
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-Disposition", "attachment; filename="+report.getReportName()+".xlsx");
 		SimpleOutputStreamExporterOutput output=new SimpleOutputStreamExporterOutput(response.getOutputStream());
 
-		exporter.setExporterInput(new SimpleExporterInput(getJasperPrinter(report,templatepath)));
+		exporter.setExporterInput(new SimpleExporterInput(getJasperPrinter(report,templatepath,parmeters.isPresent()?parmeters.get():null)));
 		exporter.setExporterOutput(output);
 
 		exporter.exportReport();
@@ -102,16 +103,16 @@ public class ReportManagerImpl implements ReportManager{
 		
 	}
 	
-	private void exportToPDF(Report report, String templatepath,HttpServletResponse response) throws Exception
+	private void exportToPDF(Report report, String templatepath,HttpServletResponse response,Optional<HashMap<String, Object>> parmeters) throws Exception
 	{
 		ByteArrayOutputStream output=new ByteArrayOutputStream();
-		 JasperExportManager.exportReportToPdfStream(getJasperPrinter(report,templatepath),output);
+		 JasperExportManager.exportReportToPdfStream(getJasperPrinter(report,templatepath,parmeters.isPresent()?parmeters.get():null),output);
 			output.writeTo(response.getOutputStream());
 			response.setContentType("application/pdf");
 			response.flushBuffer();
 	}
 	
-	private JasperPrint getJasperPrinter(Report report, String templatepath) throws Exception
+	private JasperPrint getJasperPrinter(Report report, String templatepath,HashMap<String, Object> parmeters) throws Exception
 	{
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new java.io.File(templatepath+Long.valueOf(report.getId())+"_"+report.getTempate().getAttachment()+".jasper"));
 
@@ -119,7 +120,7 @@ public class ReportManagerImpl implements ReportManager{
 
 
 		JsonDataSource jsonDataSource = new JsonDataSource(inputStream);
-		JasperPrint jasperPrinter = JasperFillManager.fillReport(jasperReport, null, jsonDataSource);
+		JasperPrint jasperPrinter = JasperFillManager.fillReport(jasperReport, parmeters, jsonDataSource);
 		
 		return jasperPrinter;
 	}

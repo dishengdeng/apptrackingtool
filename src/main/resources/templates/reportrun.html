@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-8 text-muted">
+						<i class="fa fa-bar-chart"></i>
+						<span th:text="${report.reportName}"></span>
+						</div>					
+
+					</div>						
+					</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-question-circle"></i> Parameters
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" method="post">													
+
+							<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
+
+						  <p th:each="parameter:${report.parameters}" th:if="${report.parameters.size()>0}">
+							<label th:text="@{${parameter.name}+':'}"></label>
+							<input type="text" th:name="${parameter.name}"></input>
+						  </p>	
+						  <div class="form-group">
+							<label for="reportFormat">Format:</label>
+							<select name="reportFormat" class="form-control">
+								<option value="PDF" selected>PDF</option>
+								<option value="EXCEL" selected>EXCEL</option>
+							</select>							
+						  </div>						  
+						  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" type="submit" value="Run" />
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>
+            <!-- /.row -->
+			
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script th:inline="javascript">
+    $(document).ready(function() {
+			$('#dataTables-stakeholder').DataTable({
+				responsive: true
+			});
+			$('#dataTables-app').DataTable({
+				responsive: true
+			});
+/*<![CDATA[*/
+$( "form" ).on( "submit", function( event ) {
+		event.preventDefault();
+		var formdata=/*[[${report.getParametersArray()}]]*/
+
+		if ($.isArray(formdata.parameters)|| formdata.parameters.length) 
+		{
+			  for(var obj in formdata.parameters)
+			  {
+				var selector="input[name='"+formdata.parameters[obj].name+"']";
+				formdata.parameters[obj].value=$(selector).val();
+			  }
+		} 
+		formdata.reportFormat=$("select[name='reportFormat']").val();
+		$.ajax({
+				  type: "POST",
+				  url: "/runreportwithparameters",
+				  contentType: 'application/json',
+				  data: JSON.stringify(formdata)
+				});
+		console.log(formdata);
+
+	//console.log(bodydata);
+});
+/*]]>*/
+
+		  
+    });
+
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+	</script>
+
+</body>
+
+</html>
