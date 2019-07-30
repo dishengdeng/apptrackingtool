@@ -52,7 +52,7 @@
 							<label for="description">Description:</label>
 							<input type="text" class="form-control" th:name="description" th:value="${report.description}">
 						  </div>				  
-						  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" type="submit" value="Update" />
+						  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" class="btn btn-primary" type="submit" value="Update" />
 						</form>
 						</div>
                         <!-- /.panel-body -->
@@ -67,7 +67,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-file-o"></i> Report Template
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" 
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" 
 								th:data-target="@{'#reporttemplatefile'}" 
 								style="text-decoration: none;cursor: pointer;color:white" 
 								title="Add Files">
@@ -84,7 +84,7 @@
 							  <tbody>
 								<tr>
 									<td>
-										<a  sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')"
+										<a  sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')"
 											th:href="@{'/deletereporttemplate?file='+${report.tempate.id}+'&report='+${report.id}}" 
 											style="text-decoration: none; margin-right:5px"
 											data-title="Are you sure to delete?" 
@@ -115,7 +115,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-question-circle"></i> Report Parameters
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" 
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" 
 								th:data-target="@{'#reportparamentercreate'}" 
 								style="text-decoration: none;cursor: pointer;color:white" 
 								title="Add Files">
@@ -128,12 +128,13 @@
 							  <thead>
 								<th>Name</th>
 								<th>Type</th>
+								<th>Label</th>
 								<th>Condition</th>
 							  </thead>
 							  <tbody>
 								<tr th:each="parameter: ${report.parameters}">
 									<td>
-										<a  sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')"
+										<a  sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')"
 											th:href="@{'/deletereportparemeter?parameter='+${parameter.id}}" 
 											style="text-decoration: none; margin-right:5px"
 											data-title="Are you sure to delete?" 
@@ -143,7 +144,7 @@
 										>
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" 
 											data-toggle="modal" th:data-target="@{'#reportparamenter'+${parameter.id}}"  title="Edit Parameter"
 											style="margin-right:5px;text-decoration: none;cursor:pointer"
 										   >
@@ -153,6 +154,7 @@
 										</span>
 									</td>
 									<td th:text="${parameter.type}"></td>
+									<td th:text="${parameter.label}"></td>
 									<td th:text="${parameter.condition.getConditiontext()}"></td>
 								</tr>
 							  </tbody>
@@ -169,7 +171,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-users"></i> Stakeholders
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportstakeholder'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportstakeholder'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -188,7 +190,7 @@
 							  <tbody>
 								<tr th:each="stakeholder: ${report.stakeholders}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportstakeholder?stakeholder='+${stakeholder.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportstakeholder?stakeholder='+${stakeholder.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -220,7 +222,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-windows"></i> Application
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportapplication'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportapplication'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -238,7 +240,7 @@
 							  <tbody>
 								<tr th:each="app: ${report.applications}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportapplication?app='+${app.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportapplication?app='+${app.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -269,7 +271,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-android"></i> App Instances
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportinstance'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportinstance'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -287,7 +289,7 @@
 							  <tbody>
 								<tr th:each="instance: ${report.appInstances}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportappinstance?appinstance='+${instance.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportappinstance?appinstance='+${instance.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -317,7 +319,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-building"></i> Department
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportdepartment'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportdepartment'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -334,7 +336,7 @@
 							  <tbody>
 								<tr th:each="department: ${report.departments}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportdepartment?department='+${department.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportdepartment?department='+${department.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -364,7 +366,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-cube"></i> Zone
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportzone'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportzone'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -381,7 +383,7 @@
 							  <tbody>
 								<tr th:each="zone: ${report.zones}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportzone?zone='+${zone.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportzone?zone='+${zone.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -411,7 +413,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-cubes"></i> Site
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportsite'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportsite'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -428,7 +430,7 @@
 							  <tbody>
 								<tr th:each="site: ${report.sites}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportsite?site='+${site.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportsite?site='+${site.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -458,7 +460,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-building"></i> Vendor
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportvendor'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportvendor'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -476,7 +478,7 @@
 							  <tbody>
 								<tr th:each="vendor: ${report.companys}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportcompany?company='+${vendor.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportcompany?company='+${vendor.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -506,7 +508,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-pencil-square-o"></i> Contract
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportcontract'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportcontract'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -524,7 +526,7 @@
 							  <tbody>
 								<tr th:each="contract: ${report.contracts}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportcontract?contract='+${contract.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportcontract?contract='+${contract.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -554,7 +556,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-leanpub"></i> License
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportlicense'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportlicense'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -572,7 +574,7 @@
 							  <tbody>
 								<tr th:each="license: ${report.licenses}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportlicense?license='+${license.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportlicense?license='+${license.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -602,7 +604,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-server"></i> Server
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportserver'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportserver'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -620,7 +622,7 @@
 							  <tbody>
 								<tr th:each="server: ${report.servers}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportserver?server='+${server.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportserver?server='+${server.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -650,7 +652,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-support"></i> Support
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportsupport'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportsupport'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -668,7 +670,7 @@
 							  <tbody>
 								<tr th:each="support: ${report.supports}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportsupport?support='+${support.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportsupport?support='+${support.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -698,7 +700,7 @@
 						<div class="panel-heading">
 							<i class="fa fa-search"></i> Zac
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addreportzac'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" data-toggle="modal" th:data-target="@{'#addreportzac'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
@@ -715,7 +717,7 @@
 							  <tbody>
 								<tr th:each="zac: ${report.zacs}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereportzac?zac='+${zac.id}+'&report='+${report.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereportzac?zac='+${zac.id}+'&report='+${report.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -1162,6 +1164,10 @@
 									<input type="text" name="name" class="form-control"></input>
 								</div>
 								<div class="form-group">
+									<label for="clusterSelect">Label:</label>
+									<input type="text" name="label" class="form-control"></input>
+								</div>								
+								<div class="form-group">
 									<label for="clusterSelect">Type:</label>
 									<select name="type" class="form-control" th:onchange="@{'getCollection(this.value,'+${report.id}+',1)'}">
 										<option></option>
@@ -1215,6 +1221,10 @@
 											</option>
 										</select>
 									</div>
+									<div class="form-group">
+										<label for="clusterSelect">Label:</label>
+										<input type="text" name="label" class="form-control" th:value="${parameter.label}" ></input>
+									</div>										
 									<div class="form-group">
 										<label for="clusterSelect">Condition:</label>
 										<select name="condition" class="form-control" th:id="@{'condition2'+${parameter.id}}">

@@ -2,7 +2,8 @@ package portal.entity;
 
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import portal.jsonview.Views;
 import portal.models.ParameterModel;
 import portal.models.RunReportModel;
+import portal.utility.ParameterCondition;
 import portal.utility.ReportLevelType;
 
 
@@ -592,8 +594,23 @@ public class Report {
 			model.setId(parameter.getId());
 			model.setName(parameter.getName());
 			model.setType(parameter.getType());
+			model.setLabel(parameter.getLabel());
 			model.setValue("");
 			parameters.add(model);
+			
+			if(parameter.getCondition().equals(ParameterCondition.Between))
+			{
+				try {
+					ParameterModel cloneModel=(ParameterModel) model.clone();
+					cloneModel.setName("To"+cloneModel.getName());
+					parameters.add(cloneModel);
+				}
+				catch(CloneNotSupportedException ex)
+				{
+					Logger.getLogger(Report.class.getName()).log(Level.SEVERE, ex.getMessage());
+				}
+
+			}
 		}
 		reportmodel.setParameters(parameters);
 		return reportmodel;

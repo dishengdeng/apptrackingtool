@@ -37,20 +37,39 @@
 						<form action="#" method="post">													
 
 							<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
-
+							<div>
+							</div>
 						  <p th:each="parameter:${report.parameters}" th:if="${report.parameters.size()>0}">
-							<label th:text="@{${parameter.name}+':'}"></label>
-							<input type="text" th:name="${parameter.name}"></input>
+							<label th:text="@{${parameter.label}+':'}"></label>
+							<small th:text="${parameter.condition.getConditiontext()}"></small>
+							<select th:name="${parameter.name}" th:if="${parameter.type.equals(T(portal.utility.ParameterType).Boolean)}">
+								<option selected></option>
+								<option value="TRUE">TRUE</option>
+								<option value="FALSE">FALSE</option>
+							</select>							
+							<input th:if="${parameter.type.equals(T(portal.utility.ParameterType).String)}" type="text" th:name="${parameter.name}"></input>
+							<input th:if="${parameter.type.equals(T(portal.utility.ParameterType).Date) and !parameter.condition.equals(T(portal.utility.ParameterCondition).Between)}" type="date" th:name="${parameter.name}"></input>
+							<input th:if="${parameter.type.equals(T(portal.utility.ParameterType).Date) and parameter.condition.equals(T(portal.utility.ParameterCondition).Between)}" type="date" th:name="${parameter.name}"></input>
+							<input th:if="${parameter.type.equals(T(portal.utility.ParameterType).Number) and !parameter.condition.equals(T(portal.utility.ParameterCondition).Between)}" type="text" th:name="${parameter.name}"></input>
+							<input th:if="${parameter.type.equals(T(portal.utility.ParameterType).Number) and parameter.condition.equals(T(portal.utility.ParameterCondition).Between)}" type="text" th:name="${parameter.name}"></input>							
+							<small th:if="${parameter.condition.equals(T(portal.utility.ParameterCondition).Between)}" th:text="'and'"></small>
+							<input th:if="${parameter.type.equals(T(portal.utility.ParameterType).Date) and parameter.condition.equals(T(portal.utility.ParameterCondition).Between)}" type="date" th:name="@{'To'+${parameter.name}}"></input>
+							<input th:if="${parameter.type.equals(T(portal.utility.ParameterType).Number) and parameter.condition.equals(T(portal.utility.ParameterCondition).Between)}" type="text" th:name="@{'To'+${parameter.name}}"></input>
+
+
 						  </p>	
 						  <div class="form-group">
 							<label for="reportFormat">Format:</label>
-							<select name="reportFormat" class="form-control">
+							<select name="reportFormat" class="form-control btn-w25">
 								<option value="PDF" selected>PDF</option>
 								<option value="EXCEL" selected>EXCEL</option>
 							</select>							
-						  </div>						  
-						  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" type="submit" value="Run" />
+						  </div>	
+						  
+						  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary btn-w25" type="submit" value="Run" />
+
 						</form>
+
 						</div>
                         <!-- /.panel-body -->
 					</div>
@@ -83,7 +102,9 @@ $( "form" ).on( "submit", function( event ) {
 		{
 			  for(var obj in formdata.parameters)
 			  {
+				
 				var selector="input[name='"+formdata.parameters[obj].name+"']";
+				if(formdata.parameters[obj].type==="Boolean") selector="select[name='"+formdata.parameters[obj].name+"']";
 				formdata.parameters[obj].value=$(selector).val();
 			  }
 		} 

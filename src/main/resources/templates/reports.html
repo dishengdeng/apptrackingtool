@@ -22,7 +22,7 @@
 						</div>
 						
 						<div class="col-md-4 text-right">						
-						<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" href="/addreport" data-toggle="tooltip" title="Create Report"><i class="fa fa-plus text-muted"></i></a>
+						<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" href="/addreport" data-toggle="tooltip" title="Create Report"><i class="fa fa-plus text-muted"></i></a>
 						</div>
 					</div>					
 					</h1>
@@ -47,14 +47,14 @@
                                     <tr>
                                         <th>Report</th>
 										<th>Description</th>										
-										<th>Run Report</th>
+										<!--<th>Run Report</th>-->
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr th:each="report: ${reports}">
                                         <td>
-											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletereport?report='+${report.id}}"
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','DEVELOPER')" th:href="@{'/deletereport?report='+${report.id}}"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
@@ -72,7 +72,7 @@
 											</a>
 										</td>										
 										<td th:text="${report.description}"></td>
-										<td>
+										<!--<td>
 											<form method="get" th:action="@{/getreport}">
 												<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
 												<div class="form-group">
@@ -84,7 +84,7 @@
 												</div>
 											<input  class="btn btn-primary btn-w40" type="submit" value="Run" />
 											</form>
-										</td>
+										</td>-->
                                     </tr>
 
 

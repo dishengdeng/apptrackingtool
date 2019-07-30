@@ -6,7 +6,8 @@ package portal.controllers;
 
 
 
-import java.util.HashMap;
+import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -65,7 +66,7 @@ import portal.service.StakeholderService;
 import portal.service.SupportService;
 import portal.service.ZacService;
 import portal.service.ZoneService;
-import portal.utility.Convertor;
+
 import portal.utility.FileType;
 import portal.utility.ParameterType;
 import portal.utility.ReportFormat;
@@ -449,16 +450,12 @@ public class ReportController {
     @PostMapping("/runreportwithparameters")
     public void runreportwithparameters(@RequestBody RunReportModel<Set<ParameterModel>> reportModel,HttpServletResponse response)
     {
-    	HashMap<String, Object> parameters = new HashMap<String, Object>();
-    	for(ParameterModel model:reportModel.getParameters())
-    	{
-    		if(model.getType().equals(ParameterType.String)) parameters.put(model.getName(), model.getValue());
-    		if(model.getType().equals(ParameterType.Number)) parameters.put(model.getName(), Double.valueOf(model.getValue()));
-    		if(model.getType().equals(ParameterType.Boolean)) parameters.put(model.getName(), Boolean.valueOf(model.getValue()));
-    		if(model.getType().equals(ParameterType.Date)) parameters.put(model.getName(), Convertor.JavaDate(model.getValue()));
-    	}
     	
-    	reportManager.runreport(reportService.getById(reportModel.getId()), reportModel.getReportFormat(),UPLOADED_FOLDER,response,Optional.of(parameters));
+    	reportManager.runreport(reportService.getById(reportModel.getId()), 
+				    			reportModel.getReportFormat(),
+				    			UPLOADED_FOLDER,
+				    			response,
+				    			reportModel.getParameters().isEmpty()?Optional.empty():Optional.of(reportManager.getParameters(new ArrayList<>(reportModel.getParameters()))));
     	
     }
     

@@ -5,6 +5,7 @@ package portal.report;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,8 +35,11 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 import portal.entity.File;
 import portal.entity.Report;
+import portal.models.ParameterModel;
 import portal.service.JsonWriter;
 import portal.service.ReportService;
+import portal.utility.Convertor;
+import portal.utility.ParameterType;
 import portal.utility.ReportFormat;
 
 @Service
@@ -123,6 +127,19 @@ public class ReportManagerImpl implements ReportManager{
 		JasperPrint jasperPrinter = JasperFillManager.fillReport(jasperReport, parmeters, jsonDataSource);
 		
 		return jasperPrinter;
+	}
+
+	@Override
+	public HashMap<String, Object> getParameters(List<ParameterModel> parameters) {
+    	HashMap<String, Object> params = new HashMap<String, Object>();
+    	for(ParameterModel model:parameters)
+    	{
+    		if(model.getType().equals(ParameterType.String)) params.put(model.getName(), model.getValue());
+    		if(model.getType().equals(ParameterType.Number)) params.put(model.getName(), Double.valueOf(model.getValue()));
+    		if(model.getType().equals(ParameterType.Boolean)) params.put(model.getName(), Boolean.valueOf(model.getValue()));
+    		if(model.getType().equals(ParameterType.Date)) params.put(model.getName(), Convertor.JavaDate(model.getValue()));
+    	}
+		return params;
 	}
 
 }

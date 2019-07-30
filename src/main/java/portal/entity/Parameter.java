@@ -22,7 +22,7 @@ import portal.utility.ParameterType;
 
 @Entity
 @Table(name = "Parameter")
-public class Parameter {
+public class Parameter{
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
 	@Column(name = "id",nullable = false,unique=true)
@@ -32,6 +32,10 @@ public class Parameter {
     @Column(name = "name",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String name;
+    
+    @Column(name = "label")
+    @JsonView(Views.Public.class)
+	private String label;
     
     @Column(name = "type")
     @JsonView(Views.Public.class)
@@ -97,10 +101,20 @@ public class Parameter {
 		this.report = report;
 	}
     
-    public void removeAlldependence()
+    public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	public void removeAlldependence()
     {
     	if(!ObjectUtils.isEmpty(this.report)) this.report.removeParameter(this);
     	this.setReport(null);
     }
+
+
 }
 

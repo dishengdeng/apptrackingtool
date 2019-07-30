@@ -4,12 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import portal.utility.ParameterType;
 
-public class ParameterModel {
+public class ParameterModel implements Cloneable{
 	private Long id;
 	
 	private String name;
 	
 	private ParameterType type;
+	
+	private String label;
 	
 	private String value;
 	@JsonProperty("id")
@@ -45,6 +47,19 @@ public class ParameterModel {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+	@JsonProperty("label")
+	public String getLabel() {
+		return label;
+	}
+
+	public void setLabel(String label) {
+		this.label = label;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 	
 	
