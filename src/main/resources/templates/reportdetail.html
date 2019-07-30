@@ -1355,20 +1355,20 @@
 
 		var conditionselectid='#condition'+mode+conditionselect
 
-					
-					$.get( "/getparemetercondition?parameter="+typeselect, function( data ) {
-						if (data !== undefined || data.length !== 0)
-						{
-							$( conditionselectid ).empty();
-							$( conditionselectid ).append("<option></option>");
-							for(var key in data)
-							{
-								var el="<option value='"+data[key].name+"'>"+data[key].value+"</option>";								
-								$( conditionselectid ).append(el);
-							}
-							
-						}
-					});
+		$( conditionselectid ).empty();
+		$( conditionselectid ).append("<option></option>");					
+		$.get( "/getparemetercondition?parameter="+typeselect, function( data ) {
+			if (data !== undefined || data.length !== 0)
+			{
+
+				for(var key in data)
+				{
+					var el="<option value='"+data[key].name+"'>"+data[key].value+"</option>";								
+					$( conditionselectid ).append(el);
+				}
+				
+			}
+		});
 
 	}
     </script>
