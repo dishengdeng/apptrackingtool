@@ -1,6 +1,9 @@
 package portal.models;
 
+import org.json.JSONObject;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 import portal.utility.ParameterType;
 
@@ -30,7 +33,19 @@ public class ParameterModel implements Cloneable{
 	public void setName(String name) {
 		this.name = name;
 	}
+	public ParameterModel()
+	{
+		
+	}
 	
+	public ParameterModel(JSONObject obj)
+	{
+		this.id=obj.getLong("id");
+		this.name=obj.getString("name");
+		this.label=obj.getString("label");
+		this.type=ParameterType.valueOf(obj.getString("type"));
+		this.value=obj.getString("value");
+	}
 
 	@JsonProperty("value")
 	public String getValue() {

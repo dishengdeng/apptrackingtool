@@ -4,6 +4,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class JSONObjectWithEmpty extends JSONObject{
+	
+	public JSONObjectWithEmpty(String jsonString)
+	{
+		super(jsonString);
+	}
+	
+	public JSONObjectWithEmpty()
+	{
+		super();
+	}	
 
 	@Override
 	public JSONObject put(String arg0, boolean arg1) throws JSONException {

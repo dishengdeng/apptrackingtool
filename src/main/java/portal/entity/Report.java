@@ -1,6 +1,8 @@
 package portal.entity;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -583,11 +585,11 @@ public class Report {
 		return result;
 	}
 	
-	public RunReportModel<Set<ParameterModel>> getParametersArray()
+	public RunReportModel<List<ParameterModel>> getParametersArray()
 	{
-		RunReportModel<Set<ParameterModel>> reportmodel=new  RunReportModel<Set<ParameterModel>>();
+		RunReportModel<List<ParameterModel>> reportmodel=new  RunReportModel<List<ParameterModel>>();
 		reportmodel.setId(this.id);
-		Set<ParameterModel> parameters=new HashSet<ParameterModel>();
+		List<ParameterModel> parameters=new ArrayList<ParameterModel>();
 		for(Parameter parameter:this.parameters)
 		{
 			ParameterModel model=new ParameterModel();

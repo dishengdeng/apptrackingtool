@@ -6,8 +6,8 @@ package portal.controllers;
 
 
 
+import java.io.IOException;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -29,6 +30,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+
 
 import portal.entity.AppInstance;
 import portal.entity.Application;
@@ -457,6 +462,18 @@ public class ReportController {
 				    			response,
 				    			reportModel.getParameters().isEmpty()?Optional.empty():Optional.of(reportManager.getParameters(new ArrayList<>(reportModel.getParameters()))));
     	
+    }
+    
+    @PostMapping("/runreport")
+    public void runreportwithformparameters(@ModelAttribute("reportmodel") String modelString,HttpServletResponse response) throws JsonParseException, JsonMappingException, IOException
+    {
+    	
+    	RunReportModel<List<ParameterModel>> reportModel=reportManager.getRunReportModel(modelString);
+    	reportManager.runreport(reportService.getById(reportModel.getId()), 
+				    			reportModel.getReportFormat(),
+				    			UPLOADED_FOLDER,
+				    			response,
+				    			reportModel.getParameters().isEmpty()?Optional.empty():Optional.of(reportManager.getParameters(reportModel.getParameters())));    	
     }
     
     //--parameter

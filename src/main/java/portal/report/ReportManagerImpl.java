@@ -4,6 +4,7 @@ package portal.report;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -12,7 +13,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
 
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.data.JsonDataSource;
+import net.sf.jasperreports.engine.data.JsonQLDataSource;
 import net.sf.jasperreports.engine.export.ooxml.JRXlsxExporter;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.util.JRSaver;
@@ -36,9 +38,11 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 import portal.entity.File;
 import portal.entity.Report;
 import portal.models.ParameterModel;
+import portal.models.RunReportModel;
 import portal.service.JsonWriter;
 import portal.service.ReportService;
 import portal.utility.Convertor;
+import portal.utility.JSONObjectWithEmpty;
 import portal.utility.ParameterType;
 import portal.utility.ReportFormat;
 
@@ -123,7 +127,7 @@ public class ReportManagerImpl implements ReportManager{
 		InputStream inputStream =jsonWriter.writeJsonWithNoNullIn(reportService.getReportModel(report));
 
 
-		JsonDataSource jsonDataSource = new JsonDataSource(inputStream);
+		JsonQLDataSource jsonDataSource = new JsonQLDataSource(inputStream);
 		JasperPrint jasperPrinter = JasperFillManager.fillReport(jasperReport, parmeters, jsonDataSource);
 		
 		return jasperPrinter;
@@ -140,6 +144,28 @@ public class ReportManagerImpl implements ReportManager{
     		if(model.getType().equals(ParameterType.Date)) params.put(model.getName(), Convertor.JavaDate(model.getValue()));
     	}
 		return params;
+	}
+
+	@Override
+	public RunReportModel<List<ParameterModel>> getRunReportModel(String jsonString) {
+		
+    	JSONObjectWithEmpty reportObj= new JSONObjectWithEmpty(jsonString);
+    	
+    	RunReportModel<List<ParameterModel>> reportModel=new RunReportModel<List<ParameterModel>>();
+    	
+    	reportModel.setId(reportObj.getLong("report"));
+    	reportModel.setReportFormat(ReportFormat.valueOf(reportObj.getString("reportFormat")));
+    	JSONArray parameters= reportObj.getJSONArray("parameters");
+    	List<ParameterModel> parameterList = new ArrayList<ParameterModel>();
+    	
+    	for(Object obj:parameters)
+    	{
+    		
+    		parameterList.add(new ParameterModel((JSONObject) obj)) ;
+    		
+    	}
+    	reportModel.setParameters(parameterList);
+		return reportModel;
 	}
 
 }

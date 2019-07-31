@@ -34,7 +34,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">			
-						<form action="#" method="post">													
+						<form id="formparameters" action="#" method="post">													
 
 							<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
 							<div>
@@ -69,7 +69,8 @@
 						  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary btn-w25" type="submit" value="Run" />
 
 						</form>
-
+						<form id="formrunreport" th:action="@{/runreport}" method="post">
+						</form>
 						</div>
                         <!-- /.panel-body -->
 					</div>
@@ -94,7 +95,7 @@
 				responsive: true
 			});
 /*<![CDATA[*/
-$( "form" ).on( "submit", function( event ) {
+$( "#formparameters" ).on( "submit", function( event ) {
 		event.preventDefault();
 		var formdata=/*[[${report.getParametersArray()}]]*/
 
@@ -109,12 +110,10 @@ $( "form" ).on( "submit", function( event ) {
 			  }
 		} 
 		formdata.reportFormat=$("select[name='reportFormat']").val();
-		$.ajax({
-				  type: "POST",
-				  url: "/runreportwithparameters",
-				  contentType: 'application/json',
-				  data: JSON.stringify(formdata)
-				});
+		$( "#formrunreport" ).empty();
+		var inputtext="<input type='hidden' class='form-control' name='reportmodel' value='"+JSON.stringify(formdata)+"'></input>"
+		$( "#formrunreport" ).append(inputtext);
+		$( "#formrunreport" ).submit();
 		console.log(formdata);
 
 	//console.log(bodydata);
