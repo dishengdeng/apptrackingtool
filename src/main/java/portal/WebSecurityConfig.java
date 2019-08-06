@@ -253,8 +253,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 					.antMatchers("/addreportlicense").hasAnyRole("ADMIN","SYSADMIN","USER")
 					.antMatchers("/deletereportserver").hasAnyRole("ADMIN","SYSADMIN","USER")
 					.antMatchers("/addreportserver").hasAnyRole("ADMIN","SYSADMIN","USER")
-					.antMatchers("/addreportlevel").hasAnyRole("ADMIN","SYSADMIN","USER")
-					.antMatchers("/deletereportlevel").hasAnyRole("ADMIN","SYSADMIN","USER")
 					.antMatchers("/deletereportsupport").hasAnyRole("ADMIN","SYSADMIN","USER")
 					.antMatchers("/addreportsupport").hasAnyRole("ADMIN","SYSADMIN","USER")
 					.antMatchers("/deletereportzac").hasAnyRole("ADMIN","SYSADMIN","USER")
@@ -272,6 +270,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
                     .antMatchers("/updateRole").hasRole("SYSADMIN")
                     .antMatchers("/addRole").hasRole("SYSADMIN")
                     .antMatchers("/deleteRole").hasRole("SYSADMIN")
+					.antMatchers("/addreportlevel").hasRole("SYSADMIN")
+					.antMatchers("/deletereportlevel").hasRole("SYSADMIN")
 //rest api
                     .antMatchers("/api/zones").hasAnyRole("ADMIN","SYSADMIN","INTEGRATION")
                     .antMatchers("/api/zone/create").hasAnyRole("ADMIN","SYSADMIN","INTEGRATION")

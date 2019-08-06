@@ -116,7 +116,7 @@
 									<li>
 										<a href="/reports">Reports</a>
 									</li>
-									<li sec:authorize="hasAnyRole('ADMIN','SYSADMIN')">
+									<li sec:authorize="hasRole('SYSADMIN')">
 										<a href="/reportlevels">Report Level</a>
 									</li>									
 									<li sec:authorize="hasAnyRole('ADMIN','SYSADMIN')">
