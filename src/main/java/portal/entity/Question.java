@@ -27,7 +27,7 @@ public class Question {
 	@JsonView(Views.Public.class)
 	private Long id;
 	
-    @Column(name = "questionName")
+    @Column(name = "questionName",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String questionName;
 

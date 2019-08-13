@@ -26,7 +26,7 @@ public class Answer {
 	@JsonView(Views.Public.class)
 	private Long id;
 	
-    @Column(name = "text")
+    @Column(name = "text",columnDefinition="VARCHAR(2000)")
     @JsonView(Views.Public.class)
 	private String text;
 
