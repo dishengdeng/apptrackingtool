@@ -51,15 +51,15 @@ public class AppInstance implements Comparable<AppInstance>{
     @JsonView(Views.Public.class)
 	private String version;
     
-    @Column(name = "description", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "description",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String description;
     
-    @Column(name = "notes", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "notes",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String notes;
     
-    @Column(name = "userbase ", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "userbase ",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String userbase;    
     

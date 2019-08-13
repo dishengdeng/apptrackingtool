@@ -35,7 +35,7 @@ public class Desktop {
     @JsonView(Views.Public.class)
 	private String desktopName;
 	
-    @Column(name = "description",columnDefinition="VARCHAR(250)")
+    @Column(name = "description",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String description;
     
@@ -44,7 +44,7 @@ public class Desktop {
     @JsonView(Views.Public.class)
 	private String osVersion;
     
-    @Column(name = "hwplatform",columnDefinition="VARCHAR(250)")
+    @Column(name = "hwplatform",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String hwplatform;
     

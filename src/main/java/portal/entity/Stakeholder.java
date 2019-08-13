@@ -37,7 +37,7 @@ public class Stakeholder {
     @JsonView(Views.Public.class)
 	private String stakeholderName;
 	
-    @Column(name = "note",columnDefinition="VARCHAR(250)")
+    @Column(name = "note",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String note;
     
@@ -50,7 +50,7 @@ public class Stakeholder {
     @JsonView(Views.Public.class)
 	private String lastname;
     
-    @Column(name = "address", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "address",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String address;
 
@@ -62,7 +62,7 @@ public class Stakeholder {
     @JsonView(Views.Public.class)
 	private String position; 
     
-    @Column(name = "email",columnDefinition="VARCHAR(250)")
+    @Column(name = "email",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String email;
     

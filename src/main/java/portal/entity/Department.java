@@ -37,34 +37,34 @@ public class Department {
     @JsonView(Views.Public.class)
 	private String departmentName;
 	
-    @Column(name = "description",columnDefinition="VARCHAR(250)")
+    @Column(name = "description",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String description;
     
 
-    @Column(name = "purpose",columnDefinition="VARCHAR(250)")
+    @Column(name = "purpose",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String purpose;
     
 
     
-    @Column(name = "stragicplan", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "stragicplan",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String stragicplan;
 
-    @Column(name = "roadMap",columnDefinition="VARCHAR(250)")
+    @Column(name = "roadMap",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String roadMap;   
 
-    @Column(name = "goal",columnDefinition="VARCHAR(250)")
+    @Column(name = "goal",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String goal; 
     
-    @Column(name = "painpoint",columnDefinition="VARCHAR(250)")
+    @Column(name = "painpoint",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String painpoint;
  
-    @Column(name = "attachment",columnDefinition="VARCHAR(250)")
+    @Column(name = "attachment",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String attachment;
 

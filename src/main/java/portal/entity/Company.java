@@ -42,49 +42,49 @@ public class Company {
     @JsonView(Views.Public.class)
 	private String companyName;
 	
-    @Column(name = "address",columnDefinition="VARCHAR(250)")
+    @Column(name = "address",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String address;
     
 
-    @Column(name = "phone",columnDefinition="VARCHAR(250)")
+    @Column(name = "phone",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String phone;
     
-    @Column(name = "email",columnDefinition="VARCHAR(250)")
+    @Column(name = "email",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String email;
     
-    @Column(name = "contactName", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "contactName",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String contactName;
 
-    @Column(name = "contactPhone", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "contactPhone",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String contactPhone;
     
-    @Column(name = "backupContactName", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "backupContactName",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String backupContactName;
 
-    @Column(name = "backupContactPhone", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "backupContactPhone",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String backupContactPhone;  
     
-    @Column(name = "sales", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "sales",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String sales;
     
-    @Column(name = "pm", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "pm",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String pm;
     
-    @Column(name = "mobilephone", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "mobilephone",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String mobilephone;    
 
     
-    @Column(name = "manufacturer", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "manufacturer",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String manufacturer;
     

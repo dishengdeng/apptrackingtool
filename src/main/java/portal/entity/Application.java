@@ -62,15 +62,15 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private String AppType;
     
-    @Column(name = "AppAliase",columnDefinition="VARCHAR(250)")
+    @Column(name = "AppAliase",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String AppAliase;
 
-    @Column(name = "AppPrerequisite",columnDefinition="VARCHAR(250)")
+    @Column(name = "AppPrerequisite",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String AppPrerequisite;
     
-    @Column(name = "AppPurpose",columnDefinition="VARCHAR(250)")
+    @Column(name = "AppPurpose",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String AppPurpose;
     
@@ -80,47 +80,47 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private Date AppDecomminsionDate;
  
-    @Column(name = "AppComments",columnDefinition="VARCHAR(250)")
+    @Column(name = "AppComments",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String AppComments;
     
-    @Column(name = "notes", length = 64,columnDefinition="VARCHAR(250)")
+    @Column(name = "notes", columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String notes;
     
-    @Column(name = "AppGovernance",columnDefinition="VARCHAR(250)")
+    @Column(name = "AppGovernance",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String AppGovernance;
     
-    @Column(name = "AppSupportByCapSys",columnDefinition="VARCHAR(250)")
+    @Column(name = "AppSupportByCapSys",columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String AppSupportByCapSys;
     
-    @Column(name = "strategicplan")
+    @Column(name = "strategicplan", columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String strategicplan;
     
-    @Column(name = "operationsplan")
+    @Column(name = "operationsplan", columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String operationsplan;
     
-    @Column(name = "painpoints")
+    @Column(name = "painpoints", columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String painpoints;
     
-    @Column(name = "businessgoals")
+    @Column(name = "businessgoals", columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String businessgoals;
     
-    @Column(name = "asop")
+    @Column(name = "asop", columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String asop;
     
-    @Column(name = "rit")
+    @Column(name = "rit", columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String rit;
     
-    @Column(name = "roe")
+    @Column(name = "roe", columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String roe;
     
