@@ -12,7 +12,7 @@ import portal.entity.Stakeholder;
 @Component
 public class StakeholderValidator implements Validator{
 	
-	private final String phonenumPattern="\\d{10}";
+	private final String phonenumPattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\\s\\./0-9]*$";
 	
 	private final String emailPattern="^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$";
 
