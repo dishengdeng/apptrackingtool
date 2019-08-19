@@ -62,9 +62,7 @@ public class Site implements Comparable<Site>{
         inverseJoinColumns = @JoinColumn(name = "application_id")
     )
     private Set<Application> applications = new HashSet<Application>();
-    
-	@ManyToMany(mappedBy = "sites")
-    private Set<Report> reports = new HashSet<Report>();
+
     
     public void addAppInstance(AppInstance appInstance)
     {
@@ -152,27 +150,6 @@ public class Site implements Comparable<Site>{
 	}
 	
 	
-	public Set<Report> getReports() {
-		return reports;
-	}
-
-	public void setReports(Set<Report> reports) {
-		this.reports.addAll(reports);
-		reports.forEach(obj->{
-			obj.addSite(this);
-		});
-	}
-	
-	public void addReport(Report report)
-	{
-		this.reports.add(report);
-	}
-	
-	public void removeReport(Report report)
-	{
-		this.reports.remove(report);
-	}
-	
 	public void removeAllDependence()
 	{
 		this.applications.forEach(obj->{
@@ -188,10 +165,7 @@ public class Site implements Comparable<Site>{
     	if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeSite(this);
     	this.setZone(null);
     	
-    	this.reports.forEach(obj->{
-    		obj.removeSite(this);
-    	});
-    	this.reports=null;
+
 	}
 	@Override
 	public boolean equals(Object obj)

@@ -90,8 +90,6 @@ public class License {
     )
     private Set<Application> applications = new HashSet<Application>();
     
-	@ManyToMany(mappedBy = "licenses")
-    private Set<Report> reports = new HashSet<Report>();
 
     public Long getId() {
 		return id;
@@ -217,26 +215,7 @@ public class License {
 
 	
 	
-	public Set<Report> getReports() {
-		return reports;
-	}
 
-	public void setReports(Set<Report> reports) {
-		this.reports.addAll(reports);
-		reports.forEach(obj->{
-			obj.addLicense(this);
-		});
-	}
-	
-	public void addReport(Report report)
-	{
-		this.reports.add(report);
-	}
-	
-	public void removeReport(Report report)
-	{
-		this.reports.remove(report);
-	}
 
 	public void removeAllDependence()
 	{
@@ -253,10 +232,7 @@ public class License {
 		});
 		this.appInstances=null;
 		
-		this.reports.forEach(obj->{
-			obj.removeLicense(this);
-		});
-		this.reports=null;
+
 		
 	}
   

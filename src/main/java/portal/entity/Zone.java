@@ -61,9 +61,6 @@ public class Zone {
     )
     private Set<Application> applications = new HashSet<Application>();
     
-	@ManyToMany(mappedBy = "zones")
-    private Set<Report> reports = new HashSet<Report>();
-    
 	public Long getId() {
 		return id;
 	}
@@ -160,29 +157,6 @@ public class Zone {
 		this.applications.removeIf(obj->obj.equals(application));
 	}
 	
-
-	
-	public Set<Report> getReports() {
-		return reports;
-	}
-
-	public void setReports(Set<Report> reports) {
-		this.reports.addAll(reports);
-		reports.forEach(obj->{
-			obj.addZone(this);
-		});
-	}
-
-	public void addReport(Report report)
-	{
-		this.reports.add(report);
-	}
-	
-	public void removeReport(Report report)
-	{
-		this.reports.remove(report);
-	}
-	
 	public void removeAllDependence()
 	{
 		this.applications.forEach(obj->{
@@ -199,11 +173,6 @@ public class Zone {
 			site.setZone(null);
 		});
 		this.sites=null;
-		
-		this.reports.forEach(obj->{
-			obj.removeZone(this);
-		});
-		this.reports=null;
 	}
 
 	@Override

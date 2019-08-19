@@ -16,7 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
+
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -77,9 +77,7 @@ public class Server {
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "cluster_id",referencedColumnName="id")
     private Cluster cluster;
-    
-	@ManyToMany(mappedBy = "servers")
-    private Set<Report> reports = new HashSet<Report>();
+
     
     @OneToMany(
             mappedBy = "server", 
@@ -176,29 +174,6 @@ public class Server {
 	public void setFiles(Set<File> files) {
 		this.files.addAll(files);
 	}
-	
-	
-	
-	public Set<Report> getReports() {
-		return reports;
-	}
-
-	public void setReports(Set<Report> reports) {
-		this.reports.addAll(reports);
-		reports.forEach(obj->{
-			obj.addServer(this);
-		});
-	}
-	
-	public void addReport(Report report)
-	{
-		this.reports.add(report);
-	}
-	
-	public void removeReport(Report report)
-	{
-		this.reports.remove(report);
-	}
 
 	public void removeAlldependence()
 	{
@@ -207,11 +182,6 @@ public class Server {
 		
 		if(!ObjectUtils.isEmpty(this.cluster)) this.cluster.removeServer(this);
 		this.setCluster(cluster);
-		
-		this.reports.forEach(obj->{
-			obj.removeServer(this);
-		});
-		this.reports=null;
 	}
 
 	public String getFileNameWithComma()

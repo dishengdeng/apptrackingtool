@@ -1,6 +1,7 @@
 package portal.service.Impl;
 
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +11,21 @@ import org.springframework.util.ObjectUtils;
 import portal.entity.Report;
 
 import portal.repository.ReportRepository;
+import portal.service.AppInstanceService;
+import portal.service.AppService;
+import portal.service.CompanyService;
+import portal.service.ContractService;
+import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.JsonWriter;
+import portal.service.LicenseService;
 import portal.service.ReportService;
+import portal.service.ServerService;
+import portal.service.SiteService;
+import portal.service.StakeholderService;
+import portal.service.SupportService;
+import portal.service.ZacService;
+import portal.service.ZoneService;
 import portal.utility.JSONObjectWithEmpty;
 import portal.utility.ReportLevelType;
 
@@ -26,6 +39,42 @@ public class ReportServiceImpl implements ReportService{
 	
 	@Autowired
 	private JsonWriter jsonWriter;
+	
+	@Autowired
+	private AppService appService;
+	
+	@Autowired
+	private SupportService supportService;
+	
+	@Autowired
+	private ContractService contractService;
+	
+	@Autowired
+	private ZoneService zoneService;
+	
+	@Autowired
+	private ServerService serverService;
+	
+	@Autowired
+	private LicenseService licenseService;
+	
+	@Autowired
+	private ZacService zacService;
+	
+	@Autowired
+	private CompanyService companyService;
+	
+	@Autowired
+	private SiteService siteService;
+	
+	@Autowired
+	private DepartmentService departmentService;
+	
+	@Autowired
+	private AppInstanceService instanceService;
+	
+	@Autowired
+	private StakeholderService stakeholderService;
 
 	@Override
 	public List<Report> getReports() {
@@ -70,18 +119,18 @@ public class ReportServiceImpl implements ReportService{
 		reportObj.put("ReportName",report.getReportName());
 		reportObj.put("Description", report.getDescription());
 		
-		if(report.isContainReportLevel(ReportLevelType.STAKEHOLDER)) reportObj.put("Stakeholders", jsonWriter.getStakeholders(report.getStakeholders()));
-		if(report.isContainReportLevel(ReportLevelType.APPLICATION)) reportObj.put("Applications", jsonWriter.getApplications(report.getApplications()));
-		if(report.isContainReportLevel(ReportLevelType.APPINSTANCE)) reportObj.put("AppInstances", jsonWriter.getInstances(report.getAppInstances()));
-		if(report.isContainReportLevel(ReportLevelType.DEPARTMENT)) reportObj.put("Departments", jsonWriter.getDepartment(report.getDepartments()));
-		if(report.isContainReportLevel(ReportLevelType.ZONE)) reportObj.put("Zones", jsonWriter.getZones(report.getZones()));
-		if(report.isContainReportLevel(ReportLevelType.SITE)) reportObj.put("Sites", jsonWriter.getSites(report.getSites()));
-		if(report.isContainReportLevel(ReportLevelType.VENDOR)) reportObj.put("Vendors", jsonWriter.getVendors(report.getCompanys()));
-		if(report.isContainReportLevel(ReportLevelType.CONTRACT)) reportObj.put("Contracts", jsonWriter.getContracts(report.getContracts()));
-		if(report.isContainReportLevel(ReportLevelType.LICENSE)) reportObj.put("Licenses", jsonWriter.getLicense(report.getLicenses()));
-		if(report.isContainReportLevel(ReportLevelType.SERVER)) reportObj.put("Servers", jsonWriter.getServers(report.getServers()));
-		if(report.isContainReportLevel(ReportLevelType.SUPPORT)) reportObj.put("Supports", jsonWriter.getSupports(report.getSupports()));
-		if(report.isContainReportLevel(ReportLevelType.ZAC)) reportObj.put("Zacs", jsonWriter.getZacs(report.getZacs()));
+		if(report.isContainReportLevel(ReportLevelType.STAKEHOLDER)) reportObj.put("Stakeholders", jsonWriter.getStakeholders(new HashSet<>(stakeholderService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.APPLICATION)) reportObj.put("Applications", jsonWriter.getApplications(new HashSet<>(appService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.APPINSTANCE)) reportObj.put("AppInstances", jsonWriter.getInstances(new HashSet<>(instanceService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.DEPARTMENT)) reportObj.put("Departments", jsonWriter.getDepartment(new HashSet<>(departmentService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.ZONE)) reportObj.put("Zones", jsonWriter.getZones(new HashSet<>(zoneService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.SITE)) reportObj.put("Sites", jsonWriter.getSites(new HashSet<>(siteService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.VENDOR)) reportObj.put("Vendors", jsonWriter.getVendors(new HashSet<>(companyService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.CONTRACT)) reportObj.put("Contracts", jsonWriter.getContracts(new HashSet<>(contractService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.LICENSE)) reportObj.put("Licenses", jsonWriter.getLicense(new HashSet<>(licenseService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.SERVER)) reportObj.put("Servers", jsonWriter.getServers(new HashSet<>(serverService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.SUPPORT)) reportObj.put("Supports", jsonWriter.getSupports(new HashSet<>(supportService.getAll())));
+		if(report.isContainReportLevel(ReportLevelType.ZAC)) reportObj.put("Zacs", jsonWriter.getZacs(new HashSet<>(zacService.getAll())));
 		return reportObj;
 		
 		

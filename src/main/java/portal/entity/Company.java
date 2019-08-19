@@ -102,8 +102,7 @@ public class Company {
     )	
     private Set<Application> applications = new HashSet<Application>();
 	
-	@ManyToMany(mappedBy = "companys")
-    private Set<Report> reports = new HashSet<Report>();
+
     
 	public Long getId() {
 		return id;
@@ -259,26 +258,7 @@ public class Company {
 	
 	
 
-	public Set<Report> getReports() {
-		return reports;
-	}
 
-	public void setReports(Set<Report> reports) {
-		this.reports.addAll(reports);
-		reports.forEach(obj->{
-			obj.addCompany(this);
-		});
-	}
-	
-	public void addReport(Report report)
-	{
-		this.reports.add(report);
-	}
-	
-	public void removeReport(Report report)
-	{
-		this.reports.remove(report);
-	}
 
 	public void removeAllDependence()
 	{
@@ -292,10 +272,7 @@ public class Company {
 		});
 		this.appInstances=null;
 		
-		this.reports.forEach(obj->{
-			obj.removeCompany(this);
-		});
-		this.reports=null;
+
 	}
 	
 	public String getInstanceNameWithComma()

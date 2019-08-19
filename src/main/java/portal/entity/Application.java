@@ -173,8 +173,7 @@ public class Application implements Comparable<Application>{
 	@ManyToMany(mappedBy = "applications")
     private Set<License> licenses = new HashSet<License>();
 	
-	@ManyToMany(mappedBy = "applications")
-    private Set<Report> reports = new HashSet<Report>();
+
     
     public Long getId() {
 		return id;
@@ -562,26 +561,7 @@ public class Application implements Comparable<Application>{
 
 	
 	
-	public Set<Report> getReports() {
-		return reports;
-	}
 
-	public void setReports(Set<Report> reports) {
-		this.reports.addAll(reports);
-		reports.forEach(obj->{
-			obj.addApplication(this);
-		});
-	}
-	
-	public void addReport(Report report)
-	{
-		this.reports.add(report);
-	}
-	
-	public void removeReport(Report report)
-	{
-		this.reports.remove(report);
-	}
 
 	public void removeAllDependence()
 	{
@@ -641,9 +621,7 @@ public class Application implements Comparable<Application>{
 		
 		this.licenses=null;
 		
-		this.reports.forEach(obj->{
-			obj.removeApplication(this);
-		});
+
 	}
 	
 
