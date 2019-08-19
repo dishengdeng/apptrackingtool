@@ -14,6 +14,7 @@ import portal.models.StakeholderModel;
 import portal.repository.StakeholderRepository;
 import portal.service.StakeholderService;
 
+
 @Service
 public class StakeholderServiceImpl implements StakeholderService{
 
@@ -102,12 +103,15 @@ public class StakeholderServiceImpl implements StakeholderService{
 
 	@Override
 	public void updateDetail(Stakeholder stakeholder) {
+
 		stakeholderRepository.updateDetail(stakeholder.getStakeholderName(),stakeholder.getNote(), 
 				stakeholder.getFirstname(), stakeholder.getLastname(), 
 				stakeholder.getAddress(), stakeholder.getPhone(), 
 				stakeholder.getPosition(), stakeholder.getEmail(), 
 				stakeholder.getInfluence(), stakeholder.getInterest(), 
-				stakeholder.getRaciforsyschanges(), stakeholder.getId());
+				stakeholder.getId());
+		
+
 		
 	}
 

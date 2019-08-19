@@ -66,16 +66,32 @@
 				  </div>
 				  <div class="form-group">
 					<label for="note">Influence:</label>
-					<input type="text" class="form-control" th:name="influence">
+					<select name="influence" class="form-control" id="statusSelect">
+						<option th:selected="${stakeholder.influence==null}"></option>
+						<option th:attr="value = 'Low'" th:selected="${stakeholder.influence==null} ? false:${stakeholder.influence=='Low'}" th:text="Low"></option>
+						<option th:attr="value = 'Medium'" th:selected="${stakeholder.influence==null} ? false:${stakeholder.influence=='Medium'}" th:text="Medium"></option>
+						<option th:attr="value = 'High'" th:selected="${stakeholder.influence==null} ? false:${stakeholder.influence=='High'}" th:text="High"></option>									
+					</select>								
 				  </div>
+				  
 				  <div class="form-group">
 					<label for="note">Interest:</label>
-					<input type="text" class="form-control" th:name="interest">
+					<select name="interest" class="form-control" id="statusSelect">
+						<option th:selected="${stakeholder.influence==null}"></option>
+						<option th:attr="value = 'Low'" th:selected="${stakeholder.interest==null} ? false:${stakeholder.interest=='Low'}" th:text="Low"></option>
+						<option th:attr="value = 'Medium'" th:selected="${stakeholder.interest==null} ? false:${stakeholder.interest=='Medium'}" th:text="Medium"></option>
+						<option th:attr="value = 'High'" th:selected="${stakeholder.interest==null} ? false:${stakeholder.interest=='High'}" th:text="High"></option>									
+					</select>									
 				  </div>
 				  <div class="form-group">
 					<label for="note">RACI:</label>
-					<input type="text" class="form-control" th:name="raciforsyschanges">
-				  </div>				  
+					<select name="raciforsyschanges" class="form-control" id="RACISelect" multiple>
+						<option th:each="raci : ${T(portal.utility.RACI).values()}"
+								th:value="${raci}"
+								th:text="${raci}">
+						</option>
+					</select>							
+				  </div>					  
 				  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Submit" />
 				</form>
 			</div>
@@ -93,6 +109,13 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
+			 $('#RACISelect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select RACI'
+			  });
     });
     </script>
 	<script type="text/javascript">

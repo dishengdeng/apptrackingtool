@@ -61,7 +61,8 @@ public class StakeholderController {
     	}
     	
     	
-    	stakeholderService.updateDetail(stakeholder);
+    	//stakeholderService.updateDetail(stakeholder);
+    	stakeholderService.updateStakeholder(stakeholder);
     	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
     }
     

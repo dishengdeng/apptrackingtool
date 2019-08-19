@@ -85,7 +85,7 @@
 										<td th:text="${stakeholder.note}"></td>
                                         <td th:text="${stakeholder.influence}"></td>
 										<td th:text="${stakeholder.interest}"></td>
-										<td th:text="${stakeholder.raciforsyschanges}"></td>										
+										<td th:text="${stakeholder.raciforsyschanges.size()>0} ? ${stakeholder.raciforsyschanges}:''"></td>										
 																		
 
                                     </tr>

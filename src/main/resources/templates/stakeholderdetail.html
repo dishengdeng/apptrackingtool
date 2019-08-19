@@ -86,12 +86,12 @@
 							  </div>
 							  <div class="form-group">
 								<label for="note">RACI:</label>
-								<select name="raciforsyschanges" class="form-control" id="statusSelect">
-									<option th:selected="${stakeholder.influence==null}"></option>
-									<option th:attr="value = 'Responsible'" th:selected="${stakeholder.raciforsyschanges==null} ? false:${stakeholder.raciforsyschanges=='Responsible'}" th:text="Responsible"></option>
-									<option th:attr="value = 'Accountable'" th:selected="${stakeholder.raciforsyschanges==null} ? false:${stakeholder.raciforsyschanges=='Accountable'}" th:text="Accountable"></option>
-									<option th:attr="value = 'Consulted'" th:selected="${stakeholder.raciforsyschanges==null} ? false:${stakeholder.raciforsyschanges=='Consulted'}" th:text="Consulted"></option>
-									<option th:attr="value = 'Informed'" th:selected="${stakeholder.raciforsyschanges==null} ? false:${stakeholder.raciforsyschanges=='Informed'}" th:text="Informed"></option>									
+								<select name="raciforsyschanges" class="form-control" id="RACISelect" multiple>
+									<option th:each="raci : ${T(portal.utility.RACI).values()}"
+											th:value="${raci}"
+											th:text="${raci}"
+											th:selected="${stakeholder.raciforsyschanges.contains(raci)}">
+									</option>
 								</select>								
 							  </div>							  
 							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
@@ -295,6 +295,13 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
+			 $('#RACISelect').multiselect(
+			  {
+				includeSelectAllOption: true,
+				buttonWidth: 300, 
+				enableFiltering: true,
+				nonSelectedText: 'Select RACI'
+			  });		
     });
     </script>
 	<script type="text/javascript">

@@ -4,8 +4,13 @@ package portal.entity;
 
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -21,6 +26,7 @@ import org.springframework.util.ObjectUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
+import portal.utility.RACI;
 
 @Entity
 @Table(name = "Stakeholder")
@@ -77,9 +83,11 @@ public class Stakeholder {
     @JsonView(Views.Public.class)
 	private String interest;
 
-    @Column(name = "raciforsyschanges",columnDefinition="VARCHAR(250)")
+    @ElementCollection
+    @CollectionTable(name="stakeraci", joinColumns=@JoinColumn(name="stakeraci_id"))    
+    @Column(name = "raciforsyschanges")
     @JsonView(Views.Public.class)
-	private String raciforsyschanges;    
+	private Set<RACI> raciforsyschanges= new HashSet<RACI>();    
     
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "slarole_id",referencedColumnName="id")
@@ -189,15 +197,18 @@ public class Stakeholder {
 		this.interest = interest;
 	}
 
-	public String getRaciforsyschanges() {
+
+	
+	
+	public Set<RACI> getRaciforsyschanges() {
 		return raciforsyschanges;
 	}
 
-	public void setRaciforsyschanges(String raciforsyschanges) {
-		this.raciforsyschanges = raciforsyschanges;
+	public void setRaciforsyschanges(Set<RACI> raciforsyschanges) {
+		this.raciforsyschanges.retainAll(raciforsyschanges);
+		this.raciforsyschanges.addAll(raciforsyschanges);
 	}
-	
-	
+
 	public void removeAllDependence()
 	{
 		if(!ObjectUtils.isEmpty(this.department)) this.department.removeStakeholder(this);
