@@ -54,9 +54,10 @@
 										<th>Description</th>
 										<th>Approver</th>
 										<th>Approval Date</th>
-                                        <th>SMA Description</th>
-										<th>SLA Description</th>
-										<th>contract/Licensing in Place (Yes/No)</th>
+										<th>contract/Licensing in Place (Yes/No)</th>										
+                                        <th>Vendor SLA/SMA?</th>
+										<th>AHS-IT SLA?</th>
+
 										
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
@@ -107,9 +108,10 @@
 										<td th:text="${contract.description}"></td>
 										<td th:text="${contract.approvername}"></td>
 										<td th:text="${contract.approvaldate}"></td>
-                                        <td th:text="${contract.smaDescription}"></td>
-                                        <td th:text="${contract.slaDescription}"></td>
-										<td th:text="${contract.clinplace}"></td>
+										<td th:text="${contract.clinplace}"></td>										
+                                        <td th:text="${contract.vendorsla}"></td>
+                                        <td th:text="${contract.ahsitsla}"></td>
+
 
                                     </tr>
 

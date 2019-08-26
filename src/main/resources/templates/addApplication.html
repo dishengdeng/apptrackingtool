@@ -33,11 +33,11 @@
 					</select>
 				  </div>				  
 				  <div class="form-group">
-					<label for="description">Version:</label>
+					<label for="description">Application Version:</label>
 					<input type="text" class="form-control" th:name="AppVersion">
 				  </div>
 				  <div class="form-group">
-					<label for="description">Type:</label>
+					<label for="description">Application Type:</label>
 					<input type="text" class="form-control" th:name="AppType">
 				  </div>
 				  <div class="form-group">
@@ -47,7 +47,15 @@
 				  <div class="form-group">
 					<label for="description">Purpose:</label>
 					<input type="text" class="form-control" th:name="AppPurpose">
-				  </div>				  
+				  </div>
+				  <div class="form-group">
+					<label for="description">Userbase:</label>
+					<input type="text" class="form-control" th:name="userbase" th:value="${appmodel.userbase}">
+				  </div>
+				  <div class="form-group">
+					<label for="description">Business Unit Initiatives on Roadmap?</label>
+					<input type="text" class="form-control" th:name="buroadmap" th:value="${appmodel.buroadmap}">
+				  </div>					  
 				  <div class="form-group">
 					<label for="description">Application Prerequisite:</label>
 					<input type="text" class="form-control" th:name="AppPrerequisite">
@@ -63,13 +71,14 @@
 					</div>
 				  </div>
 				  <div class="form-group">
-					<label for="description">Comments:</label>
-					<input type="text" class="form-control" th:name="AppComments">
-				  </div>
-				  <div class="form-group">
-					<label for="description">Governance:</label>
+					<label for="description">Governance/ Standards in Place (Y/N):</label>
 					<input type="text" class="form-control" th:name="AppGovernance">
-				  </div>					  
+				  </div>				  
+				  <div class="form-group">
+					<label for="note">Additional Information/ Notes:</label>
+					<input type="text" class="form-control" th:name="notes" th:value="${appmodel.notes}">
+				  </div>	
+					  
 				  <input class="btn btn-primary" type="submit" value="Submit" />
 				</form>
 			</div>

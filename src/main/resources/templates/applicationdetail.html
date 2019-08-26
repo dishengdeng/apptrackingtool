@@ -54,11 +54,11 @@
 									<p class="text-danger" th:if="${#fields.hasErrors('status')}"><strong  th:errors="*{status}"></strong></p>
 								  </div>								  
 								  <div class="form-group">
-									<label for="description">Version:</label>
+									<label for="description">Application Version:</label>
 									<input type="text" class="form-control" th:name="AppVersion" th:value="${appmodel.AppVersion}">
 								  </div>
 								  <div class="form-group">
-									<label for="description">Type:</label>
+									<label for="description">Application Type:</label>
 									<input type="text" class="form-control" th:name="AppType" th:value="${appmodel.AppType}">
 								  </div>
 								  <div class="form-group">
@@ -68,7 +68,16 @@
 								  <div class="form-group">
 									<label for="description">Purpose:</label>
 									<input type="text" class="form-control" th:name="AppPurpose" th:value="${appmodel.AppPurpose}">
-								  </div>				  
+								  </div>	
+								  <div class="form-group">
+									<label for="description">Userbase:</label>
+									<input type="text" class="form-control" th:name="userbase" th:value="${appmodel.userbase}">
+								  </div>
+
+								  <div class="form-group">
+									<label for="description">Business Unit Initiatives on Roadmap?</label>
+									<input type="text" class="form-control" th:name="buroadmap" th:value="${appmodel.buroadmap}">
+								  </div>								  
 								  <div class="form-group">
 									<label for="description">Application Prerequisite:</label>
 									<input type="text" class="form-control" th:name="AppPrerequisite" th:value="${appmodel.AppPrerequisite}">
@@ -83,46 +92,17 @@
 
 									</div>
 								  </div>
+
 								  <div class="form-group">
-									<label for="description">Tips&Tricks:</label>
-									<input type="text" class="form-control" th:name="AppComments" th:value="${appmodel.AppComments}">
-								  </div>
+									<label for="description">Governance/ Standards in Place (Y/N):</label>
+									<input type="text" class="form-control" th:name="AppGovernance" th:value="${appmodel.AppGovernance}">
+								  </div>								  
 								  <div class="form-group">
-									<label for="note">Comments/Notes:</label>
+									<label for="note">Additional Information/ Notes:</label>
 									<input type="text" class="form-control" th:name="notes" th:value="${appmodel.notes}">
 								  </div>								  
-								  <div class="form-group">
-									<label for="description">Governance:</label>
-									<input type="text" class="form-control" th:name="AppGovernance" th:value="${appmodel.AppGovernance}">
-								  </div>
-								  <div class="form-group">
-									<label for="strategicplan">Strategic Plan:</label>
-									<input type="text" class="form-control" th:name="strategicplan" th:value="${appmodel.strategicplan}">
-								  </div>
-								  <div class="form-group">
-									<label for="operationsplan">Operations Plan:</label>
-									<input type="text" class="form-control" th:name="operationsplan" th:value="${appmodel.operationsplan}">
-								  </div>
-								  <div class="form-group">
-									<label for="painpoints">Pain Points:</label>
-									<input type="text" class="form-control" th:name="painpoints" th:value="${appmodel.painpoints}">
-								  </div>
-								  <div class="form-group">
-									<label for="businessgoals">Business Goals:</label>
-									<input type="text" class="form-control" th:name="businessgoals" th:value="${appmodel.businessgoals}">
-								  </div>
-								  <div class="form-group">
-									<label for="asop">Align with Strategic and Ops Plans:</label>
-									<input type="text" class="form-control" th:name="asop" th:value="${appmodel.asop}">
-								  </div>
-								  <div class="form-group">
-									<label for="rit">Related to IT:</label>
-									<input type="text" class="form-control" th:name="rit" th:value="${appmodel.rit}">
-								  </div>
-								  <div class="form-group">
-									<label for="roe">Request or enhancements:</label>
-									<input type="text" class="form-control" th:name="roe" th:value="${appmodel.roe}">
-								  </div>								  
+
+								  
 							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 							  
 							</form>                            
@@ -339,7 +319,7 @@
 				<div class="col-lg-8">
 					 <div class="panel panel-primary">
                         <div class="panel-heading">
-                            <i class="fa fa-newspaper-o"></i> Manufacturer
+                            <i class="fa fa-newspaper-o"></i> Manufacturer/Vendor
                             <div class="pull-right">
 								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addcompany'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
@@ -493,7 +473,6 @@
 							<table class="table">
 							  <thead>
 								<th>Support</th>
-								<th>Support Type</th>
 								<th>Phone</th>
 								<th>Email</th>
 								<th>Note</th>
@@ -510,9 +489,8 @@
 										   >
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
-										<a th:href="@{'/supportdetail?support='+${appsupport.id}}" th:text="${appsupport.supportName}"></a>
+										<a th:href="@{'/supportdetail?support='+${appsupport.id}}" th:text="@{${appsupport.id}+' - '+${appsupport.supportName}}"></a>
 									</td>
-									<td th:text="${appsupport.supporttype==null}?'':(${appsupport.supporttype.name()=='Network'} ? 'Network Support':(${appsupport.supporttype.name()=='DBServer'}?'DB Server Support':'App Server Support'))"></td>
 									<td th:text="${appsupport.phone}"></td>
 									<td th:text="${appsupport.email}"></td>
 									<td th:text="${appsupport.note}"></td>
@@ -941,7 +919,7 @@
 									<input type="hidden" class="form-control" th:name="app" th:value="${app.id}"></input>
 									<select name="supports" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="supportselect">
 									  <option th:each="supportEntity : ${supports}" 
-									  th:text="${supportEntity.supportName}" 
+									  th:text="@{${supportEntity.id}+' - '+${supportEntity.supportName}}" 
 									  th:attr="value = ${supportEntity.id}">
 									</select>
 								</div>

@@ -72,7 +72,18 @@
 					<label for="note">SLA Description:</label>
 					<input type="text" class="form-control" th:name="slaDescription">
 				  </div>
-													  
+				  <div class="form-group">
+					<label for="clinplace">Contract / Licensing in Place (Y/N):</label>
+					<input type="text" class="form-control" th:name="clinplace" th:value="${contract.clinplace}">
+				  </div>	
+				  <div class="form-group">
+					<label for="vendorsla">Vendor SLA/SMA?</label>
+					<input type="text" class="form-control" th:name="vendorsla" th:value="${contract.vendorsla}">
+				  </div>	
+				  <div class="form-group">
+					<label for="ahsitsla">AHS-IT SLA?</label>
+					<input type="text" class="form-control" th:name="ahsitsla" th:value="${contract.ahsitsla}">
+				  </div>														  
 				  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Submit" />
 				</form>
 			</div>

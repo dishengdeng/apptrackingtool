@@ -90,19 +90,15 @@
 								<input type="text" class="form-control" th:name="slaDescription" th:value="${contract.slaDescription}">
 							  </div>
 							  <div class="form-group">
-								<label for="clinplace">Contract / Licensing in Place:</label>
-								<select name="clinplace" class="form-control" id="statusSelect">
-									<option th:selected="${contract.clinplace==null}"></option>
-									<option th:attr="value = 'Yes'" th:selected="${contract.clinplace==null} ? false:${contract.clinplace=='Yes'}" th:text="Yes"></option>
-									<option th:attr="value = 'No'" th:selected="${contract.clinplace==null} ? false:${contract.clinplace=='No'}" th:text="No"></option>								
-								</select>
+								<label for="clinplace">Contract / Licensing in Place (Y/N):</label>
+								<input type="text" class="form-control" th:name="clinplace" th:value="${contract.clinplace}">
 							  </div>	
 							  <div class="form-group">
-								<label for="vendorsla">Vendor SLA:</label>
+								<label for="vendorsla">Vendor SLA/SMA?</label>
 								<input type="text" class="form-control" th:name="vendorsla" th:value="${contract.vendorsla}">
 							  </div>	
 							  <div class="form-group">
-								<label for="ahsitsla">AHS-IT SLA:</label>
+								<label for="ahsitsla">AHS-IT SLA?</label>
 								<input type="text" class="form-control" th:name="ahsitsla" th:value="${contract.ahsitsla}">
 							  </div>								  
 							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />

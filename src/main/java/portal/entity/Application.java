@@ -124,6 +124,14 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private String roe;
     
+    @Column(name = "userbase ",columnDefinition="VARCHAR(1000)")
+    @JsonView(Views.Public.class)
+	private String userbase;
+    
+    @Column(name = "buroadmap ",columnDefinition="VARCHAR(1000)")
+    @JsonView(Views.Public.class)
+	private String buroadmap; 
+    
 	@ManyToMany(mappedBy = "applications")
     private Set<Project> projects = new HashSet<Project>();
 	
@@ -189,6 +197,22 @@ public class Application implements Comparable<Application>{
 
 	public void setAppName(String appName) {
 		AppName = appName;
+	}
+
+	public String getUserbase() {
+		return userbase;
+	}
+
+	public void setUserbase(String userbase) {
+		this.userbase = userbase;
+	}
+
+	public String getBuroadmap() {
+		return buroadmap;
+	}
+
+	public void setBuroadmap(String buroadmap) {
+		this.buroadmap = buroadmap;
 	}
 
 	public String getAppVersion() {
