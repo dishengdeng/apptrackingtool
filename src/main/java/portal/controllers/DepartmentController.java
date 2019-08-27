@@ -8,10 +8,13 @@ package portal.controllers;
 
 
 
+
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 
@@ -21,6 +24,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,7 +34,9 @@ import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
 import portal.entity.Stakeholder;
+
 import portal.entity.Zacmap;
+import portal.entity.Zone;
 import portal.service.AnswerService;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
@@ -40,6 +46,7 @@ import portal.service.QuestionService;
 import portal.service.StakeholderService;
 import portal.service.ZacService;
 import portal.service.ZacmapService;
+import portal.service.ZoneService;
 import portal.utility.FileType;
 
 
@@ -74,6 +81,9 @@ public class DepartmentController {
 	
 	@Autowired
 	private ZacmapService zacmapService;
+	
+	@Autowired
+	private ZoneService zoneService;
 	
 	private final String UPLOADED_FOLDER="files//department//";
 	
@@ -115,10 +125,11 @@ public class DepartmentController {
     	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
     	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
     	//--Zacmap-----
-    	model.addAttribute("zacmapModel",new Zacmap());
-    	model.addAttribute("zacmaps",department.getZacmaps());
-    	model.addAttribute("zacs",zacService.getAll());  	
+    	model.addAttribute("zacs",zacService.getAll());
+    	model.addAttribute("zacmaps",departmentService.getZacmap(department));
     	model.addAttribute("questions", questionService.getAllQuestion());
+    	//--zones--
+    	model.addAttribute("zones",zoneService.getAll());
         return "departmentdetail";
     }    
     
@@ -203,14 +214,15 @@ public class DepartmentController {
     }
     
     @PostMapping("/addDepartmentZacmap")
-    public String addDepartmentZacmap(@ModelAttribute("zacmapModel") Zacmap zacmap) {
+    public void addDepartmentZacmap(@RequestBody JSONObject formdata,HttpServletResponse response) throws Exception{
 
 
     	
-    	zacmapService.saveZacmap(zacmap);
     	
+    	response.setContentType("application/json");
+    	response.flushBuffer();
     	
-    	return "redirect:/departmentdetail?id="+zacmap.getDepartment().getId();
+
     }
     
   //--Stakeholder--    
@@ -229,6 +241,30 @@ public class DepartmentController {
 
     	return "redirect:/departmentdetail?id="+department.getId();
     } 
+    
+    //------Zones---------------    
+    @GetMapping("/deletedepartmentzone")
+    public String deleteappzone(@ModelAttribute("zone") Zone zone,@ModelAttribute("department") Department department) {
+
+
+    	
+    	zone.deleteDepartment(department);
+    	zoneService.updateZone(zone);
+    	
+    	
+    	return "redirect:/departmentdetail?id="+department.getId();
+    }
+    
+    @PostMapping("/adddepartmentzone")
+    public String addAppZone(@ModelAttribute("department") Department department) {
+
+
+    	
+    	departmentService.updateDepartment(department);
+    	
+    	return "redirect:/departmentdetail?id="+department.getId();
+    }	   
+    
 //------file management----
     @PostMapping("/departmentupload")
     public String departmentupload(@RequestParam("file") MultipartFile file,ModelMap model,@ModelAttribute("department") Department department) {

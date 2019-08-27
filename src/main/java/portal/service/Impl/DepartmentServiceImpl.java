@@ -3,6 +3,7 @@ package portal.service.Impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,8 @@ import portal.entity.AppInstance;
 import portal.entity.Department;
 import portal.entity.File;
 import portal.entity.Stakeholder;
+import portal.entity.Zaclist;
+import portal.entity.Zacmap;
 import portal.models.DepartmentModel;
 import portal.repository.AppInstanceRepository;
 
@@ -131,6 +134,13 @@ public class DepartmentServiceImpl implements DepartmentService{
 
 		
 		
+	}
+
+	@Override
+	public Set<Zacmap> getZacmap(Department department) {
+		
+		return department.getZaclists().stream().collect(Collectors.groupingBy(Zaclist::getZacmap)).keySet();
+
 	}
 
 

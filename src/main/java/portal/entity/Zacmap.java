@@ -1,5 +1,8 @@
 package portal.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.util.ObjectUtils;
@@ -30,13 +34,16 @@ public class Zacmap {
     @JoinColumn(name = "application_id",referencedColumnName="id")
     private Application application; 
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "department_id",referencedColumnName="id")
-    private Department department; 
+    @OneToMany(
+            mappedBy = "zacmap", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Zaclist> zaclists = new HashSet<Zaclist>();
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "zac_id",referencedColumnName="id")
-    private Zac zac;
+    @Column(name = "detail", columnDefinition="VARCHAR(1000)")
+    @JsonView(Views.Public.class)
+    private String detail;
 
 	public Long getId() {
 		return id;
@@ -53,34 +60,31 @@ public class Zacmap {
 	public void setApplication(Application application) {
 		this.application = application;
 	}
-
-	public Department getDepartment() {
-		return department;
-	}
-
-	public void setDepartment(Department department) {
-		this.department = department;
-	}
-
-	public Zac getZac() {
-		return zac;
-	}
-
-	public void setZac(Zac zac) {
-		this.zac = zac;
-	} 
-    
 	
+	public Set<Zaclist> getZaclists() {
+		return zaclists;
+	}
+
+	public void setZaclists(Set<Zaclist> zaclists) {
+		this.zaclists.addAll(zaclists);
+		zaclists.forEach(obj->{
+			obj.setZacmap(this);
+		});
+	}
+
+	public String getDetail() {
+		return detail;
+	}
+
+	public void setDetail(String detail) {
+		this.detail = detail;
+	}
+
 	public void removeAllDepedence()
 	{
 		if(!ObjectUtils.isEmpty(this.application)) this.application.removeZacmap(this);
 		this.setApplication(null);
-		
-		if(!ObjectUtils.isEmpty(this.department)) this.department.removeZacmap(this);
-		this.setDepartment(null);;
-		
-		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeZacmap(this);
-		this.setZac(null);
+
 	}
     
 }

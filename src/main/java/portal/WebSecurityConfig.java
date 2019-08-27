@@ -261,6 +261,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter{
 					.antMatchers("/addreportparameter").hasAnyRole("ADMIN","SYSADMIN","USER")
 					.antMatchers("/updatereportparameter").hasAnyRole("ADMIN","SYSADMIN","USER")
 					.antMatchers("/getparemetercondition").hasAnyRole("ADMIN","SYSADMIN","USER")
+					.antMatchers("/deletedepartmentzone").hasAnyRole("ADMIN","SYSADMIN","USER")
+					.antMatchers("/adddepartmentzone").hasAnyRole("ADMIN","SYSADMIN","USER")					
                     .antMatchers("/users").hasAnyRole("ADMIN","SYSADMIN")
                     .antMatchers("/loggedusers").hasAnyRole("ADMIN","SYSADMIN")
                     .antMatchers("/kickoutuser").hasAnyRole("ADMIN","SYSADMIN")

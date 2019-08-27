@@ -21,7 +21,7 @@ import portal.jsonview.Views;
 
 @Entity
 @Table(name = "Zone")
-public class Zone {
+public class Zone implements Comparable<Zone>{
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
 	@Column(name = "id",nullable = false,unique=true)
@@ -60,6 +60,21 @@ public class Zone {
         inverseJoinColumns = @JoinColumn(name = "application_id")
     )
     private Set<Application> applications = new HashSet<Application>();
+    
+    
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "departmentzone",
+        joinColumns = @JoinColumn(name = "zone_id"),
+        inverseJoinColumns = @JoinColumn(name = "department_id")
+    )
+    private Set<Department> departments = new HashSet<Department>();
+	
+    @OneToMany(
+            mappedBy = "zone", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Zaclist> zaclists = new HashSet<Zaclist>();
     
 	public Long getId() {
 		return id;
@@ -157,6 +172,39 @@ public class Zone {
 		this.applications.removeIf(obj->obj.equals(application));
 	}
 	
+	public Set<Department> getDepartments() {
+		return departments;
+	}
+
+	public void setDepartments(Set<Department> departments) {
+		this.departments.addAll(departments);
+		departments.forEach(obj->{
+			obj.addZone(this);
+		});
+	}
+	
+	public void addDepartment(Department department)
+	{
+		this.departments.add(department);
+	}
+	
+	public void deleteDepartment(Department department)
+	{
+		this.departments.remove(department);
+	}
+
+	
+	public Set<Zaclist> getZaclists() {
+		return zaclists;
+	}
+
+	public void setZaclists(Set<Zaclist> zaclists) {
+		this.zaclists.addAll(zaclists);
+		zaclists.forEach(obj->{
+			obj.setZone(this);
+		});
+	}
+
 	public void removeAllDependence()
 	{
 		this.applications.forEach(obj->{
@@ -173,6 +221,11 @@ public class Zone {
 			site.setZone(null);
 		});
 		this.sites=null;
+		
+		this.departments.forEach(obj->{
+			obj.deleteZone(this);
+		});
+		this.departments=null;
 	}
 
 	@Override
@@ -189,6 +242,12 @@ public class Zone {
 		if(this.getId()!=other.getId()) return false;
 		
 		return true;
+	}
+
+	@Override
+	public int compareTo(Zone obj) {
+		
+		return this.zoneName.compareTo(obj.zoneName);
 	}
 	
 }

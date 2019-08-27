@@ -169,7 +169,52 @@
 				<div class="col-lg-4">
 				</div>
 			</div>
-			
+			<!--Zone Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-cube"></i> Zones
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#adddepartmentzone'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${department.zones.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Zone</th>
+								<th>Description</th>
+								<th>Note</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="zone: ${department.zones}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletedepartmentzone?zone='+${zone.id}+'&department='+${department.id}}" 
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a th:href="@{'/zonedetail?zone='+${zone.id}}" th:text="${zone.zoneName}"></a>
+									</td>
+									<td th:text="${zone.description}"></td>
+									<td th:text="${zone.note}"></td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>				
 			<!--Question Detail-->
 			<div class="row">
 				<div class="col-lg-8">
@@ -239,9 +284,11 @@
 						<div th:if="${zacmaps.size()>0}" class="panel-body">
 							<table class="table">
 							  <thead>
-								<th>Rate</th>
 								<th>Application</th>
-								<th>Description</th>
+								<th th:each="zone: ${#lists.sort(department.zones)}"
+									th:text="@{${department.departmentName}+" - "+${zone.zoneName}}">
+								</th>							
+								<th>Details</th>
 							  </thead>
 							  <tbody>
 								<tr th:each="zacmap: ${zacmaps}">
@@ -254,13 +301,14 @@
 											data-popout="true"
 										   >
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-										</a>
-										<a th:href="@{'/zacdetail?zac='+${zacmap.zac.id}}" th:text="@{${zacmap.zac.rate}+' - '+${zacmap.zac.name}}"></a>
+										</a>									
+										<a th:href="@{'/applicationdetail?app='+${zacmap.application.id}}" th:text="${zacmap.application.AppName}"></a>
 									</td>
-									<td>
-									<a th:href="@{'/applicationdetail?app='+${zacmap.application.id}}" th:text="${zacmap.application.AppName}"></a>
-									</td>									
-									<td th:text="${zacmap.zac.description}"></td>
+									<td th:each="zaclist: ${#lists.sort(zacmap.zaclists)}" th:text="${zaclist.zac!=null}?zaclist.zac.rate:''">
+
+									</td>
+									
+									<td th:text="${zacmap.detail}"></td>
 
 								</tr>
 							  </tbody>
@@ -485,7 +533,34 @@
 
 					</div>	
 				</div>
-				
+				<!--Zone model-->
+				<div class="modal fade" th:id="adddepartmentzone" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Zone - '+${department.departmentName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/adddepartmentzone}" method="post">
+								<div class="form-group">
+									<label for="zoneselect">Zone:</label>
+									<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+									<select name="zones" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="zoneselect">
+									  <option th:each="zoneEntity : ${zones}" 
+									  th:text="${zoneEntity.zoneName}" 
+									  th:attr="value = ${zoneEntity.id}">
+									</select>
+								</div>
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>				
 				<!--Question Creation model-->
 				<div class="modal fade" th:id="@{'addquestion'}" role="dialog">
 					<div class="modal-dialog">
@@ -569,11 +644,11 @@
 						  <h4 class="modal-title" th:text="'Add Rate - '+${department.departmentName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/addDepartmentZacmap}" th:object="${zacmapModel}" method="post">
+							<form action="#" method="post" id="formzac">
 								<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
 								<div class="form-group">
 									<label for="zmApplicationSelect">Application:</label>
-									<select name="application" class="form-control selectpicker" data-live-search="true" id="zmApplicationSelect" required>
+									<select name="app" class="form-control selectpicker" data-live-search="true" id="zmApplicationSelect" required>
 									  <option></option>
 									  <option th:each="appEntity : ${appAssginedInstances}" 
 									  th:text="${appEntity.AppName}" 
@@ -581,18 +656,21 @@
 									  </option>
 									</select>
 								</div>								
-								<div class="form-group">
-									<label for="zmZacSelect">Rate:</label>
-									<select name="zac" class="form-control selectpicker" data-live-search="true" id="zmZacSelect" required>
+								<div class="form-group" th:each="zone : ${department.zones}">
+									<label for="zmZacSelect" th:text="${zone.zoneName}"></label>
+									<select th:name="@{'zaclist-'+${zone.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect" required>
 									  <option ></option>
 									  <option th:each="zacEntity : ${zacs}" 
 									  th:text="@{${zacEntity.rate}+' - '+${zacEntity.name}}" 
 									  th:attr="value = ${zacEntity.id}">									  
 									  </option>
 									</select>
+								</div>							
+								<div class="form-group">
+									<label for="zonedetail">Detail:</label>
+									<textarea rows="7" cols="50" class="form-control" th:name="detail"></textarea>	
 								</div>								
-							
-							  <input class="btn btn-primary" type="submit" value="Submit" onClick="validateSelect()"/>
+							  <input th:if="${department.zones.size()>0}"class="btn btn-primary" type="submit" value="Submit"/>
 							</form>
 						</div>
 					  </div>
@@ -663,12 +741,19 @@
 		nonSelectedText: 'Select Stakeholder',
 		enableCaseInsensitiveFiltering:true
 	  });
+	$('#zoneselect').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: 300, 
+		enableFiltering: true,
+		nonSelectedText: 'Select Zone'
+	  });
 	  $('#zmApplicationSelect').selectpicker(
 	  {
 		noneSelectedText: 'Select Application'
 	  });
 	  
-	  $('#zmZacSelect').selectpicker(
+	  $('[id^=zmZacSelect]').selectpicker(
 	  {
 		noneSelectedText: 'Select Rate'
 	  });	  
@@ -680,28 +765,51 @@
 		nonSelectedText: 'Select Application',
 		enableCaseInsensitiveFiltering:true
 	  });
-	/*var counter=0;
-	  $("#uploadfileclick").click(function(){
-			if(counter===0)
-			{
-				$("#UploadFileForm").css({height:'50px'});
-				counter=1;
-				$("#FormUpdateData").find(':input').each(function(){
-			   console.log("first time");
 
-
-			   var e=$(this).clone();
-			   e.attr('type','hidden').css({visibility:'hidden',height:0}).appendTo( "#UploadFileForm" );
-
-
-		
-
-				});
-			}
-
-
-		});*/ 
+  $( "#formzac" ).on( "submit", function( event ) {
   
+  		  event.preventDefault();
+		  var formdata=$( this ).serializeArray();
+		  var formobj={"application":"","zaclist":[],"detail":""};
+		  var department="";
+		  for(obj in formdata)
+		  {
+
+			
+			if(formdata[obj].name==="department") department=formdata[obj].value;
+			if(formdata[obj].name==="app") formobj.application=formdata[obj].value;
+			
+			if(formdata[obj].name.toString().includes("zaclist")) 
+			{
+				var zacobj={};
+				zacobj["deapartment"]=department;
+				zacobj["zac"]=formdata[obj].value;
+				var zonename=formdata[obj].name.toString();
+
+				zacobj["zone"]=zonename.replace("zaclist-","");
+				formobj.zaclist.push(zacobj);
+			}
+			
+			if(formdata[obj].name==="detail") formobj.detail=formdata[obj].value;
+		  }
+		  
+			console.log(formobj);
+			
+
+			$.ajax({
+				url: "/addDepartmentZacmap",
+				type: "POST",
+				data: JSON.stringify(formobj),
+				headers: {
+					"content-type":"application/json"
+				},
+				dataType: 'json',
+				success: function (data) {
+					console.info(data);
+				}
+			});			
+
+		  });
   
     });
 
@@ -716,26 +824,7 @@
 
 		});
 		
-	function validateSelect()
-	{
-		if( $('button[data-id="zmZacSelect"]').attr("title")=="Select Rate" || $('button[data-id="zmZacSelect"]').attr("title")=="Nothing selected")
-		{
-			$('button[data-id="zmZacSelect"]').css("background-color","red");
-		}
-		else
-		{
-			$('button[data-id="zmZacSelect"]').css("background-color","white");
-		}
-		
-		if( $('button[data-id="zmApplicationSelect"]').attr("title")=="Select Application" || $('button[data-id="zmApplicationSelect"]').attr("title")=="Nothing selected")
-		{
-			$('button[data-id="zmApplicationSelect"]').css("background-color","red");
-		}
-		else
-		{
-			$('button[data-id="zmApplicationSelect"]').css("background-color","white");
-		}
-	}
+
 	</script>
 
 </body>

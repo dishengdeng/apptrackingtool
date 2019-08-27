@@ -11,13 +11,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+
 import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -168,9 +168,7 @@ public class Application implements Comparable<Application>{
 	@ManyToMany(mappedBy = "applications")
     private Set<Department> departments = new HashSet<Department>();
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "zac_id",referencedColumnName="id")
-    private Zac zac;
+
     
 	@ManyToMany(mappedBy = "applications")
     private Set<Support> supports = new HashSet<Support>();
@@ -434,13 +432,6 @@ public class Application implements Comparable<Application>{
 		});
 	}
 
-	public Zac getZac() {
-		return zac;
-	}
-
-	public void setZac(Zac zac) {
-		this.zac = zac;
-	}
 
 	@Override
 	public boolean equals(Object obj)
@@ -604,8 +595,7 @@ public class Application implements Comparable<Application>{
 		});
 		this.departments=null;
 		
-		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeApplication(this);
-		this.setZac(null);
+
 		
 		this.appInstances.forEach(obj->{
 			obj.setApplication(null);

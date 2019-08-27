@@ -1,15 +1,15 @@
 package portal.entity;
 
-import java.util.ArrayList;
+
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
-import java.util.stream.Collectors;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,20 +41,14 @@ public class Zac {
     @JsonView(Views.Public.class)
 	private String description;
     
-    @OneToMany(
-            mappedBy = "zac", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true,
-            fetch=FetchType.EAGER
-        )
-    private Set<Application> applications = new HashSet<Application>();
+
     
     @OneToMany(
             mappedBy = "zac", 
             cascade = CascadeType.ALL,
             orphanRemoval = true
         )
-    private Set<Zacmap> zacmaps = new HashSet<Zacmap>();
+    private Set<Zaclist> zaclists = new HashSet<Zaclist>();
 
 	public Long getId() {
 		return id;
@@ -90,73 +84,38 @@ public class Zac {
 		this.description = description;
 	}
 
-	public void addApplication(Application application)
+
+	public void addZaclist(Zaclist Zaclist)
 	{
-		this.applications.add(application);
+		this.zaclists.add(Zaclist);
 	}
 	
-	public void removeApplication(Application application)
+	public void removeZaclist(Zaclist Zaclist)
 	{
-		this.applications.removeIf(obj->obj.equals(application));
+		this.zaclists.remove(Zaclist);
 	}
 	
-	public Set<Application> getApplications() {
-		return applications;
+
+	
+	public Set<Zaclist> getZaclists() {
+		return zaclists;
 	}
 
-	public void setApplications(Set<Application> applications) {
-		this.applications.addAll(applications);
-		applications.forEach(obj->{
+	public void setZaclists(Set<Zaclist> zaclists) {
+		this.zaclists.addAll(zaclists);
+		zaclists.forEach(obj->{
 			obj.setZac(this);
 		});
 	}
-	public void addZacmap(Zacmap zacmap)
-	{
-		this.zacmaps.add(zacmap);
-	}
-	
-	public void removeZacmap(Zacmap zacmap)
-	{
-		this.zacmaps.remove(zacmap);
-	}
-	
-	public Set<Zacmap> getZacmaps() {
-		return zacmaps;
-	}
 
-	public void setZacmaps(Set<Zacmap> zacmaps) {
-		this.zacmaps.addAll(zacmaps);
-		zacmaps.forEach(obj->{
-			obj.setZac(this);
-		});
-	}
-	
-	public Set<Application> Applicationlist()
-	{
-		List<Application> apps=new ArrayList<Application>();
-		this.zacmaps.forEach(obj->{			
-			apps.add(obj.getApplication());
-		});
-		return new HashSet<Application>(apps);
-	}
-	
-	public List<Zacmap> getbyApplication(Application application)
-	{
-		return this.zacmaps.stream().filter(obj->obj.getApplication().equals(application)).collect(Collectors.toList());
-		
-	}
-	
 	public void removeAllDependence()
 	{
-		this.applications.forEach(obj->{
-			obj.setZac(null);
-		});
-		this.applications=null;
+
 		
-		this.zacmaps.forEach(obj->{
+		this.zaclists.forEach(obj->{
 			obj.setZac(null);
 		});
-		this.zacmaps=null;
+		this.zaclists=null;
 
 	}
     

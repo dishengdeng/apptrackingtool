@@ -81,40 +81,18 @@ public class ZacController {
     }
     
     
-    //------application---------------    
-    @GetMapping("/deleteZacApp")
-    public String deleteZacApp(@ModelAttribute("application") Application application,@ModelAttribute("zac") Zac zac) {
 
-
-    	
-    	application.setZac(null);
-    	appService.updateApp(application);
-    	
-    	
-    	return "redirect:/zacdetail?zac="+zac.getId();
-    }
-    
-    @PostMapping("/addZacApp")
-    public String addZacApp(@ModelAttribute("zac") Zac zac) {
-
-
-    	
-    	zacService.updateZac(zac);
-    	
-    	
-    	return "redirect:/zacdetail?zac="+zac.getId();
-    }  
     
     //------Zacmap---------------    
     @GetMapping("/deleteZacZacmap")
     public String deleteZacZacmap(@ModelAttribute("application") Application application,@ModelAttribute("zac") Zac zac) {
 
 
-    	List<Zacmap> Zacmaps=zac.getZacmaps().stream().filter(obj->obj.getApplication().equals(application)).collect(Collectors.toList());
-    	Zacmaps.forEach(obj->{
-    		obj.removeAllDepedence();
-    		zacmapService.deleteZacmap(obj);
-    	});
+//    	List<Zacmap> Zacmaps=zac.getZacmaps().stream().filter(obj->obj.getApplication().equals(application)).collect(Collectors.toList());
+//    	Zacmaps.forEach(obj->{
+//    		obj.removeAllDepedence();
+//    		zacmapService.deleteZacmap(obj);
+//    	});
   
     	
     	
@@ -122,13 +100,13 @@ public class ZacController {
     }
     
     @PostMapping("/addZacZacmap")
-    public String addZacZacmap(@ModelAttribute("zacmapModel") Zacmap zacmap) {
+    public String addZacZacmap(@ModelAttribute("zacmapModel") Zacmap zacmap,@ModelAttribute("zac") String id) {
 
 
     	
     	zacmapService.saveZacmap(zacmap);
     	
     	
-    	return "redirect:/zacdetail?zac="+zacmap.getZac().getId();
+    	return "redirect:/zacdetail?zac="+id;
     } 
 }

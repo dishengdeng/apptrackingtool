@@ -111,8 +111,10 @@ public class Department {
             cascade = CascadeType.ALL,
             orphanRemoval = true
         )
-    private Set<Zacmap> zacmaps = new HashSet<Zacmap>();
+    private Set<Zaclist> zaclists = new HashSet<Zaclist>();
 
+	@ManyToMany(mappedBy = "departments")
+    private Set<Zone> zones = new HashSet<Zone>();
     
 	public Long getId() {
 		return id;
@@ -265,26 +267,54 @@ public class Department {
 			obj.AddDepartment(this);
 		});
 	}
-	public void addZacmap(Zacmap zacmap)
-	{
-		this.zacmaps.add(zacmap);
-	}
 	
-	public void removeZacmap(Zacmap zacmap)
-	{
-		this.zacmaps.remove(zacmap);
-	}
 	
-	public Set<Zacmap> getZacmaps() {
-		return zacmaps;
+	
+	
+	public Set<Zaclist> getZaclists() {
+		return zaclists;
 	}
 
-	public void setZacmaps(Set<Zacmap> zacmaps) {
-		this.zacmaps.addAll(zacmaps);
-		zacmaps.forEach(obj->{
+	public void setZaclists(Set<Zaclist> zaclists) {
+		this.zaclists.addAll(zaclists);
+		zaclists.forEach(obj->{
 			obj.setDepartment(this);
 		});
-	}	
+	}
+	
+	public void addZaclist(Zaclist Zaclist)
+	{
+		this.zaclists.add(Zaclist);
+	}
+	
+	public void removeZaclist(Zaclist Zaclist)
+	{
+		this.zaclists.remove(Zaclist);
+	}
+	
+
+
+	public Set<Zone> getZones() {
+		return zones;
+	}
+
+	public void setZones(Set<Zone> zones) {
+		this.zones.addAll(zones);
+		zones.forEach(obj->{
+			obj.addDepartment(this);
+		});
+	}
+	
+	public void addZone(Zone zone)
+	{
+		this.zones.add(zone);
+	}
+	
+	public void deleteZone(Zone zone)
+	{
+		this.zones.remove(zone);
+	}
+
 	public void addApplication(Application application)
 	{
 		this.applications.add(application);
@@ -365,15 +395,20 @@ public class Department {
 		});
 		this.applications=null;
 		
-		this.zacmaps.forEach(obj->{
+		this.zaclists.forEach(obj->{
 			obj.setDepartment(null);
 		});
-		this.zacmaps=null;
+		this.zaclists=null;
 		
 		this.answers.forEach(obj->{
 			obj.setDepartment(null);
 		});
 		this.answers=null;
+		
+		this.zones.forEach(obj->{
+			obj.deleteDepartment(this);
+		});
+		this.zones=null;
 		
 
 	}

@@ -344,29 +344,7 @@ public class HomeController {
         return "redirect:/applicationdetail?app="+application.getId();
     }
     
-    //------Zac---------------    
-    @GetMapping("/deleteAppZac")
-    public String deleteAppZac(@ModelAttribute("application") Application application) {
 
-
-    	
-    	application.setZac(null);
-    	appService.updateApp(application);
-    	
-    	
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
-    
-    @PostMapping("/addAppZac")
-    public String addAppZac(@ModelAttribute("application") Application application) {
-
-
-    	
-    	appService.updateApp(application);
-    	
-    	
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
     
     //------Zacmap---------------    
     @GetMapping("/deleteApplicationZacmap")
@@ -447,7 +425,7 @@ public class HomeController {
     	model.addAttribute("zones",zoneService.getAll());
     	
     	//--zac---
-    	model.addAttribute("zac",appEntity.getZac());
+
     	model.addAttribute("zacs",zacService.getAll());
     	
     	//--site---
