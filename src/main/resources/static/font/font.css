@@ -7,3 +7,5 @@
 .cursor-pointer{cursor:pointer}
 .border-red{border:1px solid #d9534f}
 .non-textarea{border:0;resize:none;overflow:hidden}
+.zacmap-zone-header-z{width: 50px;font-size:10px;padding:0;background-color:rgb(238,236,225) !important}
+.zacmap-zone-header-d{font-size:10px;padding:0;background-color:rgb(183,222,232) !important}

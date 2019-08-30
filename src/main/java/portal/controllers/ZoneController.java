@@ -64,6 +64,9 @@ public class ZoneController {
     @GetMapping("/deleteZone")
     public String deleteZone(@ModelAttribute("zone") Zone zone) {
 
+    	zone.getZaclists().forEach(obj->{
+    		obj.removeForZone();
+    	});
     	zone.removeAllDependence();
     	zoneService.delete(zone);
     	return "redirect:/zones";

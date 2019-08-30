@@ -9,6 +9,11 @@ package portal.controllers;
 
 
 
+
+
+
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +26,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +40,7 @@ import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
 import portal.entity.Stakeholder;
-
+import portal.entity.Zaclist;
 import portal.entity.Zacmap;
 import portal.entity.Zone;
 import portal.service.AnswerService;
@@ -44,7 +50,9 @@ import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.QuestionService;
 import portal.service.StakeholderService;
+import portal.service.UtilityService;
 import portal.service.ZacService;
+import portal.service.ZaclistService;
 import portal.service.ZacmapService;
 import portal.service.ZoneService;
 import portal.utility.FileType;
@@ -71,7 +79,10 @@ public class DepartmentController {
 	private AppInstanceService appInstanceService;
 	
 	@Autowired
-	private AppService appService;	
+	private AppService appService;
+	
+	@Autowired
+	private UtilityService utilityService;
 	
 	@Autowired
 	private FileService fileService;
@@ -80,7 +91,11 @@ public class DepartmentController {
 	private ZacService zacService;
 	
 	@Autowired
+	private ZaclistService zaclistService;
+	
+	@Autowired
 	private ZacmapService zacmapService;
+
 	
 	@Autowired
 	private ZoneService zoneService;
@@ -128,6 +143,7 @@ public class DepartmentController {
     	model.addAttribute("zacs",zacService.getAll());
     	model.addAttribute("zacmaps",departmentService.getZacmap(department));
     	model.addAttribute("questions", questionService.getAllQuestion());
+    	model.addAttribute("departzones", department.getZones().stream().sorted().collect(Collectors.toList()));
     	//--zones--
     	model.addAttribute("zones",zoneService.getAll());
         return "departmentdetail";
@@ -136,7 +152,10 @@ public class DepartmentController {
     @GetMapping("/deleteDepartment")
     public String deleteDepartment(@ModelAttribute("department") Department department) {
 
-
+    	department.getZaclists().forEach(obj->{
+    		obj.removeForDepartment();
+    		obj.getZacmap().removeAllDepedence();
+    	});
     	department.removeAllDependence();
     	departmentService.removFiles(UPLOADED_FOLDER, department);
     	
@@ -205,24 +224,61 @@ public class DepartmentController {
     @GetMapping("/deleteDepartmentZacmap")
     public String deleteApplicationZacmap(@ModelAttribute("zacmap") Zacmap zacmap,@ModelAttribute("department") Department department) {
 
-
     	
+
+    	zacmap.getZaclists().forEach(obj->{
+    		obj.removeForZacmap();
+    	});    	
     	zacmap.removeAllDepedence();
-    	zacmapService.deleteZacmap(zacmap);    	
+    	zacmapService.deleteZacmap(zacmap); 
+    	   	
     	
     	return "redirect:/departmentdetail?id="+department.getId();
     }
     
     @PostMapping("/addDepartmentZacmap")
-    public void addDepartmentZacmap(@RequestBody JSONObject formdata,HttpServletResponse response) throws Exception{
+    public void addDepartmentZacmap(HttpServletRequest request,HttpServletResponse response) throws Exception{
 
+
+    	Zacmap zacmapObj=departmentService.saveZacmap(utilityService.getJSONObject(request));
 
     	
     	
     	response.setContentType("application/json");
+    	if(ObjectUtils.isEmpty(zacmapObj)) {response.setStatus(202);} else {response.setStatus(200);}
+    	response.getWriter().write(ObjectUtils.isEmpty(zacmapObj)? "{'status':'202'}":getResponse(zacmapObj).toString());
     	response.flushBuffer();
     	
 
+    }
+    
+    @PostMapping("/updateDepartmentZacmap")
+    public void updateDepartmentZacmap(HttpServletRequest request,HttpServletResponse response) throws Exception{
+
+
+    	Zacmap zacmapObj=departmentService.updateZacmap(utilityService.getJSONObject(request));
+
+    	
+    	
+    	response.setContentType("application/json");
+    	if(ObjectUtils.isEmpty(zacmapObj)) 
+    	{response.setStatus(202);} 
+    	else 
+    	{response.setStatus(200);}
+
+    	response.getWriter().write(ObjectUtils.isEmpty(zacmapObj)? "{'status':'202'}":getResponse(zacmapObj).toString());
+    	response.flushBuffer();
+    	
+
+    }
+    
+    private JSONObject getResponse(Zacmap zacmapObj)
+    {
+    	JSONObject responseObj=new JSONObject();
+    	responseObj.put("zacmap_id", zacmapObj.getId());
+    	responseObj.put("application_id", zacmapObj.getApplication().getId());
+    	responseObj.put("detail", zacmapObj.getDetail());
+    	return responseObj;
     }
     
   //--Stakeholder--    
@@ -251,6 +307,14 @@ public class DepartmentController {
     	zone.deleteDepartment(department);
     	zoneService.updateZone(zone);
     	
+    	List<Zaclist> toBeRemoveList=zone.getZaclists().stream().filter(obj->obj.getDepartment().equals(department)).collect(Collectors.toList());
+    	
+    	for(Zaclist zaclist:toBeRemoveList)
+    	{
+    		zaclist.removeAlldependence();
+    		zaclistService.deleteZaclist(zaclist);
+    	}
+  	
     	
     	return "redirect:/departmentdetail?id="+department.getId();
     }
@@ -259,7 +323,25 @@ public class DepartmentController {
     public String addAppZone(@ModelAttribute("department") Department department) {
 
 
+    	Set<Zone> newZones=departmentService.getNewZoneofDepartment(department);
     	
+    	if(newZones.size()>0)
+    	{
+ 
+    		newZones.forEach(obj->{
+        		for(Zacmap zacmap : departmentService.getZacmap(department))
+    			{
+    	
+    	    		Zaclist zaclist= new Zaclist();
+    	    		zaclist.setDepartment(department);
+    	    		zaclist.setZone(obj);
+    	    		zaclist.setZacmap(zacmap);	    		
+    				department.addZaclist(zaclist);
+    			}
+    		});
+
+    		
+    	}
     	departmentService.updateDepartment(department);
     	
     	return "redirect:/departmentdetail?id="+department.getId();

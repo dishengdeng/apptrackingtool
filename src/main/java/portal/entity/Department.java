@@ -25,7 +25,7 @@ import portal.jsonview.Views;
 
 @Entity
 @Table(name = "Department")
-public class Department {
+public class Department implements Comparable<Department>{
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
@@ -395,10 +395,6 @@ public class Department {
 		});
 		this.applications=null;
 		
-		this.zaclists.forEach(obj->{
-			obj.setDepartment(null);
-		});
-		this.zaclists=null;
 		
 		this.answers.forEach(obj->{
 			obj.setDepartment(null);
@@ -411,5 +407,11 @@ public class Department {
 		this.zones=null;
 		
 
+	}
+
+	@Override
+	public int compareTo(Department obj) {
+		
+		return this.departmentName.compareTo(obj.getDepartmentName());
 	}
 }

@@ -29,7 +29,7 @@ import portal.entity.License;
 import portal.entity.Project;
 import portal.entity.Site;
 import portal.entity.Support;
-import portal.entity.Zacmap;
+
 import portal.entity.Zone;
 import portal.service.AppInstanceService;
 import portal.service.AppService;
@@ -43,7 +43,7 @@ import portal.service.ProjectService;
 import portal.service.SiteService;
 import portal.service.SupportService;
 import portal.service.ZacService;
-import portal.service.ZacmapService;
+
 import portal.service.ZoneService;
 import portal.utility.Action;
 import portal.utility.FileType;
@@ -95,8 +95,7 @@ public class HomeController {
 	@Autowired
 	private CompanyService companyService;
 	
-	@Autowired
-	private ZacmapService zacmapService;
+
     @Autowired
     private MessageSourceService messageSourceService;
 	
@@ -346,28 +345,7 @@ public class HomeController {
     
 
     
-    //------Zacmap---------------    
-    @GetMapping("/deleteApplicationZacmap")
-    public String deleteApplicationZacmap(@ModelAttribute("zacmap") Zacmap zacmap,@ModelAttribute("application") Application application) {
 
-
-    	
-    	zacmap.removeAllDepedence();
-    	zacmapService.deleteZacmap(zacmap);    	
-    	
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
-    
-    @PostMapping("/addApplicationZacmap")
-    public String addApplicationZacmap(@ModelAttribute("zacmapModel") Zacmap zacmap) {
-
-
-    	
-    	zacmapService.saveZacmap(zacmap);
-    	
-    	
-    	return "redirect:/applicationdetail?app="+zacmap.getApplication().getId();
-    }
     //------file management----
     @PostMapping("/applicationupload")
     public String uploadapplication(@RequestParam("file") MultipartFile file,@ModelAttribute("application") Application application) {
@@ -452,9 +430,7 @@ public class HomeController {
     	model.addAttribute("departs",appEntity.getDepartments());
     	model.addAttribute("departments",departmentService.getAll());
     	
-    	//--Zacmap-----
-    	model.addAttribute("zacmapModel",new Zacmap());
-    	model.addAttribute("zacmaps",appEntity.getZacmaps());
+
     }
 
 }

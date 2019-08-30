@@ -84,6 +84,58 @@ public class Zaclist implements Comparable<Zaclist>{
 	public void setZacmap(Zacmap zacmap) {
 		this.zacmap = zacmap;
 	}
+	
+	public void removeAlldependence()
+	{
+		if(!ObjectUtils.isEmpty(this.department)) this.department.removeZaclist(this);
+		this.setDepartment(null);
+		
+		if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeZaclist(this);
+		this.setZone(null);
+		
+		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeZaclist(this);
+		this.setZac(null);
+		
+		if(!ObjectUtils.isEmpty(this.zacmap)) this.zacmap.removeZaclist(this);
+		this.setZacmap(null);
+		
+
+	}
+	
+	public void removeForZacmap()
+	{
+		if(!ObjectUtils.isEmpty(this.department)) this.department.removeZaclist(this);
+		this.setDepartment(null);
+		
+		if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeZaclist(this);
+		this.setZone(null);
+		
+		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeZaclist(this);
+		this.setZac(null);
+	}
+	
+	public void removeForDepartment()
+	{
+		
+		if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeZaclist(this);
+		this.setZone(null);
+		
+		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeZaclist(this);
+		this.setZac(null);
+	}
+	
+	public void removeForZone()
+	{
+		
+		if(!ObjectUtils.isEmpty(this.department)) this.department.removeZaclist(this);
+		this.setDepartment(null);
+		
+		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeZaclist(this);
+		this.setZac(null);
+		
+		if(!ObjectUtils.isEmpty(this.zacmap)) this.zacmap.removeZaclist(this);
+		this.setZacmap(null);
+	}
 
 	@Override
 	public int compareTo(Zaclist obj) {

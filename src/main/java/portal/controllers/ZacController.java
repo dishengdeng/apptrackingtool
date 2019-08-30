@@ -2,8 +2,7 @@ package portal.controllers;
 
 
 
-import java.util.List;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,21 +11,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import portal.entity.Application;
+
 import portal.entity.Zac;
 import portal.entity.Zacmap;
 import portal.service.AppService;
 import portal.service.DepartmentService;
 import portal.service.ZacService;
-import portal.service.ZacmapService;
+
 
 @Controller
 public class ZacController {
 	@Autowired
 	private ZacService zacService;
 
-	@Autowired
-	private ZacmapService zacmapService;
+
 	@Autowired
 	private AppService appService;
 	
@@ -83,30 +81,5 @@ public class ZacController {
     
 
     
-    //------Zacmap---------------    
-    @GetMapping("/deleteZacZacmap")
-    public String deleteZacZacmap(@ModelAttribute("application") Application application,@ModelAttribute("zac") Zac zac) {
-
-
-//    	List<Zacmap> Zacmaps=zac.getZacmaps().stream().filter(obj->obj.getApplication().equals(application)).collect(Collectors.toList());
-//    	Zacmaps.forEach(obj->{
-//    		obj.removeAllDepedence();
-//    		zacmapService.deleteZacmap(obj);
-//    	});
-  
-    	
-    	
-    	return "redirect:/zacdetail?zac="+zac.getId();
-    }
-    
-    @PostMapping("/addZacZacmap")
-    public String addZacZacmap(@ModelAttribute("zacmapModel") Zacmap zacmap,@ModelAttribute("zac") String id) {
-
-
-    	
-    	zacmapService.saveZacmap(zacmap);
-    	
-    	
-    	return "redirect:/zacdetail?zac="+id;
-    } 
+ 
 }

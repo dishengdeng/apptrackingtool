@@ -13,6 +13,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+
 import javax.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -204,6 +206,16 @@ public class Zone implements Comparable<Zone>{
 			obj.setZone(this);
 		});
 	}
+	
+	public void removeZaclist(Zaclist zaclist)
+	{
+		this.zaclists.remove(zaclist);
+	}
+	
+	public void addZaclist(Zaclist zaclist)
+	{
+		this.zaclists.add(zaclist);
+	}
 
 	public void removeAllDependence()
 	{
@@ -226,6 +238,7 @@ public class Zone implements Comparable<Zone>{
 			obj.deleteZone(this);
 		});
 		this.departments=null;
+		
 	}
 
 	@Override
@@ -246,8 +259,7 @@ public class Zone implements Comparable<Zone>{
 
 	@Override
 	public int compareTo(Zone obj) {
-		
-		return this.zoneName.compareTo(obj.zoneName);
+		return this.zoneName.compareTo(obj.getZoneName());
 	}
 	
 }

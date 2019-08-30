@@ -71,7 +71,15 @@ public class Zacmap {
 			obj.setZacmap(this);
 		});
 	}
-
+	public void removeZaclist(Zaclist zaclist)
+	{
+		this.zaclists.remove(zaclist);
+	}
+	
+	public void addZaclist(Zaclist zaclist)
+	{
+		this.zaclists.add(zaclist);
+	}
 	public String getDetail() {
 		return detail;
 	}
@@ -84,6 +92,8 @@ public class Zacmap {
 	{
 		if(!ObjectUtils.isEmpty(this.application)) this.application.removeZacmap(this);
 		this.setApplication(null);
+		
+
 
 	}
     

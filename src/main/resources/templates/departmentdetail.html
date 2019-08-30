@@ -282,29 +282,34 @@
 						</div>
 						<!-- /.panel-heading -->
 						<div th:if="${zacmaps.size()>0}" class="panel-body">
-							<table class="table">
+							<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-zacmap">
 							  <thead>
-								<th>Application</th>
-								<th th:each="zone: ${#lists.sort(department.zones)}"
-									th:text="@{${department.departmentName}+" - "+${zone.zoneName}}">
+								<th class="zacmap-zone-header-d">Application</th>
+								<th class="zacmap-zone-header-z" th:each="zone: ${departzones}" 
+									th:text="@{${department.departmentName}+' - '+${zone.zoneName}}">
 								</th>							
-								<th>Details</th>
+								<th class="zacmap-zone-header-d">Details</th>
 							  </thead>
 							  <tbody>
 								<tr th:each="zacmap: ${zacmaps}">
 									<td>
 										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteDepartmentZacmap?zacmap='+${zacmap.id}+'&department='+${department.id}}" 
-											style="margin-right:10px;text-decoration: none"
+											style="margin-right:5px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
 											data-singleton="true" 
 											data-popout="true"
 										   >
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-										</a>									
+										</a>
+										<a  sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')"
+											data-toggle="modal" th:data-target="@{'#updatezacmap'+${zacmap.id}}" style="text-decoration: none;cursor: pointer;margin-right:5px;"
+										   >
+											<i class="fa fa-pencil fa-lg" th:id="@{'pencil_edit'+${zacmap.id}}" aria-hidden="true"></i>
+										</a>										
 										<a th:href="@{'/applicationdetail?app='+${zacmap.application.id}}" th:text="${zacmap.application.AppName}"></a>
 									</td>
-									<td th:each="zaclist: ${#lists.sort(zacmap.zaclists)}" th:text="${zaclist.zac!=null}?zaclist.zac.rate:''">
+									<td th:each="zaclist: ${#lists.sort(zacmap.zaclists)}" th:text="${zaclist.zac!=null}? ${zaclist.zac.rate}:''">
 
 									</td>
 									
@@ -320,7 +325,7 @@
 				<div class="col-lg-4">
 				</div>
 			</div>				
-			
+		
 			<!--stakeholder Detail-->
 			<div class="row">
 				<div class="col-lg-8">
@@ -633,7 +638,7 @@
 				</div>
 			</div>				
 				
-				<!--ZacMap model-->
+				<!--ZacMap Creation model-->
 				<div class="modal fade" th:id="addzacmap" role="dialog">
 					<div class="modal-dialog">
 					
@@ -658,7 +663,7 @@
 								</div>								
 								<div class="form-group" th:each="zone : ${department.zones}">
 									<label for="zmZacSelect" th:text="${zone.zoneName}"></label>
-									<select th:name="@{'zaclist-'+${zone.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect" required>
+									<select th:name="@{'zaclist-'+${zone.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect">
 									  <option ></option>
 									  <option th:each="zacEntity : ${zacs}" 
 									  th:text="@{${zacEntity.rate}+' - '+${zacEntity.name}}" 
@@ -669,13 +674,67 @@
 								<div class="form-group">
 									<label for="zonedetail">Detail:</label>
 									<textarea rows="7" cols="50" class="form-control" th:name="detail"></textarea>	
-								</div>								
+								</div>
+								<p class="text-danger"><strong id="message_create"></strong></p>								
 							  <input th:if="${department.zones.size()>0}"class="btn btn-primary" type="submit" value="Submit"/>
 							</form>
 						</div>
 					  </div>
 					</div>	
 				</div>
+				
+
+				<!--ZacMap Update model-->
+				<div th:if="${zacmaps.size()>0}" th:each="zacmap: ${zacmaps}">
+					<div class="modal fade" th:id="@{'updatezacmap'+${zacmap.id}}" role="dialog">
+						<div class="modal-dialog">
+						
+						  <!-- Modal content-->
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							  <h4 class="modal-title" th:text="'Update Zacmap - '+${department.departmentName}"></h4>													
+							</div>
+							<div class="modal-body">	
+								<form action="#" method="post" th:id="@{'formzac_update'+${zacmap.id}}">
+									<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+									<input type="hidden" class="form-control" th:name="zacmap" th:value="${zacmap.id}"></input>
+									<div class="form-group">
+										<label for="zmApplicationSelect">Application:</label>
+										<select name="app" class="form-control selectpicker" data-live-search="true" id="zmApplicationSelect" required>
+										  <option></option>
+										  <option th:each="appEntity : ${appAssginedInstances}" 
+										  th:text="${appEntity.AppName}" 
+										  th:attr="value = ${appEntity.id}"
+										  th:selected="${zacmap.application==null} ? false:${zacmap.application.getId()==appEntity.id}">									  
+										  </option>
+										</select>
+									</div>								
+									<div class="form-group" th:each="zaclist : ${zacmap.zaclists}">
+										<label for="zmZacSelect" th:text="${zaclist.zone.zoneName}"></label>
+										<select th:name="@{'zaclist-'+${zaclist.id}+'-'+${zaclist.zone.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect">
+										  <option ></option>
+										  <option th:each="zacEntity : ${zacs}" 
+										  th:text="@{${zacEntity.rate}+' - '+${zacEntity.name}}" 
+										  th:attr="value = ${zacEntity.id}"
+										   th:selected="${zaclist.zac==null} ? false:${zaclist.zac.getId()==zacEntity.id}">
+										  								  
+										  </option>
+										</select>
+
+									</div>							
+									<div class="form-group">
+										<label for="zonedetail">Detail:</label>
+										<textarea rows="7" cols="50" class="form-control" th:name="detail" th:text="${zacmap.detail}"></textarea>	
+									</div>
+									<p class="text-danger"><strong th:id="@{'message_update'+${zacmap.id}}"></strong></p>								
+								  <input th:if="${department.zones.size()>0}"class="btn btn-primary" type="button" value="Submit" th:onclick="@{'updatezacmap('+${zacmap.id}+')'}"/>
+								</form>
+							</div>
+						  </div>
+						</div>	
+					</div>
+				</div>					
 				<!--stakeholder model-->
 				<div class="modal fade" th:id="addstakeholder" role="dialog">
 					<div class="modal-dialog">
@@ -741,6 +800,10 @@
 		nonSelectedText: 'Select Stakeholder',
 		enableCaseInsensitiveFiltering:true
 	  });
+	  $('[id^=pencil_edit]').on( "click", function()
+	  {
+		$('[id^=message_update]').empty();
+	  });	  
 	$('#zoneselect').multiselect(
 	  {
 		includeSelectAllOption: true,
@@ -752,7 +815,9 @@
 	  {
 		noneSelectedText: 'Select Application'
 	  });
-	  
+	$('#dataTables-zacmap').DataTable({
+		responsive: true
+	});	  
 	  $('[id^=zmZacSelect]').selectpicker(
 	  {
 		noneSelectedText: 'Select Rate'
@@ -769,6 +834,7 @@
   $( "#formzac" ).on( "submit", function( event ) {
   
   		  event.preventDefault();
+		  $( "#message_create" ).empty();
 		  var formdata=$( this ).serializeArray();
 		  var formobj={"application":"","zaclist":[],"detail":""};
 		  var department="";
@@ -779,10 +845,11 @@
 			if(formdata[obj].name==="department") department=formdata[obj].value;
 			if(formdata[obj].name==="app") formobj.application=formdata[obj].value;
 			
+			
 			if(formdata[obj].name.toString().includes("zaclist")) 
 			{
 				var zacobj={};
-				zacobj["deapartment"]=department;
+				zacobj["department"]=department;
 				zacobj["zac"]=formdata[obj].value;
 				var zonename=formdata[obj].name.toString();
 
@@ -804,12 +871,21 @@
 					"content-type":"application/json"
 				},
 				dataType: 'json',
-				success: function (data) {
-					console.info(data);
+				success: function (data, textStatus, xhr) {
+					if(xhr.status===200)
+					{
+						location.reload();
+					}
+					else
+					{
+						$( "#message_create" ).text("Add Failed! Please Contact System Administrator.");
+					}
 				}
 			});			
 
 		  });
+		  
+		  
   
     });
 
@@ -823,7 +899,57 @@
 			});
 
 		});
-		
+	function updatezacmap(zacmapid)
+	{
+		var formzac="#formzac_update"+zacmapid;
+  	
+		  var message_id="message_update"+zacmapid;
+		  document.getElementById(message_id).innerHTML="";
+		  var formdata=$( formzac ).serializeArray();
+
+			
+			var formobj={"zacmap":"","application":"","zaclist":[],"detail":""};
+		  var department="";
+		  for(obj in formdata)
+		  {
+
+			
+			if(formdata[obj].name==="department") department=formdata[obj].value;
+			if(formdata[obj].name==="app") formobj.application=formdata[obj].value;
+			if(formdata[obj].name==="zacmap") formobj.zacmap=formdata[obj].value;
+			
+			if(formdata[obj].name.toString().includes("zaclist")) 
+			{
+				var zacobj={};
+				zacobj["department"]=department;
+				zacobj["zac"]=formdata[obj].value;
+				var zonename=formdata[obj].name.toString().split("-");
+				zacobj["id"]=zonename[1];
+				zacobj["zone"]=zonename[2];
+				formobj.zaclist.push(zacobj);
+			}
+			
+			if(formdata[obj].name==="detail") formobj.detail=formdata[obj].value;
+		  }
+		  console.log(formobj);
+		  
+
+
+			  var xhttp = new XMLHttpRequest();
+			  xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+				  location.reload();
+				}
+				else if(this.readyState == 4 && this.status != 200)
+				{
+					document.getElementById(message_id).innerHTML="Update Failed! Please Contact System Administrator.";
+				}
+			  };
+			  xhttp.open("POST", "/updateDepartmentZacmap", true);
+			  xhttp.setRequestHeader("Content-type", "application/json");
+			  xhttp.send(JSON.stringify(formobj));
+	
+	}
 
 	</script>
 
