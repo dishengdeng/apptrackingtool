@@ -58,7 +58,7 @@ public class SLARole {
             orphanRemoval = true,
             fetch=FetchType.EAGER
         )
-    private Set<Stakeholder> stakeholders = new HashSet<>();
+    private Set<Stakeholderext> stakeholderexts = new HashSet<>();
 
 	public Long getId() {
 		return id;
@@ -116,33 +116,35 @@ public class SLARole {
 		this.raciforsyschanges = raciforsyschanges;
 	}
 
-	public Set<Stakeholder> getStakeholders() {
-		return stakeholders;
+
+	
+	public Set<Stakeholderext> getStakeholderexts() {
+		return stakeholderexts;
 	}
 
-	public void setStakeholders(Set<Stakeholder> stakeholders) {
-		this.stakeholders.addAll(stakeholders);
-		stakeholders.forEach(obj->{
+	public void setStakeholderexts(Set<Stakeholderext> stakeholderexts) {
+		this.stakeholderexts.addAll(stakeholderexts);
+		stakeholderexts.forEach(obj->{
 			obj.setRole(this);
 		});
-	} 
-    
-	public void addStakeholder(Stakeholder stakeholder)
-	{
-		this.stakeholders.add(stakeholder);
 	}
 	
-	public void removeStakeholder(Stakeholder stakeholder)
+	public void addStakeholderext(Stakeholderext stakeholderext)
 	{
-		this.stakeholders.remove(stakeholder);
+		this.stakeholderexts.add(stakeholderext);
+	}
+	
+	public void removeStakeholderext(Stakeholderext stakeholderext)
+	{
+		this.stakeholderexts.remove(stakeholderext);
 	}
 	
 	public void removeAllDedenpence()
 	{
-		this.stakeholders.forEach(obj->{
+		this.stakeholderexts.forEach(obj->{
 			obj.setRole(null);
 		});
-		this.stakeholders=null;
+		this.stakeholderexts=null;
 	}
 	
 	@Override

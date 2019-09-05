@@ -5,12 +5,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
-import portal.entity.Department;
-import portal.entity.SLARole;
 import portal.entity.Stakeholder;
 import portal.models.StakeholderModel;
+import portal.repository.SiteRepository;
 import portal.repository.StakeholderRepository;
 import portal.service.StakeholderService;
 
@@ -20,6 +18,9 @@ public class StakeholderServiceImpl implements StakeholderService{
 
 	@Autowired
 	private StakeholderRepository stakeholderRepository;
+	
+	@Autowired
+	private SiteRepository siteRepository;
 	@Override
 	public Stakeholder addStakeholder(Stakeholder stakeholder) {
 
@@ -46,9 +47,6 @@ public class StakeholderServiceImpl implements StakeholderService{
 		for(Stakeholder stakeholder:stakeholders)
 		{
 			StakeholderModel stakeholderModel = new StakeholderModel();
-			stakeholderModel.setId(stakeholder.getId());
-			stakeholderModel.setFirstname(stakeholder.getFirstname());
-			stakeholderModel.setLastname(stakeholder.getLastname());
 			stakeholderModel.setEmail(stakeholder.getEmail());
 			stakeholderModel.setNote(stakeholder.getNote());
 			stakeholderModel.setPosition(stakeholder.getPosition());
@@ -76,40 +74,15 @@ public class StakeholderServiceImpl implements StakeholderService{
 		return stakeholderRepository.saveAndFlush(stakeholder);
 	}
 
-	@Override
-	public List<Stakeholder> findbyDepartment(Department department) {
-		
-		return stakeholderRepository.findByDepartment(department);
-	}
+
 
 	@Override
-	public void removeDepartment(Department department) {
-		stakeholderRepository.removeDepartment(department);
-		
-	}
+	public void updateDetail(StakeholderModel stakeholderModel) {
 
-	@Override
-	public void removeRole(SLARole role) {
-		stakeholderRepository.removeRole(role);
-		
-	}
-
-	@Override
-	public List<Stakeholder> getUnassginedStakeholders() {
-		List<Stakeholder> stakeholders=stakeholderRepository.findAll();
-		 stakeholders.removeIf(obj->!ObjectUtils.isEmpty(obj.getDepartment()));
-		 return stakeholders;
-	}
-
-	@Override
-	public void updateDetail(Stakeholder stakeholder) {
-
-		stakeholderRepository.updateDetail(stakeholder.getStakeholderName(),stakeholder.getNote(), 
-				stakeholder.getFirstname(), stakeholder.getLastname(), 
-				stakeholder.getAddress(), stakeholder.getPhone(), 
-				stakeholder.getPosition(), stakeholder.getEmail(), 
-				stakeholder.getInfluence(), stakeholder.getInterest(), 
-				stakeholder.getId());
+		stakeholderRepository.updateDetail(stakeholderModel.getStakeholderName(),stakeholderModel.getNote(),
+				siteRepository.findOne(stakeholderModel.getSite()), stakeholderModel.getPhone(), 
+				stakeholderModel.getPosition(), stakeholderModel.getEmail(), 
+				stakeholderModel.getId());
 		
 
 		

@@ -49,7 +49,6 @@
 										<th><span class="fa fa-paperclip fa-lg"></span></th>
 										<th>Application</th>
 										<th>App Instance</th>
-										<th>Stakeholder</th>
 										<th>Description</th>
                                         <th>Purpose</th>
 										<th>Stragic Plan</th>
@@ -95,13 +94,6 @@
 											<span class="badge badge-secondary small" th:text="${'App Instance - Total: '+department.appInstances.size()}"></span>
 											</a>
 										</td>										
-										<td>
-											<ul style="padding:0" th:if="${department.stakeholders.size()>0}">
-												<li style="list-style-type:none" th:each="stakeholder: ${department.stakeholders}">
-												<a th:href="@{'stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
-												</li>
-											</ul>
-										</td>
 										<td th:text="${department.description}"></td>
 										<td th:text="${department.purpose}"></td>
                                         <td th:text="${department.stragicplan}"></td>

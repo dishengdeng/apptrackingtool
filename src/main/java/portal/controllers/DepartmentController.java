@@ -39,7 +39,8 @@ import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
-import portal.entity.Stakeholder;
+
+import portal.entity.Stakeholderext;
 import portal.entity.Zaclist;
 import portal.entity.Zacmap;
 import portal.entity.Zone;
@@ -49,7 +50,9 @@ import portal.service.AppService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.QuestionService;
+import portal.service.SLARoleService;
 import portal.service.StakeholderService;
+import portal.service.StakeholderextService;
 import portal.service.UtilityService;
 import portal.service.ZacService;
 import portal.service.ZaclistService;
@@ -67,7 +70,7 @@ public class DepartmentController {
 	private DepartmentService departmentService;
 	
 	@Autowired
-	private StakeholderService stakholderService;
+	private StakeholderextService stakeholderextService;
 	
 	@Autowired
 	private AnswerService answerService;
@@ -77,6 +80,9 @@ public class DepartmentController {
 	
 	@Autowired
 	private AppInstanceService appInstanceService;
+	
+	@Autowired
+	private StakeholderService stakeholderService;
 	
 	@Autowired
 	private AppService appService;
@@ -95,7 +101,8 @@ public class DepartmentController {
 	
 	@Autowired
 	private ZacmapService zacmapService;
-
+	@Autowired
+	private SLARoleService slaRoleService;
 	
 	@Autowired
 	private ZoneService zoneService;
@@ -136,7 +143,8 @@ public class DepartmentController {
     public String DepartmentDetial(@RequestParam(name="id", required=true) String id,ModelMap model) {
     	Department department=departmentService.getById(Long.valueOf(id));
     	model.addAttribute("department",department);
-    	model.addAttribute("stakeholders",stakholderService.getUnassginedStakeholders());
+    	model.addAttribute("stakeholders",stakeholderService.getAll());
+    	model.addAttribute("roles", slaRoleService.getAll());
     	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
     	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
     	//--Zacmap-----
@@ -283,19 +291,27 @@ public class DepartmentController {
     
   //--Stakeholder--    
     @GetMapping("/deleteDepartmentStakeholder")
-    public String deleteDepartmentStakeholder(@ModelAttribute("stakeholder") Stakeholder stakeholder,@ModelAttribute("department") Department department) {
-    	stakeholder.setDepartment(null);
-    	stakholderService.updateStakeholder(stakeholder);
+    public String deleteDepartmentStakeholder(@ModelAttribute("stakeholderext") Stakeholderext stakeholderext) {
 
-    	return "redirect:/departmentdetail?id="+department.getId();
+
+    	Long id = stakeholderext.getDepartment().getId();
+    	stakeholderext.removeAllDependence();
+    	stakeholderextService.delete(stakeholderext);
+    	return "redirect:/departmentdetail?id="+id;
     }    
     
     @PostMapping("/addDepartmentStakeholder")
-    public String addDepartmentStakeholder(ModelMap model,@ModelAttribute("department") Department department) {
+    public String addDepartmentStakeholder(@ModelAttribute("stakeholderext") Stakeholderext stakeholderext) {
 
-    	departmentService.updateDepartment(department);
+    	stakeholderextService.save(stakeholderext);
+    	return "redirect:/departmentdetail?id="+stakeholderext.getDepartment().getId();
+    } 
+    
+    @PostMapping("/updateDepartmentStakeholder")
+    public String updateDepartmentStakeholder(@ModelAttribute("stakeholderext") Stakeholderext stakeholderext) {
 
-    	return "redirect:/departmentdetail?id="+department.getId();
+    	stakeholderextService.update(stakeholderext);
+    	return "redirect:/departmentdetail?id="+stakeholderext.getDepartment().getId();
     } 
     
     //------Zones---------------    

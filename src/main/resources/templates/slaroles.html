@@ -46,7 +46,6 @@
                                 <thead>
                                     <tr>
                                         <th>Role</th>
-										<th>Stakeholder</th>
 										<th>Description</th>
 
 
@@ -66,11 +65,6 @@
 											</a>&nbsp 
 											<a th:href="@{'/slaroledetail?slarole='+${slarole.id}}" th:text="${slarole.SLARoleName}"></a>
 										</td>
-										<td>
-											<a data-toggle="modal" th:if="${slarole.stakeholders.size()>0}" th:data-target="@{'#'+${slarole.id}+'stakeholder'}" style="cursor:pointer">
-												<span class="badge badge-secondary small" th:text="${'Stakeholder - Total: '+slarole.stakeholders.size()}"></span>
-											</a>
-										</td>
 										<td th:text="${slarole.description}"></td>
 
 
@@ -80,38 +74,7 @@
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
-							<!--Model Area-->
-							<div th:each="slarole: ${slaroles}">
-								<div class="modal fade" th:if="${slarole.stakeholders.size()>0}" th:id="${#strings.concat(slarole.id,'stakeholder')}" role="dialog" >
-								<!-- Modal content-->
-										<div class="modal-dialog">
-										  <div class="modal-content">
-											<div class="modal-header">
-											  <button type="button" class="close" data-dismiss="modal">&times;</button>
-											  <h4 class="modal-title"> Stakeholders</h4>
-											</div>
-											<div class="modal-body">
-												<table class="table table-striped" id="instancetable">
-												  <thead>
-													<tr>
-													  <th scope="col">Stakeholder</th>
-													  <th scope="col">Email:</th>
-											  
-													</tr>
-												  </thead>
-												  <tbody>
-													<tr th:each="stakeholder : ${slarole.stakeholders}">
-													  <th><h5><a th:href="@{'/stakeholderdetail?stakeholder='+${stakeholder.id}}"><h5 th:text="${stakeholder.stakeholderName}"></h5></a></th>
-													  <th><h5 th:text="${stakeholder.email}"></h5></th>
 
-													</tr>
-												  </tbody>
-												</table>
-											</div>
-										   </div>
-										 </div>
-								</div>
-							</div>
                         </div>
                         <!-- /.panel-body -->
                     </div>

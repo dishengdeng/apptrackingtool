@@ -25,7 +25,6 @@ import portal.entity.Site;
 import portal.entity.Stakeholder;
 import portal.entity.Support;
 import portal.entity.Zac;
-import portal.entity.Zacmap;
 import portal.entity.Zone;
 import portal.service.JsonWriter;
 
@@ -74,7 +73,7 @@ public class JsonWriterImpl implements JsonWriter{
 		JSONArray stakeholderArray=new JSONArray();
 		for(Stakeholder stakeholder:stakeholders)
 		{
-			boolean isNoProperty=true;
+
 			
 			JSONObjectWithEmpty stakeholderObj= new JSONObjectWithEmpty();
 			stakeholderObj.put("id",stakeholder.getId());
@@ -87,22 +86,6 @@ public class JsonWriterImpl implements JsonWriter{
 			stakeholderObj.put("position", stakeholder.getPosition());
 			stakeholderObj.put("email", stakeholder.getEmail());
 			
-			isNoProperty=ObjectUtils.isEmpty(stakeholder.getDepartment());			
-			JSONObjectWithEmpty departObj= new JSONObjectWithEmpty();
-			departObj.put("departmentName", isNoProperty ? "":stakeholder.getDepartment().getDepartmentName());
-			departObj.put("description", isNoProperty ? "":stakeholder.getDepartment().getDescription());
-			stakeholderObj.put("department", departObj);
-			
-			stakeholderObj.put("influence", stakeholder.getInfluence());
-			
-			isNoProperty=ObjectUtils.isEmpty(stakeholder.getRole());
-			JSONObjectWithEmpty roleObj= new JSONObjectWithEmpty();
-			roleObj.put("slaroleName", isNoProperty ? "":stakeholder.getRole().getSLARoleName());
-			roleObj.put("description", isNoProperty ? "":stakeholder.getRole().getDescription());
-			
-			stakeholderObj.put("role", roleObj);
-			stakeholderObj.put("interest", stakeholder.getInterest());
-			stakeholderObj.put("raciforsyschanges", stakeholder.getRaciforsyschanges());
 			
 			stakeholderArray.put(stakeholderObj);
 			
@@ -178,21 +161,6 @@ public class JsonWriterImpl implements JsonWriter{
 				siteArray.put(siteObj);
 			}
 			appObj.put("sites",siteArray);
-			
-//			JSONArray zacmapArray=new JSONArray();
-//			for(Zacmap zacMap:application.getZacmaps())
-//			{
-//				boolean isNoProperty=true;
-//				JSONObjectWithEmpty zacmapObj= new JSONObjectWithEmpty();
-//				isNoProperty =ObjectUtils.isEmpty(zacMap.getZac());
-//				zacmapObj.put("id", zacMap.getId());
-//				zacmapObj.put("rate", isNoProperty?"":zacMap.getZac().getRate());
-//				zacmapObj.put("name", isNoProperty?"":zacMap.getZac().getName());
-//				isNoProperty =ObjectUtils.isEmpty(zacMap.getDepartment());
-//				zacmapObj.put("Department", isNoProperty?"":zacMap.getDepartment().getDepartmentName());
-//				zacmapArray.put(zacmapObj);
-//			}
-//			appObj.put("zacmap",zacmapArray);				
 
 			JSONArray vendorArray=new JSONArray();
 			for(Company vendor:application.getManufacturers())
@@ -450,15 +418,7 @@ public class JsonWriterImpl implements JsonWriter{
 			}
 			departmentObj.put("ProcessExcellent",answersArray);
 			
-			JSONArray stakeholderArray=new JSONArray();
-			for(Stakeholder stakeholder:department.getStakeholders())
-			{
-				JSONObjectWithEmpty stakeholderObj= new JSONObjectWithEmpty();
-				stakeholderObj.put("id", stakeholder.getId());
-				stakeholderObj.put("Stakeholder", stakeholder.getStakeholderName());
-				stakeholderArray.put(stakeholderObj);
-			}
-			departmentObj.put("stakeholders",stakeholderArray);
+
 			
 			JSONArray applicationArray=new JSONArray();
 			for(Application application:department.getApplications())
@@ -480,22 +440,7 @@ public class JsonWriterImpl implements JsonWriter{
 				instanceObj.put("Description", instance.getDescription());
 				instanceArray.put(instanceObj);
 			}
-			departmentObj.put("AppInstances",instanceArray);
-			
-//			JSONArray zacmapArray=new JSONArray();
-//			for(Zacmap zacMap:department.getZacmaps())
-//			{
-//
-//				JSONObjectWithEmpty zacmapObj= new JSONObjectWithEmpty();
-//				isNoProperty =ObjectUtils.isEmpty(zacMap.getZac());
-//				zacmapObj.put("id", zacMap.getId());
-//				zacmapObj.put("rate", isNoProperty?"":zacMap.getZac().getRate());
-//				zacmapObj.put("name", isNoProperty?"":zacMap.getZac().getName());
-//				isNoProperty =ObjectUtils.isEmpty(zacMap.getApplication());
-//				zacmapObj.put("Application", isNoProperty?"":zacMap.getApplication().getAppName());
-//				zacmapArray.put(zacmapObj);
-//			}
-//			departmentObj.put("zacmap",zacmapArray);			
+			departmentObj.put("AppInstances",instanceArray);		
 			
 			departmentArray.put(departmentObj);
 		}
@@ -764,19 +709,14 @@ public class JsonWriterImpl implements JsonWriter{
 			JSONObjectWithEmpty supportObj= new JSONObjectWithEmpty();
 			supportObj.put("id", support.getId());
 			supportObj.put("SupportName", support.getSupportName());
-			supportObj.put("SecondarySupport", support.getSecondarysupport());
-			supportObj.put("OtherSupport", support.getOthersupport());
-			supportObj.put("AppOwner", support.getAppowner());
+			supportObj.put("AppServerSupport", support.getSecondarysupport());
+			supportObj.put("DBServerSupport", support.getOthersupport());
 			supportObj.put("Trainer", support.getTrainer());
 			supportObj.put("SME", support.getSme());
-			supportObj.put("BusinessLead", support.getBusinesslead());
-			supportObj.put("COES", support.getCoes());
 			supportObj.put("AHSHours", support.getAhshours());
 			supportObj.put("UserAdmin", support.getUseradmin());
 			supportObj.put("SysAdmin", support.getSysadmin());
 			supportObj.put("NetworkSupport", support.getNetworksupport());
-			supportObj.put("SupportType", support.getSupporttype());
-			supportObj.put("CommonIssue", support.getCommonissue());
 			supportObj.put("Phone", support.getPhone());
 			supportObj.put("Email", support.getEmail());
 			supportObj.put("Note", support.getNote());
@@ -818,31 +758,7 @@ public class JsonWriterImpl implements JsonWriter{
 			zacObj.put("id", zac.getId());
 			zacObj.put("rate", zac.getRate());
 			zacObj.put("name", zac.getName());
-			zacObj.put("description", zac.getDescription());
-//			boolean isNoProperty=true;
-//			JSONArray applicationArray=new JSONArray();
-//			for(Application application:zac.getApplications())
-//			{
-//				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
-//				applicationObj.put("id", application.getId());
-//				applicationObj.put("Application", application.getAppName());
-//				applicationArray.put(applicationObj);
-//			}
-//			zacObj.put("applications",applicationArray);
-//			
-//			JSONArray zacmapArray=new JSONArray();
-//			for(Zacmap zacmap:zac.getZacmaps())
-//			{
-//				JSONObjectWithEmpty zacmapObj= new JSONObjectWithEmpty();
-//				zacmapObj.put("id", zacmap.getId());
-//				isNoProperty=ObjectUtils.isEmpty(zacmap.getApplication());
-//				zacmapObj.put("Application", isNoProperty?"":zacmap.getApplication().getAppName());
-//				isNoProperty=ObjectUtils.isEmpty(zacmap.getDepartment());
-//				zacmapObj.put("Department", isNoProperty?"":zacmap.getDepartment().getDepartmentName());				
-//				zacmapArray.put(zacmapObj);
-//			}
-//			zacObj.put("zacmaps",zacmapArray);			
-			
+			zacObj.put("description", zac.getDescription());			
 			zacArray.put(zacObj);
 		}
 		return zacArray;

@@ -46,16 +46,11 @@
                                 <thead>
                                     <tr>
                                         <th>Stakeholder Name</th>
-										<th>Role</th>
-										<th>Department</th>
-                                        <th>Address</th>
+                                        <th>Location</th>
 										<th>Phone</th>
 										<th>Email</th>
 										<th>Position</th>
 										<th>Note</th>
-										<th>Influence</th>
-										<th>Interest</th>
-										<th>RACI</th>
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
                                 </thead>
@@ -71,22 +66,12 @@
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a th:href="@{'stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
-										</td>
-										<td>
-											<a th:if="${stakeholder.role!=null}" th:href="@{'/slaroledetail?slarole='+${stakeholder.role.id}}"  th:text="${stakeholder.role.SLARoleName}"></a>										
-										</td>
-										<td>
-											<a th:if="${stakeholder.department!=null}" th:href="@{'/departmentdetail?id='+${stakeholder.department.id}}"><h5 th:text="${stakeholder.department.departmentName}"></h5></a>										
-										</td>									
-                                        <td th:text="${stakeholder.address}"></td>
+										</td>								
+                                        <td th:text="${stakeholder.site!=null}? ${stakeholder.site.siteName}:''"></td>
                                         <td th:text="${stakeholder.phone}"></td>
 										<td th:text="${stakeholder.email}"></td>
 										<td th:text="${stakeholder.position}"></td>
-										<td th:text="${stakeholder.note}"></td>
-                                        <td th:text="${stakeholder.influence}"></td>
-										<td th:text="${stakeholder.interest}"></td>
-										<td th:text="${stakeholder.raciforsyschanges.size()>0} ? ${stakeholder.raciforsyschanges}:''"></td>										
-																		
+										<td th:text="${stakeholder.note}"></td>	
 
                                     </tr>
 

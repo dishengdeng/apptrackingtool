@@ -8,9 +8,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
+
 import javax.persistence.Column;
-import javax.persistence.ElementCollection;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -19,6 +19,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.util.ObjectUtils;
@@ -26,7 +27,7 @@ import org.springframework.util.ObjectUtils;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import portal.jsonview.Views;
-import portal.utility.RACI;
+
 
 @Entity
 @Table(name = "Stakeholder")
@@ -71,27 +72,22 @@ public class Stakeholder {
     @JsonView(Views.Public.class)
 	private String email;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "department_id",referencedColumnName="id")
-    private Department department;
-    
-    @Column(name = "influence",columnDefinition="VARCHAR(250)")
-    @JsonView(Views.Public.class)
-	private String influence;
-    
-    @Column(name = "interest", length = 64,columnDefinition="VARCHAR(250)")
-    @JsonView(Views.Public.class)
-	private String interest;
 
-    @ElementCollection
-    @CollectionTable(name="stakeraci", joinColumns=@JoinColumn(name="stakeraci_id"))    
-    @Column(name = "raciforsyschanges")
-    @JsonView(Views.Public.class)
-	private Set<RACI> raciforsyschanges= new HashSet<RACI>();    
+    
+ 
+
     
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "slarole_id",referencedColumnName="id")
-    private SLARole role;
+    @JoinColumn(name = "site_id",referencedColumnName="id")
+    private Site site;
+    
+    @OneToMany(
+            mappedBy = "stakeholder", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true,
+            fetch=FetchType.EAGER
+        )
+    private Set<Stakeholderext> stakeholderexts = new HashSet<>();
     
 	public Long getId() {
 		return id;
@@ -165,57 +161,58 @@ public class Stakeholder {
 		this.email = email;
 	}
 
-	public Department getDepartment() {
-		return department;
+
+
+	public Set<Stakeholderext> getStakeholderexts() {
+		return stakeholderexts;
 	}
 
-	public void setDepartment(Department department) {
-		this.department = department;
+	public void setStakeholderexts(Set<Stakeholderext> stakeholderexts) {
+		this.stakeholderexts.addAll(stakeholderexts);
+		stakeholderexts.forEach(obj->{
+			obj.setStakeholder(this);
+		});
+	}
+	
+	public void addStakeholderext(Stakeholderext stakeholderext)
+	{
+		this.stakeholderexts.add(stakeholderext);
+	}
+	
+	public void removeStakeholderext(Stakeholderext stakeholderext)
+	{
+		this.stakeholderexts.remove(stakeholderext);
 	}
 
-	public SLARole getRole() {
-		return role;
-	}
 
-	public void setRole(SLARole role) {
-		this.role = role;
-	}
-
-	public String getInfluence() {
-		return influence;
-	}
-
-	public void setInfluence(String influence) {
-		this.influence = influence;
-	}
-
-	public String getInterest() {
-		return interest;
-	}
-
-	public void setInterest(String interest) {
-		this.interest = interest;
-	}
 
 
 	
 	
-	public Set<RACI> getRaciforsyschanges() {
-		return raciforsyschanges;
+	public Site getSite() {
+		return site;
 	}
 
-	public void setRaciforsyschanges(Set<RACI> raciforsyschanges) {
-		this.raciforsyschanges.retainAll(raciforsyschanges);
-		this.raciforsyschanges.addAll(raciforsyschanges);
+	public void setSite(Site site) {
+		this.site = site;
 	}
+
+
+
+	
+
 
 	public void removeAllDependence()
 	{
-		if(!ObjectUtils.isEmpty(this.department)) this.department.removeStakeholder(this);
-		this.department=null;
+
 		
-		if(!ObjectUtils.isEmpty(this.role)) this.role.removeStakeholder(this);
-		this.role=null;
+		if(!ObjectUtils.isEmpty(this.site)) this.site.removeStakeholder(this);
+		this.setSite(null);
+		
+		this.stakeholderexts.forEach(obj->{
+			obj.setStakeholder(null);
+		});
+		this.stakeholderexts=null;
 
 	}
 

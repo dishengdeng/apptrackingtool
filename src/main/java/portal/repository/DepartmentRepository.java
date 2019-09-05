@@ -25,13 +25,5 @@ public interface DepartmentRepository  extends JpaRepository<Department, Long>  
     @Query("update AppInstance t set t.department=null where t.department=:department")
     void removeAllDepartment(@Param("department") Department department);
     
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Modifying
-    @Query("update Stakeholder t set t.department=:department where t.id = :id")
-    void updateStakeholderDepartment(@Param("id") Long id,@Param("department") Department department);
-    
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Modifying
-    @Query("update Stakeholder t set t.department=null where t.department=:department")
-    void removeAllStakeholderDepartment(@Param("department") Department department);
+
 }

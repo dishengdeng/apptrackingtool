@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import portal.entity.AppInstance;
 import portal.entity.Department;
-import portal.entity.Stakeholder;
 import portal.entity.Zacmap;
 import portal.entity.Zone;
 import portal.models.DepartmentModel;
@@ -26,7 +25,7 @@ public interface DepartmentService {
     
     void updateAppIstanceDepartment(Set<AppInstance> appInstances,Department department);
 
-    void updateStakeholderDepartment(Set<Stakeholder> stakeholders,Department department);
+
     void removFiles(String upload_foler,Department department);
     
     public Set<Zacmap> getZacmap(Department department);

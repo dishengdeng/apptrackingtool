@@ -2,8 +2,7 @@ package portal.service;
 
 import java.util.List;
 
-import portal.entity.Department;
-import portal.entity.SLARole;
+
 import portal.entity.Stakeholder;
 
 import portal.models.StakeholderModel;
@@ -19,9 +18,6 @@ public interface StakeholderService {
     Stakeholder getByName(String stakeholderName);
     Stakeholder getById(Long id);
     Stakeholder updateStakeholder(Stakeholder stakeholder);	
-    List<Stakeholder> findbyDepartment(Department department);
-    List<Stakeholder> getUnassginedStakeholders();
-    public void removeDepartment(Department department);    
-    public void removeRole(SLARole role);
-    public void updateDetail(Stakeholder stakeholder);
+
+    public void updateDetail(StakeholderModel stakeholdeModel);
 }

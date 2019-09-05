@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.util.ObjectUtils;
@@ -63,6 +64,13 @@ public class Site implements Comparable<Site>{
     )
     private Set<Application> applications = new HashSet<Application>();
 
+    @OneToMany(
+            mappedBy = "site", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true,
+            fetch=FetchType.EAGER
+        )
+    private Set<Stakeholder> stakeholders = new HashSet<>();
     
     public void addAppInstance(AppInstance appInstance)
     {
@@ -147,9 +155,28 @@ public class Site implements Comparable<Site>{
 	public void removeApplication(Application application)
 	{
 		this.applications.removeIf(obj->obj.equals(application));
+	}	
+	
+	public Set<Stakeholder> getStakeholders() {
+		return stakeholders;
+	}
+
+	public void setStakeholders(Set<Stakeholder> stakeholders) {
+		this.stakeholders.addAll(stakeholders);
+		stakeholders.forEach(obj->{
+			obj.setSite(this);
+		});
+	}
+
+	public void addStakeholder(Stakeholder stakeholder)
+	{
+		this.stakeholders.add(stakeholder);
 	}
 	
-	
+	public void removeStakeholder(Stakeholder stakeholder)
+	{
+		this.stakeholders.remove(stakeholder);
+	}
 	public void removeAllDependence()
 	{
 		this.applications.forEach(obj->{
@@ -164,6 +191,11 @@ public class Site implements Comparable<Site>{
     	
     	if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeSite(this);
     	this.setZone(null);
+    	
+    	this.stakeholders.forEach(obj->{
+    		obj.setSite(null);
+    	});
+    	this.stakeholders=null;
     	
 
 	}

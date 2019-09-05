@@ -4,6 +4,7 @@ package portal.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -12,9 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 import portal.entity.Stakeholder;
+import portal.entity.Stakeholderext;
+import portal.models.StakeholderModel;
 import portal.service.DepartmentService;
 import portal.service.SLARoleService;
+import portal.service.SiteService;
 import portal.service.StakeholderService;
+import portal.service.StakeholderextService;
 import portal.validator.StakeholderValidator;
 
 
@@ -32,6 +37,12 @@ public class StakeholderController {
 	private SLARoleService slaRoleService;
 	
 	@Autowired
+	private SiteService siteService;
+	
+	@Autowired
+	private StakeholderextService stakeholderextService;
+	
+	@Autowired
 	private StakeholderValidator stakeholderValidator;
 	
     @GetMapping("/stakeholders")
@@ -39,6 +50,7 @@ public class StakeholderController {
     	model.addAttribute("stakeholders", stakeholderService.getAll());
 
     	model.addAttribute("roles", slaRoleService.getAll());
+
         return "stakeholders";
     }
     
@@ -50,20 +62,21 @@ public class StakeholderController {
     }
  
     @PostMapping("/updateStakeholder")
-    public String updateStakeholder(@ModelAttribute("stakeholderModel") Stakeholder stakeholder,BindingResult bindingResult,ModelMap model) {
+    public String updateStakeholder(@ModelAttribute("stakeholderModel") StakeholderModel stakeholderModel,BindingResult bindingResult,ModelMap model) {
     	
-    	getUpdatedStakeholder(stakeholder);
     	
-    	stakeholderValidator.validate(stakeholder, bindingResult);
+    	
+    	stakeholderValidator.validate(stakeholderModel, bindingResult);
     	if (bindingResult.hasErrors()) {
-    		setModel(model,stakeholder);
+    	
+    		setModel(model,stakeholderService.getById(stakeholderModel.getId()),stakeholderModel);
     		return "stakeholderdetail";
     	}
     	
     	
-    	//stakeholderService.updateDetail(stakeholder);
-    	stakeholderService.updateStakeholder(stakeholder);
-    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
+    	stakeholderService.updateDetail(stakeholderModel);
+
+    	return "redirect:/stakeholderdetail?stakeholder="+stakeholderModel.getId();
     }
     
     @GetMapping("/addStakeholder")
@@ -71,6 +84,7 @@ public class StakeholderController {
     	model.addAttribute("stakeholder", new Stakeholder());
     	model.addAttribute("departments", departmentService.getAll());
     	model.addAttribute("roles", slaRoleService.getAll());
+    	model.addAttribute("sites",siteService.getAll());
         return "addStakeholder";
     }
     
@@ -86,54 +100,52 @@ public class StakeholderController {
     @GetMapping("/stakeholderdetail")
     public String stakeholderdetail(@ModelAttribute("stakeholder") Stakeholder stakeholder,ModelMap model) {
     	
-    	setModel(model,stakeholder);
+    	setModel(model,stakeholder,getUpdatedStakeholder(stakeholder));
         return "stakeholderdetail";
     }
 
     //--department--
-    @GetMapping("/deleteStakeHolderDepartment")
-    public String deleteStakeHolderDepartment(@ModelAttribute("stakeholder") Stakeholder stakeholder)
+    @GetMapping("/deleteStakeHolderext")
+    public String deleteStakeHolderext(@ModelAttribute("stakeholderext") Stakeholderext stakeholderext)
     {
-    	stakeholder.setDepartment(null);
-    	stakeholderService.updateStakeholder(stakeholder);
-    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
+    	Long id = stakeholderext.getStakeholder().getId();
+    	stakeholderext.removeAllDependence();
+    	stakeholderextService.delete(stakeholderext);
+    	return "redirect:/stakeholderdetail?stakeholder="+id;
     }
     
-    @PostMapping("/addStakeHolderDepartment")
-    public String addStakeHolderDepartment(@ModelAttribute("stakeholder") Stakeholder stakeholder)
+    @PostMapping("/addStakeHolderext")
+    public String addStakeHolderDepartment(@ModelAttribute("stakeholderext") Stakeholderext stakeholderext)
     {
-
-    	stakeholderService.updateStakeholder(stakeholder);
-    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
+    	stakeholderextService.save(stakeholderext);
+    	return "redirect:/stakeholderdetail?stakeholder="+stakeholderext.getStakeholder().getId();
     }
 
-    //--role--
-    @GetMapping("/deleteStakeHolderRole")
-    public String deleteStakeHolderRole(@ModelAttribute("stakeholder") Stakeholder stakeholder)
+    @PostMapping("/updateStakeHolderext")
+    public String updateStakeHolderext(@ModelAttribute("stakeholderext") Stakeholderext stakeholderext)
     {
-    	stakeholder.setRole(null);
-    	stakeholderService.updateStakeholder(stakeholder);
-    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
+    	stakeholderextService.update(stakeholderext);
+    	return "redirect:/stakeholderdetail?stakeholder="+stakeholderext.getStakeholder().getId();
     }
     
-    @PostMapping("/addStakeHolderRole")
-    public String addStakeHolderRole(@ModelAttribute("stakeholder") Stakeholder stakeholder)
+    private StakeholderModel getUpdatedStakeholder(Stakeholder stakeholder)
     {
-
-    	stakeholderService.updateStakeholder(stakeholder);
-    	return "redirect:/stakeholderdetail?stakeholder="+stakeholder.getId();
+    	StakeholderModel stakeholderModel=new StakeholderModel();
+    	stakeholderModel.setId(stakeholder.getId());
+    	stakeholderModel.setEmail(stakeholderModel.getEmail());
+    	stakeholderModel.setNote(stakeholder.getNote());
+    	stakeholderModel.setPhone(stakeholder.getPhone());
+    	stakeholderModel.setSite(ObjectUtils.isEmpty(stakeholder.getSite())? null:stakeholder.getSite().getId());
+    	stakeholderModel.setPosition(stakeholder.getPosition());
+    	stakeholderModel.setStakeholderName(stakeholder.getStakeholderName());
+    	return stakeholderModel;
     }
-    private void getUpdatedStakeholder(Stakeholder stakeholder)
+    private void setModel(ModelMap model,Stakeholder stakeholder,StakeholderModel stakeholderModel)
     {
-    	Stakeholder holderEntity=stakeholderService.getById(stakeholder.getId());
-    	stakeholder.setRole(holderEntity.getRole());
-    	stakeholder.setDepartment(holderEntity.getDepartment());
-    }
-    private void setModel(ModelMap model,Stakeholder stakeholder)
-    {
-    	model.addAttribute("stakeholderModel", stakeholder);
+    	model.addAttribute("stakeholderModel", stakeholderModel);
     	model.addAttribute("stakeholder", stakeholder);
     	model.addAttribute("departments", departmentService.getAll());
     	model.addAttribute("roles", slaRoleService.getAll());
+    	model.addAttribute("sites",siteService.getAll());
     }
 }

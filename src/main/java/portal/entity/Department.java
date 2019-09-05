@@ -75,13 +75,7 @@ public class Department implements Comparable<Department>{
         )
     private Set<Answer> answers = new HashSet<Answer>(); 
 	
-    @OneToMany(
-            mappedBy = "department", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true,
-            fetch=FetchType.EAGER
-        )
-    private Set<Stakeholder> stakeholders = new HashSet<>();
+
     
     @OneToMany(
             mappedBy = "department", 
@@ -115,6 +109,14 @@ public class Department implements Comparable<Department>{
 
 	@ManyToMany(mappedBy = "departments")
     private Set<Zone> zones = new HashSet<Zone>();
+
+    @OneToMany(
+            mappedBy = "department", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true,
+            fetch=FetchType.EAGER
+        )
+    private Set<Stakeholderext> stakeholderexts = new HashSet<>();
     
 	public Long getId() {
 		return id;
@@ -212,26 +214,27 @@ public class Department implements Comparable<Department>{
 		});
 	}
 
-	public Set<Stakeholder> getStakeholders() {
-		return stakeholders;
+
+
+	public Set<Stakeholderext> getStakeholderexts() {
+		return stakeholderexts;
 	}
 
-	public void setStakeholders(Set<Stakeholder> stakeholders) {
-
-		this.stakeholders.addAll(stakeholders);
-		stakeholders.forEach(obj->{
+	public void setStakeholderexts(Set<Stakeholderext> stakeholderexts) {
+		this.stakeholderexts.addAll(stakeholderexts);
+		stakeholderexts.forEach(obj->{
 			obj.setDepartment(this);
 		});
 	}
 	
-	public void addStakeholder(Stakeholder stakeholder)
+	public void addStakeholderext(Stakeholderext stakeholderext)
 	{
-		this.stakeholders.add(stakeholder);
+		this.stakeholderexts.add(stakeholderext);
 	}
 	
-	public void removeStakeholder(Stakeholder stakeholder)
+	public void removeStakeholderext(Stakeholderext stakeholderext)
 	{
-		this.stakeholders.removeIf(obj->obj.equals(stakeholder));
+		this.stakeholderexts.remove(stakeholderext);
 	}
 
 	public Set<AppInstance> getAppInstances() {
@@ -344,16 +347,7 @@ public class Department implements Comparable<Department>{
 		return instanceName.stream().collect(Collectors.joining(","));
 	}
 
-	public String getStakeHolderNameWithComma()
-	{
-		List<String> stakeHolderName=new ArrayList<String>();
-		for(Stakeholder stakeholder:this.stakeholders)
-		{
-			stakeHolderName.add(stakeholder.getStakeholderName());
-		}
-		
-		return stakeHolderName.stream().collect(Collectors.joining(","));
-	}
+
 
 
 	
@@ -380,10 +374,7 @@ public class Department implements Comparable<Department>{
 	
 	public void removeAllDependence()
 	{
-		this.stakeholders.forEach(obj->{
-			obj.setDepartment(null);
-		});
-		this.stakeholders=null;
+
 		
 		this.appInstances.forEach(obj->{
 			obj.setDepartment(null);
@@ -406,6 +397,10 @@ public class Department implements Comparable<Department>{
 		});
 		this.zones=null;
 		
+		this.stakeholderexts.forEach(obj->{
+			obj.setDepartment(null);
+		});
+		this.stakeholderexts=null;
 
 	}
 

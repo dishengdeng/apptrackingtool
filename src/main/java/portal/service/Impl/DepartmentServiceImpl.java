@@ -15,7 +15,7 @@ import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
-import portal.entity.Stakeholder;
+
 import portal.entity.Zac;
 import portal.entity.Zaclist;
 import portal.entity.Zacmap;
@@ -130,20 +130,7 @@ public class DepartmentServiceImpl implements DepartmentService{
 		
 	}
 
-	@Override
-	public void updateStakeholderDepartment(Set<Stakeholder> stakeholders, Department department) {
-		
-		departmentRepository.removeAllStakeholderDepartment(department);	
-		if(stakeholders.size()>0)
-		{
-			for(Stakeholder stakeholder:stakeholders)
-			{
-				departmentRepository.updateStakeholderDepartment(stakeholder.getId(), department);
-			}
-		}
 
-		
-	}
 
 	@Override
 	public void removFiles(String upload_foler, Department department) {

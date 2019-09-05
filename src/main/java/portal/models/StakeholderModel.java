@@ -9,23 +9,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class StakeholderModel {
 	
 	
-	private Long id;
 
+	private Long id;
+	
+	@JsonProperty("id")
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
 	
 	private String stakeholderName;
 	
 	
 	private String note;
     
+    
+	private Long site;
 
-	
-	private String firstname;
-    
-	
-	private String lastname;
-    
-	
-	private String address;
 
 	
 	private String phone;
@@ -34,28 +37,12 @@ public class StakeholderModel {
 	private String position; 
     
 	
-	private String influence;
-	
-	private String interest;
-	
-	private String raciforsyschanges;
 	
 	private String email;
 
-	
-	private DepartmentModel departmentModel;
 
 	
-	private SLARoleModel slaRole;
-	
-	@JsonProperty("id")
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
 	
 	@JsonProperty("stakeholderName")
 	public String getStakeholderName() {
@@ -77,34 +64,17 @@ public class StakeholderModel {
 
 		this.note = note;
 	}
-	
-	@JsonProperty("firstname")
-	public String getFirstname() {
-		return firstname;
-	}
 
-	public void setFirstname(String firstname) {
-		this.firstname = firstname;
-	}
 	
-	@JsonProperty("lastname")
-	public String getLastname() {
-		return lastname;
-	}
 
-	public void setLastname(String lastname) {
-		this.lastname = lastname;
-	}
 	
-	@JsonProperty("address")
-	public String getAddress() {
-		return address;
+	@JsonProperty("site")
+	public Long getSite() {
+		return site;
 	}
-
-	public void setAddress(String address) {
-		this.address = address;
+	public void setSite(Long site) {
+		this.site = site;
 	}
-	
 	@JsonProperty("phone")
 	public String getPhone() {
 		return phone;
@@ -132,48 +102,7 @@ public class StakeholderModel {
 		this.email = email;
 	}
 	
-	@JsonProperty("department")
-	public DepartmentModel getDepartmentModel() {
-		return departmentModel;
-	}
 
-	public void setDepartmentModel(DepartmentModel departmentModel) {
-		this.departmentModel = departmentModel;
-	}
-	
-
-	@JsonProperty("influence")
-	public String getInfluence() {
-		return influence;
-	}
-	@JsonProperty("role")
-	public SLARoleModel getSlaRole() {
-		return slaRole;
-	}
-
-	public void setSlaRole(SLARoleModel slaRole) {
-		this.slaRole = slaRole;
-	}
-
-	public void setInfluence(String influence) {
-		this.influence = influence;
-	}
-	@JsonProperty("interest")
-	public String getInterest() {
-		return interest;
-	}
-
-	public void setInterest(String interest) {
-		this.interest = interest;
-	}
-	@JsonProperty("raciforsyschanges")
-	public String getRaciforsyschanges() {
-		return raciforsyschanges;
-	}
-
-	public void setRaciforsyschanges(String raciforsyschanges) {
-		this.raciforsyschanges = raciforsyschanges;
-	}
  
 	
 }
