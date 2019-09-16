@@ -100,6 +100,7 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 			
 			sites.add(siteRepository.findOne(jsonObj.getLong("id")));
 		}
+		appdepart.refreshsite(sites);
 		appdepart.setSites(sites);
 		
 		appdepart.setSme(appdepartment.getJSONObject("support").getString("sme"));
@@ -123,6 +124,7 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 			JSONObject jsonObj=(JSONObject)obj;
 			contracts.add(contractRepository.findOne(jsonObj.getLong("id")));
 		}
+		appdepart.refreshContract(contracts);
 		appdepart.setContracts(contracts);
 		
 		Set<License> licenses= new HashSet<License>();
@@ -131,6 +133,7 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 			JSONObject jsonObj=(JSONObject)obj;
 			licenses.add(licenseRepository.findOne(jsonObj.getLong("id")));
 		}
+		appdepart.refreshlicense(licenses);
 		appdepart.setLicenses(licenses);
 		
 		appdepart.setImp(appdepartment.getJSONObject("project").getString("imp"));
@@ -141,6 +144,7 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 			JSONObject jsonObj=(JSONObject)obj;
 			projects.add(projectRepository.findOne(jsonObj.getLong("id")));
 		}
+		appdepart.refreshProject(projects);
 		appdepart.setProjects(projects);
 		
 		return appdepartmentRepository.saveAndFlush(appdepart);

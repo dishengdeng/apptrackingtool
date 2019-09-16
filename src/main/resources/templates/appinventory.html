@@ -329,7 +329,7 @@
 					</div>
 				</div>							
 			</div>	
-
+			<p class="text-danger"><strong id="message_create"></strong></p>
 			<input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="width:30%" id="submitform" type="submit" value="Submit" />			
         </div>
         <!-- /#page-wrapper -->
@@ -385,6 +385,7 @@
   $( "#submitform" ).on( "click", function( event ) {
   
   		  event.preventDefault();
+		  $( "#message_create" ).empty();
 		  var appdata=$( "#appdetailform" ).serializeArray();
 		  var zonedata=$( "#zonedetailform" ).serializeArray();
 		  var sitedata=$( "#sitedetailform" ).serializeArray();
@@ -392,7 +393,6 @@
 		  var vendordata=$( "#vendordetailform" ).serializeArray();
 		  var contractdata=$( "#contractdetailform" ).serializeArray();
 		  var projectdata=$( "#projectdetailform" ).serializeArray();
-		  var action=/*[[${actiontype.name()}]]*/;
 		  var formdata={
 						"id":"",
 						"action":"",
@@ -462,25 +462,21 @@
 			if(projectdata[i].name==="cshrecimit") formdata.project["cshrecimit"]=projectdata[i].value;
 		  }			  
 		  console.log(formdata);
-			$.ajax({
-				url: "/saveappdepartment",
-				type: "POST",
-				data:JSON.stringify(formdata),
-				headers: {
-					"content-type":"application/json"
-				},
-				dataType: 'json',
-				success: function (data, textStatus, xhr) {
-					if(xhr.status===200)
-					{
-						
-					}
-					else
-					{
-						
-					}
+
+			  var xhttp = new XMLHttpRequest();
+			  xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					console.log(this);
+					window.location.replace(this.responseURL);
 				}
-			});			  
+				else if(this.readyState == 4 && this.status != 200)
+				{
+					document.getElementById("message_create").innerHTML="Update Failed! Please Contact System Administrator.";
+				}
+			  };
+			  xhttp.open("POST", "/saveappdepartment", true);
+			  xhttp.setRequestHeader("Content-type", "application/json");
+			  xhttp.send(JSON.stringify(formdata));			
 
 	});
 

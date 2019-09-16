@@ -394,11 +394,18 @@ public class Appdepartment {
 	}
 
 	public void setSites(Set<Site> sites) {
-		this.sites.retainAll(sites);
 		this.sites.addAll(sites);
 		sites.forEach(obj->{
 			obj.addAppdepartments(this);
 		});
+	}
+	
+	public void refreshsite(Set<Site> sites)
+	{
+		this.sites.forEach(obj->{
+			if(!sites.contains(obj)) obj.removeAppdepartments(this);
+		});
+		this.sites.retainAll(sites);		
 	}
 	
 	public void addSite(Site site)
@@ -418,11 +425,19 @@ public class Appdepartment {
 	}
 
 	public void setContracts(Set<Contract> contracts) {
-		this.contracts.retainAll(contracts);
 		this.contracts.addAll(contracts);
 		contracts.forEach(obj->{
 			obj.addAppdepartments(this);
 		});
+		
+	}
+	
+	public void refreshContract(Set<Contract> contracts)
+	{
+		this.contracts.forEach(obj->{
+			if(!contracts.contains(obj)) obj.removeAppdepartments(this);
+		});		
+		this.contracts.retainAll(contracts);
 	}
 	
 	public void addContract(Contract contract)
@@ -441,12 +456,19 @@ public class Appdepartment {
 	}
 
 	public void setLicenses(Set<License> licenses) {
-		this.licenses = licenses;
-		this.licenses.retainAll(licenses);
+
 		this.licenses.addAll(licenses);
 		licenses.forEach(obj->{
 			obj.addAppdepartments(this);
 		});
+	}
+	
+	public void refreshlicense(Set<License> licenses)
+	{
+		this.licenses.forEach(obj->{
+			if(!licenses.contains(obj)) obj.removeAppdepartments(this);
+		});		
+		this.licenses.retainAll(licenses);
 	}
 
 	public void addLicense(License license)
@@ -466,11 +488,19 @@ public class Appdepartment {
 	}
 
 	public void setProjects(Set<Project> projects) {
-		this.projects.retainAll(projects);
+
 		this.projects.addAll(projects);
 		projects.forEach(obj->{
 			obj.addAppdepartments(this);
 		});
+	}
+	
+	public void refreshProject(Set<Project> projects)
+	{
+		this.projects.forEach(obj->{
+			if(!projects.contains(obj)) obj.removeAppdepartments(this);
+		});		
+		this.projects.retainAll(projects);
 	}
 	
 	public void addProject(Project project)
