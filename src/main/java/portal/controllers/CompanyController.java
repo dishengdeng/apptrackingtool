@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-import portal.entity.AppInstance;
+
 import portal.entity.Application;
 import portal.entity.Company;
-import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.CompanyService;
 
@@ -28,8 +27,7 @@ public class CompanyController {
 	@Autowired
 	private CompanyService companyService;
 	
-	@Autowired
-	private AppInstanceService appInstanceService;
+
 	
 	@Autowired
 	private AppService appService;	
@@ -73,7 +71,6 @@ public class CompanyController {
     @GetMapping("/companydetail")
     public String companydetail(@ModelAttribute("company") Company company,ModelMap model) {
     	model.addAttribute("company", company);
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
     	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
 
         return "companydetail";
@@ -94,22 +91,7 @@ public class CompanyController {
 
     	return "redirect:/companydetail?company="+company.getId();
     }
-    //--Instance--    
-    @GetMapping("/deleteCompanyInstance")
-    public String deleteCompanyInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("company") Company company,ModelMap model) {
-    	company.removeAppInstance(appInstance);
-    	companyService.updateCompany(company);
-
-    	return "redirect:/companydetail?company="+company.getId();
-    }    
-    
-    @PostMapping("/addCompanyInstance")
-    public String addCompanyInstance(ModelMap model,@ModelAttribute("company") Company company) {
-
-    	companyService.updateCompany(company);
-
-    	return "redirect:/companydetail?company="+company.getId();
-    }    
+ 
     
 
 }

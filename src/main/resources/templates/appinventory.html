@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Navigation -->
+			<div th:insert="navigation :: navbar">  </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-8 text-muted">
+						<span th:text="${actiontype}"></span>
+						</div>
+						
+
+					</div>						
+					</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<!-- application detail -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-windows"></i> Application
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" method="post" id="appdetailform">	
+						  <div class="form-group">
+							<label for="zoneName">Application:</label>
+							<input type="hidden" class="form-control" th:name="department" th:value="${appdepartment.department.id}"></input>
+							<input type="hidden" class="form-control" th:name="action" th:value="${actiontype}"></input>
+							<input type="hidden" class="form-control" th:name="id" th:value="${actiontype==T(portal.utility.Action).COPY}? null:${appdepartment.id}"></input>
+							<select name="application" class="form-control">
+							<option th:selected="${appdepartment.application==null}"></option>
+							  <option th:each="appEntity : ${apps}" 
+							  th:text="${appEntity.appName}" 
+							  th:attr="value = ${appEntity.id}"
+							  th:selected="${appdepartment.application!=null and appdepartment.application.id==appEntity.id}">									  
+							  </option>
+							</select>							
+						  </div>
+						  <div class="form-group">
+							<label for="description">Business Lead:</label>
+							<input type="text" class="form-control" th:name="businesslead" th:value="${appdepartment.businesslead}">
+						  </div>
+						   <div class="form-group">
+							<label for="note">Application Owner:</label>
+							<input type="text" class="form-control" th:name="appowner" th:value="${appdepartment.appowner}">
+						  </div>
+						   <div class="form-group">
+							<label for="note">Governance/ Standards in Place (Y/N):</label>
+							<input type="text" class="form-control" th:name="goverinplace" th:value="${appdepartment.goverinplace}">
+						  </div>
+						   <div class="form-group">
+							<label for="note">Userbase:</label>
+							<input type="text" class="form-control" th:name="userbase" th:value="${appdepartment.userbase}">
+						  </div>
+						   <div class="form-group">
+							<label for="note">Business Unit Initiatives on Roadmap?</label>
+							<input type="text" class="form-control" th:name="broadmap" th:value="${appdepartment.broadmap}">
+						  </div>
+						   <div class="form-group">
+							<label for="note">Additional Information/Notes:</label>
+							<input type="text" class="form-control" th:name="note" th:value="${appdepartment.note}">
+						  </div>						  
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>
+
+			<!-- Zone detail -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-cube"></i> Zone
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" method="post" id="zonedetailform">	
+						  <div class="form-group">
+							<label for="zoneName">South:</label>
+							<input type="text" class="form-control" th:name="south" th:value="${appdepartment.south}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">Calgary:</label>
+							<input type="text" class="form-control" th:name="calgary" th:value="${appdepartment.calgary}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">Central:</label>
+							<input type="text" class="form-control" th:name="central" th:value="${appdepartment.central}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">Edmonton:</label>
+							<input type="text" class="form-control" th:name="edmonton" th:value="${appdepartment.edmonton}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">North:</label>
+							<input type="text" class="form-control" th:name="north" th:value="${appdepartment.north}"></input>						
+						  </div>						  
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>			
+
+			<!-- Site detail -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-cube"></i> Site
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" method="post" id="sitedetailform">	
+						  <div class="form-group">
+							<label for="zoneName">Sites:</label>
+								<select name="sites" class="form-control" id="siteSelect" multiple>
+
+										  <option th:each="siteEntity : ${sites}" 
+
+										  th:selected="${appdepartment.sites.size()>0 and appdepartment.sites.contains(siteEntity)}"
+										  th:text="${siteEntity.siteName}"
+										  th:value="${siteEntity.id}">
+										  
+										  </option>
+												
+								</select>					
+						  </div>					  
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>				
+            <!-- /.row -->
+		
+			<!-- Support detail -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-cube"></i> Support Information
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" method="post" id="supportdetailform">	
+						  <div class="form-group">
+							<label for="zoneName">Subject Matter Expert:</label>
+							<input type="text" class="form-control" th:name="sme" th:value="${appdepartment.sme}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">Trainer:</label>
+							<input type="text" class="form-control" th:name="trainer" th:value="${appdepartment.trainer}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">User Admin:</label>
+							<input type="text" class="form-control" th:name="useradmin" th:value="${appdepartment.useradmin}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">System Admin:</label>
+							<input type="text" class="form-control" th:name="systemadmin" th:value="${appdepartment.systemadmin}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">App Server Support:</label>
+							<input type="text" class="form-control" th:name="dbsupport" th:value="${appdepartment.dbsupport}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">DB Server Support:</label>
+							<input type="text" class="form-control" th:name="serversupport" th:value="${appdepartment.serversupport}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">Network Support:</label>
+							<input type="text" class="form-control" th:name="networksupport" th:value="${appdepartment.networksupport}"></input>						
+						  </div>						  
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>			
+
+			<!-- Vendor detail -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-cube"></i> Vendor
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" method="post" id="vendordetailform">	
+						  <div class="form-group">
+							<label for="zoneName">Vendors:</label>
+								<select name="vendor" class="form-control">
+									<option th:selected="${appdepartment.vendor==null}"></option>
+									  <option th:each="vendorEntity : ${vendors}" 
+									  th:text="${vendorEntity.companyName}" 
+									  th:attr="value = ${vendorEntity.id}"
+									  th:selected="${appdepartment.vendor!=null and appdepartment.vendor.id==vendorEntity.id}">									  
+									  </option>
+												
+								</select>					
+						  </div>					  
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>
+			
+			<!-- Contract detail -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-cube"></i> Contract Information
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" method="post" id="contractdetailform">	
+						  <div class="form-group">
+							<label for="zoneName">Contracts:</label>
+								<select name="contracts"  id="contractSelect" multiple>
+
+										  <option th:each="contractEntity : ${contracts}" 
+
+										  th:selected="${appdepartment.contracts.size()>0 and appdepartment.contracts.contains(contractEntity)}"
+										  th:text="${contractEntity.contractName}"
+										  th:value="${contractEntity.id}">
+										  
+										  </option>
+												
+								</select>
+						</div>
+						<div class="form-group">
+							<label for="zoneName">Licenses:</label>
+								<select name="licenses"  id="licenseSelect" multiple>
+
+										  <option th:each="licenseEntity : ${licenses}" 
+
+										  th:selected="${appdepartment.licenses.size()>0 and appdepartment.licenses.contains(licenseEntity)}"
+										  th:text="${licenseEntity.licenseNumber}"
+										  th:value="${licenseEntity.id}">
+										  
+										  </option>
+												
+								</select>									
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">Contract / Licensing in Place (Y/N)?</label>
+							<input type="text" class="form-control" th:name="contractinplace" th:value="${appdepartment.contractinplace}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="Decomminsion Date">Expiration Date:</label>
+							<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
+								<input type="text" class="form-control" th:name="expireDate" th:value="${appdepartment.expireDate}">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</div>
+
+							</div>
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">Vendor SLA/SMA?</label>
+							<input type="text" class="form-control" th:name="vendorsla" th:value="${appdepartment.vendorsla}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">AHS-IT SLA?</label>
+							<input type="text" class="form-control" th:name="ahsitsla" th:value="${appdepartment.ahsitsla}"></input>						
+						  </div>						  
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>					
+			
+			<!-- Project detail -->
+			<div class="row">
+				<div class="col-lg-8">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <i class="fa fa-cube"></i> Involved in Projects (Y/N)?
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">			
+						<form action="#" method="post" id="projectdetailform">	
+						  <div class="form-group">
+							<label for="zoneName">Projects:</label>
+								<select name="projects"  id="projectSelect" multiple>
+
+										  <option th:each="projectEntity : ${projects}" 
+
+										  th:selected="${appdepartment.projects.size()>0 and appdepartment.projects.contains(projectEntity)}"
+										  th:text="${projectEntity.projectname}"
+										  th:value="${projectEntity.id}">
+										  
+										  </option>
+												
+								</select>
+						</div>
+						  <div class="form-group">
+							<label for="zoneName">IMP</label>
+							<input type="text" class="form-control" th:name="imp" th:value="${appdepartment.imp}"></input>						
+						  </div>
+						  <div class="form-group">
+							<label for="zoneName">CSHREC/IMIT</label>
+							<input type="text" class="form-control" th:name="cshrecimit" th:value="${appdepartment.cshrecimit}"></input>						
+						  </div>						  
+						</form>
+						</div>
+                        <!-- /.panel-body -->
+					</div>
+				</div>							
+			</div>	
+
+			<input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="width:30%" id="submitform" type="submit" value="Submit" />			
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+		$('[id^=siteSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Site',
+		enableCaseInsensitiveFiltering:true
+	  });
+	  		$('[id^=contractSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Contract',
+		enableCaseInsensitiveFiltering:true
+	  });
+	  		$('[id^=licenseSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select License',
+		enableCaseInsensitiveFiltering:true
+	  });
+	  	  		$('[id^=projectSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Project',
+		enableCaseInsensitiveFiltering:true
+	  });
+
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});	
+
+  $( "#submitform" ).on( "click", function( event ) {
+  
+  		  event.preventDefault();
+		  var appdata=$( "#appdetailform" ).serializeArray();
+		  var zonedata=$( "#zonedetailform" ).serializeArray();
+		  var sitedata=$( "#sitedetailform" ).serializeArray();
+		  var suportdata=$( "#supportdetailform" ).serializeArray();
+		  var vendordata=$( "#vendordetailform" ).serializeArray();
+		  var contractdata=$( "#contractdetailform" ).serializeArray();
+		  var projectdata=$( "#projectdetailform" ).serializeArray();
+		  var action=/*[[${actiontype.name()}]]*/;
+		  var formdata={
+						"id":"",
+						"action":"",
+						"application":{},
+						"department":{},
+						"zone":{},
+						"sites":[],
+						"support":{},
+						"vendor":{},
+						"contract":{"contracts":[],"licenses":[]},
+						"project":{"projects":[]}
+						};
+		  for(i in appdata )
+		  {
+
+			if(appdata[i].name==="id") formdata.id=appdata[i].value;
+			if(appdata[i].name==="action") formdata.action=appdata[i].value;
+			if(appdata[i].name==="department") formdata.department={"id":appdata[i].value};
+			if(appdata[i].name==="application") formdata.application["id"]=appdata[i].value;
+			if(appdata[i].name==="businesslead") formdata.application["businesslead"]=appdata[i].value;
+			if(appdata[i].name==="appowner") formdata.application["appowner"]=appdata[i].value;
+			if(appdata[i].name==="goverinplace") formdata.application["goverinplace"]=appdata[i].value;
+			if(appdata[i].name==="userbase") formdata.application["userbase"]=appdata[i].value;
+			if(appdata[i].name==="broadmap") formdata.application["broadmap"]=appdata[i].value;
+			if(appdata[i].name==="note") formdata.application["note"]=appdata[i].value;			
+		  }
+		  for(i in zonedata)
+		  {
+			if(zonedata[i].name==="south") formdata.zone["south"]=zonedata[i].value;
+			if(zonedata[i].name==="calgary") formdata.zone["calgary"]=zonedata[i].value;
+			if(zonedata[i].name==="edmonton") formdata.zone["edmonton"]=zonedata[i].value;
+			if(zonedata[i].name==="central") formdata.zone["central"]=zonedata[i].value;
+			if(zonedata[i].name==="north") formdata.zone["north"]=zonedata[i].value;
+		  }
+		  for(i in sitedata)
+		  {
+			if(sitedata[i].name==="sites") formdata.sites.push({"id":sitedata[i].value});
+
+		  }
+		  for(i in suportdata)
+		  {
+			if(suportdata[i].name==="sme") formdata.support["sme"]=suportdata[i].value;
+			if(suportdata[i].name==="trainer") formdata.support["trainer"]=suportdata[i].value;
+			if(suportdata[i].name==="useradmin") formdata.support["useradmin"]=suportdata[i].value;
+			if(suportdata[i].name==="systemadmin") formdata.support["systemadmin"]=suportdata[i].value;
+			if(suportdata[i].name==="dbsupport") formdata.support["dbsupport"]=suportdata[i].value;
+			if(suportdata[i].name==="serversupport") formdata.support["serversupport"]=suportdata[i].value;
+			if(suportdata[i].name==="networksupport") formdata.support["networksupport"]=suportdata[i].value;
+		  }
+		  for(i in vendordata)
+		  {
+			if(vendordata[i].name==="vendor") formdata.vendor["id"]=vendordata[i].value;
+		  }
+		  for(i in contractdata)
+		  {
+			if(contractdata[i].name==="contracts") formdata.contract.contracts.push({"id":contractdata[i].value});
+			if(contractdata[i].name==="licenses") formdata.contract.licenses.push({"id":contractdata[i].value});
+			if(contractdata[i].name==="contractinplace") formdata.contract["contractinplace"]=contractdata[i].value;
+			if(contractdata[i].name==="expireDate") formdata.contract["expireDate"]=contractdata[i].value;
+			if(contractdata[i].name==="vendorsla") formdata.contract["vendorsla"]=contractdata[i].value;
+			if(contractdata[i].name==="ahsitsla") formdata.contract["ahsitsla"]=contractdata[i].value;
+		  }	
+		  for(i in projectdata)
+		  {
+			if(projectdata[i].name==="projects") formdata.project.projects.push({"id":projectdata[i].value});
+			if(projectdata[i].name==="imp") formdata.project["imp"]=projectdata[i].value;
+			if(projectdata[i].name==="cshrecimit") formdata.project["cshrecimit"]=projectdata[i].value;
+		  }			  
+		  console.log(formdata);
+			$.ajax({
+				url: "/saveappdepartment",
+				type: "POST",
+				data:JSON.stringify(formdata),
+				headers: {
+					"content-type":"application/json"
+				},
+				dataType: 'json',
+				success: function (data, textStatus, xhr) {
+					if(xhr.status===200)
+					{
+						
+					}
+					else
+					{
+						
+					}
+				}
+			});			  
+
+	});
+
+	  
+    });
+    </script>
+	<script type="text/javascript">
+		$(function () {
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+
+		});
+		
+		
+
+	</script>
+
+</body>
+
+</html>

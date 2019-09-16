@@ -50,16 +50,10 @@
 										<th>Application</th>
 										<th><span class="fa fa-paperclip fa-lg"></span></th>
 										<th>App Instances</th>
-										<th>Projects</th>
 										<th>Status</th>
-										<th>Version</th>
-										<th>Contract</th>
-										<th>License</th>
-										<th>Support</th>
+										<th>Version</th>	
 										<th>Manufacturer</th>
-										<th>Department</th>
-										<th>Zone</th>
-										<th>Site</th>										
+						
 										<!--<th class="no-sort">Action</th>-->
 									</tr>
 								</thead>
@@ -96,46 +90,11 @@
 												</li>
 											</ul>											
 										</td>
-										<td style="padding:2px">
-											<ul th:if="${app.projects.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="project: ${app.projects}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
-													<a th:href="@{'/projectdetail?project='+${project.id}}"><span th:text="${project.projectname}"></span></a>
-													</div>
-												</li>
-											</ul>											
-										</td>										
+									
 										<td th:text="${app.status}">
 										</td>
 										<td th:text="${app.AppVersion}">
-										</td>
-										<td style="padding:2px">
-											<ul th:if="${app.contracts.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="contract: ${app.contracts}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
-													<a th:href="@{'/contractdetail?contract='+${contract.id}}"><span th:text="${contract.contractName}"></span></a>
-													</div>
-												</li>
-											</ul>											
-										</td>
-										<td style="padding:2px">
-											<ul th:if="${app.licenses.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="license: ${app.licenses}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
-													<a th:href="@{'/licensedetail?license='+${license.id}}"><span th:text="${license.licenseNumber}"></span></a>
-													</div>
-												</li>
-											</ul>											
-										</td>										
-										<td style="padding:2px">
-											<ul th:if="${app.supports.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="support: ${app.supports}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
-													<a th:href="@{'/supportdetail?support='+${support.id}}"><span th:text="${support.supportName}"></span></a>
-													</div>
-												</li>
-											</ul>											
-										</td>										
+										</td>									
 										<td style="padding:2px">
 											<ul th:if="${app.manufacturers.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="company: ${app.manufacturers}">
@@ -145,34 +104,7 @@
 												</li>
 											</ul>											
 										</td>										
-										<td style="padding:2px">
-											<ul th:if="${app.departments.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="department: ${app.departments}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
-													<a th:href="@{'/departmentdetail?id='+${department.id}}"><span th:text="${department.departmentName}"></span></a>
-													</div>
-												</li>
-											</ul>
-										</td>										
-										
-										<td style="padding:2px">
-											<ul th:if="${app.zones.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="zone: ${app.zones}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
-													<a th:href="@{'/zonedetail?zone='+${zone.id}}"><span th:text="${zone.zoneName}"></span></a>
-													</div>
-												</li>
-											</ul>
-										</td>											
-										<td style="padding:2px">
-											<ul th:if="${app.sites.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="site: ${app.sites}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important">
-													<a th:href="@{'/sitedetail?site='+${site.id}}"><span th:text="${site.siteName}"></span></a>
-													</div>
-												</li>
-											</ul>
-										</td>
+									
 
 										  <!-- Modal -->
 									 

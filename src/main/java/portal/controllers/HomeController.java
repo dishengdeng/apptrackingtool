@@ -22,29 +22,22 @@ import org.springframework.web.multipart.MultipartFile;
 import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Company;
-import portal.entity.Contract;
-import portal.entity.Department;
-import portal.entity.File;
-import portal.entity.License;
-import portal.entity.Project;
-import portal.entity.Site;
-import portal.entity.Support;
 
-import portal.entity.Zone;
+import portal.entity.File;
+
+
+
+
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.CompanyService;
-import portal.service.ContractService;
-import portal.service.DepartmentService;
+
 import portal.service.FileService;
-import portal.service.LicenseService;
+
 import portal.service.MessageSourceService;
-import portal.service.ProjectService;
-import portal.service.SiteService;
-import portal.service.SupportService;
+
 import portal.service.ZacService;
 
-import portal.service.ZoneService;
 import portal.utility.Action;
 import portal.utility.FileType;
 import portal.utility.Status;
@@ -65,29 +58,12 @@ public class HomeController {
 	@Autowired
 	private AppService appService;
 	
-	@Autowired
-	private SupportService supportService;
-	
-	@Autowired
-	private ContractService contractService;
-	
-	@Autowired
-	private LicenseService licenseService;
-	
-	@Autowired
-	private ProjectService projectService;
-	
-	@Autowired
-	private ZoneService zoneService;
+
 	
 	@Autowired
 	private ZacService zacService;
 	
-	@Autowired
-	private SiteService siteService;
-	
-	@Autowired
-	private DepartmentService departmentService;
+
 	
 	@Autowired
 	private AppInstanceService appInstanceService;
@@ -99,7 +75,7 @@ public class HomeController {
     @Autowired
     private MessageSourceService messageSourceService;
 	
-    @GetMapping("/")
+    @GetMapping("/applications")
     public String home(ModelMap model) {
     	List<Application> apps = appService.getAll();
     	model.addAttribute("Applications",apps);
@@ -191,68 +167,11 @@ public class HomeController {
     	return "redirect:/applicationdetail?app="+applicationId;
     } 
     
-    //----project------
-	@GetMapping("/deleteApplicationProject")
-	public String deleteApplicationProject(@ModelAttribute("application") Application application,@ModelAttribute("project") Project project)
-	{
-		project.removeApplication(application);
-		projectService.updateProject(project);
-		return "redirect:/applicationdetail?app="+application.getId();
-	}
+
 	
-	@PostMapping("/addApplicationProject")
-	public String addProjectApplication(@ModelAttribute("app") Application application)
-	{
-		appService.updateApp(application);
-		return "redirect:/applicationdetail?app="+application.getId();
-	}
+ 
+    
 	
-    //------Sites---------------    
-    @GetMapping("/deleteAppSite")
-    public String deleteAppSite(@ModelAttribute("site") Site site,@ModelAttribute("app") Application application) {
-
-
-    	
-    	site.removeApplication(application);
-    	
-    	siteService.updateSite(site);
-    	
-    	
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
-    
-    @PostMapping("/addAppSite")
-    public String addAppSite(@ModelAttribute("app") Application application) {
-
-
-    	
-    	appService.updateApp(application);
-    	
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
-    
-    //------Zones---------------    
-    @GetMapping("/deleteappzone")
-    public String deleteappzone(@ModelAttribute("zone") Zone zone,@ModelAttribute("app") Application application) {
-
-
-    	
-    	zone.removeApplication(application);
-    	zoneService.updateZone(zone);
-    	
-    	
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
-    
-    @PostMapping("/addAppZone")
-    public String addAppZone(@ModelAttribute("app") Application application) {
-
-
-    	
-    	appService.updateApp(application);
-    	
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }	
 	
 	
     
@@ -274,74 +193,11 @@ public class HomeController {
         return "redirect:/applicationdetail?app="+application.getId();
     }
   //----------------------- 
-    //------Contract---------------    
-    @GetMapping("/deleteApplicationContract")
-    public String deleteApplicationContract(@ModelAttribute("application") Application application,@ModelAttribute("contract") Contract contract) {
 
-    	contract.removeApplication(application);
-    	contractService.updateContract(contract);
-
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
     
-    @PostMapping("/addApplicationContract")
-    public String addApplicationContract(@ModelAttribute("app") Application application) {
 
+   
 
-    	appService.updateApp(application);
-    	return "redirect:/applicationdetail?app="+application.getId();
-    } 
-    
-    //------License---------------    
-    @GetMapping("/deleteApplicationLicense")
-    public String deleteApplicationLicense(@ModelAttribute("application") Application application,@ModelAttribute("license") License license) {
-
-    	license.removeApplication(application);
-    	licenseService.updateLicense(license);
-
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
-    
-    @PostMapping("/addApplicationLicense")
-    public String deleteApplicationLicense(@ModelAttribute("app") Application application) {
-
-
-    	appService.updateApp(application);
-    	return "redirect:/applicationdetail?app="+application.getId();
-    } 
-    
-    //------Support---------------    
-    @GetMapping("/deleteApplicationSupport")
-    public String deleteApplicationSupport(@ModelAttribute("application") Application application,@ModelAttribute("support") Support support) {
-
-    	support.removeApplication(application);
-    	supportService.updateSupport(support);
-
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
-    
-    @PostMapping("/addApplicationSupport")
-    public String addApplicationSupport(@ModelAttribute("app") Application application) {
-
-
-    	appService.updateApp(application);
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }    
-    //------Department---------------    
-    @GetMapping("/deleteApplicationDepartment")
-    public String deleteApplicationDepartment(@ModelAttribute("application") Application application,@ModelAttribute("department") Department department) {
-
-    	department.removeApplication(application);
-		departmentService.updateDepartment(department);
-    	return "redirect:/applicationdetail?app="+application.getId();
-    }
-    
-    @PostMapping("/addApplicationDepartment")
-    public String addOrupdateInstanceDepartment(@ModelAttribute("application") Application application) {
-
-		appService.updateApp(application);
-        return "redirect:/applicationdetail?app="+application.getId();
-    }
     
 
     
@@ -394,42 +250,19 @@ public class HomeController {
 
     	model.addAttribute("instances",appInstanceService.findNotAssgined());
     	
-    	//--project---
-    	model.addAttribute("applicationprojects",appEntity.getProjects());
-    	model.addAttribute("projects",projectService.getAll());  
-    	
-    	//--zone---
-    	model.addAttribute("appzones",appEntity.getZones());
-    	model.addAttribute("zones",zoneService.getAll());
+
     	
     	//--zac---
 
     	model.addAttribute("zacs",zacService.getAll());
     	
-    	//--site---
-    	model.addAttribute("appsites",appEntity.getSites());
-    	model.addAttribute("sites",siteService.getAll());
+
     	
     	//--Manufacturer-----
     	model.addAttribute("companies",appEntity.getManufacturers());
     	model.addAttribute("companys",companyService.findAllManufacturer());
     	
-    	//--Contract-----
-    	model.addAttribute("appcontracts",appEntity.getContracts());
-    	model.addAttribute("contracts",contractService.getAll());    
-    	
-    	//--License-----
-    	model.addAttribute("applicenses",appEntity.getLicenses());
-    	model.addAttribute("licenses",licenseService.getAll()); 
-    	
-    	//--Support-----
-    	model.addAttribute("appsupports",appEntity.getSupports());
-    	model.addAttribute("supports",supportService.getAll());    	
-    	
-    	//--Department-----
-    	model.addAttribute("departs",appEntity.getDepartments());
-    	model.addAttribute("departments",departmentService.getAll());
-    	
+
 
     }
 

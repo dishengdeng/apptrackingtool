@@ -50,19 +50,6 @@ public class Site implements Comparable<Site>{
     @JoinColumn(name = "zone_id",referencedColumnName="id")
     private Zone zone;
     
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "instancelocation",
-        joinColumns = @JoinColumn(name = "site_id"),
-        inverseJoinColumns = @JoinColumn(name = "appInstance_id")
-    )
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
-    
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "appsite",
-        joinColumns = @JoinColumn(name = "site_id"),
-        inverseJoinColumns = @JoinColumn(name = "application_id")
-    )
-    private Set<Application> applications = new HashSet<Application>();
 
     @OneToMany(
             mappedBy = "site", 
@@ -72,18 +59,12 @@ public class Site implements Comparable<Site>{
         )
     private Set<Stakeholder> stakeholders = new HashSet<>();
     
-    public void addAppInstance(AppInstance appInstance)
-    {
-    	appInstances.add(appInstance);
-    }
-    
-    public void removeAppInstance(AppInstance appInstance)
-    {
-    	appInstances.removeIf(obj->obj.equals(appInstance));
-
-    }
-    
-
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "appdepartsite",
+        joinColumns = @JoinColumn(name = "site_id"),
+        inverseJoinColumns = @JoinColumn(name = "appdepartment_id")
+    )
+    private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
     
 	public Long getId() {
 		return id;
@@ -125,37 +106,6 @@ public class Site implements Comparable<Site>{
 		this.note = note;
 	}
 
-	public Set<AppInstance> getAppInstances() {
-		return appInstances;
-	}
-
-	public void setAppInstances(Set<AppInstance> appInstances) {
-		this.appInstances.addAll(appInstances);
-		appInstances.forEach(obj->{
-			obj.addSite(this);
-		});
-	}
-
-	public Set<Application> getApplications() {
-		return applications;
-	}
-
-	public void setApplications(Set<Application> applications) {
-		this.applications.addAll(applications);
-		applications.forEach(obj->{
-			obj.addSite(this);
-		});
-	}
-	
-	public void addApplication(Application application)
-	{
-		this.applications.add(application);
-	}
-	
-	public void removeApplication(Application application)
-	{
-		this.applications.removeIf(obj->obj.equals(application));
-	}	
 	
 	public Set<Stakeholder> getStakeholders() {
 		return stakeholders;
@@ -177,17 +127,33 @@ public class Site implements Comparable<Site>{
 	{
 		this.stakeholders.remove(stakeholder);
 	}
+	
+	
+	
+	public Set<Appdepartment> getAppdepartments() {
+		return appdepartments;
+	}
+
+	public void setAppdepartments(Set<Appdepartment> appdepartments) {
+		this.appdepartments.addAll(appdepartments);
+		appdepartments.forEach(obj->{
+			obj.addSite(this);
+		});
+	}
+	
+	public void addAppdepartments(Appdepartment appdepartment)
+	{
+		this.appdepartments.add(appdepartment);
+	}
+	
+	public void removeAppdepartments(Appdepartment appdepartment)
+	{
+		this.appdepartments.remove(appdepartment);
+	}
+
 	public void removeAllDependence()
 	{
-		this.applications.forEach(obj->{
-			obj.removeSite(this);
-		});
-		this.applications=null;
-		
-    	this.appInstances.forEach(instance->{
-    		instance.removeSite(this);
-    	});
-    	this.appInstances=null;
+
     	
     	if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeSite(this);
     	this.setZone(null);
@@ -196,6 +162,11 @@ public class Site implements Comparable<Site>{
     		obj.setSite(null);
     	});
     	this.stakeholders=null;
+    	
+    	this.appdepartments.forEach(obj->{
+    		obj.removeSite(this);
+    	});
+    	this.appdepartments=null;
     	
 
 	}

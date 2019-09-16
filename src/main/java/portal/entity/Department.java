@@ -13,8 +13,6 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -76,21 +74,7 @@ public class Department implements Comparable<Department>{
     private Set<Answer> answers = new HashSet<Answer>(); 
 	
 
-    
-    @OneToMany(
-            mappedBy = "department", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true,
-            fetch=FetchType.EAGER
-        )
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
-    
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "appdepartment",
-        joinColumns = @JoinColumn(name = "department_id"),
-        inverseJoinColumns = @JoinColumn(name = "application_id")
-    )
-    private Set<Application> applications = new HashSet<Application>();
+
     
     @OneToMany(
             mappedBy = "department", 
@@ -117,6 +101,14 @@ public class Department implements Comparable<Department>{
             fetch=FetchType.EAGER
         )
     private Set<Stakeholderext> stakeholderexts = new HashSet<>();
+    
+    
+    @OneToMany(
+            mappedBy = "department", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
     
 	public Long getId() {
 		return id;
@@ -236,42 +228,6 @@ public class Department implements Comparable<Department>{
 	{
 		this.stakeholderexts.remove(stakeholderext);
 	}
-
-	public Set<AppInstance> getAppInstances() {
-		return appInstances;
-	}
-
-	public void setAppInstances(Set<AppInstance> appInstances) {
-
-		this.appInstances.addAll(appInstances);
-		appInstances.forEach(obj->{
-			obj.setDepartment(this);
-		});
-	}
-	
-	public void addAppInstance(AppInstance appInstance)
-	{
-		this.appInstances.add(appInstance);
-	}
-	
-	public void RemoveAppInstance(AppInstance appInstance)
-	{
-		this.appInstances.removeIf(obj->obj.equals(appInstance));
-	}
-
-	public Set<Application> getApplications() {
-		return applications;
-	}
-
-	public void setApplications(Set<Application> applications) {
-
-		this.applications.addAll(applications);
-		applications.forEach(obj->{
-			obj.AddDepartment(this);
-		});
-	}
-	
-	
 	
 	
 	public Set<Zaclist> getZaclists() {
@@ -318,14 +274,27 @@ public class Department implements Comparable<Department>{
 		this.zones.remove(zone);
 	}
 
-	public void addApplication(Application application)
-	{
-		this.applications.add(application);
+
+
+	public Set<Appdepartment> getAppdepartments() {
+		return appdepartments;
+	}
+
+	public void setAppdepartments(Set<Appdepartment> appdepartments) {
+		this.appdepartments.addAll(appdepartments);
+		appdepartments.forEach(obj->{
+			obj.setDepartment(this);
+		});
 	}
 	
-	public void removeApplication(Application application)
+	public void addAppdepartments(Appdepartment appdepartment)
 	{
-		this.applications.removeIf(obj->obj.equals(application));
+		this.appdepartments.add(appdepartment);
+	}
+	
+	public void removeAppdepartments(Appdepartment appdepartment)
+	{
+		this.appdepartments.remove(appdepartment);
 	}
 
 	public Set<File> getFiles() {
@@ -335,19 +304,6 @@ public class Department implements Comparable<Department>{
 	public void setFiles(Set<File> files) {
 		this.files.addAll(files);
 	}
-
-	public String getInstanceNameWithComma()
-	{
-		List<String> instanceName=new ArrayList<String>();
-		for(AppInstance appinstance:this.appInstances)
-		{
-			instanceName.add(appinstance.getAppInstanceName());
-		}
-		
-		return instanceName.stream().collect(Collectors.joining(","));
-	}
-
-
 
 
 	
@@ -374,19 +330,6 @@ public class Department implements Comparable<Department>{
 	
 	public void removeAllDependence()
 	{
-
-		
-		this.appInstances.forEach(obj->{
-			obj.setDepartment(null);
-		});
-		this.appInstances=null;
-		
-		this.applications.forEach(obj->{
-			obj.removeDepartment(this);
-		});
-		this.applications=null;
-		
-		
 		this.answers.forEach(obj->{
 			obj.setDepartment(null);
 		});
@@ -401,6 +344,11 @@ public class Department implements Comparable<Department>{
 			obj.setDepartment(null);
 		});
 		this.stakeholderexts=null;
+		
+		this.appdepartments.forEach(obj->{
+			obj.setDepartment(null);
+		});
+		this.appdepartments=null;
 
 	}
 

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import portal.entity.AppInstance;
 import portal.entity.Application;
-import portal.entity.Department;
 import portal.entity.File;
 import portal.models.AppInstanceModel;
 import portal.repository.AppInstanceRepository;
@@ -67,17 +66,7 @@ public class AppInstanceServiceImpl implements AppInstanceService{
 		return appInstanceRepository.saveAndFlush(appInstance);
 	}
 
-	@Override
-	public void removeDeparmentbyInstanceId(Long id) {
-		appInstanceRepository.removeDeparmentbyInstanceId(id);
-		
-	}
 
-	@Override
-	public void removeDeparment(Department department) {
-		appInstanceRepository.removeDeparment(department);
-		
-	}
 
 	@Override
 	public List<AppInstance> findNotAssgined() {

@@ -49,19 +49,6 @@ public class Zone implements Comparable<Zone>{
         )
     private Set<Site> sites = new HashSet<Site>();
     
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "instancezone",
-        joinColumns = @JoinColumn(name = "zone_id"),
-        inverseJoinColumns = @JoinColumn(name = "appInstance_id")
-    )
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>();    
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "appzone",
-        joinColumns = @JoinColumn(name = "zone_id"),
-        inverseJoinColumns = @JoinColumn(name = "application_id")
-    )
-    private Set<Application> applications = new HashSet<Application>();
     
     
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -127,53 +114,7 @@ public class Zone implements Comparable<Zone>{
 		site.setZone(null);
 	}	
 
-	
-	public Set<AppInstance> getAppInstances() {
-		return appInstances;
-	}
 
-	public void setAppInstances(Set<AppInstance> appInstances) {
-		this.appInstances.addAll(appInstances);
-		appInstances.forEach(instance->{
-			instance.addZone(this);
-		});
-	}
-	
-	public void addappInstance(AppInstance instance)
-	{
-		this.appInstances.add(instance);
-	}
-	
-	public void removeAppInstance(AppInstance instance)
-	{
-		this.appInstances.remove(instance);
-
-	}
-	
-
-
-	public Set<Application> getApplications() {
-		return applications;
-	}
-
-	public void setApplications(Set<Application> applications) {
-		this.applications.addAll(applications);
-		applications.forEach(obj->{
-			obj.addZone(this);
-		});
-		
-	}
-	
-	public void addApplication(Application application)
-	{
-		this.applications.add(application);
-	}
-	
-	public void removeApplication(Application application)
-	{
-		this.applications.removeIf(obj->obj.equals(application));
-	}
-	
 	public Set<Department> getDepartments() {
 		return departments;
 	}
@@ -219,15 +160,6 @@ public class Zone implements Comparable<Zone>{
 
 	public void removeAllDependence()
 	{
-		this.applications.forEach(obj->{
-			obj.removeZone(this);
-		});
-		this.applications=null;
-		
-		this.appInstances.forEach(obj->{
-			obj.removeZone(this);
-		});
-		this.appInstances=null;
 		
 		this.sites.forEach(site->{
 			site.setZone(null);

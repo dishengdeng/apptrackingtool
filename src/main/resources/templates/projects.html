@@ -47,14 +47,11 @@
                                     <tr>
                                         <th>Project</th>
 										<th>Colloquial Name</th>
-										<th>Application</th>
-										<th>App Instances</th>
+
 										<th>Description</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
-										<th>Business Unit Initiatives on Roadmap?</th>
-										<th>Involved in IMP Projects?</th>
-										<th>CSHREC/IMIT Projects?</th>
+
 										
 										<!--<th class="no-sort">Action</th>-->
                                     </tr>
@@ -75,22 +72,10 @@
 
 										</td>
 										<td th:text="${project.projectcolloquialname}"></td>
-										<td>
-											<a data-toggle="modal" th:if="${project.applications.size()>0}" th:data-target="@{${#strings.concat('#',project.id,'applications')}}" style="cursor:pointer">
-											<span class="badge badge-secondary small" th:text="${'Applications - Total: '+project.applications.size()}"></span>
-											</a>
-										</td>										
-										<td>
-											<a data-toggle="modal" th:if="${project.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',project.id,'instances')}}" style="cursor:pointer">
-											<span class="badge badge-secondary small" th:text="${'App Instances - Total: '+project.appInstances.size()}"></span>
-											</a>
-										</td>
+
                                         <td th:text="${project.description}"></td>
 										<td th:text="${#dates.format(project.startdate,'MMM-dd-yyyy')}"></td>
 										<td th:text="${#dates.format(project.enddate,'MMM-dd-yyyy')}"></td>
-										<td th:text="${project.roadmap==true}? 'Yes': (${project.roadmap==false} ? 'No': '')"></td>
-										<td th:text="${project.improject==true}? 'Yes': (${project.improject==false} ? 'No': '')"></td>
-										<td th:text="${project.imitproject==true}? 'Yes': (${project.imitproject==false} ? 'No': '')"></td>
                                     </tr>
 
 
@@ -99,76 +84,7 @@
                             <!-- /.table-responsive -->
 							  <!-- Modal -->
 						  
-							  
-						<div th:each="project: ${projects}" >	  
-						
-							<!--App instance Modal-->
-							<div th:if="${project.appInstances.size()>0}">
-								<div class="modal fade" th:id="${#strings.concat(project.id,'instances')}" role="dialog" >
-								<!-- Modal content-->
-										<div class="modal-dialog">
-										  <div class="modal-content">
-											<div class="modal-header">
-											  <button type="button" class="close" data-dismiss="modal">&times;</button>
-											  <h4 class="modal-title"> App Instances</h4>
-											</div>
-											<div class="modal-body">
-												<table class="table table-striped" id="instancetable">
-												  <thead>
-													<tr>
-													  <th scope="col">App Instance Name</th>
-													  <th scope="col">Status</th>
-													  <th scope="col">Description</th>														  
-													</tr>
-												  </thead>
-												  <tbody>
-													<tr th:each="appinstance : ${project.appInstances}">
-													  <th><a th:href="@{'/instancedetail?id='+${appinstance.id}}"><h5 th:text="${appinstance.appInstanceName}"></h5></a></th>
-													  <th><h5 th:text="${appinstance.status}"></h5></th>
-													  <th><h5 th:text="${appinstance.description}"></h5></th>
-													</tr>
-												  </tbody>
-												</table>
-											</div>
-										   </div>
-										 </div>
-								</div>
-							</div>
-							<!--app Modal-->
-							<div th:if="${project.applications.size()>0}">
-								<div class="modal fade" th:id="${#strings.concat(project.id,'applications')}" role="dialog" >
-								<!-- Modal content-->
-										<div class="modal-dialog">
-										  <div class="modal-content">
-											<div class="modal-header">
-											  <button type="button" class="close" data-dismiss="modal">&times;</button>
-											  <h4 class="modal-title"> Applications</h4>
-											</div>
-											<div class="modal-body">
-												<table class="table table-striped" id="instancetable">
-												  <thead>
-													<tr>
-													  <th scope="col">Application</th>
-													  <th scope="col">Status</th>
-													  <th scope="col">Version</th>														  
-													</tr>
-												  </thead>
-												  <tbody>
-													<tr th:each="app : ${project.applications}">
-													  <th><a th:href="@{'/applicationdetail?app='+${app.id}}"><h5 th:text="${app.AppName}"></h5></a></th>
-													  <th><h5 th:text="${app.status}"></h5></th>
-													  <th><h5 th:text="${app.AppVersion}"></h5></th>
-													</tr>
-												  </tbody>
-												</table>
-											</div>
-										   </div>
-										 </div>
-								</div>
-							</div>
 
-							
-						</div><!-- Modal -->
                         </div>
                         <!-- /.panel-body -->
                     </div>

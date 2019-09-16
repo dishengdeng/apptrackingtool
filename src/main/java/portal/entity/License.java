@@ -14,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -74,23 +73,15 @@ public class License {
     @Column(name = "warrenty",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
 	private String warrenty; 
-    
-    
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "instancelicense",
+   
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "appdepartlicense",
         joinColumns = @JoinColumn(name = "license_id"),
-        inverseJoinColumns = @JoinColumn(name = "instance_id")
+        inverseJoinColumns = @JoinColumn(name = "appdepartment_id")
     )
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
-    
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "applicense",
-        joinColumns = @JoinColumn(name = "license_id"),
-        inverseJoinColumns = @JoinColumn(name = "application_id")
-    )
-    private Set<Application> applications = new HashSet<Application>();
-    
-
+    private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
+	
+	
     public Long getId() {
 		return id;
 	}
@@ -171,69 +162,34 @@ public class License {
 		this.warrenty = warrenty;
 	}
 
-	public void addInstance(AppInstance instance)
-	{
-		this.appInstances.add(instance);
-	}
 	
-	public void removeInstance(AppInstance instance)
-	{
-		this.appInstances.remove(instance);
-	}
-	
-	public Set<AppInstance> getAppInstances() {
-		return appInstances;
+	public Set<Appdepartment> getAppdepartments() {
+		return appdepartments;
 	}
 
-	public void setAppInstances(Set<AppInstance> appInstances) {
-		this.appInstances.addAll(appInstances);
-		appInstances.forEach(obj->{
+	public void setAppdepartments(Set<Appdepartment> appdepartments) {
+		this.appdepartments.addAll(appdepartments);
+		appdepartments.forEach(obj->{
 			obj.addLicense(this);
 		});
 	}
-
-	public void addApplication(Application application)
+	
+	public void addAppdepartments(Appdepartment appdepartment)
 	{
-		this.applications.add(application);
+		this.appdepartments.add(appdepartment);
 	}
 	
-	public void removeApplication(Application application)
+	public void removeAppdepartments(Appdepartment appdepartment)
 	{
-		this.applications.removeIf(obj->obj.equals(application));
+		this.appdepartments.remove(appdepartment);
 	}
-	
-	public Set<Application> getApplications() {
-		return applications;
-	}
-
-	public void setApplications(Set<Application> applications) {
-		this.applications.addAll(applications);
-		applications.forEach(obj->{
-			obj.addLicense(this);
-		});
-	}
-
-	
-	
-
 
 	public void removeAllDependence()
 	{
-
-		
-		this.applications.forEach(obj->{
+		this.appdepartments.forEach(obj->{
 			obj.removeLicense(this);
 		});
-		
-		this.applications=null;
-		
-		this.appInstances.forEach(obj->{
-			obj.removeLicense(this);
-		});
-		this.appInstances=null;
-		
-
-		
+		this.appdepartments=null;
 	}
   
 }

@@ -2,7 +2,7 @@ package portal.service;
 
 import java.util.List;
 
-import portal.entity.AppInstance;
+
 import portal.entity.SLA;
 import portal.models.SLAModel;
 
@@ -16,8 +16,7 @@ public interface SLAService {
     SLA getByName(String slaName);
     SLA getById(Long id);
     SLA updateSLA(SLA sla);
-    void updateAppIstanceSLA(List<AppInstance> appInstances,SLA sla);
-    void removeAllSLA(SLA sla);
+
     void removFiles(String upload_foler,SLA sla);
 
 }

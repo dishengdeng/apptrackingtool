@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import portal.entity.AppInstance;
 import portal.entity.Application;
-import portal.entity.Department;
+
 
 
 
@@ -19,15 +19,15 @@ public interface AppInstanceRepository  extends JpaRepository<AppInstance, Long>
     @Query("select t from AppInstance t where t.appInstanceName = :appInstanceName")
     AppInstance findByName(@Param("appInstanceName") String appInstanceName);
  
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Modifying 
-    @Query("update AppInstance t set t.department=null where t.id = :id")
-    void removeDeparmentbyInstanceId(@Param("id") Long id);
-
-    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
-    @Modifying
-    @Query("update AppInstance t set t.department=null where t.department = :department")
-    void removeDeparment(@Param("department") Department department);
+//    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+//    @Modifying 
+//    @Query("update AppInstance t set t.department=null where t.id = :id")
+//    void removeDeparmentbyInstanceId(@Param("id") Long id);
+//
+//    @Transactional(propagation = Propagation.REQUIRED, readOnly = false)
+//    @Modifying
+//    @Query("update AppInstance t set t.department=null where t.department = :department")
+//    void removeDeparment(@Param("department") Department department);
 
     
     @Transactional(propagation = Propagation.REQUIRED, readOnly = false)

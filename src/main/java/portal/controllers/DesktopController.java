@@ -53,9 +53,8 @@ public class DesktopController {
     @GetMapping("/deleteDesktop")
     public String deleteDesktop(@ModelAttribute("desktop") Desktop desktop) {
 
-    	desktop.getAppInstance().setDesktop(null);
-    	desktop.setAppInstance(null);
-    	
+
+    	desktop.removeAllDependence();
     	desktopService.delete(desktop);
     	return "redirect:/desktops";
     }

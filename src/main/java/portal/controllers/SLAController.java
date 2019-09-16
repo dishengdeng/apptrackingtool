@@ -1,7 +1,6 @@
 package portal.controllers;
 
-import java.util.ArrayList;
-import java.util.stream.Collectors;
+
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -16,11 +15,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import portal.entity.AppInstance;
+
 import portal.entity.File;
 import portal.entity.SLA;
-import portal.service.AppInstanceService;
-import portal.service.AppService;
+
 import portal.service.FileService;
 import portal.service.SLAService;
 import portal.utility.FileType;
@@ -39,11 +37,7 @@ public class SLAController {
 	@Autowired
 	private FileService fileService;
 	
-	@Autowired
-	private AppInstanceService appInstanceService;
-	
-	@Autowired
-	private AppService appService;			
+		
 	
     @GetMapping("/slas")
     public String slatable(ModelMap model) {
@@ -75,7 +69,7 @@ public class SLAController {
     public String deleteSLA(@ModelAttribute("sla") SLA sla) {
 
     	
-    	slaService.removeAllSLA(sla);
+    	sla.removeAlldependence();
     	slaService.removFiles(UPLOADED_FOLDER, sla);
     	slaService.delete(sla);
     	return "redirect:/slas";
@@ -83,26 +77,10 @@ public class SLAController {
     @GetMapping("/sladetail")
     public String supportdetail(@ModelAttribute("sla") SLA sla,ModelMap model) {
     	model.addAttribute("sla",sla);
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+
         return "sladetail";
     } 
-    //--Instance--    
-    @GetMapping("/deleteSLAInstance")
-    public String deleteSupportInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("sla") SLA sla,ModelMap model) {
-    	appInstance.setSla(null);
-    	appInstanceService.updateAppInstance(appInstance);
-
-    	return "redirect:/sladetail?sla="+sla.getId();
-    }    
-    
-    @PostMapping("/addSLAInstance")
-    public String addContractInstance(ModelMap model,@ModelAttribute("sla") SLA sla) {
-
-    	slaService.updateAppIstanceSLA(new ArrayList<>(sla.getAppInstances()), sla);
-
-    	return "redirect:/sladetail?sla="+sla.getId();
-    }    
+  
     
     //------file management----   
     @PostMapping("/slaupload")

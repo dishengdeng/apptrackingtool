@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import portal.entity.AppInstance;
 import portal.entity.File;
 import portal.entity.SLA;
 import portal.models.SLAModel;
@@ -84,24 +83,8 @@ public class SLAServiceImpl implements SLAService{
 		return slaRepository.saveAndFlush(sla);
 	}
 
-	@Override
-	public void updateAppIstanceSLA(List<AppInstance> appInstances, SLA sla) {
-		
-		slaRepository.removeAllSLA(sla);
-		if(appInstances.size()>0)
-		{
-			for(AppInstance appInstance:appInstances)
-			{
-				slaRepository.updateAppIstanceSLA(appInstance.getId(), sla);
-			}
-		}
-	}
 
-	@Override
-	public void removeAllSLA(SLA sla) {
-		
-		slaRepository.removeAllSLA(sla);
-	}
+
 
 	@Override
 	public void removFiles(String upload_foler, SLA sla) {

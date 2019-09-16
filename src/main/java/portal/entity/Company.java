@@ -2,12 +2,10 @@ package portal.entity;
 
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
+import java.util.HashSet;
+
+import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,7 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -89,20 +87,18 @@ public class Company {
 	private String manufacturer;
     
 	@ManyToMany(cascade = CascadeType.ALL)
-	@JoinTable(name = "instancecompany",
-        joinColumns = @JoinColumn(name = "company_id"),
-        inverseJoinColumns = @JoinColumn(name = "instance_id")
-    )	
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
-    
-	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "appcompany",
         joinColumns = @JoinColumn(name = "company_id"),
         inverseJoinColumns = @JoinColumn(name = "app_id")
     )	
     private Set<Application> applications = new HashSet<Application>();
 	
-
+    @OneToMany(
+            mappedBy = "vendor", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
     
 	public Long getId() {
 		return id;
@@ -235,30 +231,26 @@ public class Company {
 		this.mobilephone = mobilephone;
 	}
 
-	public Set<AppInstance> getAppInstances() {
-		return appInstances;
+	public Set<Appdepartment> getAppdepartments() {
+		return appdepartments;
 	}
 
-	public void setAppInstances(Set<AppInstance> appInstances) {
-		this.appInstances.addAll(appInstances);
-		appInstances.forEach(obj->{
-			obj.addCompany(this);
+	public void setAppdepartments(Set<Appdepartment> appdepartments) {
+		this.appdepartments.addAll(appdepartments);
+		appdepartments.forEach(obj->{
+			obj.setVendor(this);
 		});
 	}
 	
-	public void addAppInstance(AppInstance appInstance)
+	public void addAppdepartments(Appdepartment appdepartment)
 	{
-		this.appInstances.add(appInstance);
+		this.appdepartments.add(appdepartment);
 	}
 	
-	public void removeAppInstance(AppInstance appInstance)
+	public void removeAppdepartments(Appdepartment appdepartment)
 	{
-		this.appInstances.removeIf(obj->obj.equals(appInstance));
+		this.appdepartments.remove(appdepartment);
 	}
-	
-	
-
-
 
 	public void removeAllDependence()
 	{
@@ -267,23 +259,13 @@ public class Company {
 		});
 		this.applications=null;
 		
-		this.appInstances.forEach(obj->{
-			obj.removeCompany(this);
+		this.appdepartments.forEach(obj->{
+			obj.setVendor(null);
 		});
-		this.appInstances=null;
+		this.appdepartments=null;
 		
 
 	}
-	
-	public String getInstanceNameWithComma()
-	{
-		List<String> instanceName=new ArrayList<String>();
-		for(AppInstance appinstance:this.appInstances)
-		{
-			instanceName.add(appinstance.getAppInstanceName());
-		}
-		
-		return instanceName.stream().collect(Collectors.joining(","));
-	}
+
 	
 }

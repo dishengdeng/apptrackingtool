@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import portal.entity.AppInstance;
 import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
@@ -21,7 +20,7 @@ import portal.entity.Zaclist;
 import portal.entity.Zacmap;
 import portal.entity.Zone;
 import portal.models.DepartmentModel;
-import portal.repository.AppInstanceRepository;
+
 import portal.repository.AppRepository;
 import portal.repository.DepartmentRepository;
 import portal.repository.ZacRepository;
@@ -37,8 +36,6 @@ public class DepartmentServiceImpl implements DepartmentService{
 	@Autowired
 	private DepartmentRepository departmentRepository;
 	
-	@Autowired
-	private AppInstanceRepository appServiceRepository;
 	
 	@Autowired
 	private AppRepository applicationRepository;
@@ -114,21 +111,6 @@ public class DepartmentServiceImpl implements DepartmentService{
 		return departmentRepository.saveAndFlush(department);
 	}
 
-	@Override
-	public void updateAppIstanceDepartment(Set<AppInstance> appInstances, Department department) {
-
-		if(appInstances.size()>0)
-		{
-
-			List<AppInstance> instances = new ArrayList<>(appInstances);
-			instances.forEach(obj->{
-				obj.setDepartment(department);
-				appServiceRepository.saveAndFlush(obj);
-			});
-		}
-
-		
-	}
 
 
 

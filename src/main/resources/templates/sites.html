@@ -47,9 +47,7 @@
                                 <thead>
                                     <tr>
                                         <th>Site</th>
-										<th>Zone</th>
-										<th>App Instance</th>
-										<th>Application</th>										
+										<th>Zone</th>									
                                         <th>Description</th>
                                         <th>Note</th>
 										<!--<th class="no-sort">Action</th>-->
@@ -72,16 +70,7 @@
 										<td>
 											<a th:if="${site.zone!=null}" th:href="@{'/zonedetail?zone='+${site.zone.id}}" th:text="${site.zone.zoneName}"></a>
 										</td>										
-										<td>
-											<a data-toggle="modal" th:if="${site.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',site.id,'instances')}}" style="cursor:pointer">
-											<span class="badge badge-secondary small" th:text="${'App Instances - Total: '+site.appInstances.size()}"></span>
-											</a>
-										</td>
-										<td>
-											<a data-toggle="modal" th:if="${site.applications.size()>0}" th:data-target="@{${#strings.concat('#',site.id,'applications')}}" style="cursor:pointer">
-											<span class="badge badge-secondary small" th:text="${'Application - Total: '+site.applications.size()}"></span>
-											</a>										
-										</td>										
+									
 
                                         <td th:text="${site.description}"></td>
                                         <td th:text="${site.note}"></td>
@@ -91,74 +80,6 @@
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
-
-										<div th:each="site: ${sites}" th:if="${site.appInstances.size()>0}">
-											<!--App Modal-->
-											<div th:if="${site.applications.size()>0}">
-												<div class="modal fade" th:id="${#strings.concat(site.id,'applications')}" role="dialog" >
-												<!-- Modal content-->
-														<div class="modal-dialog">
-														  <div class="modal-content">
-															<div class="modal-header">
-															  <button type="button" class="close" data-dismiss="modal">&times;</button>
-															  <h4 class="modal-title"> Applications</h4>
-															</div>
-															<div class="modal-body">
-																<table class="table table-striped" id="instancetable">
-																  <thead>
-																	<tr>
-																	  <th scope="col">App Instance Name</th>
-																	  <th scope="col">Status</th>
-																	  <th scope="col">Version</th>														  
-																	</tr>
-																  </thead>
-																  <tbody>
-																	<tr th:each="app : ${site.applications}">
-																	  <th><a th:href="@{'/applicationdetail?app='+${app.id}}"><h5 th:text="${app.AppName}"></h5></a></th>
-																	  <th><h5 th:text="${app.status}"></h5></th>
-																	  <th><h5 th:text="${app.AppVersion}"></h5></th>
-																	</tr>
-																  </tbody>
-																</table>
-															</div>
-														   </div>
-														 </div>
-												</div>
-											</div>	
-											
-											<!--App instance Modal-->
-											<div class="modal fade" th:id="${#strings.concat(site.id,'instances')}" role="dialog" >
-											<!-- Modal content-->
-													<div class="modal-dialog">
-													  <div class="modal-content">
-														<div class="modal-header">
-														  <button type="button" class="close" data-dismiss="modal">&times;</button>
-														  <h4 class="modal-title"> App Instances</h4>
-														</div>
-														<div class="modal-body">
-															<table class="table table-striped" id="instancetable">
-															  <thead>
-																<tr>
-																  <th scope="col">App Instance Name</th>
-																  <th scope="col">Status</th>
-																  <th scope="col">Description</th>														  
-																</tr>
-															  </thead>
-															  <tbody>
-																<tr th:each="appinstance : ${site.appInstances}">
-																  <th><a th:href="@{'/instancedetail?id='+${appinstance.id}}"><h5 th:text="${appinstance.appInstanceName}"></h5></a></th>
-																  <th><h5 th:text="${appinstance.status}"></h5></th>
-																  <th><h5 th:text="${appinstance.description}"></h5></th>
-																</tr>
-															  </tbody>
-															</table>
-														</div>
-													   </div>
-													 </div>
-											</div>
-										</div>
-
-										
 
                         </div>
                         <!-- /.panel-body -->

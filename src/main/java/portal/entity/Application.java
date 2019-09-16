@@ -124,22 +124,14 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private String roe;
     
-    @Column(name = "userbase ",columnDefinition="VARCHAR(1000)")
-    @JsonView(Views.Public.class)
-	private String userbase;
+    @OneToMany(
+            mappedBy = "application", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
     
-    @Column(name = "buroadmap ",columnDefinition="VARCHAR(1000)")
-    @JsonView(Views.Public.class)
-	private String buroadmap; 
-    
-	@ManyToMany(mappedBy = "applications")
-    private Set<Project> projects = new HashSet<Project>();
-	
-	@ManyToMany(mappedBy = "applications")
-    private Set<Zone> zones = new HashSet<Zone>();
-	
-	@ManyToMany(mappedBy = "applications")
-    private Set<Site> sites = new HashSet<Site>();
+
     
     @OneToMany(
             mappedBy = "application", 
@@ -165,19 +157,7 @@ public class Application implements Comparable<Application>{
         )
     private Set<File> files = new HashSet<File>();
     
-	@ManyToMany(mappedBy = "applications")
-    private Set<Department> departments = new HashSet<Department>();
-    
 
-    
-	@ManyToMany(mappedBy = "applications")
-    private Set<Support> supports = new HashSet<Support>();
-	
-	@ManyToMany(mappedBy = "applications")
-    private Set<Contract> contracts = new HashSet<Contract>();
-	
-	@ManyToMany(mappedBy = "applications")
-    private Set<License> licenses = new HashSet<License>();
 	
 
     
@@ -197,21 +177,7 @@ public class Application implements Comparable<Application>{
 		AppName = appName;
 	}
 
-	public String getUserbase() {
-		return userbase;
-	}
 
-	public void setUserbase(String userbase) {
-		this.userbase = userbase;
-	}
-
-	public String getBuroadmap() {
-		return buroadmap;
-	}
-
-	public void setBuroadmap(String buroadmap) {
-		this.buroadmap = buroadmap;
-	}
 
 	public String getAppVersion() {
 		return AppVersion;
@@ -361,47 +327,6 @@ public class Application implements Comparable<Application>{
 		this.appInstances.addAll(appInstances);
 	}
 
-	public Set<Zone> getZones() {
-		return zones;
-	}
-
-	public void setZones(Set<Zone> zones) {
-		this.zones.addAll(zones);
-		zones.forEach(obj->{
-			obj.addApplication(this);
-		});
-	}
-	
-	public void addZone(Zone zone)
-	{
-		this.zones.add(zone);
-	}
-	
-	public void removeZone(Zone zone)
-	{
-		this.zones.removeIf(obj->obj.equals(zone));
-	}
-
-	public Set<Site> getSites() {
-		return sites;
-	}
-
-	public void setSites(Set<Site> sites) {
-		this.sites.addAll(sites);
-		sites.forEach(obj->{
-			obj.addApplication(this);
-		});
-	}
-	
-	public void removeSite(Site site)
-	{
-		this.sites.removeIf(obj->obj.equals(site));
-	}
-	
-	public void addSite(Site site)
-	{
-		this.sites.add(site);
-	}
 	
 	public Set<File> getFiles() {
 		return files;
@@ -411,26 +336,6 @@ public class Application implements Comparable<Application>{
 		this.files.addAll(files);
 	}
 
-	public void AddDepartment(Department department)
-	{
-		this.departments.add(department);
-	}
-	
-	public void removeDepartment(Department department)
-	{
-		this.departments.remove(department);
-	}
-
-	public Set<Department> getDepartments() {
-		return departments;
-	}
-
-	public void setDepartments(Set<Department> departments) {
-		this.departments.addAll(departments);
-		departments.forEach(obj->{
-			obj.addApplication(this);
-		});
-	}
 
 
 	@Override
@@ -460,46 +365,7 @@ public class Application implements Comparable<Application>{
 		return this.AppName.compareToIgnoreCase(app.getAppName());
 	}
 
-	public void addContract(Contract contract)
-	{
-		this.contracts.add(contract);
-	}
-	
-	public void removeContract(Contract contract)
-	{
-		this.contracts.remove(contract);
-	}
-	
-	public Set<Contract> getContracts() {
-		return contracts;
-	}
 
-	public void setContracts(Set<Contract> contracts) {
-		this.contracts.addAll(contracts);
-		contracts.forEach(obj->{
-			obj.addApplication(this);
-		});
-	}
-
-	public void addSupport(Support support)
-	{
-		this.supports.add(support);
-	}
-
-	public void removeSupport(Support support)
-	{
-		this.supports.removeIf(obj->obj.equals(support));
-	}
-	public Set<Support> getSupports() {
-		return supports;
-	}
-
-	public void setSupports(Set<Support> supports) {
-		this.supports.addAll(supports);
-		supports.forEach(support->{
-			support.addApplication(this);
-		});
-	}
 
 	public void AddManufacturer(Company company)
 	{
@@ -522,36 +388,6 @@ public class Application implements Comparable<Application>{
 		});
 	}
 
-	public Set<Project> getProjects() {
-		return projects;
-	}
-
-	public void setProjects(Set<Project> projects) {
-		this.projects.addAll(projects);
-		projects.forEach(obj->{
-			obj.addApplication(this);
-		});
-	}
-
-	public void addLicense(License license)
-	{
-		this.licenses.add(license);
-	}
-	
-	public void removeLicense(License license)
-	{
-		this.licenses.remove(license);
-	}
-	public Set<License> getLicenses() {
-		return licenses;
-	}
-
-	public void setLicenses(Set<License> licenses) {
-		this.licenses.addAll(licenses);
-		licenses.forEach(obj->{
-			obj.addApplication(this);
-		});
-	}
 
 	public void addZacmap(Zacmap zacmap)
 	{
@@ -574,9 +410,27 @@ public class Application implements Comparable<Application>{
 		});
 	}
 
-	
-	
 
+	public Set<Appdepartment> getAppdepartments() {
+		return appdepartments;
+	}
+
+	public void setAppdepartments(Set<Appdepartment> appdepartments) {
+		this.appdepartments.addAll(appdepartments);
+		appdepartments.forEach(obj->{
+			obj.setApplication(this);
+		});
+	}
+	
+	public void addAppdepartments(Appdepartment appdepartment)
+	{
+		this.appdepartments.add(appdepartment);
+	}
+	
+	public void removeAppdepartments(Appdepartment appdepartment)
+	{
+		this.appdepartments.remove(appdepartment);
+	}
 
 	public void removeAllDependence()
 	{
@@ -585,17 +439,11 @@ public class Application implements Comparable<Application>{
 		});
 		this.manufacturers=null;
 		
-		this.supports.forEach(support->{
-			support.removeApplication(this);
-		});
-		this.supports=null;
-		
-		this.departments.forEach(obj->{
-			obj.removeApplication(this);
-		});
-		this.departments=null;
-		
 
+		this.appdepartments.forEach(obj->{
+			obj.setApplication(null);
+		});
+		this.appdepartments=null;
 		
 		this.appInstances.forEach(obj->{
 			obj.setApplication(null);
@@ -607,33 +455,7 @@ public class Application implements Comparable<Application>{
 		});
 		this.zacmaps=null;
 		
-		this.projects.forEach(obj->{
-			obj.removeApplication(this);
-		});
-		this.projects=null;
-		
-		this.zones.forEach(obj->{
-			obj.removeApplication(this);
-		});
-		this.zones=null;
-		
-		this.sites.forEach(obj->{
-			obj.removeApplication(this);
-		});
-		
-		this.sites=null;
-		
-		this.contracts.forEach(obj->{
-			obj.removeApplication(this);
-		});
-		
-		this.contracts=null;
-		
-		this.licenses.forEach(obj->{
-			obj.removeApplication(this);
-		});
-		
-		this.licenses=null;
+
 		
 
 	}

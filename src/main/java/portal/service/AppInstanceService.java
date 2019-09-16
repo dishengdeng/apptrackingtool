@@ -5,7 +5,7 @@ import java.util.List;
 import portal.entity.AppInstance;
 import portal.entity.Application;
 
-import portal.entity.Department;
+
 import portal.models.AppInstanceModel;
 
 public interface AppInstanceService {
@@ -16,15 +16,6 @@ public interface AppInstanceService {
     AppInstance getByName(String appInstanceName);
     AppInstance getById(Long id);
     AppInstance updateAppInstance(AppInstance appInstance);	
-    
-    void removeDeparmentbyInstanceId(Long id);
-    
-    void removeDeparment(Department department);
-    
-
-    
-
-    
     List<AppInstance> findNotAssgined();
     
     void removeApplication(Application application);

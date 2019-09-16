@@ -3,14 +3,14 @@ package portal.entity;
 
 
 
-import java.util.ArrayList;
+
 
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
+
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,8 +19,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -76,38 +76,13 @@ public class Contract {
     @JsonView(Views.Public.class)
 	private String approvername;
     
-    @Column(name = "clinplace", length = 64,columnDefinition="VARCHAR(250)")
-    @JsonView(Views.Public.class)
-	private String clinplace;
-    
-    @Column(name = "vendorsla", length = 64,columnDefinition="VARCHAR(250)")
-    @JsonView(Views.Public.class)
-	private String vendorsla;
-    
-    @Column(name = "ahsitsla", length = 64,columnDefinition="VARCHAR(250)")
-    @JsonView(Views.Public.class)
-	private String ahsitsla;
+
 
     @Column(name = "approvaldate")
     @Temporal(TemporalType.DATE)
     @JsonView(Views.Public.class)
 	private Date approvaldate;
-    
-	@ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "instancecontract",
-        joinColumns = @JoinColumn(name = "contract_id"),
-        inverseJoinColumns = @JoinColumn(name = "instance_id")
-    )	
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
-    
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "appcontract",
-        joinColumns = @JoinColumn(name = "contract_id"),
-        inverseJoinColumns = @JoinColumn(name = "application_id")
-    )
-    private Set<Application> applications = new HashSet<Application>();
-    
-
+  
     
     @OneToMany(
             mappedBy = "contract", 
@@ -115,6 +90,14 @@ public class Contract {
             orphanRemoval = true
         )
     private Set<File> files = new HashSet<File>();
+    
+    
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "appdepartcontr",
+        joinColumns = @JoinColumn(name = "contract_id"),
+        inverseJoinColumns = @JoinColumn(name = "appdepartment_id")
+    )
+    private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
 
 	public Long getId() {
 		return id;
@@ -165,8 +148,6 @@ public class Contract {
 	}
 
 
-
-
 	public Date getEffectivedate() {
 		return effectivedate;
 	}
@@ -191,79 +172,6 @@ public class Contract {
 		this.approvaldate = Convertor.JavaDate(approvaldate);
 	}
 
-	public void removeApplication(Application application)
-	{
-		this.applications.removeIf(obj->obj.equals(application));
-	}
-
-	public void addApplication(Application application)
-	{
-		this.applications.add(application);
-	}
-	
-	public Set<Application> getApplications() {
-		return applications;
-	}
-
-	public String getClinplace() {
-		return clinplace;
-	}
-
-	public void setClinplace(String clinplace) {
-		this.clinplace = clinplace;
-	}
-
-	public String getVendorsla() {
-		return vendorsla;
-	}
-
-	public void setVendorsla(String vendorsla) {
-		this.vendorsla = vendorsla;
-	}
-
-	public String getAhsitsla() {
-		return ahsitsla;
-	}
-
-	public void setAhsitsla(String ahsitsla) {
-		this.ahsitsla = ahsitsla;
-	}
-
-	public void setApplications(Set<Application> applications) {
-		this.applications.addAll(applications);
-		applications.forEach(obj->{
-			obj.addContract(this);
-		});
-	}
-
-	public void addInstance(AppInstance appInstance)
-	{
-		this.appInstances.add(appInstance);
-	}
-	
-	public void removeInstance(AppInstance appInstance)
-	{
-		this.appInstances.remove(appInstance);
-	}
-	
-	public Set<AppInstance> getAppInstances() {
-		return appInstances;
-	}
-
-	public void setAppInstances(Set<AppInstance> appInstances) {
-		this.appInstances.addAll(appInstances);
-	}
-
-	public String getInstanceNameWithComma()
-	{
-		List<String> instanceName=new ArrayList<String>();
-		for(AppInstance appinstance:this.appInstances)
-		{
-			instanceName.add(appinstance.getAppInstanceName());
-		}
-		
-		return instanceName.stream().collect(Collectors.joining(","));
-	}
 
 
 
@@ -275,26 +183,36 @@ public class Contract {
 		this.files.addAll(files);
 	}
 	
-	
 
+	public Set<Appdepartment> getAppdepartments() {
+		return appdepartments;
+	}
 
-
-	public void removeAllDependence()
-	{
-		this.appInstances.forEach(obj->{
-			obj.removeContract(this);
+	public void setAppdepartments(Set<Appdepartment> appdepartments) {
+		this.appdepartments.addAll(appdepartments);
+		appdepartments.forEach(obj->{
+			obj.addContract(this);
 		});
-		
-		this.appInstances=null;
-		
-		this.applications.forEach(obj->{
-			obj.removeContract(this);
-		});
-		this.applications=null;
-		
-
 	}
 	
+	public void addAppdepartments(Appdepartment appdepartment)
+	{
+		this.appdepartments.add(appdepartment);
+	}
+	
+	public void removeAppdepartments(Appdepartment appdepartment)
+	{
+		this.appdepartments.remove(appdepartment);
+	}
+	
+	public void removeAllDependence()
+	{
+		this.appdepartments.forEach(obj->{
+			obj.removeContract(this);
+		});
+		this.appdepartments=null;
+	}
+
 	public Status getContractStatus()
 	{
 		Date currentdate= new Date();

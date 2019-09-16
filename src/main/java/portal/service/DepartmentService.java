@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.json.JSONObject;
 
-import portal.entity.AppInstance;
+
 import portal.entity.Department;
 import portal.entity.Zacmap;
 import portal.entity.Zone;
@@ -23,7 +23,7 @@ public interface DepartmentService {
     Department getById(Long id);
     Department updateDepartment(Department department);
     
-    void updateAppIstanceDepartment(Set<AppInstance> appInstances,Department department);
+
 
 
     void removFiles(String upload_foler,Department department);

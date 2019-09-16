@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import portal.entity.AppInstance;
 import portal.entity.Site;
 import portal.entity.Zone;
 import portal.models.SiteModel;
@@ -85,15 +84,6 @@ public class SiteServiceImpl implements SiteService{
 		return siteRepository.findAllbyZone(zone);
 	}
 
-	@Override
-	public void removeAppInstance(AppInstance appInstance) {
-		List<Site> sites= siteRepository.findAll();
-		for(Site site:sites)
-		{
-			site.removeAppInstance(appInstance);
-			siteRepository.saveAndFlush(site);
-		}
-		
-	}
+
 
 }

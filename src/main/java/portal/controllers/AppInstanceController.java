@@ -20,30 +20,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.AppInstance;
-import portal.entity.Company;
-import portal.entity.Contract;
+
 import portal.entity.Desktop;
 import portal.entity.File;
-import portal.entity.License;
-import portal.entity.Project;
+
 import portal.entity.Server;
-import portal.entity.Site;
-import portal.entity.Support;
-import portal.entity.Zone;
+
 import portal.service.AppInstanceService;
-import portal.service.CompanyService;
-import portal.service.ContractService;
+
 import portal.service.DesktopService;
 import portal.service.FileService;
-import portal.service.LicenseService;
-import portal.service.ProjectService;
-import portal.service.SLAService;
+
+
 import portal.service.ServerService;
-import portal.service.SiteService;
-import portal.service.SupportService;
-import portal.service.ZoneService;
+
 import portal.utility.FileType;
-import portal.service.DepartmentService;
 
 @Controller
 public class AppInstanceController {
@@ -56,39 +47,17 @@ public class AppInstanceController {
 	@Autowired
 	private AppInstanceService appInstanceService;
 	
-	@Autowired
-	private SLAService slaService;
+
 	
-	@Autowired
-	private ContractService contractService;
-	
-	@Autowired
-	private LicenseService licenseService;
+
 	
 	@Autowired
 	private DesktopService desktopService;
 	
 	@Autowired
 	private ServerService serverService;
-	
-	@Autowired
-	private CompanyService companyService;
-	
-	@Autowired
-	private DepartmentService departmentService;
-	
-	@Autowired
-	private SupportService supportService;
-	
-	@Autowired
-	private ProjectService projectService;
 
-	@Autowired
-	private SiteService siteService;
-	
-	@Autowired
-	private ZoneService zoneService;
-	
+
     @GetMapping("/instances")
     public String AppInstance(ModelMap model) {
     	List<AppInstance> appInstances = appInstanceService.getAll();
@@ -132,17 +101,8 @@ public class AppInstanceController {
     	AppInstance appInstance = appInstanceService.getById(Long.valueOf(id));
     	model.addAttribute("appinstance", appInstance);
    
-    	//--SLA-----
-    	model.addAttribute("sla",appInstance.getSla());
-    	model.addAttribute("slas",slaService.getAll());
-    	
-    	//--Contract-----
-    	model.addAttribute("appcontracts",appInstance.getContracts());
-    	model.addAttribute("contracts",contractService.getAll());
-    	
-    	//--License-----
-    	model.addAttribute("instancelicenses",appInstance.getLicenses());
-    	model.addAttribute("licenses",licenseService.getAll());
+
+ 
     	
     	//--Desktop-----
     	model.addAttribute("desktop",appInstance.getDesktop());
@@ -152,92 +112,18 @@ public class AppInstanceController {
     	model.addAttribute("serverSelected",appInstance.getServers());
     	model.addAttribute("servers",serverService.findByNotAssigned(appInstance));  
     	
-    	//--Vendor-----
-    	model.addAttribute("companies",appInstance.getCompanys());
-    	model.addAttribute("companys",companyService.getAll());     	
-
-    	//--Department-----
-    	model.addAttribute("department",appInstance.getDepartment());
-    	model.addAttribute("departments",departmentService.getAll());
+ 
     	
-    	//--Support-----
-    	model.addAttribute("instancesupports",appInstance.getSupports());
-    	model.addAttribute("supports",supportService.getAll());
-    	
-    	//--Project----
-    	model.addAttribute("instanceprojects",appInstance.getProjects());    	
-    	model.addAttribute("projects",projectService.getAll());    	
-    	
-    	//--Sites----
-    	model.addAttribute("instancelocations",appInstance.getSites());
-    	model.addAttribute("sites",siteService.getAll());
-    	
-    	//--Zone-----
-    	model.addAttribute("instancezones",appInstance.getZones());
-    	model.addAttribute("zones",zoneService.getAll());    	
+  	
     	
     	return "instancedetail";
     }
+
     
-//------SLA---------------    
-    @GetMapping("/deleteInstanceSLA")
-    public String deleteInstanceSLA(@ModelAttribute("instance") AppInstance appinstance) {
 
-    	appinstance.setSla(null);
-
-    	appInstanceService.updateAppInstance(appinstance);
-    	return "redirect:/instancedetail?id="+appinstance.getId();
-    }
-    
-    @PostMapping("/addInstanceSLA")
-    public String addOrupdateInstanceSLA(@ModelAttribute("appinstance") AppInstance appinstance) {
-
-
-    	appInstanceService.updateAppInstance(appinstance);
-        return "redirect:/instancedetail?id="+appinstance.getId();
-    }
-  //-----------------------
-    
-  //------Contract---------------    
-    @GetMapping("/deleteInstanceContract")
-    public String deleteInstanceContract(@ModelAttribute("instance") AppInstance appinstance,@ModelAttribute("contract") Contract contract) {
-
-    	contract.removeInstance(appinstance);
-    	contractService.updateContract(contract);
-
-    	return "redirect:/instancedetail?id="+appinstance.getId();
-    }
-    
-    @PostMapping("/addInstanceContract")
-    public String addOrupdateInstanceContract(@ModelAttribute("appinstance") AppInstance appinstance) {
-
-    	appInstanceService.updateAppInstance(appinstance);
-        return "redirect:/instancedetail?id="+appinstance.getId();
-    }
-  //----------------------- 
     
     
-    //------License---------------    
-    @GetMapping("/deleteInstanceLicense")
-    public String deleteInstanceLicense(@ModelAttribute("license") License license,@ModelAttribute("appinstance") AppInstance appinstance) {
 
-
-    	license.removeInstance(appinstance);
-    	licenseService.updateLicense(license);
-
-
-    	return "redirect:/instancedetail?id="+appinstance.getId();
-    }
-    
-    @PostMapping("/addInstanceLicense")
-    public String addOrupdateInstanceLicense(@ModelAttribute("appinstance") AppInstance appinstance) {
-
-
-
-    	appInstanceService.updateAppInstance(appinstance);
-        return "redirect:/instancedetail?id="+appinstance.getId();
-    }
-  //----------------------- 
     
     
     //------Desktop---------------    
@@ -289,113 +175,9 @@ public class AppInstanceController {
     }
   //----------------------- 
     
-    //------Vendor---------------    
-    @GetMapping("/deleteInstanceCompany")
-    public String deleteInstanceCompany(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("company") Company company) {
-
-    	company.removeAppInstance(appInstance);
-    	companyService.updateCompany(company);
-    	return "redirect:/instancedetail?id="+appInstance.getId();
-    }
-    
-    @PostMapping("/addInstanceCompany")
-    public String addOrupdateInstanceCompany(@ModelAttribute("appinstance") AppInstance appInstance) {
 
 
-    	appInstanceService.updateAppInstance(appInstance);
-        return "redirect:/instancedetail?id="+appInstance.getId();
-    }
-  //----------------------- 
-    
-    
-    //------Department---------------    
-    @GetMapping("/deleteInstanceDepartment")
-    public String deleteInstanceDepartment(@ModelAttribute("instance") AppInstance appInstance) {
-    	appInstance.setDepartment(null);
-    	appInstanceService.updateAppInstance(appInstance);
 
-    	return "redirect:/instancedetail?id="+appInstance.getId();
-    }
-    
-    @PostMapping("/addInstanceDepartment")
-    public String addOrupdateInstanceDepartment(@ModelAttribute("appinstance") AppInstance appInstance) {
-
-    	appInstanceService.updateAppInstance(appInstance);
-        return "redirect:/instancedetail?id="+appInstance.getId();
-    }
-  //-----------------------
-
-    //------Support---------------    
-    @GetMapping("/deleteInstanceSupport")
-    public String deleteInstanceSupport(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("support") Support support) {
-
-    	support.removeInstance(appInstance);
-    	supportService.updateSupport(support);
-
-    	return "redirect:/instancedetail?id="+appInstance.getId();
-    }
-    
-    @PostMapping("/addInstanceSupport")
-    public String addOrupdateInstanceSupport(@ModelAttribute("appinstance") AppInstance appInstance) {
-
-
-    	appInstanceService.updateAppInstance(appInstance);
-        return "redirect:/instancedetail?id="+appInstance.getId();
-    }
-  //-----------------------
-    
-    //-----project------
-	@GetMapping("/deleteInstanceProject")
-	public String deleteProjectInstance(@ModelAttribute("project") Project project,@ModelAttribute("appinstance") AppInstance appInstance)
-	{
-		project.removeAppInstance(appInstance);
-		projectService.updateProject(project);
-		return "redirect:/instancedetail?id="+appInstance.getId();
-	}
-	
-	@PostMapping("/addInstanceProject")
-	public String addProjectInstance(@ModelAttribute("appInstance") AppInstance appInstance)
-	{
-		appInstanceService.updateAppInstance(appInstance);
-		return "redirect:/instancedetail?id="+appInstance.getId();
-	}
-    
-    //------Sites---------------    
-    @GetMapping("/deleteInstanceSite")
-    public String deleteInstanceSite(@ModelAttribute("site") Site site,@ModelAttribute("appinstance") AppInstance appInstance) {
-
-
-    	
-    	site.removeAppInstance(appInstance);
-    	
-    	siteService.updateSite(site);
-    	
-    	
-    	return "redirect:/instancedetail?id="+appInstance.getId();
-    }
-    
-    @PostMapping("/addInstanceSite")
-    public String addOrupdateInstanceSite(@ModelAttribute("appInstance") AppInstance appInstance) {
-
-
-    	
-    	appInstanceService.updateAppInstance(appInstance);
-    	
-        return "redirect:/instancedetail?id="+appInstance.getId();
-    }
-    
-    //------Zones---------------    
-    @GetMapping("/deleteInstanceZone")
-    public String deleteInstanceZone(@ModelAttribute("zone") Zone zone,@ModelAttribute("appinstance") AppInstance appInstance) {
-
-
-    	
-    	zone.removeAppInstance(appInstance);
-    	zoneService.updateZone(zone);
-    	
-    	
-    	return "redirect:/instancedetail?id="+appInstance.getId();
-    }
     
     @PostMapping("/addInstanceZone")
     public String addInstanceZone(@ModelAttribute("appInstance") AppInstance appInstance) {

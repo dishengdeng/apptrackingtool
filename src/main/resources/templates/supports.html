@@ -46,9 +46,7 @@
                                 <thead>
                                     <tr>
 										<th>ID</th>
-                                        <th>Support Name</th>
-                                        <th>Applications</th>
-                                        <th>Instances</th>										
+                                        <th>Support Name</th>								
                                         <th>Phone</th>
 										<th>Email</th>
 										<th>Location</th>
@@ -80,16 +78,6 @@
 
 										</td>
 										<td th:text="${support.supportName}"></td>
-										<td>
-											<a data-toggle="modal" th:if="${support.applications.size()>0}" th:data-target="@{${#strings.concat('#',support.id,'applications')}}" style="cursor:pointer">
-											<span class="badge badge-secondary small" th:text="${'Application - Total: '+support.applications.size()}"></span>
-											</a>
-										</td>										
-										<td>
-											<a data-toggle="modal" th:if="${support.appInstances.size()>0}" th:data-target="@{${#strings.concat('#',support.id,'instances')}}" style="cursor:pointer">
-											<span class="badge badge-secondary small" th:text="${'App Instances - Total: '+support.appInstances.size()}"></span>
-											</a>
-										</td>
                                         <td th:text="${support.phone}"></td>
 										<td th:text="${support.email}"></td>
 										<td th:text="${support.location}"></td>
@@ -111,74 +99,6 @@
                             <!-- /.table-responsive -->
 							  <!-- Modal -->
 						  
-							  
-						<div th:each="support: ${supports}" >	  
-						
-							<!--App instance Modal-->
-							<div th:if="${support.appInstances.size()>0}">
-								<div class="modal fade" th:id="${#strings.concat(support.id,'instances')}" role="dialog" >
-								<!-- Modal content-->
-										<div class="modal-dialog">
-										  <div class="modal-content">
-											<div class="modal-header">
-											  <button type="button" class="close" data-dismiss="modal">&times;</button>
-											  <h4 class="modal-title"> App Instances</h4>
-											</div>
-											<div class="modal-body">
-												<table class="table table-striped" id="instancetable">
-												  <thead>
-													<tr>
-													  <th scope="col">App Instance Name</th>
-													  <th scope="col">Status</th>
-													  <th scope="col">Description</th>														  
-													</tr>
-												  </thead>
-												  <tbody>
-													<tr th:each="appinstance : ${support.appInstances}">
-													  <th><a th:href="@{'/instancedetail?id='+${appinstance.id}}"><h5 th:text="${appinstance.appInstanceName}"></h5></a></th>
-													  <th><h5 th:text="${appinstance.status}"></h5></th>
-													  <th><h5 th:text="${appinstance.description}"></h5></th>
-													</tr>
-												  </tbody>
-												</table>
-											</div>
-										   </div>
-										 </div>
-								</div>
-							</div>	
-							<!--applications Modal-->
-							<div th:if="${support.applications.size()>0}">
-								<div class="modal fade" th:id="${#strings.concat(support.id,'applications')}" role="dialog" >
-								<!-- Modal content-->
-										<div class="modal-dialog">
-										  <div class="modal-content">
-											<div class="modal-header">
-											  <button type="button" class="close" data-dismiss="modal">&times;</button>
-											  <h4 class="modal-title"> Applications</h4>
-											</div>
-											<div class="modal-body">
-												<table class="table table-striped" id="instancetable">
-												  <thead>
-													<tr>
-													  <th scope="col">Application</th>
-
-													  <th scope="col">Decommission Date</th>														  
-													</tr>
-												  </thead>
-												  <tbody>
-													<tr th:each="app : ${support.applications}">
-													  <th><a th:href="@{'/applicationdetail?app='+${app.id}}"><h5 th:text="${app.AppName}"></h5></a></th>
-
-													  <th><h5 th:text="${#dates.format(app.AppDecomminsionDate,'MMM-dd-yyyy')}"></h5></th>
-													</tr>
-												  </tbody>
-												</table>
-											</div>
-										   </div>
-										 </div>
-								</div>
-							</div>							
-						</div><!-- Modal -->
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -202,14 +122,7 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
-		$('[id^=instanceSelect]').multiselect(
-		  {
-			includeSelectAllOption: true,
-			buttonWidth: '100%', 
-			enableFiltering: true,
-			nonSelectedText: 'Select Instance',
-			enableCaseInsensitiveFiltering:true
-		  });
+
     });
     </script>
 	<script type="text/javascript">

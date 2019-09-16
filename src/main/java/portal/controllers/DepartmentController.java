@@ -35,8 +35,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.Answer;
-import portal.entity.AppInstance;
-import portal.entity.Application;
+
 import portal.entity.Department;
 import portal.entity.File;
 
@@ -45,8 +44,7 @@ import portal.entity.Zaclist;
 import portal.entity.Zacmap;
 import portal.entity.Zone;
 import portal.service.AnswerService;
-import portal.service.AppInstanceService;
-import portal.service.AppService;
+
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.QuestionService;
@@ -78,14 +76,12 @@ public class DepartmentController {
 	@Autowired
 	private QuestionService questionService;
 	
-	@Autowired
-	private AppInstanceService appInstanceService;
+
 	
 	@Autowired
 	private StakeholderService stakeholderService;
 	
-	@Autowired
-	private AppService appService;
+
 	
 	@Autowired
 	private UtilityService utilityService;
@@ -109,7 +105,7 @@ public class DepartmentController {
 	
 	private final String UPLOADED_FOLDER="files//department//";
 	
-    @GetMapping("/departments")
+    @GetMapping("/")
     public String departmenttable(ModelMap model) {
     	model.addAttribute("departments", departmentService.getAll());
 
@@ -145,8 +141,7 @@ public class DepartmentController {
     	model.addAttribute("department",department);
     	model.addAttribute("stakeholders",stakeholderService.getAll());
     	model.addAttribute("roles", slaRoleService.getAll());
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+
     	//--Zacmap-----
     	model.addAttribute("zacs",zacService.getAll());
     	model.addAttribute("zacmaps",departmentService.getZacmap(department));
@@ -195,38 +190,7 @@ public class DepartmentController {
     	return "redirect:/departmentdetail?id="+answer.getDepartment().getId();
     }     
     
-  //--application--    
-    @GetMapping("/deleteDepartmentapplication")
-    public String deleteDepartmentapplication(@ModelAttribute("application") Application application,@ModelAttribute("department") Department department,ModelMap model) {
-    	department.removeApplication(application);
-    	departmentService.updateDepartment(department);
-    	return "redirect:/departmentdetail?id="+department.getId();
-    }    
-    
-    @PostMapping("/addDepartmentapplication")
-    public String addDepartmentapplication(ModelMap model,@ModelAttribute("department") Department department) {
-
-    	departmentService.updateDepartment(department);
-
-    	return "redirect:/departmentdetail?id="+department.getId();
-    }    
-    
-//--Instance--    
-    @GetMapping("/deleteDepartmentInstance")
-    public String deleteDepartmentInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("department") Department department,ModelMap model) {
-    	appInstance.setDepartment(null);
-    	appInstanceService.updateAppInstance(appInstance);
-
-    	return "redirect:/departmentdetail?id="+department.getId();
-    }    
-    
-    @PostMapping("/addDepartmentInstance")
-    public String addDepartmentInstance(ModelMap model,@ModelAttribute("department") Department department) {
-
-    	departmentService.updateDepartment(department);
-
-    	return "redirect:/departmentdetail?id="+department.getId();
-    }    
+   
 
     //------Zacmap---------------    
     @GetMapping("/deleteDepartmentZacmap")

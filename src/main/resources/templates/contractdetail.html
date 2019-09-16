@@ -88,18 +88,6 @@
 							  <div class="form-group">
 								<label for="note">SLA Description:</label>
 								<input type="text" class="form-control" th:name="slaDescription" th:value="${contract.slaDescription}">
-							  </div>
-							  <div class="form-group">
-								<label for="clinplace">Contract / Licensing in Place (Y/N):</label>
-								<input type="text" class="form-control" th:name="clinplace" th:value="${contract.clinplace}">
-							  </div>	
-							  <div class="form-group">
-								<label for="vendorsla">Vendor SLA/SMA?</label>
-								<input type="text" class="form-control" th:name="vendorsla" th:value="${contract.vendorsla}">
-							  </div>	
-							  <div class="form-group">
-								<label for="ahsitsla">AHS-IT SLA?</label>
-								<input type="text" class="form-control" th:name="ahsitsla" th:value="${contract.ahsitsla}">
 							  </div>								  
 							  <input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="margin-top:20px" type="submit" value="Update" />
 							</form>
@@ -109,99 +97,9 @@
 				</div>
 			</div>
             <!-- /.row -->
-			<!--application Detail-->
-			<div class="row">
-				<div class="col-lg-8">
-					 <div class="panel panel-primary">
-						<div class="panel-heading">
-							<i class="fa fa-windows"></i> Applications
-							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addapplication'}" style="color:white;cursor:pointer" title="Add/Change">
-									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
-								</a>
-							</div>
-						</div>
-						<!-- /.panel-heading -->
-						<div th:if="${contract.applications.size()>0}" class="panel-body">
-							<table class="table">
-							  <thead>
-								<th>Application</th>
-								<th>Status</th>
-								<th>Version</th>
-							  </thead>
-							  <tbody>
-								<tr th:each="app: ${#lists.sort(contract.applications)}">
-									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteContractApplication?app='+${app.id}+'&contract='+${contract.id}}" 
-											style="margin-right:20px;text-decoration: none"
-											data-title="Are you sure to delete?" 
-											data-toggle="confirmation" 
-											data-singleton="true" 
-											data-popout="true" 
-										   >
-											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-										</a>
-										<a th:href="@{'/applicationdetail?app='+${app.id}}" th:text="${app.AppName}"></a>
-									</td>
-									<td th:text="${app.status}"></td>
-									<td th:text="${app.AppVersion}"></td>
-								</tr>
-							  </tbody>
-							</table>
-						</div>
-						<!-- /.panel-body -->
-					</div>
-				</div>
-				<div class="col-lg-4">
-				</div>
-			</div>			
 			
-			<!--AppInstance Detail-->
-			<div class="row">
-				<div class="col-lg-8">
-					 <div class="panel panel-primary">
-						<div class="panel-heading">
-							<i class="fa fa-laptop"></i> App Instances
-							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addInstance'}" style="color:white;cursor:pointer" title="Add/Change">
-									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
-								</a>
-							</div>
-						</div>
-						<!-- /.panel-heading -->
-						<div th:if="${contract.appInstances.size()>0}" class="panel-body">
-							<table class="table">
-							  <thead>
-								<th>App Instance</th>
-								<th>Status</th>
-								<th>Description</th>
-							  </thead>
-							  <tbody>
-								<tr th:each="appinstance: ${#lists.sort(contract.appInstances)}">
-									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteContractInstance?instance='+${appinstance.id}+'&contract='+${contract.id}}" 
-											style="margin-right:20px;text-decoration: none"
-											data-title="Are you sure to delete?" 
-											data-toggle="confirmation" 
-											data-singleton="true" 
-											data-popout="true" 
-										   >
-											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-										</a>
-										<a th:href="@{'/instancedetail?id='+${appinstance.id}}" th:text="${appinstance.appInstanceName}"></a>
-									</td>
-									<td th:text="${appinstance.status}"></td>
-									<td th:text="${appinstance.description}"></td>
-								</tr>
-							  </tbody>
-							</table>
-						</div>
-						<!-- /.panel-body -->
-					</div>
-				</div>
-				<div class="col-lg-4">
-				</div>
-			</div>
+			
+
 			<!--file detail-->			
 			<div class="row">
 				<div class="col-lg-8">
@@ -258,78 +156,8 @@
 				</div><!-- col-lg-8 -->									
 			</div>
 			<!-- /.row -->			
-				<!--application model-->
-				<div class="modal fade" th:id="addapplication" role="dialog">
-					<div class="modal-dialog">
-					
-					  <!-- Modal content-->
-					  <div class="modal-content">
-						<div class="modal-header">
-						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Application - '+${contract.contractName}"></h4>													
-						</div>
-						<div class="modal-body">	
-							<form action="#" th:action="@{/addContractApplication}"  method="post">
-								<div class="form-group">
-									<label for="instanceselect">Application:</label>
-									<input type="hidden" class="form-control" th:name="contract" th:value="${contract.id}"></input>
-									<select name="applications" class="form-control" id="applicationSelect" multiple>
-									  <option th:each="appEntity : ${appAssginedInstances}" 
 
-									  th:attr="value = ${appEntity.id}"
-									  th:text="${appEntity.AppName}">
-									  
-									  </option>
-									</select>
-								</div>
-							  <input class="btn btn-primary" type="submit" value="Submit" />
-							</form>
-						</div>
-					  </div>
-
-					</div>	
-				</div>
-				<!--AppInstance model-->
-				<div class="modal fade" th:id="addInstance" role="dialog">
-					<div class="modal-dialog">
-					
-					  <!-- Modal content-->
-					  <div class="modal-content">
-						<div class="modal-header">
-						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Or Change Instance - '+${contract.contractName}"></h4>													
-						</div>
-						<div class="modal-body">	
-							<form action="#" th:action="@{/addContractInstance}"  method="post">
-								<div class="form-group">
-									<label for="instanceselect">App Instance:</label>
-									<input type="hidden" class="form-control" th:name="contract" th:value="${contract.id}"></input>
-									<select name="appInstances" class="form-control" id="instanceSelect" multiple>
-										<optgroup th:each="appEntity : ${appAssginedInstances}" th:if="${appEntity.appInstances.size()>0}" th:label="${appEntity.AppName}">
-											  <option th:each="instanceEntity : ${appEntity.appInstances}" 
-
-											  th:attr="value = ${instanceEntity.id}"
-											  th:text="${instanceEntity.appInstanceName}">
-											  
-											  </option>
-										</optgroup>
-										<optgroup th:if="${appUnassginedInstances.size()>0}" label="Other">
-											  <option th:each="instanceEntity : ${appUnassginedInstances}" 
-
-											  th:attr="value = ${instanceEntity.id}"
-											  th:text="${instanceEntity.appInstanceName}">
-											  
-											  </option>
-										</optgroup>													
-									</select>
-								</div>
-							  <input class="btn btn-primary" type="submit" value="Submit" />
-							</form>
-						</div>
-					  </div>
-
-					</div>	
-				</div>			
+		
 			
 				<div class="modal fade" th:id="${#strings.concat(contract.id,'file')}" role="dialog" >
 						<!-- Modal content-->
@@ -375,23 +203,7 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
-	$('[id^=applicationSelect]').multiselect(
-	  {
-		includeSelectAllOption: true,
-		buttonWidth: '100%', 
-		enableFiltering: true,
-		nonSelectedText: 'Select Application',
-		enableCaseInsensitiveFiltering:true
-	  });
 	  
-	$('[id^=instanceSelect]').multiselect(
-	  {
-		includeSelectAllOption: true,
-		buttonWidth: '100%', 
-		enableFiltering: true,
-		nonSelectedText: 'Select Instance',
-		enableCaseInsensitiveFiltering:true
-	  });	  
     });
     </script>
 	<script type="text/javascript">

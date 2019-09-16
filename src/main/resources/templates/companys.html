@@ -47,7 +47,6 @@
                                     <tr>
                                         <th>Vendor</th>
 										<th>Manufacturer</th>
-										<th>App Instance</th>
 										<th>Application</th>
 										<th>Address</th>
                                         <th>Office Phone</th>
@@ -76,15 +75,7 @@
 											</a>&nbsp 
 											<a th:href="@{'/companydetail?company='+${company.id}}" th:text="${company.companyName}"></a>
 										</td>
-										<td th:text="${company.manufacturer}"></td>										
-										<td>
-											<a data-toggle="modal" 
-											th:if="${company.appInstances.size()>0}" 
-											th:text="${company.getInstanceNameWithComma()}" 
-											th:data-target="@{${#strings.concat('#',company.id,'instances')}}" 
-											style="cursor:pointer">
-											</a>
-										</td>
+										<td th:text="${company.manufacturer}"></td>	
 										<td style="padding:2px">
 											<ul th:if="${company.applications.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
 												<li th:each="app: ${company.applications}">
@@ -109,37 +100,7 @@
                             </table>
                             <!-- /.table-responsive -->
 									<!-- Modal Area-->
-									<div th:each="company: ${companys}">
-										<div class="modal fade" th:if="${company.appInstances.size()>0}" th:id="${#strings.concat(company.id,'instances')}" role="dialog" >
-										<!-- Modal content-->
-												<div class="modal-dialog">
-												  <div class="modal-content">
-													<div class="modal-header">
-													  <button type="button" class="close" data-dismiss="modal">&times;</button>
-													  <h4 class="modal-title"> App Instances</h4>
-													</div>
-													<div class="modal-body">
-														<table class="table table-striped" id="instancetable">
-														  <thead>
-															<tr>
-															  <th scope="col">App Instance</th>
-															  <th scope="col">status</th>
-															  <th scope="col">Description</th>														  
-															</tr>
-														  </thead>
-														  <tbody>
-															<tr th:each="appInstance : ${company.appInstances}">
-															  <th><a th:href="@{'/instancedetail?id='+${appInstance.id}}"><h5 th:text="${appInstance.appInstanceName}"></h5></a></th>
-															  <th><h5 th:text="${appInstance.status}"></h5></th>
-															  <th><h5 th:text="${appInstance.description}"></h5></th>
-															</tr>
-														  </tbody>
-														</table>
-													</div>
-												   </div>
-												 </div>
-										</div>										  
-									</div><!-- Modal -->
+
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -163,14 +124,7 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
-		$('[id^=instanceSelect]').multiselect(
-		  {
-			includeSelectAllOption: true,
-			buttonWidth: '100%', 
-			enableFiltering: true,
-			nonSelectedText: 'Select Instance',
-			enableCaseInsensitiveFiltering:true
-		  });
+
     });
     </script>
 	<script type="text/javascript">

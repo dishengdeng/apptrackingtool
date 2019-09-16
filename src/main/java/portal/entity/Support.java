@@ -2,23 +2,16 @@ package portal.entity;
 
 
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+
 import javax.persistence.Table;
-import javax.persistence.JoinColumn;
+
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -113,19 +106,7 @@ public class Support {
     @JsonView(Views.Public.class)
 	private String location;
     
-	@ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "instancesupport",
-        joinColumns = @JoinColumn(name = "support_id"),
-        inverseJoinColumns = @JoinColumn(name = "instance_id")
-    )	
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
-    
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "appsupport",
-        joinColumns = @JoinColumn(name = "support_id"),
-        inverseJoinColumns = @JoinColumn(name = "application_id")
-    )
-    private Set<Application> applications = new HashSet<Application>();   
+ 
 
 	public Long getId() {
 		return id;
@@ -168,55 +149,6 @@ public class Support {
 	}
 
 
-	public void addInstance(AppInstance app)
-	{
-		this.appInstances.add(app);		
-	}
-	
-	public void removeInstance(AppInstance app)
-	{
-		this.appInstances.remove(app);
-	}
-	
-	public Set<AppInstance> getAppInstances() {
-		return appInstances;
-	}
-
-	public void setAppInstances(Set<AppInstance> appInstances) {
-		
-		this.appInstances.addAll(appInstances);
-	}
-
-	public void addApplication(Application application)
-	{
-		this.applications.add(application);
-	}
-	
-	public void removeApplication(Application application)
-	{
-		this.applications.removeIf(obj->obj.equals(application));
-	}
-	public Set<Application> getApplications() {
-		return applications;
-	}
-
-	public void setApplications(Set<Application> applications) {
-		this.applications.addAll(applications);
-		applications.forEach(application->{
-			application.addSupport(this);
-		});
-	}
-
-	public String getInstanceNameWithComma()
-	{
-		List<String> instanceName=new ArrayList<String>();
-		for(AppInstance appinstance:this.appInstances)
-		{
-			instanceName.add(appinstance.getAppInstanceName());
-		}
-		
-		return instanceName.stream().collect(Collectors.joining(","));
-	}
 	
 	public String getSecondarysupport() {
 		return secondarysupport;
@@ -331,14 +263,6 @@ public class Support {
 	}
 	public void removeAllDependence()
 	{
-		this.applications.forEach(obj->{
-			obj.removeSupport(this);
-		});
-		this.applications=null;
-		
-		this.appInstances.forEach(obj->{
-			obj.removeSupport(this);
-		});
-		this.appInstances=null;		
+
 	}
 }

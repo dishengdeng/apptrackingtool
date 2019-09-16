@@ -47,16 +47,12 @@
                                     <tr>
                                         <th>Contract</th>
 										<th><span class="fa fa-paperclip fa-lg"></span></th>
-										<th>Application</th>
-										<th>App Instance</th>
 										<th>Effective Date</th>
 										<th>Expired Date</th>
 										<th>Description</th>
 										<th>Approver</th>
 										<th>Approval Date</th>
-										<th>contract/Licensing in Place (Yes/No)</th>										
-                                        <th>Vendor SLA/SMA?</th>
-										<th>AHS-IT SLA?</th>
+
 
 										
 										<!--<th class="no-sort">Action</th>-->
@@ -84,33 +80,12 @@
 												<span class="fa fa-paperclip fa-lg"></span>
 											</a>
 
-										</td>
-										<td style="padding:2px">
-											<ul th:if="${contract.applications.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="app: ${contract.applications}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
-													<a th:href="@{'/applicationdetail?app='+${app.id}}"><span th:text="${app.AppName}"></span></a>
-													</div>
-												</li>
-											</ul>											
-										</td>										
-										<td style="padding:2px">
-											<ul th:if="${contract.appInstances.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="instance: ${contract.appInstances}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px">
-													<a th:href="@{'/instancedetail?id='+${instance.id}}"><span th:text="${instance.appInstanceName}"></span></a>
-													</div>
-												</li>
-											</ul>											
-										</td>										
+										</td>									
 										<td th:text="${contract.effectivedate}"></td>
 										<td th:text="${contract.expireDate}"></td>
 										<td th:text="${contract.description}"></td>
 										<td th:text="${contract.approvername}"></td>
 										<td th:text="${contract.approvaldate}"></td>
-										<td th:text="${contract.clinplace}"></td>										
-                                        <td th:text="${contract.vendorsla}"></td>
-                                        <td th:text="${contract.ahsitsla}"></td>
 
 
                                     </tr>

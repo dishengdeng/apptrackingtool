@@ -46,7 +46,6 @@
                                 <thead>
                                     <tr>
                                         <th>SLA</th>
-										<th>App Instance</th>
                                         <th>Description</th>
                                         <th>Effective Date</th>
 										<th>Termination Date</th>
@@ -70,14 +69,7 @@
 											<a th:href="@{'/sladetail?sla='+${sla.id}}" th:text="${sla.slaName}">
 											</a>
 										</td>
-										<td>
-											<a data-toggle="modal" 
-											th:if="${sla.appInstances.size()>0}" 
-											th:text="${sla.getInstanceNameWithComma()}" 
-											th:data-target="@{${#strings.concat('#',sla.id,'instances')}}" 
-											style="cursor:pointer">
-											</a>
-										</td>
+
                                         <td th:text="${sla.description}"></td>
                                         <td th:text="${sla.effectivedate}"></td>
 										<td th:text="${sla.terminationdate}"></td>
@@ -99,40 +91,7 @@
                                 </tbody>
                             </table>
                             <!-- /.table-responsive -->
-							
-							<!-- SLA update Modal -->
-							<div th:each="sla: ${slas}">
-								<div class="modal fade" th:if="${sla.appInstances.size()>0}" th:id="${#strings.concat(sla.id,'instances')}" role="dialog" >
-									<!-- Modal content-->
-											<div class="modal-dialog">
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title"> App Instances</h4>
-												</div>
-												<div class="modal-body">
-													<table class="table table-striped" id="instancetable">
-													  <thead>
-														<tr>
-														  <th scope="col">App Instance</th>
-														  <th scope="col">status</th>
-														  <th scope="col">Description</th>														  
-														</tr>
-													  </thead>
-													  <tbody>
-														<tr th:each="appInstance : ${sla.appInstances}">
-														  <th><a th:href="@{'/instancedetail?id='+${appInstance.id}}"><h5 th:text="${appInstance.appInstanceName}"></h5></a></th>
-														  <th><h5 th:text="${appInstance.status}"></h5></th>
-														  <th><h5 th:text="${appInstance.description}"></h5></th>
-														</tr>
-													  </tbody>
-													</table>
-												</div>
-											   </div>
-											 </div>
-								</div>	
-
-							</div>							
+													
 
                         </div>
                         <!-- /.panel-body -->

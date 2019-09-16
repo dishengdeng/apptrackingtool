@@ -3,7 +3,7 @@ package portal.controllers;
 
 
 
-import java.util.stream.Collectors;
+
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,13 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-
-import portal.entity.AppInstance;
-import portal.entity.Application;
 import portal.entity.Contract;
 import portal.entity.File;
-import portal.service.AppInstanceService;
-import portal.service.AppService;
 import portal.service.ContractService;
 import portal.service.FileService;
 import portal.utility.FileType;
@@ -36,11 +31,7 @@ public class ContractController {
 	@Autowired
 	private ContractService contractService;
 	
-	@Autowired
-	private AppInstanceService appInstanceService;
 	
-	@Autowired
-	private AppService appService;		
 	
 	@Autowired
 	private FileService fileService;
@@ -88,46 +79,9 @@ public class ContractController {
     @GetMapping("/contractdetail")
     public String supportdetail(@ModelAttribute("contract") Contract contract,ModelMap model) {
     	model.addAttribute("contract",contract);
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+
         return "contractdetail";
     } 
-    
-    //------Application---------------    
-    @GetMapping("/deleteContractApplication")
-    public String deleteApplicationContract(@ModelAttribute("app") Application application,@ModelAttribute("contract") Contract contract) {
-
-    	contract.removeApplication(application);
-    	contractService.updateContract(contract);
-
-    	return "redirect:/contractdetail?contract="+contract.getId();
-    }
-    
-    @PostMapping("/addContractApplication")
-    public String addContractApplication(@ModelAttribute("contract") Contract contract) {
-
-
-    	contractService.updateContract(contract);
-    	return "redirect:/contractdetail?contract="+contract.getId();
-    }
-    
-    //--Instance--    
-    @GetMapping("/deleteContractInstance")
-    public String deleteSupportInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("contract") Contract contract,ModelMap model) {
-    	contract.removeInstance(appInstance);
-    	contractService.updateContract(contract);
-
-    	return "redirect:/contractdetail?contract="+contract.getId();
-    }    
-    
-    @PostMapping("/addContractInstance")
-    public String addContractInstance(ModelMap model,@ModelAttribute("contract") Contract contract) {
-
-    	contractService.updateContract(contract);
-
-    	return "redirect:/contractdetail?contract="+contract.getId();
-    }
-
   //------file management----
     @PostMapping("/contractupload")
     public String uploadContract(@RequestParam("file") MultipartFile file,@ModelAttribute("contract") Contract contract) {

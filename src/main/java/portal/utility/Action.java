@@ -5,7 +5,8 @@ package portal.utility;
 public enum Action {
 	CREATE(1),
 	UPDATE(0),
-	DELETE(2);
+	DELETE(2),
+	COPY(3);
 	private final int roleCode;
 
 	

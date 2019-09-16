@@ -19,7 +19,6 @@ import portal.entity.Company;
 import portal.entity.Contract;
 import portal.entity.Department;
 import portal.entity.License;
-import portal.entity.Project;
 import portal.entity.Server;
 import portal.entity.Site;
 import portal.entity.Stakeholder;
@@ -126,41 +125,7 @@ public class JsonWriterImpl implements JsonWriter{
 			appObj.put("roe", application.getRoe());
 			
 			
-			JSONArray projArray=new JSONArray();
-			for(Project project:application.getProjects())
-			{
-				JSONObjectWithEmpty projObj= new JSONObjectWithEmpty();
-				projObj.put("id", project.getId());
-				projObj.put("ProjectName", project.getProjectname());
-				projObj.put("projectcolloquialname", project.getProjectcolloquialname());
-				projObj.put("Description", project.getDescription());
-				projObj.put("StartDate", project.getStartdate());
-				projObj.put("EndDate", project.getEnddate());
-				projArray.put(projObj);
-			}
-			appObj.put("projects",projArray);
-			
-			JSONArray zoneArray=new JSONArray();
-			for(Zone zone:application.getZones())
-			{
-				JSONObjectWithEmpty zoneObj= new JSONObjectWithEmpty();
-				zoneObj.put("id", zone.getId());
-				zoneObj.put("ZoneName", zone.getZoneName());
 
-				zoneArray.put(zoneObj);
-			}
-			appObj.put("zones",zoneArray);
-			
-			JSONArray siteArray=new JSONArray();
-			for(Site site:application.getSites())
-			{
-				JSONObjectWithEmpty siteObj= new JSONObjectWithEmpty();
-				siteObj.put("id", site.getId());
-				siteObj.put("SiteName", site.getSiteName());
-
-				siteArray.put(siteObj);
-			}
-			appObj.put("sites",siteArray);
 
 			JSONArray vendorArray=new JSONArray();
 			for(Company vendor:application.getManufacturers())
@@ -174,52 +139,9 @@ public class JsonWriterImpl implements JsonWriter{
 			}
 			appObj.put("vendors",vendorArray);
 			
-			JSONArray departmentArray=new JSONArray();
-			for(Department deparment:application.getDepartments())
-			{
-				JSONObjectWithEmpty deparmentObj= new JSONObjectWithEmpty();
-				deparmentObj.put("id", deparment.getId());
-				deparmentObj.put("DepartmentName", deparment.getDepartmentName());
 
-				departmentArray.put(deparmentObj);
-			}
-			appObj.put("Departments",departmentArray);
 			
-			JSONArray supportArray=new JSONArray();
-			for(Support support:application.getSupports())
-			{
-				JSONObjectWithEmpty supportsObj= new JSONObjectWithEmpty();
-				supportsObj.put("id", support.getId());
-				supportsObj.put("Support", support.getSupportName());
-				supportsObj.put("SupportType", support.getSupporttype());
-				supportsObj.put("SecondarySupport", support.getSecondarysupport());
-				supportArray.put(supportsObj);
-			}
-			appObj.put("supports",supportArray);
-			
-			JSONArray contractArray=new JSONArray();
-			for(Contract contract:application.getContracts())
-			{
-				JSONObjectWithEmpty contractObj= new JSONObjectWithEmpty();
-				contractObj.put("id", contract.getId());
-				contractObj.put("ContractName", contract.getContractName());
-				contractObj.put("ExpireDate", contract.getExpireDate());
-				contractObj.put("Description", contract.getDescription());
-				contractArray.put(contractObj);
-			}
-			appObj.put("contracts",contractArray);
-			
-			JSONArray licenseArray=new JSONArray();
-			for(License license:application.getLicenses())
-			{
-				JSONObjectWithEmpty licenseObj= new JSONObjectWithEmpty();
-				licenseObj.put("id", license.getId());
-				licenseObj.put("LicenseNumber", license.getLicenseNumber());
-				licenseObj.put("ExpireDate", license.getExpireDate());
-				licenseObj.put("RegistrationDate", license.getRegistrationDate());
-				licenseArray.put(licenseObj);
-			}
-			appObj.put("licenses",licenseArray);
+
 			
 			JSONArray instanceArray=new JSONArray();
 			for(AppInstance instance:application.getAppInstances())
@@ -252,63 +174,14 @@ public class JsonWriterImpl implements JsonWriter{
 			instanceObj.put("Version", instance.getVersion());
 			instanceObj.put("Description", instance.getDescription());
 			instanceObj.put("Notes", instance.getNotes());
-			instanceObj.put("Userbase", instance.getUserbase());
+
 			boolean isNoProperty=true;
 			
-			isNoProperty=ObjectUtils.isEmpty(instance.getDepartment());
-			JSONObjectWithEmpty departmentObj= new JSONObjectWithEmpty();
-			departmentObj.put("id", isNoProperty?"":instance.getDepartment().getId());
-			departmentObj.put("departmentName", isNoProperty?"":instance.getDepartment().getDepartmentName());
-			departmentObj.put("Description", isNoProperty?"":instance.getDepartment().getDescription());
-			instanceObj.put("Department", departmentObj);
-			
-			JSONArray supportArray=new JSONArray();
-			for(Support support:instance.getSupports())
-			{
-				JSONObjectWithEmpty supportsObj= new JSONObjectWithEmpty();
-				supportsObj.put("id", support.getId());
-				supportsObj.put("Support", support.getSupportName());
-				supportsObj.put("SupportType", support.getSupporttype());
-				supportsObj.put("SecondarySupport", support.getSecondarysupport());
-				supportArray.put(supportsObj);
-			}
-			instanceObj.put("supports",supportArray);
-			
-			JSONArray siteArray=new JSONArray();
-			for(Site site:instance.getSites())
-			{
-				JSONObjectWithEmpty siteObj= new JSONObjectWithEmpty();
-				siteObj.put("id", site.getId());
-				siteObj.put("SiteName", site.getSiteName());
 
-				siteArray.put(siteObj);
-			}
-			instanceObj.put("sites",siteArray);
 			
-			JSONArray zoneArray=new JSONArray();
-			for(Zone zone:instance.getZones())
-			{
-				JSONObjectWithEmpty zoneObj= new JSONObjectWithEmpty();
-				zoneObj.put("id", zone.getId());
-				zoneObj.put("ZoneName", zone.getZoneName());
 
-				zoneArray.put(zoneObj);
-			}
-			instanceObj.put("zones",zoneArray);			
+			
 
-			JSONArray projArray=new JSONArray();
-			for(Project project:instance.getProjects())
-			{
-				JSONObjectWithEmpty projObj= new JSONObjectWithEmpty();
-				projObj.put("id", project.getId());
-				projObj.put("ProjectName", project.getProjectname());
-				projObj.put("projectcolloquialname", project.getProjectcolloquialname());
-				projObj.put("Description", project.getDescription());
-				projObj.put("StartDate", project.getStartdate());
-				projObj.put("EndDate", project.getEnddate());
-				projArray.put(projObj);
-			}
-			instanceObj.put("projects",projArray);
 			
 			isNoProperty=ObjectUtils.isEmpty(instance.getApplication());
 			JSONObjectWithEmpty appObj= new JSONObjectWithEmpty();
@@ -318,38 +191,9 @@ public class JsonWriterImpl implements JsonWriter{
 			appObj.put("Version", isNoProperty?"":instance.getApplication().getAppVersion());
 			instanceObj.put("Application", appObj);
 			
-			JSONArray contractArray=new JSONArray();
-			for(Contract contract:instance.getContracts())
-			{
-				JSONObjectWithEmpty contractObj= new JSONObjectWithEmpty();
-				contractObj.put("id", contract.getId());
-				contractObj.put("ContractName", contract.getContractName());
-				contractObj.put("ExpireDate", contract.getExpireDate());
-				contractObj.put("Description", contract.getDescription());
-				contractArray.put(contractObj);
-			}
-			instanceObj.put("contracts",contractArray);
-			
-			JSONArray vendorArray=new JSONArray();
-			for(Company vendor:instance.getCompanys())
-			{
-				JSONObjectWithEmpty vendorObj= new JSONObjectWithEmpty();
-				vendorObj.put("id", vendor.getId());
-				vendorObj.put("Vendor", vendor.getManufacturer());
-				vendorObj.put("CompanyName", vendor.getCompanyName());
-				vendorObj.put("Email", vendor.getEmail());
-				vendorArray.put(vendorObj);
-			}
-			instanceObj.put("vendors",vendorArray);
-			
-			isNoProperty=ObjectUtils.isEmpty(instance.getSla());
-			JSONObjectWithEmpty slaObj= new JSONObjectWithEmpty();
-			slaObj.put("id", isNoProperty?"":instance.getSla().getId());
-			slaObj.put("SLA", isNoProperty?"":instance.getSla().getSlaName());
-			slaObj.put("Description", isNoProperty?"":instance.getSla().getDescription());
-			slaObj.put("EffectiveDate", isNoProperty?"":instance.getSla().getEffectivedate());
-			slaObj.put("TerminationDate", isNoProperty?"":instance.getSla().getTerminationdate());
-			instanceObj.put("SLA", slaObj);
+
+
+
 			
 			JSONArray serverArray=new JSONArray();
 			for(Server server:instance.getServers())
@@ -363,17 +207,7 @@ public class JsonWriterImpl implements JsonWriter{
 			}
 			instanceObj.put("servers",serverArray);
 			
-			JSONArray licenseArray=new JSONArray();
-			for(License license:instance.getLicenses())
-			{
-				JSONObjectWithEmpty licenseObj= new JSONObjectWithEmpty();
-				licenseObj.put("id", license.getId());
-				licenseObj.put("LicenseNumber", license.getLicenseNumber());
-				licenseObj.put("ExpireDate", license.getExpireDate());
-				licenseObj.put("RegistrationDate", license.getRegistrationDate());
-				licenseArray.put(licenseObj);
-			}
-			instanceObj.put("licenses",licenseArray);	
+
 			
 			isNoProperty=ObjectUtils.isEmpty(instance.getDesktop());
 			JSONObjectWithEmpty desktopObj= new JSONObjectWithEmpty();
@@ -420,27 +254,7 @@ public class JsonWriterImpl implements JsonWriter{
 			
 
 			
-			JSONArray applicationArray=new JSONArray();
-			for(Application application:department.getApplications())
-			{
-				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
-				applicationObj.put("id", application.getId());
-				applicationObj.put("Application", application.getAppName());
-				applicationArray.put(applicationObj);
-			}
-			departmentObj.put("applications",applicationArray);
-			
-			JSONArray instanceArray=new JSONArray();
-			for(AppInstance instance:department.getAppInstances())
-			{
-				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
-				instanceObj.put("id", instance.getId());
-				instanceObj.put("AppInstance", instance.getAppInstanceName());
-				instanceObj.put("Status", instance.getStatus());
-				instanceObj.put("Description", instance.getDescription());
-				instanceArray.put(instanceObj);
-			}
-			departmentObj.put("AppInstances",instanceArray);		
+	
 			
 			departmentArray.put(departmentObj);
 		}
@@ -470,27 +284,9 @@ public class JsonWriterImpl implements JsonWriter{
 			}
 			zoneObj.put("sites",siteArray);
 			
-			JSONArray applicationArray=new JSONArray();
-			for(Application application:zone.getApplications())
-			{
-				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
-				applicationObj.put("id", application.getId());
-				applicationObj.put("Application", application.getAppName());
-				applicationArray.put(applicationObj);
-			}
-			zoneObj.put("applications",applicationArray);
+
 			
-			JSONArray instanceArray=new JSONArray();
-			for(AppInstance instance:zone.getAppInstances())
-			{
-				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
-				instanceObj.put("id", instance.getId());
-				instanceObj.put("AppInstance", instance.getAppInstanceName());
-				instanceObj.put("Status", instance.getStatus());
-				instanceObj.put("Description", instance.getDescription());
-				instanceArray.put(instanceObj);
-			}
-			zoneObj.put("AppInstances",instanceArray);			
+		
 			
 			zoneArray.put(zoneObj);
 		}
@@ -512,27 +308,7 @@ public class JsonWriterImpl implements JsonWriter{
 			isNoProperty=ObjectUtils.isEmpty(site.getZone());
 			siteObj.put("Zone", isNoProperty?"":site.getZone().getZoneName());
 			
-			JSONArray applicationArray=new JSONArray();
-			for(Application application:site.getApplications())
-			{
-				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
-				applicationObj.put("id", application.getId());
-				applicationObj.put("Application", application.getAppName());
-				applicationArray.put(applicationObj);
-			}
-			siteObj.put("applications",applicationArray);
 			
-			JSONArray instanceArray=new JSONArray();
-			for(AppInstance instance:site.getAppInstances())
-			{
-				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
-				instanceObj.put("id", instance.getId());
-				instanceObj.put("AppInstance", instance.getAppInstanceName());
-				instanceObj.put("Status", instance.getStatus());
-				instanceObj.put("Description", instance.getDescription());
-				instanceArray.put(instanceObj);
-			}
-			siteObj.put("AppInstances",instanceArray);				
 			
 			siteArray.put(siteObj);
 		}
@@ -569,17 +345,7 @@ public class JsonWriterImpl implements JsonWriter{
 			}
 			vendorObj.put("applications",applicationArray);
 			
-			JSONArray instanceArray=new JSONArray();
-			for(AppInstance instance:vendor.getAppInstances())
-			{
-				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
-				instanceObj.put("id", instance.getId());
-				instanceObj.put("AppInstance", instance.getAppInstanceName());
-				instanceObj.put("Status", instance.getStatus());
-				instanceObj.put("Description", instance.getDescription());
-				instanceArray.put(instanceObj);
-			}
-			vendorObj.put("AppInstances",instanceArray);				
+			
 			
 			vendorArray.put(vendorObj);
 		}
@@ -601,31 +367,9 @@ public class JsonWriterImpl implements JsonWriter{
 			contractObj.put("EffectiveDate", contract.getEffectivedate());
 			contractObj.put("ApprovalDate", contract.getApprovaldate());
 			contractObj.put("ApproverName", contract.getApprovername());
-			contractObj.put("ContractLicensing in Place", contract.getClinplace());
-			contractObj.put("Vendor SLA", contract.getVendorsla());
-			contractObj.put("AHS-IT SLA", contract.getAhsitsla());
+
 			
-			JSONArray applicationArray=new JSONArray();
-			for(Application application:contract.getApplications())
-			{
-				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
-				applicationObj.put("id", application.getId());
-				applicationObj.put("Application", application.getAppName());
-				applicationArray.put(applicationObj);
-			}
-			contractObj.put("applications",applicationArray);
-			
-			JSONArray instanceArray=new JSONArray();
-			for(AppInstance instance:contract.getAppInstances())
-			{
-				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
-				instanceObj.put("id", instance.getId());
-				instanceObj.put("AppInstance", instance.getAppInstanceName());
-				instanceObj.put("Status", instance.getStatus());
-				instanceObj.put("Description", instance.getDescription());
-				instanceArray.put(instanceObj);
-			}
-			contractObj.put("AppInstances",instanceArray);	
+
 			
 			contractArray.put(contractObj);
 		}
@@ -650,27 +394,7 @@ public class JsonWriterImpl implements JsonWriter{
 			licenseObj.put("RenewalOwner", license.getRenewalowner());
 			licenseObj.put("Warrenty", license.getWarrenty());
 			
-			JSONArray applicationArray=new JSONArray();
-			for(Application application:license.getApplications())
-			{
-				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
-				applicationObj.put("id", application.getId());
-				applicationObj.put("Application", application.getAppName());
-				applicationArray.put(applicationObj);
-			}
-			licenseObj.put("applications",applicationArray);
-			
-			JSONArray instanceArray=new JSONArray();
-			for(AppInstance instance:license.getAppInstances())
-			{
-				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
-				instanceObj.put("id", instance.getId());
-				instanceObj.put("AppInstance", instance.getAppInstanceName());
-				instanceObj.put("Status", instance.getStatus());
-				instanceObj.put("Description", instance.getDescription());
-				instanceArray.put(instanceObj);
-			}
-			licenseObj.put("AppInstances",instanceArray);
+
 			
 			licenseArray.put(licenseObj);
 		}
@@ -722,27 +446,7 @@ public class JsonWriterImpl implements JsonWriter{
 			supportObj.put("Note", support.getNote());
 			supportObj.put("Location", support.getLocation());
 			
-			JSONArray applicationArray=new JSONArray();
-			for(Application application:support.getApplications())
-			{
-				JSONObjectWithEmpty applicationObj= new JSONObjectWithEmpty();
-				applicationObj.put("id", application.getId());
-				applicationObj.put("Application", application.getAppName());
-				applicationArray.put(applicationObj);
-			}
-			supportObj.put("applications",applicationArray);
-			
-			JSONArray instanceArray=new JSONArray();
-			for(AppInstance instance:support.getAppInstances())
-			{
-				JSONObjectWithEmpty instanceObj= new JSONObjectWithEmpty();
-				instanceObj.put("id", instance.getId());
-				instanceObj.put("AppInstance", instance.getAppInstanceName());
-				instanceObj.put("Status", instance.getStatus());
-				instanceObj.put("Description", instance.getDescription());
-				instanceArray.put(instanceObj);
-			}
-			supportObj.put("AppInstances",instanceArray);			
+	
 			
 			supportArray.put(supportObj);
 		}

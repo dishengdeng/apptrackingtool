@@ -74,12 +74,7 @@ public class SLA {
     @JsonView(Views.Public.class)
 	private String attachment;   
 
-    @OneToMany(
-            mappedBy = "sla", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true
-        )
-    private Set<AppInstance> appInstances = new HashSet<AppInstance>();
+
     
     @OneToMany(
             mappedBy = "sla", 
@@ -163,25 +158,11 @@ public class SLA {
 	}
 
 
-
-	public String getInstanceNameWithComma()
+	public void removeAlldependence()
 	{
-		List<String> instanceName=new ArrayList<String>();
-		for(AppInstance appinstance:this.appInstances)
-		{
-			instanceName.add(appinstance.getAppInstanceName());
-		}
 		
-		return instanceName.stream().collect(Collectors.joining(","));
 	}
 
-	public Set<AppInstance> getAppInstances() {
-		return appInstances;
-	}
-
-	public void setAppInstances(Set<AppInstance> appInstances) {
-		this.appInstances.addAll(appInstances);
-	}
 
 	public Set<File> getFiles() {
 		return files;

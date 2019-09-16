@@ -2,7 +2,6 @@ package portal.controllers;
 
 
 
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,11 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
-import portal.entity.AppInstance;
-import portal.entity.Application;
 import portal.entity.Support;
-import portal.service.AppInstanceService;
-import portal.service.AppService;
 import portal.service.SupportService;
 import portal.validator.SupportValidator;
 
@@ -29,11 +24,7 @@ public class SupportController {
 	@Autowired
 	private SupportService supportService;
 	
-	@Autowired
-	private AppInstanceService appInstanceService;
-	
-	@Autowired
-	private AppService appService;
+
 	
 	@Autowired
 	private SupportValidator supportValidator;
@@ -53,7 +44,7 @@ public class SupportController {
  
     @PostMapping("/updateSupport")
     public String updateSupport(@ModelAttribute("supportModel") Support support,BindingResult bindingResult,ModelMap model) {
-    	getUpdatedSupport(support);
+
     	supportValidator.validate(support, bindingResult);
     	if (bindingResult.hasErrors())
     	{
@@ -87,52 +78,10 @@ public class SupportController {
         return "supportdetail";
     }
     
-    //--application--    
-    @GetMapping("/deletesupportapplication")
-    public String deletesupportapplication(@ModelAttribute("application") Application application,@ModelAttribute("support") Support support,ModelMap model) {
-    	support.removeApplication(application);
-    	supportService.updateSupport(support);
-
-    	return "redirect:/supportdetail?support="+support.getId();
-    }    
-    
-    @PostMapping("/addsupportapplication")
-    public String addDepartmentapplication(ModelMap model,@ModelAttribute("support") Support support) {
-
-    	supportService.updateSupport(support);
-
-    	return "redirect:/supportdetail?support="+support.getId();
-    }    
-    
-  //--Instance--    
-    @GetMapping("/deleteSupportInstance")
-    public String deleteSupportInstance(@ModelAttribute("instance") AppInstance appInstance,@ModelAttribute("support") Support support,ModelMap model) {
-    	support.removeInstance(appInstance);
-    	supportService.updateSupport(support);
-
-    	return "redirect:/supportdetail?support="+support.getId();
-    }    
-    
-    @PostMapping("/addSupportInstance")
-    public String addSupportInstance(ModelMap model,@ModelAttribute("support") Support support) {
-
-    	supportService.updateSupport(support);
-
-    	return "redirect:/supportdetail?support="+support.getId();
-    }
-
-    private void getUpdatedSupport(Support support)
-    {
-    	Support supportEntity=supportService.getById(support.getId());
-    	support.setAppInstances(supportEntity.getAppInstances());
-    	support.setApplications(supportEntity.getApplications());
-    }
-    
     private void setModel(Support support,ModelMap model)
     {
     	model.addAttribute("support",support);
     	model.addAttribute("supportModel",support);
-    	model.addAttribute("appUnassginedInstances",appInstanceService.getUnassginedAppInstances());
-    	model.addAttribute("appAssginedInstances",appService.getAll().stream().sorted().collect(Collectors.toList()));
+
     }
 }
