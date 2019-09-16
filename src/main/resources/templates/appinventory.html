@@ -16,7 +16,8 @@
                     <h1 class="page-header">
 					<div class="row">
 						<div class="col-md-8 text-muted">
-						<span th:text="${actiontype}"></span>
+						<span th:text="${actiontype}" th:if="${actiontype!=T(portal.utility.Action).COPYTO}"></span>
+						<span th:text="@{${actiontype}+' - '+${department.departmentName}}" th:if="${actiontype==T(portal.utility.Action).COPYTO}"></span>
 						</div>
 						
 
@@ -38,9 +39,9 @@
 						<form action="#" method="post" id="appdetailform">	
 						  <div class="form-group">
 							<label for="zoneName">Application:</label>
-							<input type="hidden" class="form-control" th:name="department" th:value="${appdepartment.department.id}"></input>
+							<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
 							<input type="hidden" class="form-control" th:name="action" th:value="${actiontype}"></input>
-							<input type="hidden" class="form-control" th:name="id" th:value="${actiontype==T(portal.utility.Action).COPY}? null:${appdepartment.id}"></input>
+							<input type="hidden" class="form-control" th:name="id" th:value="${actiontype==T(portal.utility.Action).COPY or actiontype==T(portal.utility.Action).COPYTO}? null:${appdepartment.id}"></input>
 							<select name="application" class="form-control">
 							<option th:selected="${appdepartment.application==null}"></option>
 							  <option th:each="appEntity : ${apps}" 

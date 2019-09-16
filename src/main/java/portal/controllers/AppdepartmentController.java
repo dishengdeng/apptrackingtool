@@ -11,7 +11,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.Appdepartment;
 import portal.entity.Department;
@@ -20,6 +20,7 @@ import portal.service.AppService;
 import portal.service.AppdepartmentService;
 import portal.service.CompanyService;
 import portal.service.ContractService;
+import portal.service.DepartmentService;
 import portal.service.LicenseService;
 import portal.service.ProjectService;
 import portal.service.SiteService;
@@ -52,18 +53,29 @@ public class AppdepartmentController {
 	@Autowired
 	private AppdepartmentService appDepartmentService;
 	
+	@Autowired
+	private DepartmentService departmentService;
+	
+	
+	
     @GetMapping("/appinventory")
-    public String appinventory(@ModelAttribute("appdepartment") Appdepartment appdepartment,
-    							@ModelAttribute("department") Department department,
-    							@ModelAttribute("actiontype") Action actionType,
+    public String appinventory(@RequestParam("appdepartment") String appdepartment,
+    							@RequestParam("department") String department,
+    							@RequestParam("actiontype") String actionType,
     								ModelMap model) {
-    	if(actionType==Action.CREATE)
+    	Appdepartment appdepart;
+    	Action type=Action.valueOf(actionType);
+    	if(type==Action.CREATE)
     	{
-    		appdepartment.setDepartment(department);
+    		appdepart=new Appdepartment();
     	}
-    	
-    	model.addAttribute("appdepartment",appdepartment);
-    	model.addAttribute("actiontype",actionType);
+    	else
+    	{
+    		appdepart=appDepartmentService.findone(Long.valueOf(appdepartment));
+    	}
+		model.addAttribute("department",departmentService.getById(Long.valueOf(department)));
+    	model.addAttribute("appdepartment",appdepart);
+    	model.addAttribute("actiontype",type);
     	model.addAttribute("apps",appService.getAll());
     	model.addAttribute("sites",siteService.getAll());
     	model.addAttribute("vendors",vendorService.getAll());

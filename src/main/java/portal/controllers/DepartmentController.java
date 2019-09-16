@@ -44,7 +44,7 @@ import portal.entity.Zaclist;
 import portal.entity.Zacmap;
 import portal.entity.Zone;
 import portal.service.AnswerService;
-
+import portal.service.AppService;
 import portal.service.DepartmentService;
 import portal.service.FileService;
 import portal.service.QuestionService;
@@ -76,7 +76,8 @@ public class DepartmentController {
 	@Autowired
 	private QuestionService questionService;
 	
-
+	@Autowired
+	private AppService appService;
 	
 	@Autowired
 	private StakeholderService stakeholderService;
@@ -147,6 +148,8 @@ public class DepartmentController {
     	model.addAttribute("zacmaps",departmentService.getZacmap(department));
     	model.addAttribute("questions", questionService.getAllQuestion());
     	model.addAttribute("departzones", department.getZones().stream().sorted().collect(Collectors.toList()));
+    	model.addAttribute("apps", appService.getAll());
+    	model.addAttribute("departments",departmentService.getAll());
     	//--zones--
     	model.addAttribute("zones",zoneService.getAll());
         return "departmentdetail";

@@ -47,6 +47,7 @@
                                     <tr>
                                         <th>Business Unit</th>
 										<th><span class="fa fa-paperclip fa-lg"></span></th>
+										<th>App Inventory</th>
 										<th>Description</th>
                                         <th>Purpose</th>
 										<th>Stragic Plan</th>
@@ -80,7 +81,15 @@
 											</a>
 
 										</td>																			
-									
+										<td style="padding:2px">
+											<ul th:if="${department.appdepartments.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
+												<li th:each="appdepart: ${department.appdepartments}">
+													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important" th:if="${appdepart.application!=null}">
+													<a th:href="@{'/applicationdetail?app='+${appdepart.application.id}}"><span th:text="${appdepart.application.AppName}"></span></a>
+													</div>
+												</li>
+											</ul>											
+										</td>									
 										<td th:text="${department.description}"></td>
 										<td th:text="${department.purpose}"></td>
                                         <td th:text="${department.stragicplan}"></td>

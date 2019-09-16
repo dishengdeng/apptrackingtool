@@ -13,4 +13,5 @@ public interface AppdepartmentService {
 	public void delete(Appdepartment appdepartment);
 	public List<Appdepartment> getAll();
 	public Appdepartment saveAppdepartment(JSONObject appdepartment);
+	public Appdepartment findone(Long id);
 }

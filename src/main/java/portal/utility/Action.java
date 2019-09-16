@@ -6,7 +6,8 @@ public enum Action {
 	CREATE(1),
 	UPDATE(0),
 	DELETE(2),
-	COPY(3);
+	COPY(3),
+	COPYTO(4);
 	private final int roleCode;
 
 	

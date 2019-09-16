@@ -78,7 +78,7 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 	@Override
 	public Appdepartment saveAppdepartment(JSONObject appdepartment) {
 		Action actionType=Action.valueOf(appdepartment.getString("action"));
-		Appdepartment appdepart= actionType.equals(Action.CREATE) || actionType.equals(Action.COPY) ? new Appdepartment():appdepartmentRepository.findOne(appdepartment.getLong("id"));
+		Appdepartment appdepart= actionType.equals(Action.CREATE) || actionType.equals(Action.COPY) || actionType.equals(Action.COPYTO)? new Appdepartment():appdepartmentRepository.findOne(appdepartment.getLong("id"));
 		appdepart.setApplication(appRepository.findOne(appdepartment.getJSONObject("application").getLong("id")));
 		appdepart.setBusinesslead(appdepartment.getJSONObject("application").getString("businesslead"));
 		appdepart.setAppowner(appdepartment.getJSONObject("application").getString("appowner"));
@@ -148,6 +148,12 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 		appdepart.setProjects(projects);
 		
 		return appdepartmentRepository.saveAndFlush(appdepart);
+	}
+
+	@Override
+	public Appdepartment findone(Long id) {
+		
+		return appdepartmentRepository.findOne(id);
 	}
 
 }
