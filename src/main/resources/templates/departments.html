@@ -81,14 +81,10 @@
 											</a>
 
 										</td>																			
-										<td style="padding:2px">
-											<ul th:if="${department.appdepartments.size()>0}" style="list-style-type: none;margin: 0;padding: 0;">
-												<li th:each="appdepart: ${department.appdepartments}">
-													<div class="panel panel-default" style="padding:0;margin-bottom:2px !important" th:if="${appdepart.application!=null}">
-													<a th:href="@{'/applicationdetail?app='+${appdepart.application.id}}"><span th:text="${appdepart.application.AppName}"></span></a>
-													</div>
-												</li>
-											</ul>											
+										<td>
+											<a data-toggle="modal" th:if="${department.appdepartments.size()>0}" th:data-target="@{${#strings.concat('#',department.id,'appdepartment')}}" class="cursor-pointer">
+											<span class="badge badge-secondary small" th:text="${'Application - Total: '+department.appdepartments.size()}"></span>
+											</a>										
 										</td>									
 										<td th:text="${department.description}"></td>
 										<td th:text="${department.purpose}"></td>
@@ -138,6 +134,39 @@
 											   </div>
 											 </div>
 										</div>
+										
+										<!--app Modal-->
+										<div th:if="${department.appdepartments.size()>0}">
+											<div class="modal fade" th:id="${#strings.concat(department.id,'appdepartment')}" role="dialog" >
+											<!-- Modal content-->
+													<div class="modal-dialog">
+													  <div class="modal-content">
+														<div class="modal-header">
+														  <button type="button" class="close" data-dismiss="modal">&times;</button>
+														  <h4 class="modal-title"> Application</h4>
+														</div>
+														<div class="modal-body">
+															<table class="table table-striped" id="instancetable">
+															  <thead>
+																<tr>
+																  <th scope="col">Application</th>
+
+																  <th scope="col">Notes</th>														  
+																</tr>
+															  </thead>
+															  <tbody>
+																<tr th:each="appdepartment : ${department.appdepartments}">
+																  <th><a th:href="@{'/applicationdetail?app='+${appdepartment.application.id}}" th:if="${appdepartment.application!=null}"><h5 th:text="${appdepartment.application.AppName}"></h5></a></th>
+
+																  <th><h5 th:text="${appdepartment.application.notes}" th:if="${appdepartment.application!=null}"></h5></th>
+																</tr>
+															  </tbody>
+															</table>
+														</div>
+													   </div>
+													 </div>
+											</div>
+										</div>										
 
 									</div><!--Model Area-->
                         </div>
