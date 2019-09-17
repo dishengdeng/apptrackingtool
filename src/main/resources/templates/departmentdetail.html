@@ -905,7 +905,7 @@
 							  <h4 class="modal-title">Copy To</h4>													
 							</div>
 							<div class="modal-body">	
-								<form action="#" method="post" id="copytoform">
+								<form action="/appinventory" method="GET">
 									<div class="form-group">
 										<label for="zoneselect">Department:</label>
 										<input type="hidden" class="form-control" th:name="appdepartment" th:value="${appdepartment.id}"></input>
@@ -1035,19 +1035,7 @@
 
 		  });
 		  
-		    $( "#copytoform" ).on( "submit", function( event ) {
-				event.preventDefault();
-				var formdata=$( this ).serializeArray();
-				var url="/appinventory?";
-				for(i in formdata)
-				{
-					if(formdata[i].name==="appdepartment") url=url+formdata[i].name+"="+formdata[i].value+"&";
-					if(formdata[i].name==="department") url=url+formdata[i].name+"="+formdata[i].value+"&";
-					if(formdata[i].name==="actiontype") url=url+formdata[i].name+"="+formdata[i].value+"&";
-				}
-				window.location.replace(url);
-			
-			});
+
 		  
 		  
   
