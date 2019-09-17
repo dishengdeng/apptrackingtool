@@ -26,28 +26,7 @@
 					<input type="text" class="form-control" th:name="stakeholderName" th:value="${stakeholder.stakeholderName}"></input>
 
 				  </div>
-				  <div class="form-group">
-					<label for="roleSelect">Role:</label>
-					<select name="role" class="form-control" id="roleSelect">
-					<option selected="selected" th:value="${stakeholder.role}"></option>
-					  <option th:each="roleEntity : ${roles}" 
-					  th:text="${roleEntity.SLARoleName}" 
-					  th:attr="value = ${roleEntity.id}">
-					  
-					  </option>
-					</select>
-				  </div>													  
-				  <div class="form-group">
-					<label for="departmentSelect">Department:</label>
-					<select name="department" class="form-control" id="departmentSelect">
-						<option selected="selected" th:value="${stakeholder.department}"></option>
-					  <option th:each="departmentEntity : ${departments}" 
-					  th:text="${departmentEntity.departmentName}" 
-					  th:attr="value = ${departmentEntity.id}">
-					  
-					  </option>
-					</select>
-				  </div>					  												  
+					  												  
 				  <div class="form-group">
 					<label for="note">Location(site):</label>
 					<select name="site" class="form-control" id="SiteSelect">
@@ -69,34 +48,6 @@
 				  <div class="form-group">
 					<label for="note">Position/Title:</label>
 					<input type="text" class="form-control" th:name="position">
-				  </div>
-				  <div class="form-group">
-					<label for="note">Influence:</label>
-					<select name="influence" class="form-control" id="statusSelect">
-						<option th:selected="${stakeholder.influence==null}"></option>
-						<option th:attr="value = 'Low'" th:selected="${stakeholder.influence==null} ? false:${stakeholder.influence=='Low'}" th:text="Low"></option>
-						<option th:attr="value = 'Medium'" th:selected="${stakeholder.influence==null} ? false:${stakeholder.influence=='Medium'}" th:text="Medium"></option>
-						<option th:attr="value = 'High'" th:selected="${stakeholder.influence==null} ? false:${stakeholder.influence=='High'}" th:text="High"></option>									
-					</select>								
-				  </div>
-				  
-				  <div class="form-group">
-					<label for="note">Interest:</label>
-					<select name="interest" class="form-control" id="statusSelect">
-						<option th:selected="${stakeholder.influence==null}"></option>
-						<option th:attr="value = 'Low'" th:selected="${stakeholder.interest==null} ? false:${stakeholder.interest=='Low'}" th:text="Low"></option>
-						<option th:attr="value = 'Medium'" th:selected="${stakeholder.interest==null} ? false:${stakeholder.interest=='Medium'}" th:text="Medium"></option>
-						<option th:attr="value = 'High'" th:selected="${stakeholder.interest==null} ? false:${stakeholder.interest=='High'}" th:text="High"></option>									
-					</select>									
-				  </div>
-				  <div class="form-group">
-					<label for="note">RACI:</label>
-					<select name="raciforsyschanges" class="form-control" id="RACISelect" multiple>
-						<option th:each="raci : ${T(portal.utility.RACI).values()}"
-								th:value="${raci}"
-								th:text="${raci}">
-						</option>
-					</select>							
 				  </div>					  
 				  <input class="btn btn-primary" style="margin-top:20px" type="submit" value="Submit" />
 				</form>

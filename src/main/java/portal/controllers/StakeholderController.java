@@ -132,7 +132,7 @@ public class StakeholderController {
     {
     	StakeholderModel stakeholderModel=new StakeholderModel();
     	stakeholderModel.setId(stakeholder.getId());
-    	stakeholderModel.setEmail(stakeholderModel.getEmail());
+    	stakeholderModel.setEmail(stakeholder.getEmail());
     	stakeholderModel.setNote(stakeholder.getNote());
     	stakeholderModel.setPhone(stakeholder.getPhone());
     	stakeholderModel.setSite(ObjectUtils.isEmpty(stakeholder.getSite())? null:stakeholder.getSite().getId());

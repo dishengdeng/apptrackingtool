@@ -7,6 +7,7 @@ import java.util.Set;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import portal.entity.Appdepartment;
 import portal.entity.Contract;
@@ -79,7 +80,9 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 	public Appdepartment saveAppdepartment(JSONObject appdepartment) {
 		Action actionType=Action.valueOf(appdepartment.getString("action"));
 		Appdepartment appdepart= actionType.equals(Action.CREATE) || actionType.equals(Action.COPY) || actionType.equals(Action.COPYTO)? new Appdepartment():appdepartmentRepository.findOne(appdepartment.getLong("id"));
-		appdepart.setApplication(appRepository.findOne(appdepartment.getJSONObject("application").getLong("id")));
+		
+
+		if(!ObjectUtils.isEmpty(appdepartment.getJSONObject("application").getString("id"))) appdepart.setApplication(appRepository.findOne(appdepartment.getJSONObject("application").getLong("id")));
 		appdepart.setBusinesslead(appdepartment.getJSONObject("application").getString("businesslead"));
 		appdepart.setAppowner(appdepartment.getJSONObject("application").getString("appowner"));
 		appdepart.setGoverinplace(appdepartment.getJSONObject("application").getString("goverinplace"));
@@ -111,8 +114,8 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 		appdepart.setServersupport(appdepartment.getJSONObject("support").getString("serversupport"));
 		appdepart.setNetworksupport(appdepartment.getJSONObject("support").getString("networksupport"));
 		
-		appdepart.setDepartment(departmentRepository.findOne(appdepartment.getJSONObject("department").getLong("id")));
-		appdepart.setVendor(companyRepository.findOne(appdepartment.getJSONObject("vendor").getLong("id")));
+		if(!ObjectUtils.isEmpty(appdepartment.getJSONObject("department").getString("id"))) appdepart.setDepartment(departmentRepository.findOne(appdepartment.getJSONObject("department").getLong("id")));
+		if(!ObjectUtils.isEmpty(appdepartment.getJSONObject("vendor").getString("id")))appdepart.setVendor(companyRepository.findOne(appdepartment.getJSONObject("vendor").getLong("id")));
 		
 		appdepart.setAhsitsla(appdepartment.getJSONObject("contract").getString("ahsitsla"));
 		appdepart.setContractinplace(appdepartment.getJSONObject("contract").getString("contractinplace"));

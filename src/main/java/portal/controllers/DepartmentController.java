@@ -119,7 +119,7 @@ public class DepartmentController {
     public String addDepartment(@ModelAttribute("department") Department department) {
 
     	departmentService.addDepartment(department);
-        return "redirect:/departments";
+        return "redirect:/";
     }
     
     @PostMapping("/updateDepartment")
@@ -166,7 +166,7 @@ public class DepartmentController {
     	departmentService.removFiles(UPLOADED_FOLDER, department);
     	
     	departmentService.delete(department);
-    	return "redirect:/departments";
+    	return "redirect:/";
     }
     
     //------Question---------------    

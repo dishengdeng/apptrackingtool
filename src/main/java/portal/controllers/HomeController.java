@@ -86,7 +86,7 @@ public class HomeController {
     public String addApplication(@ModelAttribute("application") Application application) {
 
     	appService.addApplication(application);
-        return "redirect:/";
+        return "redirect:/applications";
     }
     
     @GetMapping("/addApplication")
@@ -112,7 +112,7 @@ public class HomeController {
 
     	appService.removFiles(UPLOADED_FOLDER, application);
     	appService.delete(application);
-    	return "redirect:/";
+    	return "redirect:/applications";
     }
     
     @PostMapping("/updateApplication")
