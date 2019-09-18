@@ -16,7 +16,7 @@
                     <h1 class="page-header">
 					<div class="row">
 						<div class="col-md-8 text-muted">
-						<span th:text="${actiontype}" th:if="${actiontype!=T(portal.utility.Action).COPYTO}"></span>
+						<span th:text="@{${actiontype}+' - '+${department.departmentName}}" th:if="${actiontype!=T(portal.utility.Action).COPYTO}"></span>
 						<span th:text="@{'Copy To - '+${department.departmentName}}" th:if="${actiontype==T(portal.utility.Action).COPYTO}"></span>
 						</div>
 						
