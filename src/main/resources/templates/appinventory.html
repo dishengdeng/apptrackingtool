@@ -330,7 +330,7 @@
 					</div>
 				</div>							
 			</div>	
-			<p class="text-danger"><strong id="message_create"></strong></p>
+			<p><strong id="message_create"></strong></p>
 			<input sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" class="btn btn-primary" style="width:30%" id="submitform" type="submit" value="Submit" />			
         </div>
         <!-- /#page-wrapper -->
@@ -468,10 +468,13 @@
 			  xhttp.onreadystatechange = function() {
 				if (this.readyState == 4 && this.status == 200) {
 					console.log(this);
-					window.location.replace(this.responseURL);
+					//window.location.replace(this.responseURL);
+					document.getElementById("message_create").className="text-success";
+					document.getElementById("message_create").innerHTML="Update Successfully!";
 				}
 				else if(this.readyState == 4 && this.status != 200)
 				{
+					document.getElementById("message_create").className="text-danger";
 					document.getElementById("message_create").innerHTML="Update Failed! Please Contact System Administrator.";
 				}
 			  };

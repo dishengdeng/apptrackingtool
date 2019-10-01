@@ -13,7 +13,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -91,8 +91,7 @@ public class Department implements Comparable<Department>{
         )
     private Set<Zaclist> zaclists = new HashSet<Zaclist>();
 
-	@ManyToMany(mappedBy = "departments")
-    private Set<Zone> zones = new HashSet<Zone>();
+
 
     @OneToMany(
             mappedBy = "department", 
@@ -109,6 +108,14 @@ public class Department implements Comparable<Department>{
             orphanRemoval = true
         )
     private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
+    
+    @OneToMany(
+            mappedBy = "department", 
+            cascade = CascadeType.ALL, 
+            orphanRemoval = true,
+            fetch=FetchType.EAGER
+        )
+    private Set<Zacfield> zacfields = new HashSet<>();
     
 	public Long getId() {
 		return id;
@@ -253,26 +260,7 @@ public class Department implements Comparable<Department>{
 	
 
 
-	public Set<Zone> getZones() {
-		return zones;
-	}
 
-	public void setZones(Set<Zone> zones) {
-		this.zones.addAll(zones);
-		zones.forEach(obj->{
-			obj.addDepartment(this);
-		});
-	}
-	
-	public void addZone(Zone zone)
-	{
-		this.zones.add(zone);
-	}
-	
-	public void deleteZone(Zone zone)
-	{
-		this.zones.remove(zone);
-	}
 
 
 
@@ -295,6 +283,29 @@ public class Department implements Comparable<Department>{
 	public void removeAppdepartments(Appdepartment appdepartment)
 	{
 		this.appdepartments.remove(appdepartment);
+	}
+
+	
+	
+	public Set<Zacfield> getZacfields() {
+		return zacfields;
+	}
+
+	public void setZacfields(Set<Zacfield> zacfields) {
+		this.zacfields.addAll(zacfields);
+		zacfields.forEach(obj->{
+			obj.setDepartment(this);
+		});
+	}
+	
+	public void addZacfield(Zacfield zacfield)
+	{
+		this.zacfields.add(zacfield);
+	}
+	
+	public void removeZacfield(Zacfield zacfield)
+	{
+		this.zacfields.remove(zacfield);
 	}
 
 	public Set<File> getFiles() {
@@ -335,10 +346,7 @@ public class Department implements Comparable<Department>{
 		});
 		this.answers=null;
 		
-		this.zones.forEach(obj->{
-			obj.deleteDepartment(this);
-		});
-		this.zones=null;
+
 		
 		this.stakeholderexts.forEach(obj->{
 			obj.setDepartment(null);

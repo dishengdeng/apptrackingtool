@@ -39,9 +39,11 @@ public class Zaclist implements Comparable<Zaclist>{
     @JoinColumn(name = "zacmap_id",referencedColumnName="id")
     private Zacmap zacmap;
     
+
+    
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "zone_id",referencedColumnName="id")
-    private Zone zone;
+    @JoinColumn(name = "zacfield_id",referencedColumnName="id")
+    private Zacfield zacfield;
 
 	public Long getId() {
 		return id;
@@ -69,12 +71,13 @@ public class Zaclist implements Comparable<Zaclist>{
 
 
 
-	public Zone getZone() {
-		return zone;
+	
+	public Zacfield getZacfield() {
+		return zacfield;
 	}
 
-	public void setZone(Zone zone) {
-		this.zone = zone;
+	public void setZacfield(Zacfield zacfield) {
+		this.zacfield = zacfield;
 	}
 
 	public Zacmap getZacmap() {
@@ -89,15 +92,16 @@ public class Zaclist implements Comparable<Zaclist>{
 	{
 		if(!ObjectUtils.isEmpty(this.department)) this.department.removeZaclist(this);
 		this.setDepartment(null);
-		
-		if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeZaclist(this);
-		this.setZone(null);
+
 		
 		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeZaclist(this);
 		this.setZac(null);
 		
 		if(!ObjectUtils.isEmpty(this.zacmap)) this.zacmap.removeZaclist(this);
 		this.setZacmap(null);
+		
+		if(!ObjectUtils.isEmpty(this.zacfield)) this.zacfield.removeZaclist(this);
+		this.setZacfield(null);
 		
 
 	}
@@ -107,24 +111,21 @@ public class Zaclist implements Comparable<Zaclist>{
 		if(!ObjectUtils.isEmpty(this.department)) this.department.removeZaclist(this);
 		this.setDepartment(null);
 		
-		if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeZaclist(this);
-		this.setZone(null);
-		
+
 		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeZaclist(this);
 		this.setZac(null);
+		
+		if(!ObjectUtils.isEmpty(this.zacfield)) this.zacfield.removeZaclist(this);
+		this.setZacfield(null);
 	}
 	
 	public void removeForDepartment()
 	{
-		
-		if(!ObjectUtils.isEmpty(this.zone)) this.zone.removeZaclist(this);
-		this.setZone(null);
-		
 		if(!ObjectUtils.isEmpty(this.zac)) this.zac.removeZaclist(this);
 		this.setZac(null);
 	}
-	
-	public void removeForZone()
+
+	public void removeForZacfield()
 	{
 		
 		if(!ObjectUtils.isEmpty(this.department)) this.department.removeZaclist(this);
@@ -140,8 +141,8 @@ public class Zaclist implements Comparable<Zaclist>{
 	@Override
 	public int compareTo(Zaclist obj) {
 		if(ObjectUtils.isEmpty(obj)) return -1;
-		if(ObjectUtils.isEmpty(this.zone)) return -1;
-		return this.zone.getZoneName().compareTo(obj.getZone().getZoneName());
+		if(ObjectUtils.isEmpty(this.zacfield)) return -1;
+		return this.zacfield.getFieldName().compareTo(obj.getZacfield().getFieldName());
 	}
     
     

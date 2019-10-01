@@ -7,8 +7,9 @@ import org.json.JSONObject;
 
 
 import portal.entity.Department;
+
 import portal.entity.Zacmap;
-import portal.entity.Zone;
+
 import portal.models.DepartmentModel;
 
 
@@ -32,5 +33,6 @@ public interface DepartmentService {
     
     public Zacmap saveZacmap(JSONObject zacmapObj);
     public Zacmap updateZacmap(JSONObject zacmapObj);
-    public Set<Zone> getNewZoneofDepartment(Department department);
+    public boolean saveZacfield(JSONObject zacfieldObj);
+
 }

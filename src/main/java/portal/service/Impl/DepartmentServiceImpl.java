@@ -16,9 +16,10 @@ import portal.entity.Department;
 import portal.entity.File;
 
 import portal.entity.Zac;
+import portal.entity.Zacfield;
 import portal.entity.Zaclist;
 import portal.entity.Zacmap;
-import portal.entity.Zone;
+
 import portal.models.DepartmentModel;
 
 import portal.repository.AppRepository;
@@ -26,9 +27,11 @@ import portal.repository.DepartmentRepository;
 import portal.repository.ZacRepository;
 import portal.repository.ZaclistRepository;
 import portal.repository.ZacmapRepository;
-import portal.repository.ZoneRepository;
+
 import portal.service.DepartmentService;
 import portal.service.FileService;
+import portal.service.ZacfieldService;
+
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService{
@@ -44,7 +47,7 @@ public class DepartmentServiceImpl implements DepartmentService{
 	private FileService fileService;
 	
 	@Autowired
-	private ZoneRepository zoneRepository;
+	private ZacfieldService zacfieldService;
 	
 	@Autowired
 	private ZacRepository zacRepository;
@@ -54,6 +57,7 @@ public class DepartmentServiceImpl implements DepartmentService{
 	
 	@Autowired
 	private ZacmapRepository zacmapRepository;
+
 	
 	@Override
 	public Department addDepartment(Department department) {
@@ -158,8 +162,8 @@ public class DepartmentServiceImpl implements DepartmentService{
 			Department department=departmentRepository.findOne(listObj.getLong("department"));
 			zaclistobj.setDepartment(department);
 			
-			Zone zone=zoneRepository.findOne(listObj.getLong("zone"));
-			zaclistobj.setZone(zone);
+			Zacfield zacfield=zacfieldService.findone(listObj.getLong("zacfield"));
+			zaclistobj.setZacfield(zacfield);
 			
 			if(!ObjectUtils.isEmpty(listObj.getString("zac")))
 			{
@@ -192,8 +196,8 @@ public class DepartmentServiceImpl implements DepartmentService{
 			Department department=departmentRepository.findOne(listObj.getLong("department"));
 			zaclistobj.setDepartment(department);
 			
-			Zone zone=zoneRepository.findOne(listObj.getLong("zone"));
-			zaclistobj.setZone(zone);
+			Zacfield zacfield=zacfieldService.findone(listObj.getLong("zacfield"));
+			zaclistobj.setZacfield(zacfield);
 			
 			if(!ObjectUtils.isEmpty(listObj.getString("zac")))
 			{
@@ -215,26 +219,37 @@ public class DepartmentServiceImpl implements DepartmentService{
 	}
 
 	@Override
-	public Set<Zone> getNewZoneofDepartment(Department department) {
-		
-		Set<Zone> newZones=new HashSet<Zone>();
-		if(department.getZones().size()>0 && department.getZaclists().size()>0)
-		{
-			Set<Zacmap> zacmaps=department.getZaclists().stream().collect(Collectors.groupingBy(Zaclist::getZacmap)).keySet();
-			Zacmap zacmap=zacmaps.iterator().next();
-			Set<Zone> zaclistZone=zacmap.getZaclists().stream().collect(Collectors.groupingBy(Zaclist::getZone)).keySet();
-			
+	public boolean saveZacfield(JSONObject zacfieldObj) {
+		Department department=departmentRepository.findOne(zacfieldObj.getLong("department"));
+		int zacfieldsize_old=department.getZacfields().size();
 
-			for(Zone zone:department.getZones())
+		Zacfield zacfield=new Zacfield();
+		zacfield.setDepartment(department);
+		zacfield.setFieldName(zacfieldObj.getString("fieldname"));
+		department.addZacfield(zacfield);
+    	if(department.getZaclists().size()>0)
+    	{
+ 
+   
+    		for(Zacmap zacmap : getZacmap(department))
 			{
-				if(!zaclistZone.contains(zone)) newZones.add(zone);
-				
+	
+	    		Zaclist zaclist= new Zaclist();
+	    		zaclist.setDepartment(department);
+	    		zaclist.setZacfield(zacfield);
+	    		zaclist.setZacmap(zacmap);	    		
+				department.addZaclist(zaclist);
 			}
-		}
 
-		
-		return newZones;
+
+    		
+    	}
+    	Department updatedDepartment=departmentRepository.saveAndFlush(department);
+    	return updatedDepartment.getZacfields().size()==zacfieldsize_old? false:true;
+
 	}
+
+
 
 
 

@@ -81,15 +81,15 @@ public class Appdepartment {
     @JsonView(Views.Public.class)
 	private String goverinplace;
     
-    @Column(name = "userbase",columnDefinition="VARCHAR(1000)")
+    @Column(name = "userbase",columnDefinition="VARCHAR(4000)")
     @JsonView(Views.Public.class)
 	private String userbase;
     
-    @Column(name = "broadmap",columnDefinition="VARCHAR(1000)")
+    @Column(name = "broadmap",columnDefinition="VARCHAR(4000)")
     @JsonView(Views.Public.class)
 	private String broadmap;
     
-    @Column(name = "note",columnDefinition="VARCHAR(1000)")
+    @Column(name = "note",columnDefinition="VARCHAR(4000)")
     @JsonView(Views.Public.class)
 	private String note;    
     

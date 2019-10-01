@@ -93,7 +93,7 @@ public class AppdepartmentController {
     	response.setContentType("application/json");
     	if(ObjectUtils.isEmpty(repsponseObj)) 
     	{response.setStatus(202);} 
-    	else {response.setStatus(200);response.sendRedirect(request.getContextPath()+"/departmentdetail?id="+repsponseObj.getDepartment().getId());} 
+    	else {response.setStatus(200);/*--response.sendRedirect(request.getContextPath()+"/departmentdetail?id="+repsponseObj.getDepartment().getId());--*/} 
     	response.getWriter().write(ObjectUtils.isEmpty(repsponseObj)? "{'status':'202'}":"{'status':'200'}");
     	response.flushBuffer();    	
     }

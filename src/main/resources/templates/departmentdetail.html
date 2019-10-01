@@ -231,30 +231,29 @@
 				</div>
 			</div>	
 			
-			<!--Zone Detail-->
+			<!--Zacfield Detail-->
 			<div class="row">
 				<div class="col-lg-8">
 					 <div class="panel panel-primary">
 						<div class="panel-heading">
-							<i class="fa fa-cube"></i> Zones
+							<i class="fa fa-cube"></i> Zac Field
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#adddepartmentzone'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#adddepartmentzacfield'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
 									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
 								</a>
 							</div>
 						</div>
 						<!-- /.panel-heading -->
-						<div th:if="${department.zones.size()>0}" class="panel-body">
+						<div th:if="${department.zacfields.size()>0}" class="panel-body">
 							<table class="table">
 							  <thead>
-								<th>Zone</th>
-								<th>Description</th>
-								<th>Note</th>
+								<th style="width:10%">Action</th>
+								<th>Name</th>
 							  </thead>
 							  <tbody>
-								<tr th:each="zone: ${department.zones}">
+								<tr th:each="zacfield: ${department.zacfields}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletedepartmentzone?zone='+${zone.id}+'&department='+${department.id}}" 
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletedepartmentzacfield?zacfield='+${zacfield.id}+'&department='+${department.id}}" 
 											style="margin-right:10px;text-decoration: none"
 											data-title="Are you sure to delete?" 
 											data-toggle="confirmation" 
@@ -263,10 +262,15 @@
 										   >
 											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 										</a>
-										<a th:href="@{'/zonedetail?zone='+${zone.id}}" th:text="${zone.zoneName}"></a>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											data-toggle="modal" th:data-target="@{'#updatezacfield'+${zacfield.id}}"  title="Edit Zacfield"
+											style="margin-right:5px;text-decoration: none;cursor:pointer"
+										   >
+											<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+										</a>										
 									</td>
-									<td th:text="${zone.description}"></td>
-									<td th:text="${zone.note}"></td>
+									<td th:text="${zacfield.fieldName}">									
+									</td>
 								</tr>
 							  </tbody>
 							</table>
@@ -417,8 +421,8 @@
 							<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-zacmap">
 							  <thead>
 								<th class="zacmap-zone-header-d">Application</th>
-								<th class="zacmap-zone-header-z" th:each="zone: ${departzones}" 
-									th:text="@{${department.departmentName}+' - '+${zone.zoneName}}">
+								<th class="zacmap-zone-header-z" th:each="field: ${zacfields}" 
+									th:text="${field.fieldName}">
 								</th>							
 								<th class="zacmap-zone-header-d">Details</th>
 							  </thead>
@@ -552,33 +556,58 @@
 							</div>
 				</div>
 
-				<!--Zone model-->
-				<div class="modal fade" th:id="adddepartmentzone" role="dialog">
+				<!--Zacfield Creation model-->
+				<div class="modal fade" th:id="adddepartmentzacfield" role="dialog">
 					<div class="modal-dialog">
 					
 					  <!-- Modal content-->
 					  <div class="modal-content">
 						<div class="modal-header">
 						  <button type="button" class="close" data-dismiss="modal">&times;</button>
-						  <h4 class="modal-title" th:text="'Add Zone - '+${department.departmentName}"></h4>													
+						  <h4 class="modal-title" th:text="'Add Zacfield - '+${department.departmentName}"></h4>													
 						</div>
 						<div class="modal-body">	
-							<form action="#" th:action="@{/adddepartmentzone}" method="post">
+							<form action="#" method="post" id="zacfield_creation">
 								<div class="form-group">
-									<label for="zoneselect">Zone:</label>
-									<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
-									<select name="zones" class="mdb-select md-form colorful-select dropdown-primary form-control" multiple id="zoneselect">
-									  <option th:each="zoneEntity : ${zones}" 
-									  th:text="${zoneEntity.zoneName}" 
-									  th:attr="value = ${zoneEntity.id}">
-									</select>
+									<label for="zoneselect">Field Name:</label>
+									<input type="hidden" class="form-control" name="department" th:value="${department.id}"></input>
+									<input type="text" class="form-control" name="fieldname"></input>
 								</div>
-							  <input class="btn btn-primary" type="submit" value="Submit" />
+								<p class="text-danger"><strong id="message_zacfile_create"></strong></p>
+								 <input class="btn btn-primary" type="submit" value="Submit" />
 							</form>
 						</div>
 					  </div>
 
 					</div>	
+				</div>
+				<!--Zacfield Update model-->
+				<div th:each="zacfield:${department.zacfields}">
+					<div class="modal fade" th:id="@{'updatezacfield'+${zacfield.id}}" role="dialog">
+						<div class="modal-dialog">
+						
+						  <!-- Modal content-->
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							  <h4 class="modal-title" th:text="'Update Zacfield - '+${zacfield.fieldName}"></h4>													
+							</div>
+							<div class="modal-body">	
+								<form action="updatedepartmentzacfield" method="post">
+									<div class="form-group">
+										<label for="zoneselect">Field Name:</label>
+										<input type="hidden" class="form-control" name="department" th:value="${department.id}"></input>
+										<input type="hidden" class="form-control" name="zacfield" th:value="${zacfield.id}"></input>
+										<input type="text" class="form-control" name="fieldName" th:value="${zacfield.fieldName}"></input>
+									</div>
+
+									 <input class="btn btn-primary" type="submit" value="Submit" />
+								</form>
+							</div>
+						  </div>
+
+						</div>	
+					</div>
 				</div>				
 				<!--Question Creation model-->
 				<div class="modal fade" th:id="@{'addquestion'}" role="dialog">
@@ -750,12 +779,13 @@
 									<div class="form-group">
 										<label for="departmentSelect">Role:</label>
 										<select name="role" class="form-control" id="roleSelect">
-										  <option th:each="roleEntity : ${roles}" 
-										  th:text="${roleEntity.SLARoleName}" 
-										  th:attr="value = ${roleEntity.id}"
-										  th:selected="${stakeholderext.role!=null and stakeholderext.role.id==roleEntity.id}"
-										  >									  
-										  </option>
+											<option th:selected="${stakeholderext.role==null}"></option>
+											<option th:each="roleEntity : ${roles}" 
+											  th:text="${roleEntity.SLARoleName}" 
+											  th:attr="value = ${roleEntity.id}"
+											  th:selected="${stakeholderext.role!=null and stakeholderext.role.id==roleEntity.id}"
+											>									  
+											</option>
 										</select>
 									</div>
 									  <div class="form-group">
@@ -818,9 +848,9 @@
 									  </option>
 									</select>
 								</div>								
-								<div class="form-group" th:each="zone : ${department.zones}">
-									<label for="zmZacSelect" th:text="${zone.zoneName}"></label>
-									<select th:name="@{'zaclist-'+${zone.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect">
+								<div class="form-group" th:each="zacfield : ${department.zacfields}">
+									<label for="zmZacSelect" th:text="${zacfield.fieldName}"></label>
+									<select th:name="@{'zaclist-'+${zacfield.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect">
 									  <option ></option>
 									  <option th:each="zacEntity : ${zacs}" 
 									  th:text="@{${zacEntity.rate}+' - '+${zacEntity.name}}" 
@@ -833,7 +863,7 @@
 									<textarea rows="7" cols="50" class="form-control" th:name="detail"></textarea>	
 								</div>
 								<p class="text-danger"><strong id="message_create"></strong></p>								
-							  <input th:if="${department.zones.size()>0}"class="btn btn-primary" type="submit" value="Submit"/>
+							  <input th:if="${department.zacfields.size()>0}"class="btn btn-primary" type="submit" value="Submit"/>
 							</form>
 						</div>
 					  </div>
@@ -867,9 +897,9 @@
 										  </option>
 										</select>
 									</div>								
-									<div class="form-group" th:each="zaclist : ${zacmap.zaclists}">
-										<label for="zmZacSelect" th:text="${zaclist.zone.zoneName}"></label>
-										<select th:name="@{'zaclist-'+${zaclist.id}+'-'+${zaclist.zone.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect">
+									<div class="form-group" th:each="zaclist : ${zacmap.zaclists}" th:if="${zaclist.zacfield!=null}">
+										<label for="zmZacSelect" th:text="${zaclist.zacfield.fieldName}"></label>
+										<select th:name="@{'zaclist-'+${zaclist.id}+'-'+${zaclist.zacfield.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect">
 										  <option ></option>
 										  <option th:each="zacEntity : ${zacs}" 
 										  th:text="@{${zacEntity.rate}+' - '+${zacEntity.name}}" 
@@ -885,7 +915,7 @@
 										<textarea rows="7" cols="50" class="form-control" th:name="detail" th:text="${zacmap.detail}"></textarea>	
 									</div>
 									<p class="text-danger"><strong th:id="@{'message_update'+${zacmap.id}}"></strong></p>								
-								  <input th:if="${department.zones.size()>0}"class="btn btn-primary" type="button" value="Submit" th:onclick="@{'updatezacmap('+${zacmap.id}+')'}"/>
+								  <input th:if="${department.zacfields.size()>0}"class="btn btn-primary" type="button" value="Submit" th:onclick="@{'updatezacmap('+${zacmap.id}+')'}"/>
 								</form>
 							</div>
 						  </div>
@@ -986,7 +1016,34 @@
 	enableFiltering: true,
 	nonSelectedText: 'Select RACI'
   });	
+$("#zacfield_creation" ).on( "submit", function( event ) {
+	event.preventDefault();
+	var formdata=$( this ).serializeArray();
+	$( "#message_zacfile_create" ).empty();
+	console.log(formdata);
+	var formobj={"department":"","fieldname":""}
+	for(obj in formdata)
+	{
+		if(formdata[obj].name==="department") formobj.department=formdata[obj].value;
+		if(formdata[obj].name==="fieldname") formobj.fieldname=formdata[obj].value;
+	}
+	console.log(formobj);
 
+
+			  var xhttp = new XMLHttpRequest();
+			  xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+				  location.reload();
+				}
+				else if(this.readyState == 4 && this.status != 200)
+				{
+					$( "#message_zacfile_create" ).text("Add Failed! Please Contact System Administrator.");
+				}
+			  };
+			  xhttp.open("POST", "/adddepartmentzacfield", true);
+			  xhttp.setRequestHeader("Content-type", "application/json");
+			  xhttp.send(JSON.stringify(formobj));	
+});
   $( "#formzac" ).on( "submit", function( event ) {
   
   		  event.preventDefault();
@@ -1009,7 +1066,7 @@
 				zacobj["zac"]=formdata[obj].value;
 				var zonename=formdata[obj].name.toString();
 
-				zacobj["zone"]=zonename.replace("zaclist-","");
+				zacobj["zacfield"]=zonename.replace("zaclist-","");
 				formobj.zaclist.push(zacobj);
 			}
 			
@@ -1080,7 +1137,7 @@
 				zacobj["zac"]=formdata[obj].value;
 				var zonename=formdata[obj].name.toString().split("-");
 				zacobj["id"]=zonename[1];
-				zacobj["zone"]=zonename[2];
+				zacobj["zacfield"]=zonename[2];
 				formobj.zaclist.push(zacobj);
 			}
 			

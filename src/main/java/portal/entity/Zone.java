@@ -9,13 +9,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
-import javax.persistence.JoinColumn;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
@@ -48,22 +45,9 @@ public class Zone implements Comparable<Zone>{
             orphanRemoval = true 
         )
     private Set<Site> sites = new HashSet<Site>();
-    
-    
-    
-	@ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "departmentzone",
-        joinColumns = @JoinColumn(name = "zone_id"),
-        inverseJoinColumns = @JoinColumn(name = "department_id")
-    )
-    private Set<Department> departments = new HashSet<Department>();
+ 
 	
-    @OneToMany(
-            mappedBy = "zone", 
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-        )
-    private Set<Zaclist> zaclists = new HashSet<Zaclist>();
+
     
 	public Long getId() {
 		return id;
@@ -115,49 +99,6 @@ public class Zone implements Comparable<Zone>{
 	}	
 
 
-	public Set<Department> getDepartments() {
-		return departments;
-	}
-
-	public void setDepartments(Set<Department> departments) {
-		this.departments.addAll(departments);
-		departments.forEach(obj->{
-			obj.addZone(this);
-		});
-	}
-	
-	public void addDepartment(Department department)
-	{
-		this.departments.add(department);
-	}
-	
-	public void deleteDepartment(Department department)
-	{
-		this.departments.remove(department);
-	}
-
-	
-	public Set<Zaclist> getZaclists() {
-		return zaclists;
-	}
-
-	public void setZaclists(Set<Zaclist> zaclists) {
-		this.zaclists.addAll(zaclists);
-		zaclists.forEach(obj->{
-			obj.setZone(this);
-		});
-	}
-	
-	public void removeZaclist(Zaclist zaclist)
-	{
-		this.zaclists.remove(zaclist);
-	}
-	
-	public void addZaclist(Zaclist zaclist)
-	{
-		this.zaclists.add(zaclist);
-	}
-
 	public void removeAllDependence()
 	{
 		
@@ -166,10 +107,7 @@ public class Zone implements Comparable<Zone>{
 		});
 		this.sites=null;
 		
-		this.departments.forEach(obj->{
-			obj.deleteZone(this);
-		});
-		this.departments=null;
+
 		
 	}
 
