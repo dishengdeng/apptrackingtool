@@ -45,6 +45,10 @@
 							<input type="hidden" class="form-control" th:name="report" th:value="${report.id}"></input>
 						  </div>
 						  <div class="form-group">
+							<label for="reportlevels">Source Type:</label>
+							<p th:text="${report.sourceType}"></p>
+						  </div>						  
+						  <div class="form-group">
 							<label for="reportlevels">Report Levels:</label>
 							<p th:each="reportlevel :${report.reportlevels}" th:text="${reportlevel.reportLevelType!=null}? ${reportlevel.reportLevelType}:'N/A'"></p>
 						  </div>						  
@@ -61,7 +65,7 @@
 			</div>
             <!-- /.row -->
 			<!--file detail-->			
-			<div class="row" th:if="${report.reportlevels.size()>0}">
+			<div class="row" th:if="${report.reportlevels.size()>0 or report.sourceType==T(portal.utility.ReportSourceType).SQL}">
 				<div class="col-lg-8">
 					<div class="panel panel-primary">
 						<div class="panel-heading">

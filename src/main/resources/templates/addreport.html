@@ -25,6 +25,16 @@
 					<input type="text" class="form-control" th:field="*{reportName}">
 				  </div>
 				  <div class="form-group">
+					<label for="note">Source Type:</label>
+					<select name="sourceType" class="form-control" id="sourcetypeSelect">
+						<option></option>
+						<option th:each="ReportSourceType : ${T(portal.utility.ReportSourceType).values()}"
+								th:value="${ReportSourceType}"
+								th:text="${ReportSourceType}">
+						</option>
+					</select>							
+				  </div>				  
+				  <div class="form-group" id="reportleveldiv" style="display: none;">
 					<label for="reportlevels">Report Levels:</label>
 					<select name="reportlevels" class="form-control" multiple id="reportLevelSelect">
 						<option th:each="reportlevel :${reportlevels}" th:value="${reportlevel.id}" th:text="${reportlevel.reportLevelType}"></option>
@@ -58,6 +68,11 @@
 		enableFiltering: true,
 		nonSelectedText: 'Select Report Level'
 	  });
+		$( "#sourcetypeSelect" ).change(function() {
+			var text=$( "#sourcetypeSelect" ).val();
+			if(text==="SQL") $( "#reportleveldiv" ).hide();
+			if(text==="JSON") $( "#reportleveldiv" ).show();
+		});	  
     });
     </script>
 	<script type="text/javascript">

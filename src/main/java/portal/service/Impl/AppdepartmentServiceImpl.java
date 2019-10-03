@@ -89,6 +89,8 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 		appdepart.setUserbase(appdepartment.getJSONObject("application").getString("userbase"));
 		appdepart.setBroadmap(appdepartment.getJSONObject("application").getString("broadmap"));
 		appdepart.setNote(appdepartment.getJSONObject("application").getString("note"));
+		appdepart.setPoweruser(appdepartment.getJSONObject("application").getString("poweruser"));
+		appdepart.setFluser(appdepartment.getJSONObject("application").getString("fluser"));
 		
 		appdepart.setCalgary(appdepartment.getJSONObject("zone").getString("calgary"));
 		appdepart.setSouth(appdepartment.getJSONObject("zone").getString("south"));

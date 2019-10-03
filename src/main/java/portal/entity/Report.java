@@ -30,6 +30,7 @@ import portal.models.ParameterModel;
 import portal.models.RunReportModel;
 import portal.utility.ParameterCondition;
 import portal.utility.ReportLevelType;
+import portal.utility.ReportSourceType;
 
 
 @Entity
@@ -49,7 +50,9 @@ public class Report {
     @JsonView(Views.Public.class)
 	private String description;
     
-
+    @Column(name = "sourcetype")
+    @JsonView(Views.Public.class)
+	private ReportSourceType sourceType;
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "reportlevelrel",
@@ -127,6 +130,14 @@ public class Report {
 	}
 
 
+
+	public ReportSourceType getSourceType() {
+		return sourceType;
+	}
+
+	public void setSourceType(ReportSourceType sourceType) {
+		this.sourceType = sourceType;
+	}
 
 	public Set<Parameter> getParameters() {
 		return parameters;

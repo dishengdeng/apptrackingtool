@@ -46,6 +46,7 @@
                                 <thead>
                                     <tr>
                                         <th>Stakeholder Name</th>
+										<th>Business Unit</th>
                                         <th>Location</th>
 										<th>Phone</th>
 										<th>Email</th>
@@ -66,7 +67,8 @@
 												<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
 											</a>&nbsp 
 											<a th:href="@{'stakeholderdetail?stakeholder='+${stakeholder.id}}" th:text="${stakeholder.stakeholderName}"></a>
-										</td>								
+										</td>
+										<td th:text="${stakeholder.businessunit}"></td>										
                                         <td th:text="${stakeholder.site!=null}? ${stakeholder.site.siteName}:''"></td>
                                         <td th:text="${stakeholder.phone}"></td>
 										<td th:text="${stakeholder.email}"></td>

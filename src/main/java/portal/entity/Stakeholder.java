@@ -72,7 +72,9 @@ public class Stakeholder {
     @JsonView(Views.Public.class)
 	private String email;
     
-
+    @Column(name = "businessunit",columnDefinition="VARCHAR(1000)")
+    @JsonView(Views.Public.class)
+	private String businessunit;
     
  
 
@@ -162,6 +164,14 @@ public class Stakeholder {
 	}
 
 
+
+	public String getBusinessunit() {
+		return businessunit;
+	}
+
+	public void setBusinessunit(String businessunit) {
+		this.businessunit = businessunit;
+	}
 
 	public Set<Stakeholderext> getStakeholderexts() {
 		return stakeholderexts;

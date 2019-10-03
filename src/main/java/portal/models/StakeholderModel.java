@@ -41,7 +41,7 @@ public class StakeholderModel {
 	private String email;
 
 
-	
+	private String businessunit;
 
 	
 	@JsonProperty("stakeholderName")
@@ -100,6 +100,15 @@ public class StakeholderModel {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	
+	@JsonProperty("businessunit")
+	public String getBusinessunit() {
+		return businessunit;
+	}
+	
+	public void setBusinessunit(String businessunit) {
+		this.businessunit = businessunit;
 	}
 	
 

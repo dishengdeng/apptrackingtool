@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -45,6 +46,7 @@ import portal.utility.Convertor;
 import portal.utility.JSONObjectWithEmpty;
 import portal.utility.ParameterType;
 import portal.utility.ReportFormat;
+import portal.utility.ReportSourceType;
 
 @Service
 public class ReportManagerImpl implements ReportManager{
@@ -53,6 +55,9 @@ public class ReportManagerImpl implements ReportManager{
 	
 	@Autowired
 	private JsonWriter jsonWriter;
+	
+	@Autowired
+	private DataSource sqlDataSource;
 
 	@Override
 	public void compileTemplate(File template, String templatepath) {
@@ -124,13 +129,13 @@ public class ReportManagerImpl implements ReportManager{
 	{
 		JasperReport jasperReport = (JasperReport) JRLoader.loadObject(new java.io.File(templatepath+Long.valueOf(report.getId())+"_"+report.getTempate().getAttachment()+".jasper"));
 
-		InputStream inputStream =jsonWriter.writeJsonWithNoNullIn(reportService.getReportModel(report));
-
-
-		JsonQLDataSource jsonDataSource = new JsonQLDataSource(inputStream);
-		JasperPrint jasperPrinter = JasperFillManager.fillReport(jasperReport, parmeters, jsonDataSource);
+		if(report.getSourceType()==ReportSourceType.SQL) return JasperFillManager.fillReport(jasperReport, parmeters,sqlDataSource.getConnection());
 		
-		return jasperPrinter;
+		InputStream inputStream =jsonWriter.writeJsonWithNoNullIn(reportService.getReportModel(report));
+		
+		JsonQLDataSource jsonDataSource = new JsonQLDataSource(inputStream);
+		
+		return JasperFillManager.fillReport(jasperReport, parmeters,jsonDataSource);
 	}
 
 	@Override

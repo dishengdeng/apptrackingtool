@@ -81,7 +81,7 @@ public class StakeholderServiceImpl implements StakeholderService{
 
 		stakeholderRepository.updateDetail(stakeholderModel.getStakeholderName(),stakeholderModel.getNote(),
 				siteRepository.findOne(stakeholderModel.getSite()), stakeholderModel.getPhone(), 
-				stakeholderModel.getPosition(), stakeholderModel.getEmail(), 
+				stakeholderModel.getPosition(),stakeholderModel.getBusinessunit(), stakeholderModel.getEmail(), 
 				stakeholderModel.getId());
 		
 

@@ -138,6 +138,7 @@ public class StakeholderController {
     	stakeholderModel.setSite(ObjectUtils.isEmpty(stakeholder.getSite())? null:stakeholder.getSite().getId());
     	stakeholderModel.setPosition(stakeholder.getPosition());
     	stakeholderModel.setStakeholderName(stakeholder.getStakeholderName());
+    	stakeholderModel.setBusinessunit(stakeholder.getBusinessunit());
     	return stakeholderModel;
     }
     private void setModel(ModelMap model,Stakeholder stakeholder,StakeholderModel stakeholderModel)

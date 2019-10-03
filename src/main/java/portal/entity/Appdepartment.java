@@ -91,7 +91,15 @@ public class Appdepartment {
     
     @Column(name = "note",columnDefinition="VARCHAR(4000)")
     @JsonView(Views.Public.class)
-	private String note;    
+	private String note;  
+    
+    @Column(name = "poweruser",columnDefinition="VARCHAR(1000)")
+    @JsonView(Views.Public.class)
+	private String poweruser;
+    
+    @Column(name = "fluser",columnDefinition="VARCHAR(1000)")
+    @JsonView(Views.Public.class)
+	private String fluser;
     
    //--contract information 
 	@ManyToMany(mappedBy = "appdepartments")
@@ -259,6 +267,22 @@ public class Appdepartment {
 
 	public void setNote(String note) {
 		this.note = note;
+	}
+
+	public String getPoweruser() {
+		return poweruser;
+	}
+
+	public void setPoweruser(String poweruser) {
+		this.poweruser = poweruser;
+	}
+
+	public String getFluser() {
+		return fluser;
+	}
+
+	public void setFluser(String fluser) {
+		this.fluser = fluser;
 	}
 
 	public String getContractinplace() {
