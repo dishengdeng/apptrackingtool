@@ -70,9 +70,13 @@ public class UserServiceImpl implements UserService{
 	public List<String> getAllloggedUsers() {
 		List<String> loggedUsers= new ArrayList<String>();
 		
-		sessionRegistry.getAllPrincipals().stream().forEach(u->{
-			UserDetails user=(UserDetails)u;
-			loggedUsers.add(user.getUsername());
+		sessionRegistry.getAllPrincipals().stream().forEach(user->{
+
+            for (SessionInformation information : sessionRegistry.getAllSessions(user, false)) {
+                loggedUsers.add(((UserDetails)information.getPrincipal()).getUsername());
+
+            }
+			
 		});
 
 		return loggedUsers;

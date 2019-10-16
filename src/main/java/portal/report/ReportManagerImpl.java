@@ -119,9 +119,10 @@ public class ReportManagerImpl implements ReportManager{
 	private void exportToPDF(Report report, String templatepath,HttpServletResponse response,Optional<HashMap<String, Object>> parmeters) throws Exception
 	{
 		ByteArrayOutputStream output=new ByteArrayOutputStream();
-		 JasperExportManager.exportReportToPdfStream(getJasperPrinter(report,templatepath,parmeters.isPresent()?parmeters.get():null),output);
+		response.setContentType("application/pdf");
+		 JasperExportManager.exportReportToPdfStream(getJasperPrinter(report,templatepath,parmeters.isPresent()?parmeters.get():null),output);		 
 			output.writeTo(response.getOutputStream());
-			response.setContentType("application/pdf");
+			
 			response.flushBuffer();
 	}
 	
