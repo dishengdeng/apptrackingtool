@@ -69,7 +69,7 @@ public class Appdepartment {
     @JoinColumn(name = "application_id",referencedColumnName="id")
     private Application application;
 	
-    @Column(name = "businesslead",columnDefinition="VARCHAR(1000)")
+    @Column(name = "businesslead",columnDefinition="VARCHAR(3000)")
     @JsonView(Views.Public.class)
 	private String businesslead;
     

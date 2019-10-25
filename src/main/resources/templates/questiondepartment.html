@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+		<!-- Navigation -->
+		<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-12 text-primary">
+						<i class="fa fa-users"></i>
+						<span th:text="@{'Conversation - '}"></span>
+						<a th:href="@{'/departmentdetail?id='+${department.id}}" th:text="${department.departmentName}"></a>
+						</div>	
+					</div>
+					</h1>
+					
+                </div>
+
+				
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+				
+			<!--Question Detail-->
+			<div class="row">
+				<div class="col-lg-8">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-smile-o"></i> Conversation
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addquestion'}" style="color:white;cursor:pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${department.answers.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th>Question</th>
+								<th>Answer</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="answer: ${department.answers}" th:if="${answer.question!=null}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteDepartmentQuestion?answer='+${answer.id}+'&department='+${department.id}}" 
+											style="margin-right:5px;text-decoration: none;"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true" 
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											data-toggle="modal" th:data-target="@{'#addquestion'+${answer.id}}"  title="Edit Answer"
+											style="margin-right:5px;text-decoration: none;cursor:pointer"
+										   >
+											<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+										</a>										
+										<a th:href="@{'/questiondetail?question='+${answer.question.id}}" th:text="${answer.question.questionName}"></a>
+									</td>
+									<td th:text="${answer.text}">
+									</td>
+
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+            <!-- /.row -->
+				<!--Question Creation model-->
+				<div class="modal fade" th:id="@{'addquestion'}" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title">Add Question</h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addDepartmentQeustion}" th:object="${answer}" method="post">
+								<div class="form-group">
+									<label for="departmentSelect">Question:</label>
+									<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+									<select name="question" class="form-control" id="departmentSelect">
+											<option></option>
+											  <option th:each="questionEntity : ${questions}" 
+	
+											  th:attr="value = ${questionEntity.id}"
+											  th:text="${questionEntity.questionName}"
+											  >
+											  
+											  </option>
+													
+									</select>
+								</div>
+							<div class="form-group">
+								<label for="zoneName">Answer:</label>
+								<textarea rows="7" cols="50" class="form-control" th:name="text"></textarea>	
+							</div>							
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+	
+					</div>
+				</div>
+			
+			<!--Question model-->
+			<div th:each="answer: ${department.answers}" th:if="${department.answers.size()>0}">
+				<div class="modal fade" th:id="@{'addquestion'+${answer.id}}" role="dialog" th:if="${answer.question!=null}">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="@{'Edit Answer - '+${department.departmentName}}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" th:action="@{/addDepartmentQeustion}"  method="post">
+								<div class="form-group">
+									<label for="departmentSelect">Question:</label>
+									<input type="hidden" class="form-control" th:name="answer" th:value="${answer.id}"></input>
+									<input type="hidden" class="form-control" th:name="question" th:value="${answer.question.id}"></input>
+									<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+									<p th:text="${answer.question.questionName}"></p>
+								</div>
+							<div class="form-group">
+								<label for="zoneName">Answer:</label>
+								<textarea rows="7" cols="50" class="form-control" th:name="text" th:value="${answer.text}" th:text="${answer.text}"></textarea>	
+							</div>							
+							  <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+	
+					</div>
+				</div>
+			</div>	
+
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+
+</body>
+
+</html>

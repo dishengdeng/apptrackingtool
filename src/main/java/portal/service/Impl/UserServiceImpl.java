@@ -1,10 +1,11 @@
 package portal.service.Impl;
 
 
+
 import java.util.ArrayList;
-
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
-	public List<String> getAllloggedUsers() {
+	public Set<String> getAllloggedUsers() {
 		List<String> loggedUsers= new ArrayList<String>();
 		
 		sessionRegistry.getAllPrincipals().stream().forEach(user->{
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService{
 			
 		});
 
-		return loggedUsers;
+		return new HashSet<String>(loggedUsers);
 	}
 
 	@Override

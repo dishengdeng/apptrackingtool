@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+		<!-- Navigation -->
+		<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-12 text-primary">
+						<i class="fa fa-thumbs-up"></i>
+						<a th:href="@{'/zacdepartment?department='+${department.id}}" th:text="@{'Update ZacMap - '+${department.departmentName}}"></a>
+						</div>	
+					</div>
+					</h1>
+					
+                </div>
+
+				
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            ZacMap Update
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+							<!--ZacMap Update model-->
+
+							<form action="#" method="post" th:id="@{'formzac_update'+${zacmap.id}}">
+								<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+								<input type="hidden" class="form-control" th:name="zacmap" th:value="${zacmap.id}"></input>
+								<div class="form-group">
+									<label for="zmApplicationSelect">Application:</label>
+									<select name="app" class="form-control selectpicker" data-live-search="true" id="zmApplicationSelect" required>
+									  <option></option>
+									  <option th:each="appEntity : ${apps}" 
+									  th:text="${appEntity.AppName}" 
+									  th:attr="value = ${appEntity.id}"
+									  th:selected="${zacmap.application==null} ? false:${zacmap.application.getId()==appEntity.id}">									  
+									  </option>
+									</select>
+								</div>								
+								<div class="form-group" th:each="zaclist : ${zacmap.zaclists}" th:if="${zaclist.zacfield!=null}">
+									<label for="zmZacSelect" th:text="${zaclist.zacfield.fieldName}"></label>
+									<select th:name="@{'zaclist-'+${zaclist.id}+'-'+${zaclist.zacfield.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect">
+									  <option ></option>
+									  <option th:each="zacEntity : ${zacs}" 
+									  th:text="@{${zacEntity.rate}+' - '+${zacEntity.name}}" 
+									  th:attr="value = ${zacEntity.id}"
+									   th:selected="${zaclist.zac==null} ? false:${zaclist.zac.getId()==zacEntity.id}">
+																	  
+									  </option>
+									</select>
+
+								</div>							
+								<div class="form-group">
+									<label for="zonedetail">Detail:</label>
+									<textarea rows="7" cols="50" class="form-control" th:name="detail" th:text="${zacmap.detail}"></textarea>	
+								</div>
+								<p><strong th:id="@{'message_update'}"></strong></p>								
+							  <input th:if="${department.zacfields.size()>0}"class="btn btn-primary" type="button" value="Submit" th:onclick="@{'updatezacmap('+${zacmap.id}+')'}"/>
+							</form>
+
+                            <!-- /.table-responsive -->
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+
+	  $('#zmApplicationSelect').selectpicker(
+	  {
+		noneSelectedText: 'Select Application'
+	  });
+	  $('[id^=zmZacSelect]').selectpicker(
+	  {
+		noneSelectedText: 'Select Rate'
+	  });	  
+    });
+	function updatezacmap(zacmapid)
+	{
+		var formzac="#formzac_update"+zacmapid;
+  	
+		  var message_id="message_update";
+		  document.getElementById(message_id).innerHTML="";
+		  var formdata=$( formzac ).serializeArray();
+			console.log(formdata);
+			
+			var formobj={"zacmap":"","application":"","zaclist":[],"detail":""};
+		  var department="";
+		  for(obj in formdata)
+		  {
+
+			
+			if(formdata[obj].name==="department") department=formdata[obj].value;
+			if(formdata[obj].name==="app") formobj.application=formdata[obj].value;
+			if(formdata[obj].name==="zacmap") formobj.zacmap=formdata[obj].value;
+			
+			if(formdata[obj].name.toString().includes("zaclist")) 
+			{
+				var zacobj={};
+				zacobj["department"]=department;
+				zacobj["zac"]=formdata[obj].value;
+				var zonename=formdata[obj].name.toString().split("-");
+				zacobj["id"]=zonename[1];
+				zacobj["zacfield"]=zonename[2];
+				formobj.zaclist.push(zacobj);
+			}
+			
+			if(formdata[obj].name==="detail") formobj.detail=formdata[obj].value;
+		  }
+
+		  
+
+
+			  var xhttp = new XMLHttpRequest();
+			  xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					document.getElementById(message_id).className="text-success";
+					document.getElementById(message_id).innerHTML="Update Successfully!";
+				}
+				else if(this.readyState == 4 && this.status != 200)
+				{
+					document.getElementById(message_id).innerHTML="Update Failed! Please Contact System Administrator.";
+				}
+			  };
+			  xhttp.open("POST", "/updateDepartmentZacmap", true);
+			  xhttp.setRequestHeader("Content-type", "application/json");
+			  xhttp.send(JSON.stringify(formobj));
+	
+	}	
+    </script>
+
+</body>
+
+</html>

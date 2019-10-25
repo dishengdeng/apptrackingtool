@@ -46,7 +46,7 @@ public class Application implements Comparable<Application>{
 	@JsonView(Views.Public.class)
 	private Long id;
 	
-    @Column(name = "AppName", length = 64, unique=true)
+    @Column(name = "AppName",unique=true,columnDefinition="VARCHAR(1000)")
     @JsonView(Views.Public.class)
 	private String AppName; 
     
@@ -58,7 +58,7 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private String AppVersion;
     
-    @Column(name = "AppType", length = 128)
+    @Column(name = "AppType", columnDefinition="VARCHAR(3000)")
     @JsonView(Views.Public.class)
 	private String AppType;
     
@@ -70,7 +70,7 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private String AppPrerequisite;
     
-    @Column(name = "AppPurpose",columnDefinition="VARCHAR(1000)")
+    @Column(name = "AppPurpose",columnDefinition="VARCHAR(3000)")
     @JsonView(Views.Public.class)
 	private String AppPurpose;
     

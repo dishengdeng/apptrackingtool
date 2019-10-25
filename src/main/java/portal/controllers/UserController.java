@@ -7,6 +7,7 @@ package portal.controllers;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -197,7 +198,7 @@ public class UserController{
     @GetMapping("/loggedusers")
     public ResponseEntity<List<String>> loggedusers() {
 
-        return new ResponseEntity<List<String>>(userService.getAllloggedUsers(),HttpStatus.OK);
+        return new ResponseEntity<List<String>>(new ArrayList<String>(userService.getAllloggedUsers()),HttpStatus.OK);
     }
     
     @GetMapping("/kickoutuser")

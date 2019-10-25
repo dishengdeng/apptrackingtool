@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+		<!-- Navigation -->
+		<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-12 text-primary">
+						<i class="fa fa-thumbs-up"></i>
+						<span th:text="@{'Zac Map - '}"></span>
+						<a th:href="@{'/departmentdetail?id='+${department.id}}" th:text="${department.departmentName}"></a>
+						</div>						
+					</div>
+					</h1>
+					
+                </div>
+
+				
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+			<!--Zacmap Detail-->
+			<div class="row">
+				<div class="col-lg-12">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-thumbs-up"></i> Zac Map
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addzacmap'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${zacmaps.size()>0}" class="panel-body">
+							<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-zacmap">
+							  <thead>
+								<th class="zacmap-zone-header-d">Application</th>
+								<th class="zacmap-zone-header-z" th:each="field: ${zacfields}" 
+									th:text="${field.fieldName}">
+								</th>							
+								<th class="zacmap-zone-header-d">Details</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="zacmap: ${zacmaps}">
+									<td>
+										<li class="dropdown" sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="list-style-type: none;">
+											<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+												<i class="fa fa-cog fa-lg"></i>
+											</a>
+											<ul class="dropdown-menu dropdown-user">
+												<li><a th:href="@{'/updatezacdepartment?department='+${department.id}}+'&zacmap='+${zacmap.id}">Update</a>
+												</li>
+												<li class="divider"></li>												
+												<li>
+													<a 
+													data-title="Are you sure to delete?" 
+													data-toggle="confirmation" 
+													data-singleton="true" 
+													data-popout="true"									
+													th:href="@{'/deleteDepartmentZacmap?zacmap='+${zacmap.id}+'&department='+${department.id}}">Delete</a>
+												</li>												
+											</ul>
+										</li>									
+										<a th:href="@{'/applicationdetail?app='+${zacmap.application.id}}" th:text="${zacmap.application.AppName}"></a>
+									</td>
+									<td th:each="zaclist: ${#lists.sort(zacmap.zaclists)}" th:text="${zaclist.zac!=null}? ${zaclist.zac.rate}:''">
+
+									</td>
+									
+									<td th:text="${zacmap.detail}"></td>
+
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>							
+			<!--Zacfield Detail-->
+			<div class="row">
+				<div class="col-lg-12">
+					 <div class="panel panel-primary">
+						<div class="panel-heading">
+							<i class="fa fa-cube"></i> Zac Field
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#adddepartmentzacfield'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+						</div>
+						<!-- /.panel-heading -->
+						<div th:if="${department.zacfields.size()>0}" class="panel-body">
+							<table class="table">
+							  <thead>
+								<th style="width:10%">Action</th>
+								<th>Name</th>
+							  </thead>
+							  <tbody>
+								<tr th:each="zacfield: ${department.zacfields}">
+									<td>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deletedepartmentzacfield?zacfield='+${zacfield.id}+'&department='+${department.id}}" 
+											style="margin-right:10px;text-decoration: none"
+											data-title="Are you sure to delete?" 
+											data-toggle="confirmation" 
+											data-singleton="true" 
+											data-popout="true"
+										   >
+											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+										</a>
+										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											data-toggle="modal" th:data-target="@{'#updatezacfield'+${zacfield.id}}"  title="Edit Zacfield"
+											style="margin-right:5px;text-decoration: none;cursor:pointer"
+										   >
+											<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
+										</a>										
+									</td>
+									<td th:text="${zacfield.fieldName}">									
+									</td>
+								</tr>
+							  </tbody>
+							</table>
+						</div>
+						<!-- /.panel-body -->
+					</div>
+				</div>
+				<div class="col-lg-4">
+				</div>
+			</div>
+			<!-- /.row -->
+
+            <!-- /.row -->
+				<!--Zacfield Creation model-->
+				<div class="modal fade" th:id="adddepartmentzacfield" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Zacfield - '+${department.departmentName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" method="post" id="zacfield_creation">
+								<div class="form-group">
+									<label for="zoneselect">Field Name:</label>
+									<input type="hidden" class="form-control" name="department" th:value="${department.id}"></input>
+									<input type="text" class="form-control" name="fieldname"></input>
+								</div>
+								<p class="text-danger"><strong id="message_zacfile_create"></strong></p>
+								 <input class="btn btn-primary" type="submit" value="Submit" />
+							</form>
+						</div>
+					  </div>
+
+					</div>	
+				</div>
+				<!--Zacfield Update model-->
+				<div th:each="zacfield:${department.zacfields}">
+					<div class="modal fade" th:id="@{'updatezacfield'+${zacfield.id}}" role="dialog">
+						<div class="modal-dialog">
+						
+						  <!-- Modal content-->
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							  <h4 class="modal-title" th:text="'Update Zacfield - '+${zacfield.fieldName}"></h4>													
+							</div>
+							<div class="modal-body">	
+								<form action="updatedepartmentzacfield" method="post">
+									<div class="form-group">
+										<label for="zoneselect">Field Name:</label>
+										<input type="hidden" class="form-control" name="department" th:value="${department.id}"></input>
+										<input type="hidden" class="form-control" name="zacfield" th:value="${zacfield.id}"></input>
+										<input type="text" class="form-control" name="fieldName" th:value="${zacfield.fieldName}"></input>
+									</div>
+
+									 <input class="btn btn-primary" type="submit" value="Submit" />
+								</form>
+							</div>
+						  </div>
+
+						</div>	
+					</div>
+				</div>
+				
+				<!--ZacMap Creation model-->
+				<div class="modal fade" th:id="addzacmap" role="dialog">
+					<div class="modal-dialog">
+					
+					  <!-- Modal content-->
+					  <div class="modal-content">
+						<div class="modal-header">
+						  <button type="button" class="close" data-dismiss="modal">&times;</button>
+						  <h4 class="modal-title" th:text="'Add Rate - '+${department.departmentName}"></h4>													
+						</div>
+						<div class="modal-body">	
+							<form action="#" method="post" id="formzac">
+								<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+								<div class="form-group">
+									<label for="zmApplicationSelect">Application:</label>
+									<select name="app" class="form-control selectpicker" data-live-search="true" id="zmApplicationSelect" required>
+									  <option></option>
+									  <option th:each="appEntity : ${apps}" 
+									  th:text="${appEntity.AppName}" 
+									  th:attr="value = ${appEntity.id}">									  
+									  </option>
+									</select>
+								</div>								
+								<div class="form-group" th:each="zacfield : ${department.zacfields}">
+									<label for="zmZacSelect" th:text="${zacfield.fieldName}"></label>
+									<select th:name="@{'zaclist-'+${zacfield.id}}" class="form-control selectpicker" data-live-search="true" id="zmZacSelect">
+									  <option ></option>
+									  <option th:each="zacEntity : ${zacs}" 
+									  th:text="@{${zacEntity.rate}+' - '+${zacEntity.name}}" 
+									  th:attr="value = ${zacEntity.id}">									  
+									  </option>
+									</select>
+								</div>							
+								<div class="form-group">
+									<label for="zonedetail">Detail:</label>
+									<textarea rows="7" cols="50" class="form-control" th:name="detail"></textarea>	
+								</div>
+								<p class="text-danger"><strong id="message_create"></strong></p>								
+							  <input th:if="${department.zacfields.size()>0}"class="btn btn-primary" type="submit" value="Submit"/>
+							</form>
+						</div>
+					  </div>
+					</div>	
+				</div>
+				
+
+			
+
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});
+	  $('#zmApplicationSelect').selectpicker(
+	  {
+		noneSelectedText: 'Select Application'
+	  });
+	$('#dataTables-zacmap').DataTable({
+		responsive: true
+	});	 
+	  $('[id^=zmZacSelect]').selectpicker(
+	  {
+		noneSelectedText: 'Select Rate'
+	  });
+$("#zacfield_creation" ).on( "submit", function( event ) {
+	event.preventDefault();
+	var formdata=$( this ).serializeArray();
+	$( "#message_zacfile_create" ).empty();
+	console.log(formdata);
+	var formobj={"department":"","fieldname":""}
+	for(obj in formdata)
+	{
+		if(formdata[obj].name==="department") formobj.department=formdata[obj].value;
+		if(formdata[obj].name==="fieldname") formobj.fieldname=formdata[obj].value;
+	}
+	console.log(formobj);
+
+
+			  var xhttp = new XMLHttpRequest();
+			  xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+				  location.reload();
+				}
+				else if(this.readyState == 4 && this.status != 200)
+				{
+					$( "#message_zacfile_create" ).text("Add Failed! Please Contact System Administrator.");
+				}
+			  };
+			  xhttp.open("POST", "/adddepartmentzacfield", true);
+			  xhttp.setRequestHeader("Content-type", "application/json");
+			  xhttp.send(JSON.stringify(formobj));	
+});
+
+  $( "#formzac" ).on( "submit", function( event ) {
+  
+  		  event.preventDefault();
+		  $( "#message_create" ).empty();
+		  var formdata=$( this ).serializeArray();
+		  var formobj={"application":"","zaclist":[],"detail":""};
+		  var department="";
+		  for(obj in formdata)
+		  {
+
+			
+			if(formdata[obj].name==="department") department=formdata[obj].value;
+			if(formdata[obj].name==="app") formobj.application=formdata[obj].value;
+			
+			
+			if(formdata[obj].name.toString().includes("zaclist")) 
+			{
+				var zacobj={};
+				zacobj["department"]=department;
+				zacobj["zac"]=formdata[obj].value;
+				var zonename=formdata[obj].name.toString();
+
+				zacobj["zacfield"]=zonename.replace("zaclist-","");
+				formobj.zaclist.push(zacobj);
+			}
+			
+			if(formdata[obj].name==="detail") formobj.detail=formdata[obj].value;
+		  }
+
+			$.ajax({
+				url: "/addDepartmentZacmap",
+				type: "POST",
+				data: JSON.stringify(formobj),
+				headers: {
+					"content-type":"application/json"
+				},
+				dataType: 'json',
+				success: function (data, textStatus, xhr) {
+					if(xhr.status===200)
+					{
+						location.reload();
+					}
+					else
+					{
+						$( "#message_create" ).text("Add Failed! Please Contact System Administrator.");
+					}
+				}
+			});			
+
+		  });	  
+  
+    });
+	
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+		<!-- Navigation -->
+		<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-12 text-primary">
+						<i class="fa fa-windows"></i>
+						<span th:text="@{'Application Inventory - '}"></span>
+						<a th:href="@{'/departmentdetail?id='+${department.id}}" th:text="${department.departmentName}"></a>
+						</div>
+				
+					</div>
+					</h1>
+					
+                </div>
+
+				
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Inventory
+							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+								style="text-decoration: none;color:white;cursor: pointer" 
+								title="Add/Change"
+								th:href="@{'/appinventory?department='+${department.id}}+'&appdepartment=&actiontype=CREATE'">
+									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
+								</a>
+							</div>
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+							<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-appinventory">
+							  <thead>
+								<tr>
+									<th class="zacmap-zone-header-d" rowspan="2">Application Name</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Application Type</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Application Purpose</th>
+									<th class="zacmap-zone-header-d" colspan="5">Zone</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Site</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Business Lead</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Application Owner</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Governance/ Standards in Place (Y/N)</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Userbase</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Power-User (alt. point person)</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Frontline User</th>
+									<th class="zacmap-zone-header-d" colspan="7">Support Information</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Vendor</th>
+									<th class="zacmap-zone-header-d" colspan="6">Contract Information</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Application Version</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Business Unit Initiatives on Roadmap?</th>
+									<th class="zacmap-zone-header-d" colspan="3">Involved in Projects (Y/N)?</th>
+									<th class="zacmap-zone-header-d" rowspan="2">Additional Information/Notes</th>
+								</tr>
+								<tr>
+									<th class="zacmap-zone-header-d">South</th>
+									<th class="zacmap-zone-header-d">Calgary</th>
+									<th class="zacmap-zone-header-d">Central</th>
+									<th class="zacmap-zone-header-d">Edmonton</th>
+									<th class="zacmap-zone-header-d">North</th>
+									
+									<th class="zacmap-zone-header-d">Subject Matter Expert</th>
+									<th class="zacmap-zone-header-d">Trainer</th>
+									<th class="zacmap-zone-header-d">User Admin</th>
+									<th class="zacmap-zone-header-d">System Admin</th>
+									<th class="zacmap-zone-header-d">App Server Support</th>	
+									<th class="zacmap-zone-header-d">DB Server Support</th>
+									<th class="zacmap-zone-header-d">Network Support</th>
+
+									<th class="zacmap-zone-header-d">Contracts</th>
+									<th class="zacmap-zone-header-d">Licenses</th>
+									<th class="zacmap-zone-header-d">Contract / Licensing in Place (Y/N)?</th>
+									<th class="zacmap-zone-header-d">Expiration Date</th>
+									<th class="zacmap-zone-header-d">Vendor SLA/SMA?</th>							
+									<th class="zacmap-zone-header-d">AHS-IT SLA?</th>
+									
+									<th class="zacmap-zone-header-d">Projects</th>
+									<th class="zacmap-zone-header-d">IMP</th>						
+									<th class="zacmap-zone-header-d">CSHREC/IMIT</th>								
+								</tr>
+							  </thead>
+							  <tbody>
+								<tr th:each="appdepartment: ${department.appdepartments}">
+									<td>
+										<li class="dropdown" sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="list-style-type: none;">
+											<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+												<i class="fa fa-cog fa-lg"></i>
+											</a>
+											<ul class="dropdown-menu dropdown-user">
+												<li><a th:href="@{'/appinventory?department='+${department.id}}+'&appdepartment='+${appdepartment.id}+'&actiontype=UPDATE'">Update</a>
+												</li>
+												<li class="divider"></li>
+												<li><a th:href="@{'/appinventory?department='+${department.id}}+'&appdepartment='+${appdepartment.id}+'&actiontype=COPY'">Copy</a>
+												</li>
+												<li class="divider"></li>
+												<li>
+													<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:onclick="@{'copyto('+${appdepartment.id}+')'}" th:data-target="@{'#copytomodal'}" >
+														Copy To
+													</a>
+												</li>												
+												<li class="divider"></li>												
+												<li>
+													<a 
+													data-title="Are you sure to delete?" 
+													data-toggle="confirmation" 
+													data-singleton="true" 
+													data-popout="true"									
+													th:href="@{'/deleteappdepartment?appdepartment='+${appdepartment.id}+'&department='+${department.id}}">Delete</a>
+												</li>												
+											</ul>
+										</li>									
+										<a th:if="${appdepartment.application!=null}" th:href="@{'/applicationdetail?app='+${appdepartment.application.id}}" th:text="${appdepartment.application!=null}?${appdepartment.application.AppName}:''"></a>
+									</td>									
+									<td th:text="${appdepartment.application!=null}?${appdepartment.application.AppType}:''"></td>
+									<td th:text="${appdepartment.application!=null}?${appdepartment.application.AppPurpose}:''"></td>
+									<td th:text="${appdepartment.south}"></td>
+									<td th:text="${appdepartment.calgary}"></td>
+									<td th:text="${appdepartment.central}"></td>
+									<td th:text="${appdepartment.edmonton}"></td>
+									<td th:text="${appdepartment.north}"></td>
+									<td><p th:each="site: ${appdepartment.sites}">
+											<a th:href="@{'/sitedetail?site='+${site.id}}" th:text="${site.siteName}">
+											</a>
+										</p>
+									</td>
+									<td th:text="${appdepartment.businesslead}"></td>
+									<td th:text="${appdepartment.appowner}"></td>
+									<td th:text="${appdepartment.goverinplace}"></td>
+									<td th:text="${appdepartment.userbase}"></td>
+									<td th:text="${appdepartment.poweruser}"></td>
+									<td th:text="${appdepartment.fluser}"></td>
+									<td th:text="${appdepartment.sme}"></td>
+									<td th:text="${appdepartment.trainer}"></td>
+									<td th:text="${appdepartment.useradmin}"></td>
+									<td th:text="${appdepartment.systemadmin}"></td>
+									<td th:text="${appdepartment.dbsupport}"></td>
+									<td th:text="${appdepartment.serversupport}"></td>
+									<td th:text="${appdepartment.networksupport}"></td>
+									<td th:text="${appdepartment.vendor!=null}?${appdepartment.vendor.companyName}:''"></td>
+									<td><p th:each="contract: ${appdepartment.contracts}">
+											<a th:href="@{'/contractdetail?contract='+${contract.id}}" th:text="${contract.contractName}">
+											</a>
+										</p>
+									</td>
+									<td><p th:each="license: ${appdepartment.licenses}">
+											<a th:href="@{'/licensedetail?contract='+${license.id}}" th:text="${license.licenseNumber}">
+											</a>
+										</p>
+									</td>
+									<td th:text="${appdepartment.contractinplace}"></td>
+									<td th:text="${appdepartment.expireDate}"></td>
+									<td th:text="${appdepartment.vendorsla}"></td>
+									<td th:text="${appdepartment.ahsitsla}"></td>
+									<td th:text="${appdepartment.application!=null}?${appdepartment.application.AppVersion}:''"></td>						
+									<td th:text="${appdepartment.broadmap}"></td>
+									<td><p th:each="project: ${appdepartment.projects}">
+											<a th:href="@{'/projectdetail?project='+${project.id}}" th:text="${project.projectname}">
+											</a>
+										</p>
+									</td>									
+									<td th:text="${appdepartment.imp}"></td>
+									<td th:text="${appdepartment.cshrecimit}"></td>	
+									<td th:text="${appdepartment.note}"></td>										
+								</tr>
+							  </tbody>
+							</table>
+                            <!-- /.table-responsive -->
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+				<!--Copy to modal-->
+
+					<div class="modal fade" th:id="@{'copytomodal'}" role="dialog">
+						<div class="modal-dialog">
+						
+						  <!-- Modal content-->
+						  <div class="modal-content">
+							<div class="modal-header">
+							  <button type="button" class="close" data-dismiss="modal">&times;</button>
+							  <h4 class="modal-title">Copy To</h4>													
+							</div>
+							<div class="modal-body">	
+								<form action="/appinventory" method="GET">
+									<div class="form-group">
+										<label for="zoneselect">Department:</label>
+										<input type="hidden" class="form-control" id="appdepartmentid" th:name="appdepartment" value=""></input>
+										<input type="hidden" class="form-control" th:name="actiontype" value="COPYTO"></input>
+										<select name="department" class="mdb-select md-form colorful-select dropdown-primary form-control" required>
+											<option selected></option>
+										  <option th:each="departEntity : ${departments}" 
+										  th:text="${departEntity.departmentName}" 
+										  th:attr="value = ${departEntity.id}">
+										</select>
+									</div>
+								  <input class="btn btn-primary" type="submit" value="Submit" />
+								</form>
+							</div>
+						  </div>
+
+						</div>	
+					</div>				
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+			$('[id^=datetimepicker]').datepicker({
+				format: 'yyyy-mm-dd',
+				 orientation: "bottom auto"
+			});		
+		$('#dataTables-appinventory').DataTable({
+            responsive: true
+        });
+    });
+	function copyto(appdepartmentid)
+	{
+		document.getElementById("appdepartmentid").value=appdepartmentid;
+	}
+    </script>
+
+</body>
+
+</html>

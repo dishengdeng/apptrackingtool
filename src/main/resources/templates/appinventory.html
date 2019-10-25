@@ -42,7 +42,15 @@
 							<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
 							<input type="hidden" class="form-control" th:name="action" th:value="${actiontype}"></input>
 							<input type="hidden" class="form-control" th:name="id" th:value="${actiontype==T(portal.utility.Action).COPY or actiontype==T(portal.utility.Action).COPYTO}? null:${appdepartment.id}"></input>
-							<select name="application" class="form-control">
+							<select name="application" class="form-control" id="applicationselect" th:if="${#httpServletRequest.remoteUser}=='leo' or ${#httpServletRequest.remoteUser}=='mike'">
+							<option th:selected="${appdepartment.application==null}"></option>
+							  <option th:each="appEntity : ${apps}" 
+							  th:text="${appEntity.appName}" 
+							  th:attr="value = ${appEntity.id}"
+							  th:selected="${appdepartment.application!=null and appdepartment.application.id==appEntity.id}">									  
+							  </option>
+							</select>
+							<select name="application" class="form-control" th:if="${#httpServletRequest.remoteUser}!='leo' and ${#httpServletRequest.remoteUser}!='mike'">
 							<option th:selected="${appdepartment.application==null}"></option>
 							  <option th:each="appEntity : ${apps}" 
 							  th:text="${appEntity.appName}" 
@@ -384,6 +392,12 @@
 		enableFiltering: true,
 		nonSelectedText: 'Select Project',
 		enableCaseInsensitiveFiltering:true
+	  });
+	  	  $('[id^=applicationselect]').selectpicker(
+	  {
+			liveSearch:true,
+			width:300,
+			noneSelectedText:'Select Application'
 	  });
 
 			$('[id^=datetimepicker]').datepicker({

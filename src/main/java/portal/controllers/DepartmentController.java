@@ -125,19 +125,71 @@ public class DepartmentController {
     public String DepartmentDetial(@RequestParam(name="id", required=true) String id,ModelMap model) {
     	Department department=departmentService.getById(Long.valueOf(id));
     	model.addAttribute("department",department);
+
+
+    	//--Zacmap-----
+    	model.addAttribute("zacmaps",departmentService.getZacmap(department));
+
+
+
+
+        return "departmentdetail";
+    }
+    
+    @GetMapping("/appdepartment")
+    public String appdepartment(@ModelAttribute("department") Department department,ModelMap model) {
+
+    	model.addAttribute("department",department);
+
+    	model.addAttribute("departments",departmentService.getAll());
+
+        return "appdepartment";
+    } 
+    
+    @GetMapping("/zacdepartment")
+    public String zacdepartment(@ModelAttribute("department") Department department,ModelMap model) {
+
+    	model.addAttribute("department",department);
+
+    	model.addAttribute("zacs",zacService.getAll());
+    	model.addAttribute("zacmaps",departmentService.getZacmap(department));
+    	model.addAttribute("zacfields", department.getZacfields().stream().sorted().collect(Collectors.toList()));
+    	model.addAttribute("apps", appService.getAll());
+
+        return "zacdepartment";
+    } 
+    
+    @GetMapping("/updatezacdepartment")
+    public String updatezacdepartment(@ModelAttribute("department") Department department,@ModelAttribute("zacmap") Zacmap zacmap,ModelMap model) {
+
+    	model.addAttribute("department",department);
+    	model.addAttribute("zacs",zacService.getAll());
+    	model.addAttribute("zacmap",zacmap);
+    	model.addAttribute("apps", appService.getAll());
+
+        return "updatezacdepartment";
+    }
+    
+    @GetMapping("/stakedepartment")
+    public String stakedepartment(@ModelAttribute("department") Department department,ModelMap model) {
+
+    	model.addAttribute("department",department);
+
     	model.addAttribute("stakeholders",stakeholderService.getAll());
     	model.addAttribute("roles", slaRoleService.getAll());
 
-    	//--Zacmap-----
-    	model.addAttribute("zacs",zacService.getAll());
-    	model.addAttribute("zacmaps",departmentService.getZacmap(department));
-    	model.addAttribute("questions", questionService.getAllQuestion());
-    	model.addAttribute("zacfields", department.getZacfields().stream().sorted().collect(Collectors.toList()));
-    	model.addAttribute("apps", appService.getAll());
-    	model.addAttribute("departments",departmentService.getAll());
+        return "stakedepartment";
+    } 
+    
+    @GetMapping("/questiondepartment")
+    public String questiondepartment(@ModelAttribute("department") Department department,ModelMap model) {
 
-        return "departmentdetail";
-    }    
+    	model.addAttribute("department",department);
+
+    	model.addAttribute("questions", questionService.getAllQuestion());
+
+        return "questiondepartment";
+    }
     
     @GetMapping("/deleteDepartment")
     public String deleteDepartment(@ModelAttribute("department") Department department) {
@@ -192,7 +244,7 @@ public class DepartmentController {
     	zacmapService.deleteZacmap(zacmap); 
     	   	
     	
-    	return "redirect:/departmentdetail?id="+department.getId();
+    	return "redirect:/zacdepartment?department="+department.getId();
     }
     
     @PostMapping("/addDepartmentZacmap")
@@ -279,7 +331,7 @@ public class DepartmentController {
     	});
     	zacfieldService.delete(zacfield);
     	
-    	return "redirect:/departmentdetail?id="+department.getId();
+    	return "redirect:/zacdepartment?department="+department.getId();
     }
     
     @PostMapping("/adddepartmentzacfield")
@@ -303,7 +355,7 @@ public class DepartmentController {
     public String updatedepartmentzacfield(@ModelAttribute("zacfield") Zacfield zacfield) {
 
     	zacfieldService.update(zacfield);
-    	return "redirect:/departmentdetail?id="+zacfield.getDepartment().getId();
+    	return "redirect:/zacdepartment?department="+zacfield.getDepartment().getId();
     } 
     
 //------file management----

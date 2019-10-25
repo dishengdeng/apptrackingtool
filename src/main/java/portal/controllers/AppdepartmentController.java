@@ -103,6 +103,6 @@ public class AppdepartmentController {
     	
     	appdepartment.removeAlldependence();
     	appDepartmentService.delete(appdepartment);
-    	return "redirect:/departmentdetail?id="+department.getId();
+    	return "redirect:/appdepartment?department="+department.getId();
     }
 }
