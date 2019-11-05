@@ -1,0 +1,24 @@
+.tooltiptd {
+  top: -5px;
+  left: 105%;
+  border-bottom: 1px dotted black;
+}
+
+.tooltiptd .tooltiptexttd {
+	visibility: hidden;
+    position: absolute;
+    width: 50%;
+    background-color: #555;
+    color: #fff;
+    text-align: left;
+    padding: 5px 0;
+    border-radius: 6px;
+    z-index: 1;
+    opacity: 0.8;
+    transition: opacity .6s;  
+  
+}
+
+.tooltiptd:hover .tooltiptexttd {
+  visibility: visible;
+}

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:insert="head :: header">
+
+<body>
+
+    <div id="wrapper">
+
+		<!-- Navigation -->
+		<div th:insert="navigation :: navbar">  </div>
+
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">
+					<div class="row">
+						<div class="col-md-12 text-primary">
+						<i class="fa fa-thumbs-up"></i>
+						<a th:href="@{'/stakedepartment?department='+${department.id}}" th:text="@{'Update Stakeholder - '+${department.departmentName}}"></a>
+						</div>	
+					</div>
+					</h1>
+					
+                </div>
+
+				
+
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            Stakeholder Update
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+								<form th:action="@{/updateDepartmentStakeholder}"  method="post">
+									<div class="form-group">
+										<label for="departmentSelect">Stakeholder:</label>
+										<input type="hidden" class="form-control" name="department" th:value="${department.id}"></input>
+										<input type="hidden" class="form-control" name="stakeholderext" th:value="${stakeholderext.id}"></input>
+										<select name="stakeholder" class="form-control" id="stakeholderSelect">
+										  <option th:each="stakeholderEntity : ${stakeholders}" 
+										  th:text="${stakeholderEntity.stakeholderName}" 
+										  th:attr="value = ${stakeholderEntity.id}"
+										  th:selected="${stakeholderext.stakeholder!=null and stakeholderext.stakeholder.id==stakeholderEntity.id}">									  
+										  </option>
+										</select>
+									</div>
+									<div class="form-group">
+										<label for="departmentSelect">Role:</label>
+										<select name="role" class="form-control" id="roleSelect">
+											<option th:selected="${stakeholderext.role==null}"></option>
+											<option th:each="roleEntity : ${roles}" 
+											  th:text="${roleEntity.SLARoleName}" 
+											  th:attr="value = ${roleEntity.id}"
+											  th:selected="${stakeholderext.role!=null and stakeholderext.role.id==roleEntity.id}"
+											>									  
+											</option>
+										</select>
+									</div>
+									  <div class="form-group">
+										<label for="note">Influence:</label>
+										<select name="influence" class="form-control" id="statusSelect">
+											<option th:selected="${stakeholderext.influence==null}"></option>
+											<option th:attr="value = 'Low'" th:selected="${stakeholderext.influence==null} ? false:${stakeholderext.influence=='Low'}" th:text="Low"></option>
+											<option th:attr="value = 'Medium'" th:selected="${stakeholderext.influence==null} ? false:${stakeholderext.influence=='Medium'}" th:text="Medium"></option>
+											<option th:attr="value = 'High'" th:selected="${stakeholderext.influence==null} ? false:${stakeholderext.influence=='High'}" th:text="High"></option>												
+										</select>								
+									  </div>
+									  
+									  <div class="form-group">
+										<label for="note">Interest:</label>
+										<select name="interest" class="form-control" id="statusSelect">
+											<option th:selected="${stakeholderext.interest==null}"></option>
+											<option th:attr="value = 'Low'" th:selected="${stakeholderext.interest==null} ? false:${stakeholderext.interest=='Low'}" th:text="Low"></option>
+											<option th:attr="value = 'Medium'" th:selected="${stakeholderext.interest==null} ? false:${stakeholderext.interest=='Medium'}" th:text="Medium"></option>
+											<option th:attr="value = 'High'" th:selected="${stakeholderext.interest==null} ? false:${stakeholderext.interest=='High'}" th:text="High"></option>									
+										</select>									
+									  </div>
+									  <div class="form-group">
+										<label for="note">RACI:</label>
+										<select name="raciforsyschanges" class="form-control" id="RACISelect" multiple>
+											<option th:each="raci : ${T(portal.utility.RACI).values()}"
+													th:value="${raci}"
+													th:text="${raci}"
+													th:selected="${stakeholderext.raciforsyschanges.contains(raci)}">
+											</option>
+										</select>								
+									  </div>								
+								  <input class="btn btn-primary" type="submit" value="Submit" />
+								</form>
+
+                            <!-- /.table-responsive -->
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+
+
+            <!-- /.row -->
+        </div>
+        <!-- /#page-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+
+    <!-- Page-Level Demo Scripts - Tables - Use for reference -->
+    <script>
+    $(document).ready(function() {
+        $('#dataTables-example').DataTable({
+            responsive: true
+        });
+	$('[id^=stakeholderSelect]').selectpicker(
+	  {
+			liveSearch:true,
+			width:300,
+			noneSelectedText:'Select Stakeholder'
+	  });
+	  $('[id^=roleSelect]').selectpicker(
+	  {
+			liveSearch:true,
+			width:300,
+			noneSelectedText:'Select Role'
+	  });
+	 $('[id^=RACISelect]').multiselect(
+  {
+	includeSelectAllOption: true,
+	buttonWidth: 300, 
+	enableFiltering: true,
+	nonSelectedText: 'Select RACI'
+  });		
+    });
+    </script>
+
+</body>
+
+</html>

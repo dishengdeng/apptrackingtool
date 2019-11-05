@@ -42,7 +42,7 @@
 							<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
 							<input type="hidden" class="form-control" th:name="action" th:value="${actiontype}"></input>
 							<input type="hidden" class="form-control" th:name="id" th:value="${actiontype==T(portal.utility.Action).COPY or actiontype==T(portal.utility.Action).COPYTO}? null:${appdepartment.id}"></input>
-							<select name="application" class="form-control" id="applicationselect" th:if="${#httpServletRequest.remoteUser}=='leo' or ${#httpServletRequest.remoteUser}=='mike'">
+							<select name="application" class="form-control" id="applicationselect">
 							<option th:selected="${appdepartment.application==null}"></option>
 							  <option th:each="appEntity : ${apps}" 
 							  th:text="${appEntity.appName}" 
@@ -50,15 +50,21 @@
 							  th:selected="${appdepartment.application!=null and appdepartment.application.id==appEntity.id}">									  
 							  </option>
 							</select>
-							<select name="application" class="form-control" th:if="${#httpServletRequest.remoteUser}!='leo' and ${#httpServletRequest.remoteUser}!='mike'">
-							<option th:selected="${appdepartment.application==null}"></option>
-							  <option th:each="appEntity : ${apps}" 
-							  th:text="${appEntity.appName}" 
-							  th:attr="value = ${appEntity.id}"
-							  th:selected="${appdepartment.application!=null and appdepartment.application.id==appEntity.id}">									  
-							  </option>
-							</select>							
+						
 						  </div>
+						  <div class="form-group">
+							<label for="zoneName">App Instance:</label>
+							<select name="appinstance" class="form-control" id="instanceselect">
+							<option th:selected="${appdepartment.appInstance==null}"></option>
+							  <option th:each="appInstanceEntity : ${appinstances}" 
+							  th:text="${appInstanceEntity.appName}" 
+							  th:attr="value = ${appInstanceEntity.id}"
+							  th:selected="${appdepartment.appInstance!=null and appdepartment.appInstance.id==appInstanceEntity.id}">									  
+							  </option>
+							</select>
+						
+						  </div>						  
+						  
 						  <div class="form-group">
 							<label for="description">Business Lead:</label>
 							<input type="text" class="form-control" th:name="businesslead" th:value="${appdepartment.businesslead}">
@@ -224,12 +230,12 @@
 						<form action="#" method="post" id="vendordetailform">	
 						  <div class="form-group">
 							<label for="zoneName">Vendors:</label>
-								<select name="vendor" class="form-control">
-									<option th:selected="${appdepartment.vendor==null}"></option>
+								<select name="vendors" class="form-control" id="vendorSelect" multiple>
+									
 									  <option th:each="vendorEntity : ${vendors}" 
 									  th:text="${vendorEntity.companyName}" 
 									  th:attr="value = ${vendorEntity.id}"
-									  th:selected="${appdepartment.vendor!=null and appdepartment.vendor.id==vendorEntity.id}">									  
+									  th:selected="${appdepartment.vendors.size()>0 and appdepartment.vendors.contains(vendorEntity)}">																			  
 									  </option>
 												
 								</select>					
@@ -369,6 +375,15 @@
 		nonSelectedText: 'Select Site',
 		enableCaseInsensitiveFiltering:true
 	  });
+		$('[id^=vendorSelect]').multiselect(
+	  {
+		includeSelectAllOption: true,
+		buttonWidth: '100%', 
+		enableFiltering: true,
+		nonSelectedText: 'Select Vendor',
+		enableCaseInsensitiveFiltering:true
+	  });	  
+	  
 	  		$('[id^=contractSelect]').multiselect(
 	  {
 		includeSelectAllOption: true,
@@ -399,6 +414,12 @@
 			width:300,
 			noneSelectedText:'Select Application'
 	  });
+	  	  	  $('[id^=instanceselect]').selectpicker(
+	  {
+			liveSearch:true,
+			width:300,
+			noneSelectedText:'N/A'
+	  });
 
 			$('[id^=datetimepicker]').datepicker({
 				format: 'yyyy-mm-dd',
@@ -420,11 +441,12 @@
 						"id":"",
 						"action":"",
 						"application":{},
+						"appinstance":{},
 						"department":{},
 						"zone":{},
 						"sites":[],
 						"support":{},
-						"vendor":{},
+						"vendors":[],
 						"contract":{"contracts":[],"licenses":[]},
 						"project":{"projects":[]}
 						};
@@ -435,6 +457,7 @@
 			if(appdata[i].name==="action") formdata.action=appdata[i].value;
 			if(appdata[i].name==="department") formdata.department={"id":appdata[i].value};
 			if(appdata[i].name==="application") formdata.application["id"]=appdata[i].value;
+			if(appdata[i].name==="appinstance") formdata.appinstance["id"]=appdata[i].value;
 			if(appdata[i].name==="businesslead") formdata.application["businesslead"]=appdata[i].value;
 			if(appdata[i].name==="appowner") formdata.application["appowner"]=appdata[i].value;
 			if(appdata[i].name==="goverinplace") formdata.application["goverinplace"]=appdata[i].value;
@@ -469,7 +492,7 @@
 		  }
 		  for(i in vendordata)
 		  {
-			if(vendordata[i].name==="vendor") formdata.vendor["id"]=vendordata[i].value;
+			if(vendordata[i].name==="vendors") formdata.vendors.push({"id":vendordata[i].value});
 		  }
 		  for(i in contractdata)
 		  {

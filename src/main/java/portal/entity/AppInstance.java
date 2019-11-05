@@ -66,6 +66,13 @@ public class AppInstance implements Comparable<AppInstance>{
     
     @OneToMany(
             mappedBy = "appInstance", 
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+        )
+    private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
+    
+    @OneToMany(
+            mappedBy = "appInstance", 
             cascade = CascadeType.ALL, 
             orphanRemoval = true 
         )
@@ -164,11 +171,26 @@ public class AppInstance implements Comparable<AppInstance>{
 	}
 
 
+	public Set<Appdepartment> getAppdepartments() {
+		return appdepartments;
+	}
+
+	public void setAppdepartments(Set<Appdepartment> appdepartments) {
+		this.appdepartments.addAll(appdepartments);
+		appdepartments.forEach(obj->{
+			obj.setAppInstance(this);
+		});
+	}
 	
-
-
-
-
+	public void AddAppdepartment(Appdepartment appdepartment)
+	{
+		this.appdepartments.add(appdepartment);
+	}
+	
+	public void RemoveAppdepartment(Appdepartment appdepartment)
+	{
+		this.appdepartments.remove(appdepartment);
+	}
 
 	@Override
 	public boolean equals(Object obj)
@@ -245,6 +267,11 @@ public class AppInstance implements Comparable<AppInstance>{
 			obj.setAppInstance(null);
 		});
 		this.servers=null;
+		
+		this.appdepartments.forEach(obj->{
+			obj.setAppInstance(null);
+		});
+		this.appdepartments=null;
 		
 
 	}

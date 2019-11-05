@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import portal.entity.Appdepartment;
+import portal.entity.Company;
 import portal.entity.Contract;
 import portal.entity.License;
 import portal.entity.Project;
 import portal.entity.Site;
+import portal.repository.AppInstanceRepository;
 import portal.repository.AppRepository;
 import portal.repository.AppdepartmentRepository;
 import portal.repository.CompanyRepository;
@@ -33,6 +35,9 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 	
 	@Autowired
 	private AppRepository appRepository;
+	
+	@Autowired
+	private AppInstanceRepository appInstanceRepository;
 	
 	@Autowired
 	private DepartmentRepository departmentRepository;
@@ -83,6 +88,7 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 		
 
 		if(!ObjectUtils.isEmpty(appdepartment.getJSONObject("application").getString("id"))) appdepart.setApplication(appRepository.findOne(appdepartment.getJSONObject("application").getLong("id")));
+		if(!ObjectUtils.isEmpty(appdepartment.getJSONObject("appinstance").getString("id"))) appdepart.setAppInstance(appInstanceRepository.findOne(appdepartment.getJSONObject("appinstance").getLong("id")));
 		appdepart.setBusinesslead(appdepartment.getJSONObject("application").getString("businesslead"));
 		appdepart.setAppowner(appdepartment.getJSONObject("application").getString("appowner"));
 		appdepart.setGoverinplace(appdepartment.getJSONObject("application").getString("goverinplace"));
@@ -117,7 +123,16 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 		appdepart.setNetworksupport(appdepartment.getJSONObject("support").getString("networksupport"));
 		
 		if(!ObjectUtils.isEmpty(appdepartment.getJSONObject("department").getString("id"))) appdepart.setDepartment(departmentRepository.findOne(appdepartment.getJSONObject("department").getLong("id")));
-		if(!ObjectUtils.isEmpty(appdepartment.getJSONObject("vendor").getString("id")))appdepart.setVendor(companyRepository.findOne(appdepartment.getJSONObject("vendor").getLong("id")));
+
+		Set<Company> vendors= new HashSet<Company>();
+		for(Object obj : appdepartment.getJSONArray("vendors"))
+		{
+			JSONObject jsonObj=(JSONObject)obj;
+			
+			vendors.add(companyRepository.findOne(jsonObj.getLong("id")));
+		}
+		appdepart.refreshVendors(vendors);
+		appdepart.setVendors(vendors);	
 		
 		appdepart.setAhsitsla(appdepartment.getJSONObject("contract").getString("ahsitsla"));
 		appdepart.setContractinplace(appdepartment.getJSONObject("contract").getString("contractinplace"));

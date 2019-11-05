@@ -86,12 +86,42 @@
 											<span class="badge badge-secondary small" th:text="${'Application - Total: '+department.appdepartments.size()}"></span>
 											</a>										
 										</td>									
-										<td th:text="${department.description}"></td>
-										<td th:text="${department.purpose}"></td>
-                                        <td th:text="${department.stragicplan}"></td>
-										<td th:text="${department.roadMap}"></td>
-										<td th:text="${department.goal}"></td>
-										<td th:text="${department.painpoint}"></td>
+										<td>
+											<div class="tooltiptd" th:if="${department.description!=null}">
+											<div style="height:40px; overflow:hidden" th:text="${department.description}"></div>
+											<span class="tooltiptexttd" th:text="${department.description}"></span>
+											</div>						
+										</td>
+										<td>
+											<div class="tooltiptd" th:if="${department.purpose!=null}">
+											<div style="height:40px; overflow:hidden" th:text="${department.purpose}"></div>
+											<span class="tooltiptexttd" th:text="${department.purpose}"></span>
+											</div>											
+										</td>
+                                        <td>
+											<div class="tooltiptd" th:if="${department.stragicplan!=null}">
+											<div style="height:40px; overflow:hidden" th:text="${department.stragicplan}"></div>
+											<span class="tooltiptexttd" th:text="${department.stragicplan}"></span>
+											</div>											
+										</td>
+										<td>
+											<div class="tooltiptd" th:if="${department.roadMap!=null}">
+											<div style="height:40px; overflow:hidden" th:text="${department.roadMap}"></div>
+											<span class="tooltiptexttd" th:text="${department.roadMap}"></span>
+											</div>						
+										</td>
+										<td>
+											<div class="tooltiptd" th:if="${department.goal!=null}">
+											<div style="height:40px; overflow:hidden" th:text="${department.goal}"></div>
+											<span class="tooltiptexttd" th:text="${department.goal}"></span>
+											</div>												
+										</td>
+										<td>
+											<div class="tooltiptd" th:if="${department.painpoint!=null}">
+											<div style="height:40px; overflow:hidden" th:text="${department.painpoint}"></div>
+											<span class="tooltiptexttd" th:text="${department.painpoint}"></span>
+											</div>											
+										</td>
 
 										
 
@@ -99,7 +129,7 @@
 
 
                                 </tbody>
-                            </table>
+                            </table>							
                             <!-- /.table-responsive -->
 									<div th:each="department: ${departments}"><!--Model Area-->
 									
@@ -124,7 +154,7 @@
 													  </thead>
 													  <tbody>
 														<tr th:each="file : ${department.files}">
-														  <th><h5><a th:href="@{'/downloadcontract?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
+														  <th><h5><a th:href="@{'/downloaddepartment?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
 														  <th><h5 th:text="${#dates.format(file.getCreateDate(),'MMM-dd-yyyy HH:mm')}"></h5></th>
 														  <th><h5 th:text="${file.createdby}"></h5></th>
 														</tr>

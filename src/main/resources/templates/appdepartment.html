@@ -128,9 +128,20 @@
 											</ul>
 										</li>									
 										<a th:if="${appdepartment.application!=null}" th:href="@{'/applicationdetail?app='+${appdepartment.application.id}}" th:text="${appdepartment.application!=null}?${appdepartment.application.AppName}:''"></a>
+										<a th:if="${appdepartment.appInstance!=null}" th:href="@{'/instancedetail?id='+${appdepartment.appInstance.id}}" th:text="${appdepartment.appInstance!=null}?${appdepartment.appInstance.appInstanceName}:''"></a>
 									</td>									
-									<td th:text="${appdepartment.application!=null}?${appdepartment.application.AppType}:''"></td>
-									<td th:text="${appdepartment.application!=null}?${appdepartment.application.AppPurpose}:''"></td>
+									<td>
+										<div class="tooltiptd" th:if="${appdepartment.application!=null and appdepartment.application.AppType!=null}">
+										<div style="height:40px; overflow:hidden" th:text="${appdepartment.application.AppType}"></div>
+										<span class="tooltiptexttd" th:text="${appdepartment.application.AppType}"></span>
+										</div>									
+									</td>
+									<td>
+										<div class="tooltiptd" th:if="${appdepartment.application!=null and appdepartment.application.AppPurpose!=null}">
+										<div style="height:40px; overflow:hidden" th:text="${appdepartment.application.AppPurpose}"></div>
+										<span class="tooltiptexttd" th:text="${appdepartment.application.AppPurpose}"></span>
+										</div>										
+									</td>
 									<td th:text="${appdepartment.south}"></td>
 									<td th:text="${appdepartment.calgary}"></td>
 									<td th:text="${appdepartment.central}"></td>
@@ -141,7 +152,12 @@
 											</a>
 										</p>
 									</td>
-									<td th:text="${appdepartment.businesslead}"></td>
+									<td>
+										<div class="tooltiptd" th:if="${appdepartment.businesslead!=null}">
+										<div style="height:40px; overflow:hidden" th:text="${appdepartment.businesslead}"></div>
+										<span class="tooltiptexttd" th:text="${appdepartment.businesslead}"></span>
+										</div>										
+									</td>
 									<td th:text="${appdepartment.appowner}"></td>
 									<td th:text="${appdepartment.goverinplace}"></td>
 									<td th:text="${appdepartment.userbase}"></td>
@@ -154,7 +170,11 @@
 									<td th:text="${appdepartment.dbsupport}"></td>
 									<td th:text="${appdepartment.serversupport}"></td>
 									<td th:text="${appdepartment.networksupport}"></td>
-									<td th:text="${appdepartment.vendor!=null}?${appdepartment.vendor.companyName}:''"></td>
+									<td><p th:each="vendor: ${appdepartment.vendors}">
+											<a th:href="@{'/companydetail?company='+${vendor.id}}" th:text="${vendor.companyName}">
+											</a>
+										</p>
+									</td>
 									<td><p th:each="contract: ${appdepartment.contracts}">
 											<a th:href="@{'/contractdetail?contract='+${contract.id}}" th:text="${contract.contractName}">
 											</a>

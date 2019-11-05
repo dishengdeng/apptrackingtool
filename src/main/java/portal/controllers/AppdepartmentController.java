@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import portal.entity.Appdepartment;
 import portal.entity.Department;
-
+import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.AppdepartmentService;
 import portal.service.CompanyService;
@@ -56,6 +56,9 @@ public class AppdepartmentController {
 	@Autowired
 	private DepartmentService departmentService;
 	
+	@Autowired
+	private AppInstanceService appInstanceService;
+	
 	
 	
     @GetMapping("/appinventory")
@@ -77,6 +80,7 @@ public class AppdepartmentController {
     	model.addAttribute("appdepartment",appdepart);
     	model.addAttribute("actiontype",type);
     	model.addAttribute("apps",appService.getAll());
+    	model.addAttribute("appinstances",appInstanceService.getAll());
     	model.addAttribute("sites",siteService.getAll());
     	model.addAttribute("vendors",vendorService.getAll());
     	model.addAttribute("contracts",contractService.getAll());

@@ -56,26 +56,30 @@
 							  <tbody>
 								<tr th:each="stakeholderext: ${department.stakeholderexts}">
 									<td>
-										<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" th:href="@{'/deleteDepartmentStakeholder?stakeholderext='+${stakeholderext.id}}" 
-											style="margin-right:5px;text-decoration: none"
-											data-title="Are you sure to delete?" 
-											data-toggle="confirmation" 
-											data-singleton="true" 
-											data-popout="true"
-										   >
-											<i class="fa fa-trash fa-lg" aria-hidden="true"></i>
-										</a>
-										<a  sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')"
-											data-toggle="modal" th:data-target="@{'#updatestakeholderext'+${stakeholderext.id}}" style="text-decoration: none;cursor: pointer;margin-right:5px;"
-										   >
-											<i class="fa fa-pencil fa-lg" aria-hidden="true"></i>
-										</a>										
-										<a 
-											th:href="@{'/stakeholderdetail?stakeholder='+${stakeholderext.stakeholder.id}}" 
-											th:text="${stakeholderext.stakeholder.stakeholderName}"
-											th:if="${stakeholderext.stakeholder!=null}"
-										>
-										</a>
+										<li class="dropdown" sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="list-style-type: none;">
+											<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+												<i class="fa fa-cog fa-lg"></i>
+											</a>									
+											<ul class="dropdown-menu dropdown-user">
+												<li><a th:href="@{'/updatestakedepartment?department='+${department.id}}+'&stakeholderext='+${stakeholderext.id}">Update</a>
+												</li>
+												<li class="divider"></li>												
+												<li>
+													<a 
+													data-title="Are you sure to delete?" 
+													data-toggle="confirmation" 
+													data-singleton="true" 
+													data-popout="true"									
+													th:href="@{'/deleteDepartmentStakeholder?stakeholderext='+${stakeholderext.id}}">Delete</a>
+												</li>												
+											</ul>
+										</li>										
+											<a 
+												th:href="@{'/stakeholderdetail?stakeholder='+${stakeholderext.stakeholder.id}}" 
+												th:text="${stakeholderext.stakeholder.stakeholderName}"
+												th:if="${stakeholderext.stakeholder!=null}"
+											>
+											</a>
 									</td>
 									<td>
 										<a 
@@ -169,80 +173,6 @@
 					</div>	
 				</div>
 
-				<!--stakeholder update model-->
-				<div th:each="stakeholderext: ${department.stakeholderexts}" th:if="${department.stakeholderexts.size()>0}">
-					<div class="modal fade" th:id="@{'updatestakeholderext'+${stakeholderext.id}}" role="dialog">
-						<div class="modal-dialog">
-						
-						  <!-- Modal content-->
-						  <div class="modal-content">
-							<div class="modal-header">
-							  <button type="button" class="close" data-dismiss="modal">&times;</button>
-							  <h4 class="modal-title" th:text="'Add Or Change Stakeholder - '+${department.departmentName}"></h4>													
-							</div>
-							<div class="modal-body">	
-								<form th:action="@{/updateDepartmentStakeholder}"  method="post">
-									<div class="form-group">
-										<label for="departmentSelect">Stakeholder:</label>
-										<input type="hidden" class="form-control" name="department" th:value="${department.id}"></input>
-										<input type="hidden" class="form-control" name="stakeholderext" th:value="${stakeholderext.id}"></input>
-										<select name="stakeholder" class="form-control" id="stakeholderSelect">
-										  <option th:each="stakeholderEntity : ${stakeholders}" 
-										  th:text="${stakeholderEntity.stakeholderName}" 
-										  th:attr="value = ${stakeholderEntity.id}"
-										  th:selected="${stakeholderext.stakeholder!=null and stakeholderext.stakeholder.id==stakeholderEntity.id}">									  
-										  </option>
-										</select>
-									</div>
-									<div class="form-group">
-										<label for="departmentSelect">Role:</label>
-										<select name="role" class="form-control" id="roleSelect">
-											<option th:selected="${stakeholderext.role==null}"></option>
-											<option th:each="roleEntity : ${roles}" 
-											  th:text="${roleEntity.SLARoleName}" 
-											  th:attr="value = ${roleEntity.id}"
-											  th:selected="${stakeholderext.role!=null and stakeholderext.role.id==roleEntity.id}"
-											>									  
-											</option>
-										</select>
-									</div>
-									  <div class="form-group">
-										<label for="note">Influence:</label>
-										<select name="influence" class="form-control" id="statusSelect">
-											<option th:selected="${stakeholderext.influence==null}"></option>
-											<option th:attr="value = 'Low'" th:selected="${stakeholderext.influence==null} ? false:${stakeholderext.influence=='Low'}" th:text="Low"></option>
-											<option th:attr="value = 'Medium'" th:selected="${stakeholderext.influence==null} ? false:${stakeholderext.influence=='Medium'}" th:text="Medium"></option>
-											<option th:attr="value = 'High'" th:selected="${stakeholderext.influence==null} ? false:${stakeholderext.influence=='High'}" th:text="High"></option>												
-										</select>								
-									  </div>
-									  
-									  <div class="form-group">
-										<label for="note">Interest:</label>
-										<select name="interest" class="form-control" id="statusSelect">
-											<option th:selected="${stakeholderext.interest==null}"></option>
-											<option th:attr="value = 'Low'" th:selected="${stakeholderext.interest==null} ? false:${stakeholderext.interest=='Low'}" th:text="Low"></option>
-											<option th:attr="value = 'Medium'" th:selected="${stakeholderext.interest==null} ? false:${stakeholderext.interest=='Medium'}" th:text="Medium"></option>
-											<option th:attr="value = 'High'" th:selected="${stakeholderext.interest==null} ? false:${stakeholderext.interest=='High'}" th:text="High"></option>									
-										</select>									
-									  </div>
-									  <div class="form-group">
-										<label for="note">RACI:</label>
-										<select name="raciforsyschanges" class="form-control" id="RACISelect" multiple>
-											<option th:each="raci : ${T(portal.utility.RACI).values()}"
-													th:value="${raci}"
-													th:text="${raci}"
-													th:selected="${stakeholderext.raciforsyschanges.contains(raci)}">
-											</option>
-										</select>								
-									  </div>								
-								  <input class="btn btn-primary" type="submit" value="Submit" />
-								</form>
-							</div>
-						  </div>
-
-						</div>	
-					</div>	
-				</div>
 
             <!-- /.row -->
         </div>

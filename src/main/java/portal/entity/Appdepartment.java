@@ -68,6 +68,11 @@ public class Appdepartment {
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "application_id",referencedColumnName="id")
     private Application application;
+    
+	//--instance information
+    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "appinstance_id",referencedColumnName="id")
+    private AppInstance appInstance;
 	
     @Column(name = "businesslead",columnDefinition="VARCHAR(3000)")
     @JsonView(Views.Public.class)
@@ -126,9 +131,8 @@ public class Appdepartment {
     @JsonView(Views.Public.class)
 	private String ahsitsla;
     //--vendor
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
-    @JoinColumn(name = "vendor_id",referencedColumnName="id")
-    private Company vendor;
+    @ManyToMany(mappedBy = "appdepartments")
+    private Set<Company> vendors=new HashSet<Company>();
     
     //----support information
     @Column(name = "sme",columnDefinition="VARCHAR(500)")
@@ -396,13 +400,43 @@ public class Appdepartment {
 	public void setApplication(Application application) {
 		this.application = application;
 	}
-	
-	public Company getVendor() {
-		return vendor;
+
+
+	public AppInstance getAppInstance() {
+		return appInstance;
 	}
 
-	public void setVendor(Company vendor) {
-		this.vendor = vendor;
+	public void setAppInstance(AppInstance appInstance) {
+		this.appInstance = appInstance;
+	}
+
+	public Set<Company> getVendors() {
+		return vendors;
+	}
+
+	public void setVendors(Set<Company> vendors) {
+		this.vendors.addAll(vendors);
+		vendors.forEach(obj->{
+			obj.addAppdepartments(this);
+		});
+	}
+	
+	public void addVendor(Company vendor)
+	{
+		this.vendors.add(vendor);
+	}
+	
+	public void removeVendor(Company vendor)
+	{
+		this.vendors.remove(vendor);
+	}
+	
+	public void refreshVendors(Set<Company> vendors)
+	{
+		this.vendors.forEach(obj->{
+			if(!vendors.contains(obj)) obj.removeAppdepartments(this);
+		});
+		this.vendors.retainAll(vendors);
 	}
 
 	public Department getDepartment() {
@@ -544,11 +578,16 @@ public class Appdepartment {
 		if(!ObjectUtils.isEmpty(this.application)) this.application.removeAppdepartments(this);
 		this.setApplication(null);
 		
+		if(!ObjectUtils.isEmpty(this.appInstance)) this.appInstance.RemoveAppdepartment(this);
+		this.setAppInstance(null);
+		
 		if(!ObjectUtils.isEmpty(this.department)) this.department.removeAppdepartments(this);
 		this.setDepartment(null);
 		
-		if(!ObjectUtils.isEmpty(this.vendor)) this.vendor.removeAppdepartments(this);
-		this.setVendor(null);
+		this.vendors.forEach(obj->{
+			obj.removeAppdepartments(this);
+		});
+		this.vendors=null;
 		
 		this.sites.forEach(obj->{
 			obj.removeAppdepartments(this);

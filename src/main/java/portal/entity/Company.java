@@ -16,7 +16,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -93,11 +92,11 @@ public class Company {
     )	
     private Set<Application> applications = new HashSet<Application>();
 	
-    @OneToMany(
-            mappedBy = "vendor", 
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-        )
+	@ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "appdepartvendor",
+        joinColumns = @JoinColumn(name = "vendor_id"),
+        inverseJoinColumns = @JoinColumn(name = "appdepartment_id")
+    )
     private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
     
 	public Long getId() {
@@ -238,7 +237,7 @@ public class Company {
 	public void setAppdepartments(Set<Appdepartment> appdepartments) {
 		this.appdepartments.addAll(appdepartments);
 		appdepartments.forEach(obj->{
-			obj.setVendor(this);
+			obj.addVendor(this);
 		});
 	}
 	
@@ -260,7 +259,7 @@ public class Company {
 		this.applications=null;
 		
 		this.appdepartments.forEach(obj->{
-			obj.setVendor(null);
+			obj.removeVendor(this);
 		});
 		this.appdepartments=null;
 		

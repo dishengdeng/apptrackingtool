@@ -179,6 +179,17 @@ public class DepartmentController {
     	model.addAttribute("roles", slaRoleService.getAll());
 
         return "stakedepartment";
+    }
+    
+    @GetMapping("/updatestakedepartment")
+    public String stakedepartment(@ModelAttribute("department") Department department,@ModelAttribute("stakeholderext") Stakeholderext stakeholderext,ModelMap model) {
+
+    	model.addAttribute("department",department);
+    	model.addAttribute("stakeholderext",stakeholderext);
+    	model.addAttribute("stakeholders",stakeholderService.getAll());
+    	model.addAttribute("roles", slaRoleService.getAll());
+
+        return "updatestakedepartment";
     } 
     
     @GetMapping("/questiondepartment")
@@ -300,21 +311,21 @@ public class DepartmentController {
     	Long id = stakeholderext.getDepartment().getId();
     	stakeholderext.removeAllDependence();
     	stakeholderextService.delete(stakeholderext);
-    	return "redirect:/departmentdetail?id="+id;
+    	return "redirect:/stakedepartment?department="+id;
     }    
     
     @PostMapping("/addDepartmentStakeholder")
     public String addDepartmentStakeholder(@ModelAttribute("stakeholderext") Stakeholderext stakeholderext) {
 
     	stakeholderextService.save(stakeholderext);
-    	return "redirect:/departmentdetail?id="+stakeholderext.getDepartment().getId();
+    	return "redirect:/stakedepartment?department="+stakeholderext.getDepartment().getId();
     } 
     
     @PostMapping("/updateDepartmentStakeholder")
     public String updateDepartmentStakeholder(@ModelAttribute("stakeholderext") Stakeholderext stakeholderext) {
 
     	stakeholderextService.update(stakeholderext);
-    	return "redirect:/departmentdetail?id="+stakeholderext.getDepartment().getId();
+    	return "redirect:/stakedepartment?department="+stakeholderext.getDepartment().getId();
     } 
     
 
@@ -382,10 +393,10 @@ public class DepartmentController {
     }
     
     @GetMapping("/downloaddepartment")
-    public ResponseEntity<Resource> downloadfile(@RequestParam(name="id", required=true) String id,HttpServletRequest request)
+    public ResponseEntity<Resource> downloadfile(@ModelAttribute("file") File file,HttpServletRequest request)
     {
     	
-    	File file= fileService.findById(Long.valueOf(id));
+
     	return fileService.downloadFile(UPLOADED_FOLDER,file.getDepartment().getId().toString(),file , request);
     }
 
