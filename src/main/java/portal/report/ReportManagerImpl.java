@@ -120,6 +120,7 @@ public class ReportManagerImpl implements ReportManager{
 	{
 		ByteArrayOutputStream output=new ByteArrayOutputStream();
 		response.setContentType("application/pdf");
+		response.setHeader("Content-Disposition", "attachment; filename="+report.getReportName()+".pdf");
 		 JasperExportManager.exportReportToPdfStream(getJasperPrinter(report,templatepath,parmeters.isPresent()?parmeters.get():null),output);		 
 			output.writeTo(response.getOutputStream());
 			

@@ -17,6 +17,20 @@ public class FileModel {
 	
 	@JsonProperty("departmentid")
 	private Long departmentid;
+	
+	public FileModel(Long _id,String _filename,String _createdat,String _createdby,Long _departmentid)
+	{
+		this.id=_id;
+		this.filename=_filename;
+		this.createdat=_createdat;
+		this.createdby=_createdby;
+		this.departmentid=_departmentid;
+	}
+	
+	public FileModel()
+	{
+		
+	}
 
 	public Long getDepartmentid() {
 		return departmentid;

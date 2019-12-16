@@ -6,11 +6,14 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import portal.entity.Appdepartment;
 import portal.entity.Application;
 import portal.entity.Department;
 import portal.entity.File;
@@ -19,9 +22,9 @@ import portal.entity.Zac;
 import portal.entity.Zacfield;
 import portal.entity.Zaclist;
 import portal.entity.Zacmap;
-
+import portal.models.App;
 import portal.models.DepartmentModel;
-
+import portal.models.FileModel;
 import portal.repository.AppRepository;
 import portal.repository.DepartmentRepository;
 import portal.repository.ZacRepository;
@@ -247,6 +250,39 @@ public class DepartmentServiceImpl implements DepartmentService{
     	Department updatedDepartment=departmentRepository.saveAndFlush(department);
     	return updatedDepartment.getZacfields().size()==zacfieldsize_old? false:true;
 
+	}
+
+	@Override
+	public List<FileModel> getfiles(Department department, HttpServletRequest request) {
+		List<FileModel> files= new ArrayList<FileModel>();
+		for(File file :department.getFiles())
+		{
+			files.add(new FileModel(file.getId(),file.getAttachment(),file.getCreatedat(),file.getCreatedby(),department.getId()));
+		}
+		return files;
+	}
+
+	@Override
+	public List<App> getApplications(Department department, HttpServletRequest request) {
+		
+		List<App> apps= new ArrayList<App>();
+		for(Appdepartment app :department.getAppdepartments())
+		{
+			if(!ObjectUtils.isEmpty(app.getApplication())) apps.add(new App(app.getApplication().getId(),
+																	app.getApplication().getAppName(),
+																	ObjectUtils.isEmpty(app.getApplication().getAppDecomminsionDate())? null:app.getApplication().getAppDecomminsionDate().toString(),
+																			ObjectUtils.isEmpty(app.getApplication().getNotes())?"":app.getApplication().getNotes(),
+																	"/applicationdetail?app="+app.getApplication().getId()
+																	));
+			if(!ObjectUtils.isEmpty(app.getAppInstance())) apps.add(new App(app.getAppInstance().getId(),
+					app.getAppInstance().getAppInstanceName(),
+					null,
+					ObjectUtils.isEmpty(app.getAppInstance().getNotes())?"":app.getApplication().getNotes(),
+					"/instancedetail?id="+app.getAppInstance().getId()
+					));			
+			
+		}
+		return apps;
 	}
 
 

@@ -73,8 +73,10 @@
 										</td>
 										<td>
 											<a data-toggle="modal"  
-												th:data-target="@{${#strings.concat('#',department.id,'files')}}" 
+												data-target="#filemodel" 
 												th:if="${department.files.size()>0}"
+												th:onclick="@{'getfiles('+${department.id}+')'}"
+												th:departmentid="${department.id}"
 												style="text-decoration: none;cursor: pointer"
 												>
 												<span class="fa fa-paperclip fa-lg"></span>
@@ -82,7 +84,12 @@
 
 										</td>																			
 										<td>
-											<a data-toggle="modal" th:if="${department.appdepartments.size()>0}" th:data-target="@{${#strings.concat('#',department.id,'appdepartment')}}" class="cursor-pointer">
+											<a data-toggle="modal" 
+												th:if="${department.appdepartments.size()>0}" 
+												data-target="#appmodel" 
+												class="cursor-pointer"
+												th:onclick="@{'getapps('+${department.id}+')'}"
+												th:departmentid="${department.id}">
 											<span class="badge badge-secondary small" th:text="${'Application - Total: '+department.appdepartments.size()}"></span>
 											</a>										
 										</td>									
@@ -131,74 +138,62 @@
                                 </tbody>
                             </table>							
                             <!-- /.table-responsive -->
-									<div th:each="department: ${departments}"><!--Model Area-->
-									
-										
-										<!--file model-->
-										<div class="modal fade" th:if="${department.files.size()>0}" th:id="${#strings.concat(department.id,'files')}" role="dialog" >
-											<!-- Modal content-->
-											<div class="modal-dialog">
-											  <div class="modal-content">
-												<div class="modal-header">
-												  <button type="button" class="close" data-dismiss="modal">&times;</button>
-												  <h4 class="modal-title"> Attachments</h4>
-												</div>
-												<div class="modal-body">
-													<table class="table table-striped" id="filestable">
-													  <thead>
-														<tr>
-														  <th scope="col">File Name</th>
-														  <th scope="col">Created At</th>
-														  <th scope="col">Created By</th>														  
-														</tr>
-													  </thead>
-													  <tbody>
-														<tr th:each="file : ${department.files}">
-														  <th><h5><a th:href="@{'/downloaddepartment?file='+${file.id}}" th:text="${file.attachment}"></h5></a></th>
-														  <th><h5 th:text="${#dates.format(file.getCreateDate(),'MMM-dd-yyyy HH:mm')}"></h5></th>
-														  <th><h5 th:text="${file.createdby}"></h5></th>
-														</tr>
-													  </tbody>
-													</table>
-												</div>
-											   </div>
-											 </div>
-										</div>
-										
-										<!--app Modal-->
-										<div th:if="${department.appdepartments.size()>0}">
-											<div class="modal fade" th:id="${#strings.concat(department.id,'appdepartment')}" role="dialog" >
-											<!-- Modal content-->
-													<div class="modal-dialog">
-													  <div class="modal-content">
-														<div class="modal-header">
-														  <button type="button" class="close" data-dismiss="modal">&times;</button>
-														  <h4 class="modal-title"> Application</h4>
-														</div>
-														<div class="modal-body">
-															<table class="table table-striped" id="instancetable">
-															  <thead>
-																<tr>
-																  <th scope="col">Application</th>
 
-																  <th scope="col">Notes</th>														  
-																</tr>
-															  </thead>
-															  <tbody>
-																<tr th:each="appdepartment : ${department.appdepartments}">
-																  <th><a th:href="@{'/applicationdetail?app='+${appdepartment.application.id}}" th:if="${appdepartment.application!=null}"><h5 th:text="${appdepartment.application.AppName}"></h5></a></th>
+								<!--app Modal-->
 
-																  <th><h5 th:text="${appdepartment.application.notes}" th:if="${appdepartment.application!=null}"></h5></th>
-																</tr>
-															  </tbody>
-															</table>
-														</div>
-													   </div>
-													 </div>
+								<div class="modal fade" id="appmodel" role="dialog" >
+								<!-- Modal content-->
+										<div class="modal-dialog">
+										  <div class="modal-content">
+											<div class="modal-header">
+											  <button type="button" class="close" data-dismiss="modal">&times;</button>
+											  <h4 class="modal-title"> Application</h4>
 											</div>
-										</div>										
+											<div class="modal-body">
+												<table class="table table-striped" id="instancetable">
+												  <thead>
+													<tr>
+													  <th scope="col">Application</th>
 
-									</div><!--Model Area-->
+													  <th scope="col">Notes</th>														  
+													</tr>
+												  </thead>
+												  <tbody id="apptbody">
+
+												  </tbody>
+												</table>
+											</div>
+										   </div>
+										 </div>
+								</div>
+								
+									<!--file model-->
+									<div class="modal fade" id="filemodel" role="dialog" >
+										<!-- Modal content-->
+										<div class="modal-dialog">
+										  <div class="modal-content">
+											<div class="modal-header">
+											  <button type="button" class="close" data-dismiss="modal">&times;</button>
+											  <h4 class="modal-title"> Attachments</h4>
+											</div>
+											<div class="modal-body">
+												<table class="table table-striped" id="filestable">
+												  <thead>
+													<tr>
+													  <th scope="col">File Name</th>
+													  <th scope="col">Created At</th>
+													  <th scope="col">Created By</th>														  
+													</tr>
+												  </thead>
+												  <tbody id="filetbody">
+
+												  </tbody>
+												</table>
+											</div>
+										   </div>
+										 </div>
+									</div>									
+									<!--Model Area-->
                         </div>
                         <!-- /.panel-body -->
                     </div>
@@ -222,8 +217,55 @@
         $('#dataTables-example').DataTable({
             responsive: true
         });
+
+
+			
+		
+
 	
     });
+
+	function getfiles(departmentid)
+	{
+			$( "#filetbody" ).empty();
+			$.get( "/downloaddepartmentfiles?department="+departmentid, function( data ) {
+			 
+			  console.log(data);
+			  for(index in data)
+			  {
+				$( "#filetbody" ).append(
+						"<tr>"+
+						  "<th><a href="+"/downloaddepartment?file="+data[index].id+"><h5>"+data[index].filename+"</h5></a></th>"+
+						  "<th><h5>"+new Date(data[index].createdat)+"</h5></th>"+
+						  "<th><h5>"+data[index].createdby+"</h5></th>"+
+						"</tr>"	 				
+				);
+			  }
+			  
+ 
+			  
+			});
+	}
+	function getapps(departmentid)
+	{
+			$( "#apptbody" ).empty();
+			$.get( "/downloaddepartmentapps?department="+departmentid, function( data ) {
+			 
+			  console.log(data);
+			  for(index in data)
+			  {
+				$( "#apptbody" ).append(
+						"<tr>"+
+						  "<th><a href="+data[index].url+"><h5>"+data[index].ApplicationName+"</h5></a></th>"+
+						  "<th><h5>"+data[index].notes+"</h5></th>"+
+						"</tr>"	 				
+				);
+			  }
+			  
+ 
+			  
+			});
+	}
     </script>
 	<script type="text/javascript">
 		$(function () {

@@ -1,5 +1,6 @@
 package portal.controllers;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -29,7 +30,8 @@ import portal.entity.Stakeholderext;
 import portal.entity.Zacfield;
 
 import portal.entity.Zacmap;
-
+import portal.models.App;
+import portal.models.FileModel;
 import portal.service.AnswerService;
 import portal.service.AppService;
 import portal.service.DepartmentService;
@@ -369,6 +371,15 @@ public class DepartmentController {
     	return "redirect:/zacdepartment?department="+zacfield.getDepartment().getId();
     } 
     
+    //--get application list
+    @GetMapping("/downloaddepartmentapps")
+    public ResponseEntity<List<App>> getApplications(@ModelAttribute("department") Department department,HttpServletRequest request)
+    {
+    	
+    	return new ResponseEntity<List<App>>(departmentService.getApplications(department, request),HttpStatus.OK);
+    	
+    }    
+    
 //------file management----
     @PostMapping("/departmentupload")
     public String departmentupload(@RequestParam("file") MultipartFile file,ModelMap model,@ModelAttribute("department") Department department) {
@@ -411,6 +422,14 @@ public class DepartmentController {
 
     	
     	return "redirect:/departmentdetail?id="+department.getId();
+    	
+    }
+    
+    @GetMapping("/downloaddepartmentfiles")
+    public ResponseEntity<List<FileModel>> getfiles(@ModelAttribute("department") Department department,HttpServletRequest request)
+    {
+    	
+    	return new ResponseEntity<List<FileModel>>(departmentService.getfiles(department, request),HttpStatus.OK);
     	
     }
 

@@ -57,7 +57,7 @@
 							<select name="appinstance" class="form-control" id="instanceselect">
 							<option th:selected="${appdepartment.appInstance==null}"></option>
 							  <option th:each="appInstanceEntity : ${appinstances}" 
-							  th:text="${appInstanceEntity.appName}" 
+							  th:text="${appInstanceEntity.appInstanceName}" 
 							  th:attr="value = ${appInstanceEntity.id}"
 							  th:selected="${appdepartment.appInstance!=null and appdepartment.appInstance.id==appInstanceEntity.id}">									  
 							  </option>
