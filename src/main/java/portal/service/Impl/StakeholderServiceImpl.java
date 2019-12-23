@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 import portal.entity.Stakeholder;
 import portal.models.StakeholderModel;
@@ -80,7 +81,7 @@ public class StakeholderServiceImpl implements StakeholderService{
 	public void updateDetail(StakeholderModel stakeholderModel) {
 
 		stakeholderRepository.updateDetail(stakeholderModel.getStakeholderName(),stakeholderModel.getNote(),
-				siteRepository.findOne(stakeholderModel.getSite()), stakeholderModel.getPhone(), 
+				ObjectUtils.isEmpty(stakeholderModel.getSite())? null: siteRepository.findOne(stakeholderModel.getSite()), stakeholderModel.getPhone(), 
 				stakeholderModel.getPosition(),stakeholderModel.getBusinessunit(), stakeholderModel.getEmail(), 
 				stakeholderModel.getId());
 		
