@@ -144,7 +144,7 @@ public class Contract {
 	}
 
 	public void setExpireDate(String expireDate) {
-		this.expireDate = Convertor.JavaDate(expireDate);
+		this.expireDate = Convertor.StringToDate(expireDate);
 	}
 
 
@@ -153,7 +153,7 @@ public class Contract {
 	}
 
 	public void setEffectivedate(String effectivedate) {
-		this.effectivedate = Convertor.JavaDate(effectivedate);
+		this.effectivedate = Convertor.StringToDate(effectivedate);
 	}
 
 	public String getApprovername() {
@@ -169,7 +169,7 @@ public class Contract {
 	}
 
 	public void setApprovaldate(String approvaldate) {
-		this.approvaldate = Convertor.JavaDate(approvaldate);
+		this.approvaldate = Convertor.StringToDate(approvaldate);
 	}
 
 

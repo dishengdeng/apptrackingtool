@@ -147,7 +147,7 @@ public class Server {
 	}
 
 	public void setDecomminsionDate(String decomminsionDate) {
-		this.decomminsionDate = Convertor.JavaDate(decomminsionDate);
+		this.decomminsionDate = Convertor.StringToDate(decomminsionDate);
 	}
 
 	public String getAttachment() {

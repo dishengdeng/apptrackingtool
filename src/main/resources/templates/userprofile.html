@@ -27,7 +27,10 @@
 				
 					  <div class="form-group">
 						<label for="username">User:</label>
-						<input type="text" class="form-control" th:name="username" th:value="${user.username}"></input>
+						<input type="text" class="form-control" th:name="username" th:value="${user.username}" sec:authorize="hasAnyRole('ADMIN','SYSADMIN')">
+						</input>
+						<input type="text" class="form-control" th:name="username" th:value="${user.username}" sec:authorize="!hasAnyRole('ADMIN','SYSADMIN')" readonly>
+						</input>						
 						<p class="text-danger" th:if="${#fields.hasErrors('username')}"><strong  th:errors="*{username}"></strong></p>
 						<input type="hidden" class="form-control" th:name="id" th:value="${user.id}"></input>
 						<input type="hidden" class="form-control" th:name="action" value="UPDATE"></input>

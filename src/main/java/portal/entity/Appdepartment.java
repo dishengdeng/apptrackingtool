@@ -117,10 +117,18 @@ public class Appdepartment {
     @JsonView(Views.Public.class)
 	private String contractinplace;
     
+    @Column(name = "contractdetail",columnDefinition="VARCHAR(1000)")
+    @JsonView(Views.Public.class)
+	private String contractdetail;
+    
     @Column(name = "expireDate")
     @Temporal(TemporalType.DATE)
     @JsonView(Views.Public.class)
 	private Date expireDate;
+    
+    @Column(name = "frequency",columnDefinition="VARCHAR(1000)")
+    @JsonView(Views.Public.class)
+	private String frequency;
     
     @Column(name = "vendorsla", length = 64,columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
@@ -297,12 +305,28 @@ public class Appdepartment {
 		this.contractinplace = contractinplace;
 	}
 
+	public String getContractdetail() {
+		return contractdetail;
+	}
+
+	public void setContractdetail(String contractdetail) {
+		this.contractdetail = contractdetail;
+	}
+
+	public String getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(String frequency) {
+		this.frequency = frequency;
+	}
+
 	public Date getExpireDate() {
 		return expireDate;
 	}
 
 	public void setExpireDate(String expireDate) {
-		this.expireDate = Convertor.JavaDate(expireDate);
+		this.expireDate = Convertor.StringToDate(expireDate);
 	}
 
 	public String getVendorsla() {

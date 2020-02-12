@@ -5,6 +5,7 @@ package portal;
 
 
 import java.util.Properties;
+import java.util.concurrent.Executor;
 
 import javax.annotation.Resource;
 import javax.mail.PasswordAuthentication;
@@ -12,7 +13,8 @@ import javax.mail.Session;
 import javax.sql.DataSource;
 
 import org.hibernate.ejb.HibernatePersistence;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +27,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
@@ -38,6 +42,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @ComponentScan({ "portal" })
 @PropertySource("classpath:application.properties")
 @EnableJpaRepositories("portal.repository")
+@EnableAsync
 public class Config {
 	private static final String PROP_DATABASE_DRIVER = "db.driver";
 	private static final String PROP_DATABASE_PASSWORD = "db.password";
@@ -54,6 +59,8 @@ public class Config {
 	private static final String PROP_MAIL_SMTP_STARTTLS_ENABLE = "mail.smtp.starttls.enable";
 	private static final String PROP_MAIL_USERNAME = "mail.username";
 	private static final String PROP_MAIL_PASSWORD = "mail.password";
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(Config.class);
 	
 	@Resource
 	private Environment env;
@@ -135,6 +142,18 @@ public class Config {
 		
 		return properties;
 	}
+	
+    @Bean (name = "importTaskExecutor")
+    public Executor importTaskExecutor() {
+        LOGGER.debug("Creating Async Import Task Executor");
+        final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(2);
+        executor.setQueueCapacity(100);
+        executor.setThreadNamePrefix("ImportThread-");
+        executor.initialize();
+        return executor;
+    }
 	
 }
 	

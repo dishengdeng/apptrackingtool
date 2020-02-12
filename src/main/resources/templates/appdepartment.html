@@ -38,6 +38,13 @@
                         <div class="panel-heading">
                             Inventory
 							<div class="pull-right">
+								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" 
+								th:data-target="@{${#strings.concat('#',department.id,'file')}}" 
+								style="text-decoration: none;cursor: pointer;color:white" 
+								title="Import">
+									<i class="fa fa-upload fa-lg" style="margin-right:5px"></i>
+								</a>							
+								
 								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
 								style="text-decoration: none;color:white;cursor: pointer" 
 								title="Add/Change"
@@ -88,7 +95,9 @@
 									<th class="zacmap-zone-header-d">Contracts</th>
 									<th class="zacmap-zone-header-d">Licenses</th>
 									<th class="zacmap-zone-header-d">Contract / Licensing in Place (Y/N)?</th>
+									<th class="zacmap-zone-header-d">Contract / Licensing Details</th>
 									<th class="zacmap-zone-header-d">Expiration Date</th>
+									<th class="zacmap-zone-header-d">Frequency</th>
 									<th class="zacmap-zone-header-d">Vendor SLA/SMA?</th>							
 									<th class="zacmap-zone-header-d">AHS-IT SLA?</th>
 									
@@ -186,7 +195,9 @@
 										</p>
 									</td>
 									<td th:text="${appdepartment.contractinplace}"></td>
+									<td th:text="${appdepartment.contractdetail}"></td>
 									<td th:text="${appdepartment.expireDate}"></td>
+									<td th:text="${appdepartment.frequency}"></td>
 									<td th:text="${appdepartment.vendorsla}"></td>
 									<td th:text="${appdepartment.ahsitsla}"></td>
 									<td th:text="${appdepartment.application!=null}?${appdepartment.application.AppVersion}:''"></td>						
@@ -250,7 +261,50 @@
 						  </div>
 
 						</div>	
-					</div>				
+					</div>
+
+					<!--file model-->
+						<div class="modal fade" th:id="${#strings.concat(department.id,'file')}" role="dialog" >
+								<!-- Modal content-->
+									<div class="modal-dialog">
+										<div class="modal-content">
+											<div class="modal-header">
+											  <button type="button" class="close" data-dismiss="modal">&times;</button>
+											  <h4 class="modal-title"> Import</h4>
+											</div>
+											<div class="modal-body">
+												<form  id="UploadFileForm"  method="POST" enctype="multipart/form-data">
+													<!-- COMPONENT START -->
+													<div class="input-group">
+																		
+															<a th:onclick="@{'uploadfile(\''+${department.id}+'\')'}"><input type="text" th:id="@{${department.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+															<div class="input-group-btn">
+															<button type="submit" class="btn btn-primary" id="submitform"><i class="fa fa-upload"></i></button>
+															</div>
+								
+													</div>
+													<!-- COMPONENT END -->
+													<div class="form-group  pull-center">
+														<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${department.id}+'fileupload'}">
+														<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
+
+
+													</div>
+												</form>
+												<div class="row" style="display:none" id="uploadProgress">
+													<div class="col-lg-12">
+													    <h4 id="alertMsg"></h4>
+													    <div class="progress">
+															<div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+															</div>
+													    </div>
+														<p id="uploadMessage" class="text-danger"></p>
+													</div>
+												</div>
+											</div>
+									   </div>
+									</div>
+						</div>					
 
 
     <!-- Page-Level Demo Scripts - Tables - Use for reference -->
@@ -266,11 +320,71 @@
 		$('#dataTables-appinventory').DataTable({
             responsive: true
         });
+		
+  $( "#submitform" ).on( "click", function( event ) {
+  
+  		  event.preventDefault();
+		  let myForm = document.getElementById('UploadFileForm');
+		  var dataform = new FormData(myForm);
+			$.ajax({
+				type: "POST",
+				enctype: 'multipart/form-data',
+				url: "/appinventoryimport",
+				data: dataform,
+				beforeSend: function (request, xhr) {
+					//request.setRequestHeader(csrf_headerName, csrf_paramValue);
+					 //Reset alert message and progress bar
+
+					$('#uploadProgress').css('display','block');
+					$('#alertMsg').text('');
+					$('#uploadMessage').text('');
+					$('#progressBar').css('width','0%');
+					$('#uploadMessage').removeClass("text-danger");
+					$('#uploadMessage').removeClass("text-success");
+				},
+				processData: false,
+
+				contentType: false,
+				cache: false,
+				timeout: 6000000,
+				success: function (data) {
+					//window.location.replace(this.responseURL);
+					
+					$('#uploadMessage').addClass("text-success");
+					$('#uploadMessage').text('Success');
+				},
+
+				xhr: function(){
+					//Get XmlHttpRequest object
+					 var xhr = $.ajaxSettings.xhr() ;
+					//Set onprogress event handler
+					 xhr.upload.onprogress = function(data){
+
+						var perc = Math.round((data.loaded / data.total) * 100);
+
+						$('#alertMsg').text("Uploading... "+perc + '%');
+						$('#progressBar').css('width',perc + '%');
+					 };
+				 
+					 
+					 return xhr ;
+				},
+				error: function (e) {
+					
+					$('#uploadMessage').addClass("text-danger");
+					$('#uploadMessage').text(e.responseText);
+				}
+			});
+		  
+	});	
+
+	
     });
 	function copyto(appdepartmentid)
 	{
 		document.getElementById("appdepartmentid").value=appdepartmentid;
 	}
+	
     </script>
 
 </body>

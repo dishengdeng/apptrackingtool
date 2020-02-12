@@ -32,30 +32,43 @@ public class Convertor {
 			
 
 		}
-		@SuppressWarnings("finally")
-		static public java.util.Date JavaDate(String dateString)
+
+		static public java.util.Date JavaDate(String dateString) throws ParseException
 		{
 			java.util.Date date=null;
 			
-			try
-			{
+
 				
 				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd");
 				date = dateFormatStr.parse(dateString);
-				
-			}
-			catch(ParseException ex)
-			{
-				//ex.printStackTrace();
-			}
-			finally
-			{
 				return date;
-			}
+	
 			
 
 		}
-		
+		@SuppressWarnings("finally")
+		static public java.util.Date StringToDate(String dateString)
+		{
+			java.util.Date date=null;
+			
+
+				try
+				{
+				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd");
+				date = dateFormatStr.parse(dateString);
+				}
+				catch(ParseException ex)
+				{
+					//ex.printStackTrace();
+				}
+				finally
+				{
+					return date;
+				}
+	
+			
+
+		}		
 		@SuppressWarnings("finally")
 		static public java.util.Date JavaDateTime(String dateString)
 		{
@@ -80,6 +93,8 @@ public class Convertor {
 			
 
 		}
+		
+		
 		
 		@SuppressWarnings("finally")
 		static public int JavaInt(String intString)

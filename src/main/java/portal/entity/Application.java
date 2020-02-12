@@ -224,7 +224,7 @@ public class Application implements Comparable<Application>{
 	}
 
 	public void setAppDecomminsionDate(String appDecomminsionDate) {
-		AppDecomminsionDate = Convertor.JavaDate(appDecomminsionDate);
+		AppDecomminsionDate = Convertor.StringToDate(appDecomminsionDate);
 	}
 
 	public String getAppComments() {

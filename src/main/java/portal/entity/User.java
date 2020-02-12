@@ -40,9 +40,7 @@ public class User {
     @JsonView(Views.Public.class)
 	private String password;
 
-    @Column(name = "encodedpassword",columnDefinition="VARCHAR(250)")
-    @JsonView(Views.Public.class)
-	private String encodedpassword;
+
     
     @Column(name = "passwordchg",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
@@ -166,13 +164,6 @@ public class User {
 		this.namebypass = namebypass;
 	}
 
-	public String getEncodedpassword() {
-		return encodedpassword;
-	}
-
-	public void setEncodedpassword(String encodedpassword) {
-		this.encodedpassword = encodedpassword;
-	}
 	
 	public void removeAlldependence()
 	{

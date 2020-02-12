@@ -103,7 +103,7 @@ public class License {
 	}
 
 	public void setRegistrationDate(String registrationDate) {
-		this.registrationDate = Convertor.JavaDate(registrationDate);
+		this.registrationDate = Convertor.StringToDate(registrationDate);
 	}
 
 	public String getNote() {
@@ -127,7 +127,7 @@ public class License {
 	}
 
 	public void setExpireDate(String expireDate) {
-		this.expireDate = Convertor.JavaDate(expireDate);
+		this.expireDate = Convertor.StringToDate(expireDate);
 	}
 
 	public int getNumberoflicenserequired() {

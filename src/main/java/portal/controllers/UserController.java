@@ -14,7 +14,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.codec.binary.Base64;
+
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -89,6 +89,8 @@ public class UserController{
         	model.addAttribute("roles", roleService.getAll());
             return "userprofile";
         }
+        
+        final String newPassword=user.getPasswordchg();
 
     	if(securityService.hasRole(Role.ADMIN) || securityService.hasRole(Role.SYSADMIN)) 
     	{
@@ -101,7 +103,7 @@ public class UserController{
     		User updatedUser=userService.updateUser(adminUpdatedUser(pastUser,user));
 
 
-        	if(isAutoLogin) securityService.autologin(updatedUser.getUsername(),new String(Base64.decodeBase64(updatedUser.getEncodedpassword().getBytes())));
+        	if(isAutoLogin) securityService.autologin(updatedUser.getUsername(),newPassword);
 
         	
         	model.addAttribute("user", updatedUser);
@@ -115,7 +117,7 @@ public class UserController{
     	{
     		User updatedUser=userService.updateUser(updatedUser(pastUser,user));
     		
-    		securityService.autologin(updatedUser.getUsername(),new String(Base64.decodeBase64(updatedUser.getEncodedpassword().getBytes())));
+    		securityService.autologin(updatedUser.getUsername(),newPassword);
         	model.addAttribute("user", updatedUser);
         	model.addAttribute("roles", roleService.getAll());
         	model.addAttribute("message",messageSourceService.getMessage(messages.USER_UPDATE_SUCCESSFUL.toString(),new Object[]{updatedUser.getUsername()},LocaleContextHolder.getLocale()));
@@ -128,13 +130,13 @@ public class UserController{
     
     private User updatedUser(User pastUser,User formUser)
     {
-    	pastUser.setUsername(formUser.getUsername());
+    	//pastUser.setUsername(formUser.getUsername());
     	//pastUser.setStatus(formUser.getStatus());
 
     	if(!StringUtils.isEmpty(formUser.getPasswordchg()))
     	{
     		pastUser.setPassword(bCryptPasswordEncoder.encode(formUser.getPasswordchg()));
-    		pastUser.setEncodedpassword(new String(Base64.encodeBase64(formUser.getPasswordchg().getBytes())));
+    		//pastUser.setEncodedpassword(new String(Base64.encodeBase64(formUser.getPasswordchg().getBytes())));
     	}
     	pastUser.setPasswordchg(null);
     	pastUser.setPasswordconfirm(null);   	
@@ -154,7 +156,7 @@ public class UserController{
     	if(!StringUtils.isEmpty(formUser.getPasswordchg()))
     	{
     		pastUser.setPassword(bCryptPasswordEncoder.encode(formUser.getPasswordchg()));
-    		pastUser.setEncodedpassword(new String(Base64.encodeBase64(formUser.getPasswordchg().getBytes())));
+    		//pastUser.setEncodedpassword(new String(Base64.encodeBase64(formUser.getPasswordchg().getBytes())));
     	}
     	pastUser.setPasswordchg(null);
     	pastUser.setPasswordconfirm(null);
@@ -164,6 +166,7 @@ public class UserController{
     
     private User getValidationByPassUser(User pastUser,User formUser)
     {
+    	formUser.setStatus(pastUser.getStatus());
     	//set all by pass rule
     	if(!StringUtils.isEmpty(formUser.getUsername()) && pastUser.getUsername().equals(formUser.getUsername()))
     	{

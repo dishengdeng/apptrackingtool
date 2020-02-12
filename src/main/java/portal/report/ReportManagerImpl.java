@@ -148,7 +148,7 @@ public class ReportManagerImpl implements ReportManager{
     		if(model.getType().equals(ParameterType.String)) params.put(model.getName(), model.getValue());
     		if(model.getType().equals(ParameterType.Number)) params.put(model.getName(), Double.valueOf(model.getValue()));
     		if(model.getType().equals(ParameterType.Boolean)) params.put(model.getName(), Boolean.valueOf(model.getValue()));
-    		if(model.getType().equals(ParameterType.Date)) params.put(model.getName(), Convertor.JavaDate(model.getValue()));
+    		if(model.getType().equals(ParameterType.Date)) params.put(model.getName(), Convertor.StringToDate(model.getValue()));
     	}
 		return params;
 	}

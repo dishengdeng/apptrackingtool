@@ -101,7 +101,7 @@ public class Project {
 	}
 
 	public void setStartdate(String startdate) {
-		this.startdate = Convertor.JavaDate(startdate);
+		this.startdate = Convertor.StringToDate(startdate);
 	}
 
 	public Date getEnddate() {
@@ -109,7 +109,7 @@ public class Project {
 	}
 
 	public void setEnddate(String enddate) {
-		this.enddate = Convertor.JavaDate(enddate);
+		this.enddate = Convertor.StringToDate(enddate);
 	}
 
 	

@@ -290,6 +290,10 @@
 							<input type="text" class="form-control" th:name="contractinplace" th:value="${appdepartment.contractinplace}"></input>						
 						  </div>
 						  <div class="form-group">
+							<label for="zoneName">Contract / Licensing Details</label>
+							<input type="text" class="form-control" th:name="contractdetail" th:value="${appdepartment.contractdetail}"></input>						
+						  </div>						  
+						  <div class="form-group">
 							<label for="Decomminsion Date">Expiration Date:</label>
 							<div class="input-group date" data-provide="datepicker" id='datetimepicker2'>
 								<input type="text" class="form-control" th:name="expireDate" th:value="${appdepartment.expireDate}">
@@ -299,6 +303,10 @@
 
 							</div>
 						  </div>
+						  <div class="form-group">
+							<label for="zoneName">Frequency</label>
+							<input type="text" class="form-control" th:name="frequency" th:value="${appdepartment.frequency}"></input>						
+						  </div>						  
 						  <div class="form-group">
 							<label for="zoneName">Vendor SLA/SMA?</label>
 							<input type="text" class="form-control" th:name="vendorsla" th:value="${appdepartment.vendorsla}"></input>						
@@ -499,7 +507,9 @@
 			if(contractdata[i].name==="contracts") formdata.contract.contracts.push({"id":contractdata[i].value});
 			if(contractdata[i].name==="licenses") formdata.contract.licenses.push({"id":contractdata[i].value});
 			if(contractdata[i].name==="contractinplace") formdata.contract["contractinplace"]=contractdata[i].value;
+			if(contractdata[i].name==="contractdetail") formdata.contract["contractdetail"]=contractdata[i].value;
 			if(contractdata[i].name==="expireDate") formdata.contract["expireDate"]=contractdata[i].value;
+			if(contractdata[i].name==="frequency") formdata.contract["frequency"]=contractdata[i].value;
 			if(contractdata[i].name==="vendorsla") formdata.contract["vendorsla"]=contractdata[i].value;
 			if(contractdata[i].name==="ahsitsla") formdata.contract["ahsitsla"]=contractdata[i].value;
 		  }	

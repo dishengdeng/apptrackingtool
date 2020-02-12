@@ -114,7 +114,7 @@ public class SLA {
 	}
 
 	public void setEffectivedate(String effectivedate) {
-		this.effectivedate = Convertor.JavaDate(effectivedate);
+		this.effectivedate = Convertor.StringToDate(effectivedate);
 	}
 
 	public Date getTerminationdate() {
@@ -122,7 +122,7 @@ public class SLA {
 	}
 
 	public void setTerminationdate(String terminationdate) {
-		this.terminationdate = Convertor.JavaDate(terminationdate);
+		this.terminationdate = Convertor.StringToDate(terminationdate);
 	}
 
 	public String getApprovername() {
@@ -138,7 +138,7 @@ public class SLA {
 	}
 
 	public void setApprovaldate(String approvaldate) {
-		this.approvaldate = Convertor.JavaDate(approvaldate);
+		this.approvaldate = Convertor.StringToDate(approvaldate);
 	}
 
 	public String getDocreferece() {

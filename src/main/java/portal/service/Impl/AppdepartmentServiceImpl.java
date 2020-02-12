@@ -136,7 +136,9 @@ public class AppdepartmentServiceImpl implements AppdepartmentService{
 		
 		appdepart.setAhsitsla(appdepartment.getJSONObject("contract").getString("ahsitsla"));
 		appdepart.setContractinplace(appdepartment.getJSONObject("contract").getString("contractinplace"));
+		appdepart.setContractdetail(appdepartment.getJSONObject("contract").getString("contractdetail"));
 		appdepart.setExpireDate(appdepartment.getJSONObject("contract").getString("expireDate"));
+		appdepart.setFrequency(appdepartment.getJSONObject("contract").getString("frequency"));
 		appdepart.setVendorsla(appdepartment.getJSONObject("contract").getString("vendorsla"));
 		Set<Contract> contracts= new HashSet<Contract>();
 		for(Object obj : appdepartment.getJSONObject("contract").getJSONArray("contracts"))
