@@ -65,6 +65,14 @@ public class Site implements Comparable<Site>{
         inverseJoinColumns = @JoinColumn(name = "appdepartment_id")
     )
     private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
+	
+	public Site()
+	{}
+	
+	public Site(String _siteName)
+	{
+		this.siteName=_siteName;
+	}
     
 	public Long getId() {
 		return id;

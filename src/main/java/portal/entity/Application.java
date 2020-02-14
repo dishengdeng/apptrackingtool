@@ -158,7 +158,13 @@ public class Application implements Comparable<Application>{
     private Set<File> files = new HashSet<File>();
     
 
+	public Application()
+	{}
 	
+	public Application(String _appName)
+	{
+		this.AppName=_appName;
+	}
 
     
     public Long getId() {

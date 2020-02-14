@@ -1,23 +1,41 @@
 package portal.service.Impl;
 
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
+import java.util.List;
+import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
-
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
 import org.springframework.web.multipart.MultipartFile;
 
+import portal.ImportDTO.AppInventoryDTO;
+import portal.entity.Appdepartment;
+import portal.entity.Department;
+import portal.repository.AppRepository;
+import portal.repository.AppdepartmentRepository;
+import portal.repository.CompanyRepository;
+import portal.repository.DepartmentRepository;
+import portal.repository.SiteRepository;
 import portal.service.ImportService;
 import portal.utility.AppinventoryMap;
 import portal.utility.ColumnHeaderValidator;
@@ -33,8 +51,19 @@ public class ImportServiceImp implements ImportService{
 	@Autowired
 	private ColumnHeaderValidator columnHeaderValidator;
 
+	@Autowired
+	private AppdepartmentRepository appdepartmentRepository;
+	@Autowired
+	private AppRepository appRepository;
+	@Autowired
+	private SiteRepository siteRepository;
+	@Autowired
+	private CompanyRepository companyRepository;
 
+	
+	private final int threadPoolNumber=3;
 
+	private ExecutorService execSvc = Executors.newFixedThreadPool(threadPoolNumber);
 	
 	@Override
 	public CompletableFuture<JSONArray> getAppInventory(MultipartFile file) throws InvalidTemplateFormatException, Exception {
@@ -80,7 +109,14 @@ public class ImportServiceImp implements ImportService{
 						(new AppInventoryImportValidator<String>())
 						.AppinventoryDataValidate(AppinventoryMap.North,row.getCell(AppinventoryMap.North.getColumnIndex()))
 						);
-				obj.put(AppinventoryMap.Site.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Site.getColumnIndex())));
+				//getting sites
+				List<String> sites=Arrays.asList(StringUtils.split(dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Site.getColumnIndex())),";"));
+				JSONArray sitesArray= new JSONArray();
+				sites.forEach(site->{
+					sitesArray.put(site);
+				});
+				
+				obj.put(AppinventoryMap.Site.name(), sitesArray);
 				obj.put(AppinventoryMap.BusinessLead.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.BusinessLead.getColumnIndex())));
 				obj.put(AppinventoryMap.ApplicationOwner.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.ApplicationOwner.getColumnIndex())));
 				obj.put(AppinventoryMap.Goverinplace.name(),
@@ -97,14 +133,21 @@ public class ImportServiceImp implements ImportService{
 				obj.put(AppinventoryMap.AppServerSupport.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.AppServerSupport.getColumnIndex())));
 				obj.put(AppinventoryMap.DBServerSupport.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.DBServerSupport.getColumnIndex())));
 				obj.put(AppinventoryMap.NetworkSupport.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.NetworkSupport.getColumnIndex())));
-				obj.put(AppinventoryMap.Vendor.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Vendor.getColumnIndex())));
+				//getting Vendors
+				List<String> vendors=Arrays.asList(StringUtils.split(dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Vendor.getColumnIndex())),";"));
+				JSONArray vendorsArray= new JSONArray();
+				vendors.forEach(vendor->{
+					vendorsArray.put(vendor);
+				});				
+				
+				obj.put(AppinventoryMap.Vendor.name(), vendorsArray);				
 				obj.put(AppinventoryMap.Contractinplace.name(),
 						(new AppInventoryImportValidator<String>())
 						.AppinventoryDataValidate(AppinventoryMap.Contractinplace,row.getCell(AppinventoryMap.Contractinplace.getColumnIndex()))
 						);
 				obj.put(AppinventoryMap.Contractdetail.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Contractdetail.getColumnIndex())));
 				obj.put(AppinventoryMap.ExpirationDate.name(),
-						(new AppInventoryImportValidator<Date>())
+						(new AppInventoryImportValidator<String>())
 						.AppinventoryDataValidate(AppinventoryMap.ExpirationDate,row.getCell(AppinventoryMap.ExpirationDate.getColumnIndex()))
 						);
 				obj.put(AppinventoryMap.Frequency.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Frequency.getColumnIndex())));
@@ -144,6 +187,34 @@ public class ImportServiceImp implements ImportService{
 
 		LOGGER.info("i wakeup after 20 sec");
 
+	}
+
+
+
+	@Override
+	public List<Appdepartment> importAppdepartment(JSONArray importData,Department department) throws Exception {
+		List<Appdepartment> appDepartmentList=new ArrayList<Appdepartment>();
+		List<Callable<AppInventoryDTO>> appInventoryList = new ArrayList<Callable<AppInventoryDTO>>();
+		for(Object importObj:importData)
+		{
+			appInventoryList.add(	new AppInventoryDTO((JSONObject)importObj,
+									department,
+									appdepartmentRepository,
+									appRepository,
+									siteRepository,
+									companyRepository));
+		}
+		
+		List<Future<AppInventoryDTO>> results=execSvc.invokeAll(appInventoryList);
+	
+		for(Future<AppInventoryDTO> appInventoryFuture:results)
+		{
+			//AppInventoryDTO appInventoryDTO=appInventoryFuture.get();
+			//appDepartmentList.add(appInventoryDTO.getAppdepartment());
+			
+		}
+
+		return appDepartmentList;
 	}
 
 }

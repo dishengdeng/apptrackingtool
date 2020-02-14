@@ -71,7 +71,7 @@
 									<th class="zacmap-zone-header-d" rowspan="2">Frontline User</th>
 									<th class="zacmap-zone-header-d" colspan="7">Support Information</th>
 									<th class="zacmap-zone-header-d" rowspan="2">Vendor</th>
-									<th class="zacmap-zone-header-d" colspan="6">Contract Information</th>
+									<th class="zacmap-zone-header-d" colspan="8">Contract Information</th>
 									<th class="zacmap-zone-header-d" rowspan="2">Application Version</th>
 									<th class="zacmap-zone-header-d" rowspan="2">Business Unit Initiatives on Roadmap?</th>
 									<th class="zacmap-zone-header-d" colspan="3">Involved in Projects (Y/N)?</th>
@@ -175,9 +175,9 @@
 									<td th:text="${appdepartment.sme}"></td>
 									<td th:text="${appdepartment.trainer}"></td>
 									<td th:text="${appdepartment.useradmin}"></td>
-									<td th:text="${appdepartment.systemadmin}"></td>
-									<td th:text="${appdepartment.dbsupport}"></td>
+									<td th:text="${appdepartment.systemadmin}"></td>									
 									<td th:text="${appdepartment.serversupport}"></td>
+									<td th:text="${appdepartment.dbsupport}"></td>
 									<td th:text="${appdepartment.networksupport}"></td>
 									<td><p th:each="vendor: ${appdepartment.vendors}">
 											<a th:href="@{'/companydetail?company='+${vendor.id}}" th:text="${vendor.companyName}">
@@ -349,7 +349,7 @@
 				timeout: 6000000,
 				success: function (data) {
 					//window.location.replace(this.responseURL);
-					
+					console.log(data);
 					$('#uploadMessage').addClass("text-success");
 					$('#uploadMessage').text('Success');
 				},

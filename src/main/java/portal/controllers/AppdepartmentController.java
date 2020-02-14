@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
 
 import portal.entity.Appdepartment;
 import portal.entity.Department;
@@ -74,7 +77,7 @@ public class AppdepartmentController {
 	@Autowired
 	private AppInstanceService appInstanceService;
 	
-	
+	private static final Logger LOGGER = LoggerFactory.getLogger(AppdepartmentController.class);	
     @GetMapping("/appinventory")
     public String appinventory(@RequestParam("appdepartment") String appdepartment,
     							@RequestParam("department") String department,
@@ -132,6 +135,7 @@ public class AppdepartmentController {
     	{
     	importService.testExcutor();
     	JSONArray data=importService.getAppInventory(file).get();
+    	importService.importAppdepartment(data,department);
     	data.toString();
     	}
     	catch(ExecutionException ex)
@@ -146,11 +150,13 @@ public class AppdepartmentController {
     		}    		
     		else
     		{
-    			return new ResponseEntity<String>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    			LOGGER.info(ex.getMessage());
+    			return new ResponseEntity<String>("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR);
     		}
     	}
     	catch(Exception ex)
-    	{    		
+    	{  
+    		LOGGER.info(ex.getMessage());  		
     		return new ResponseEntity<String>("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR);
     	}
 

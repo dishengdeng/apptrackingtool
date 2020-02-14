@@ -27,7 +27,7 @@ import portal.utility.Convertor;
 
 @Entity
 @Table(name = "appdepartment")
-public class Appdepartment {
+public class Appdepartment implements Cloneable{
 
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
@@ -57,7 +57,7 @@ public class Appdepartment {
 	private String north;
 	
 	//--site
-	@ManyToMany(mappedBy = "appdepartments")
+	@ManyToMany(mappedBy = "appdepartments",fetch = FetchType.LAZY)
     private Set<Site> sites = new HashSet<Site>();
 	//--department
     @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
@@ -107,10 +107,10 @@ public class Appdepartment {
 	private String fluser;
     
    //--contract information 
-	@ManyToMany(mappedBy = "appdepartments")
+	@ManyToMany(mappedBy = "appdepartments",fetch = FetchType.LAZY)
     private Set<Contract> contracts = new HashSet<Contract>();
 	
-	@ManyToMany(mappedBy = "appdepartments")
+	@ManyToMany(mappedBy = "appdepartments",fetch = FetchType.LAZY)
     private Set<License> licenses = new HashSet<License>();
 	
     @Column(name = "contractinplace",columnDefinition="VARCHAR(1000)")
@@ -139,7 +139,7 @@ public class Appdepartment {
     @JsonView(Views.Public.class)
 	private String ahsitsla;
     //--vendor
-    @ManyToMany(mappedBy = "appdepartments")
+    @ManyToMany(mappedBy = "appdepartments",fetch = FetchType.LAZY)
     private Set<Company> vendors=new HashSet<Company>();
     
     //----support information
@@ -172,7 +172,7 @@ public class Appdepartment {
 	private String networksupport;
     
     //--project information
-	@ManyToMany(mappedBy = "appdepartments")
+	@ManyToMany(mappedBy = "appdepartments",fetch = FetchType.LAZY)
     private Set<Project> projects = new HashSet<Project>();
 	
     @Column(name = "imp",columnDefinition="VARCHAR(500)")
@@ -633,4 +633,12 @@ public class Appdepartment {
 		});
 		this.projects=null;
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		
+		return super.clone();
+	}
+	
+	
 }

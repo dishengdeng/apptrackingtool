@@ -4,6 +4,7 @@ package portal.validator;
 
 import java.text.ParseException;
 
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -76,7 +77,8 @@ public class AppInventoryImportValidator<T> {
 			
 			try
 			{
-				return (T) Convertor.JavaDate(dataFormatter.formatCellValue(cell).trim());
+				Convertor.JavaDate(dataFormatter.formatCellValue(cell).trim());
+		
 			}
 			catch(ParseException ex)
 			{

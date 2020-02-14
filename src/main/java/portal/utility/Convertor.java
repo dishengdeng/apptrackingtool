@@ -5,10 +5,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.ObjectUtils;
+
+
 
 
 public class Convertor {
-
+		private static final Logger LOGGER = LoggerFactory.getLogger(Convertor.class);
 		@SuppressWarnings("finally")
 		static public Date SQLDate(String dateString)
 		{
@@ -35,37 +40,40 @@ public class Convertor {
 
 		static public java.util.Date JavaDate(String dateString) throws ParseException
 		{
-			java.util.Date date=null;
+			
 			
 
-				
+				if(ObjectUtils.isEmpty(dateString)) return null;
 				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd");
-				date = dateFormatStr.parse(dateString);
-				return date;
+				return dateFormatStr.parse(dateString);
+
 	
 			
 
 		}
-		@SuppressWarnings("finally")
-		static public java.util.Date StringToDate(String dateString)
-		{
-			java.util.Date date=null;
-			
 
+		@SuppressWarnings("finally")
+		static public java.util.Date StringToDate(String dateString) 
+		{
+			
+			
+				java.util.Date date=null;
 				try
 				{
+				if(ObjectUtils.isEmpty(dateString)) return date;
 				SimpleDateFormat dateFormatStr= new SimpleDateFormat("yyyy-MM-dd");
-				date = dateFormatStr.parse(dateString);
+				date= dateFormatStr.parse(dateString);
 				}
 				catch(ParseException ex)
 				{
-					//ex.printStackTrace();
+					LOGGER.info(ex.getMessage());
 				}
 				finally
 				{
 					return date;
 				}
-	
+				
+
 			
 
 		}		

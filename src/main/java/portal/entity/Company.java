@@ -98,6 +98,14 @@ public class Company {
         inverseJoinColumns = @JoinColumn(name = "appdepartment_id")
     )
     private Set<Appdepartment> appdepartments = new HashSet<Appdepartment>();
+	
+	public Company()
+	{}
+	
+	public Company(String _companyName)
+	{
+		this.companyName=_companyName;
+	}	
     
 	public Long getId() {
 		return id;
