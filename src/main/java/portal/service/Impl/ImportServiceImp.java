@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -31,12 +32,13 @@ import org.springframework.web.multipart.MultipartFile;
 import portal.ImportDTO.AppInventoryDTO;
 import portal.entity.Appdepartment;
 import portal.entity.Department;
+import portal.models.Alert;
 import portal.repository.AppRepository;
 import portal.repository.AppdepartmentRepository;
 import portal.repository.CompanyRepository;
-import portal.repository.DepartmentRepository;
 import portal.repository.SiteRepository;
 import portal.service.ImportService;
+
 import portal.utility.AppinventoryMap;
 import portal.utility.ColumnHeaderValidator;
 import portal.utility.InvalidTemplateFormatException;
@@ -59,6 +61,8 @@ public class ImportServiceImp implements ImportService{
 	private SiteRepository siteRepository;
 	@Autowired
 	private CompanyRepository companyRepository;
+	@Autowired
+	private SimpMessageSendingOperations messagingTemplate;
 
 	
 	private final int threadPoolNumber=3;
@@ -192,7 +196,7 @@ public class ImportServiceImp implements ImportService{
 
 
 	@Override
-	public List<Appdepartment> importAppdepartment(JSONArray importData,Department department) throws Exception {
+	public CompletableFuture<List<Appdepartment>> importAppdepartment(JSONArray importData,Department department) throws Exception {
 		List<Appdepartment> appDepartmentList=new ArrayList<Appdepartment>();
 		List<Callable<AppInventoryDTO>> appInventoryList = new ArrayList<Callable<AppInventoryDTO>>();
 		for(Object importObj:importData)
@@ -209,12 +213,16 @@ public class ImportServiceImp implements ImportService{
 	
 		for(Future<AppInventoryDTO> appInventoryFuture:results)
 		{
-			//AppInventoryDTO appInventoryDTO=appInventoryFuture.get();
-			//appDepartmentList.add(appInventoryDTO.getAppdepartment());
+			AppInventoryDTO appInventoryDTO=appInventoryFuture.get();
+			appDepartmentList.add(appInventoryDTO.getAppdepartment());
 			
 		}
+		Alert alert=new Alert();
+		alert.setTitle("Job Completion");
+		alert.setContent("Import have been done for client \""+department.getDepartmentName()+"\"!");
 
-		return appDepartmentList;
+		this.messagingTemplate.convertAndSend("/subject/alert", alert);
+		return CompletableFuture.completedFuture(appDepartmentList);
 	}
 
 }

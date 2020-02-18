@@ -31,7 +31,7 @@ public class AppInventoryImportValidator<T> {
 	public T AppinventoryDataValidate(AppinventoryMap elment,Cell cell) throws InvalidDataFormatException,Exception
 	{
 		Assert.notNull(elment);
-		Assert.notNull(cell);
+		//Assert.notNull(cell);
 		
 		if(elment.equals(AppinventoryMap.ApplicationName))
 		{

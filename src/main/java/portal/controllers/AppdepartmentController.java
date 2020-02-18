@@ -133,10 +133,10 @@ public class AppdepartmentController {
 
     	try
     	{
-    	importService.testExcutor();
+
     	JSONArray data=importService.getAppInventory(file).get();
     	importService.importAppdepartment(data,department);
-    	data.toString();
+
     	}
     	catch(ExecutionException ex)
     	{
@@ -160,7 +160,7 @@ public class AppdepartmentController {
     		return new ResponseEntity<String>("Internal Server Error",HttpStatus.INTERNAL_SERVER_ERROR);
     	}
 
-    	return new ResponseEntity<String>("Success",HttpStatus.CREATED);
+    	return new ResponseEntity<String>("Successfully Submit your upload request. You will get a notice once it done. Or come back later to check",HttpStatus.CREATED);
 
     }    
 }
