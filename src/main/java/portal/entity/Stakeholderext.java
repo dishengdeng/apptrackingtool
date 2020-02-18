@@ -57,6 +57,10 @@ public class Stakeholderext {
     @Column(name = "raciforsyschanges")
     @JsonView(Views.Public.class)
 	private Set<RACI> raciforsyschanges= new HashSet<RACI>();
+    
+    @Column(name = "note",columnDefinition="VARCHAR(4000)")
+    @JsonView(Views.Public.class)
+	private String note;
 
 	public Long getId() {
 		return id;
@@ -115,7 +119,15 @@ public class Stakeholderext {
 		this.raciforsyschanges.addAll(raciforsyschanges);
 	}
     
-    public void removeAllDependence()
+    public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public void removeAllDependence()
     {
 		if(!ObjectUtils.isEmpty(this.stakeholder)) this.stakeholder.removeStakeholderext(this);;
 		this.setStakeholder(null);

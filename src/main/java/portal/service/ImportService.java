@@ -24,4 +24,7 @@ public interface ImportService {
 	
 	@Async("importTaskExecutor")
 	public CompletableFuture<List<Appdepartment>> importAppdepartment(JSONArray importData,Department department) throws Exception;
+	
+	@Async("importTaskExecutor")
+	public CompletableFuture<JSONArray> getStakeholders(MultipartFile file) throws InvalidTemplateFormatException, Exception;
 }

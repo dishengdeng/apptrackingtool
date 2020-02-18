@@ -33,7 +33,7 @@ public interface StakeholderRepository  extends JpaRepository<Stakeholder, Long>
     		+ "t.email=:email "
     		+ "where t.id = :id")    
     void updateDetail(@Param("stakeholderName") String stakeholderName,@Param("note") String note,
-    		@Param("site") Site site,@Param("phone") String phone,
+    		@Param("site") Site site,@Param("phone") Long phone,
     		@Param("position") String position,@Param("businessunit") String businessunit,@Param("email") String email,
     		@Param("id") Long id	
     		);

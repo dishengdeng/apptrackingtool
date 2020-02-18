@@ -21,6 +21,8 @@ public interface FileService {
 	
 	public File findById(Long id);
 	
+	ResponseEntity<Resource> downloadTemplate(String filepath,String filename,HttpServletRequest request);
+	
 
 
 }

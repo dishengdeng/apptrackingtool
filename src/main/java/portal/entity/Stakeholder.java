@@ -60,9 +60,9 @@ public class Stakeholder {
     @JsonView(Views.Public.class)
 	private String address;
 
-    @Column(name = "phone",columnDefinition="VARCHAR(250)")
+    @Column(name = "phone",columnDefinition="number(10)")
     @JsonView(Views.Public.class)
-	private String phone;   
+	private Long phone;   
 
     @Column(name = "position",columnDefinition="VARCHAR(250)")
     @JsonView(Views.Public.class)
@@ -139,11 +139,12 @@ public class Stakeholder {
 		this.address = address;
 	}
 
-	public String getPhone() {
+
+	public Long getPhone() {
 		return phone;
 	}
 
-	public void setPhone(String phone) {
+	public void setPhone(Long phone) {
 		this.phone = phone;
 	}
 

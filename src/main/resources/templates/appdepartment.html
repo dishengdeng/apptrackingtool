@@ -38,19 +38,40 @@
                         <div class="panel-heading">
                             Inventory
 							<div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" 
-								th:data-target="@{${#strings.concat('#',department.id,'file')}}" 
-								style="text-decoration: none;cursor: pointer;color:white" 
-								title="Import">
-									<i class="fa fa-upload fa-lg" style="margin-right:5px"></i>
-								</a>							
-								
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
-								style="text-decoration: none;color:white;cursor: pointer" 
-								title="Add/Change"
-								th:href="@{'/appinventory?department='+${department.id}}+'&appdepartment=&actiontype=CREATE'">
-									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
-								</a>
+								<li class="dropdown" sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="list-style-type: none;">
+									<a class="dropdown-toggle" data-toggle="dropdown" href="#" style="cursor: pointer;color:white">
+										<i class="fa fa-cog fa-lg"></i>
+									</a>
+									<ul class="dropdown-menu pull-right dropdown-user">
+										<li>
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" 
+											th:data-target="@{${#strings.concat('#',department.id,'file')}}" 
+											style="text-decoration: none;cursor: pointer;" 
+											title="Import">
+												<i class="fa fa-upload fa-lg" style="margin-right:5px"></i> Import
+											</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											style="text-decoration: none;" 
+											title="Add/Change"
+											th:href="@{'/appinventory?department='+${department.id}}+'&appdepartment=&actiontype=CREATE'">
+												<i class="fa fa-plus fa-lg" style="margin-right:5px"></i> Create
+											</a>												
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											style="text-decoration: none;" 
+											title="Download Template File"
+											href="/appinventorytemplate?filename=appInventory.xlsx">
+												Get Import Template
+											</a>
+										</li>										
+										
+									</ul>
+								</li>
 							</div>
                         </div>
                         <!-- /.panel-heading -->

@@ -40,18 +40,18 @@ import portal.repository.SiteRepository;
 import portal.service.ImportService;
 
 import portal.utility.AppinventoryMap;
-import portal.utility.ColumnHeaderValidator;
+
 import portal.utility.InvalidTemplateFormatException;
 import portal.utility.JSONObjectWithEmpty;
+import portal.utility.StakeholderMap;
 import portal.validator.AppInventoryImportValidator;
+import portal.validator.StakeholderImportValidator;
 
 @Service
 public class ImportServiceImp implements ImportService{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(ImportServiceImp.class);
 
-	@Autowired
-	private ColumnHeaderValidator columnHeaderValidator;
 
 	@Autowired
 	private AppdepartmentRepository appdepartmentRepository;
@@ -79,7 +79,7 @@ public class ImportServiceImp implements ImportService{
 		
 		DataFormatter dataFormatter = new DataFormatter();
 		
-		columnHeaderValidator.TemplateFormatValidate(sheet.getRow(0));
+		new AppInventoryImportValidator<>().TemplateFormatValidate(sheet.getRow(0));
 		
 		JSONArray excelData = new JSONArray();
 		for(Row row:sheet)
@@ -223,6 +223,59 @@ public class ImportServiceImp implements ImportService{
 
 		this.messagingTemplate.convertAndSend("/subject/alert", alert);
 		return CompletableFuture.completedFuture(appDepartmentList);
+	}
+
+
+
+	@Override
+	public CompletableFuture<JSONArray> getStakeholders(MultipartFile file)
+			throws InvalidTemplateFormatException, Exception {
+		Assert.notNull(file);
+		LOGGER.info("getting Stakeholder");
+		Workbook workbook = WorkbookFactory.create(file.getInputStream());
+		
+		Sheet sheet = workbook.getSheetAt(0);
+		
+		DataFormatter dataFormatter = new DataFormatter();
+		
+		new StakeholderImportValidator<>().TemplateFormatValidate(sheet.getRow(0));
+		
+		JSONArray excelData = new JSONArray();
+		for(Row row:sheet)
+		{
+			if(row.getRowNum()>0)
+			{
+				JSONObjectWithEmpty obj=new JSONObjectWithEmpty();
+				obj.put(StakeholderMap.Name.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
+				obj.put(StakeholderMap.Position.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
+				obj.put(StakeholderMap.Location.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
+				obj.put(StakeholderMap.Role.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
+				obj.put(StakeholderMap.Email.name(), 
+						(new StakeholderImportValidator<String>())
+						.StakeholderDataValidate(StakeholderMap.Email,row.getCell(StakeholderMap.Email.getColumnIndex()))
+						);
+				obj.put(StakeholderMap.Phone.name(), 
+						(new StakeholderImportValidator<String>())
+						.StakeholderDataValidate(StakeholderMap.Phone,row.getCell(StakeholderMap.Phone.getColumnIndex()))
+						);
+				obj.put(StakeholderMap.Influence.name(), 
+						(new StakeholderImportValidator<String>())
+						.StakeholderDataValidate(StakeholderMap.Influence,row.getCell(StakeholderMap.Influence.getColumnIndex()))
+						);
+				obj.put(StakeholderMap.Interest.name(), 
+						(new StakeholderImportValidator<String>())
+						.StakeholderDataValidate(StakeholderMap.Interest,row.getCell(StakeholderMap.Interest.getColumnIndex()))
+						);
+				obj.put(StakeholderMap.RACI.name(), 
+						(new StakeholderImportValidator<JSONArray>())
+						.StakeholderDataValidate(StakeholderMap.RACI,row.getCell(StakeholderMap.RACI.getColumnIndex()))
+						);
+				obj.put(StakeholderMap.Notes.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
+				excelData.put(obj);
+			}
+		}
+		
+		return CompletableFuture.completedFuture(excelData);
 	}
 
 }

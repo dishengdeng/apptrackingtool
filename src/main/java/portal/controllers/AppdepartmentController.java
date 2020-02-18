@@ -9,7 +9,7 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,13 +25,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import portal.entity.Appdepartment;
 import portal.entity.Department;
-
 import portal.service.AppInstanceService;
 import portal.service.AppService;
 import portal.service.AppdepartmentService;
 import portal.service.CompanyService;
 import portal.service.ContractService;
 import portal.service.DepartmentService;
+import portal.service.FileService;
 import portal.service.ImportService;
 import portal.service.LicenseService;
 import portal.service.ProjectService;
@@ -69,6 +69,9 @@ public class AppdepartmentController {
 	private ImportService importService;
 	
 	@Autowired
+	private FileService fileService;
+	
+	@Autowired
 	private AppdepartmentService appDepartmentService;
 	
 	@Autowired
@@ -78,6 +81,10 @@ public class AppdepartmentController {
 	private AppInstanceService appInstanceService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppdepartmentController.class);	
+	
+	private final String filepath="files//template//";
+
+	
     @GetMapping("/appinventory")
     public String appinventory(@RequestParam("appdepartment") String appdepartment,
     							@RequestParam("department") String department,
@@ -128,6 +135,15 @@ public class AppdepartmentController {
     }
     
   //------file management----
+    
+    @GetMapping("/appinventorytemplate")
+    public ResponseEntity<Resource> downloadfile(@RequestParam("filename") String filename,HttpServletRequest request)
+    {
+    	
+
+    	return fileService.downloadTemplate(filepath, filename, request);
+    }
+    
     @PostMapping("/appinventoryimport")
     public @ResponseBody ResponseEntity<String> departmentupload(@RequestParam("file") MultipartFile file,@ModelAttribute("department") Department department) {
 

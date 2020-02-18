@@ -38,9 +38,37 @@
                         <div class="panel-heading">
                             <i class="fa  fa-users"></i> Stakeholders
                             <div class="pull-right">
-								<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addstakeholder'}" style="text-decoration: none;color:white;cursor: pointer" title="Add/Change">
-									<i class="fa fa-plus fa-lg" style="margin-right:5px"></i>
-								</a>
+								<li class="dropdown" sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" style="list-style-type: none;">
+									<a class="dropdown-toggle" data-toggle="dropdown" href="#" style="cursor: pointer;color:white">
+										<i class="fa fa-cog fa-lg"></i>
+									</a>
+									<ul class="dropdown-menu pull-right dropdown-user">
+										<li>
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" 
+											th:data-target="@{${#strings.concat('#',department.id,'file')}}" 
+											style="text-decoration: none;cursor: pointer;" 
+											title="Import">
+												<i class="fa fa-upload fa-lg" style="margin-right:5px"></i> Import
+											</a>
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" data-toggle="modal" th:data-target="@{'#addstakeholder'}" style="text-decoration: none;cursor: pointer" title="Add/Change">
+												<i class="fa fa-plus fa-lg" style="margin-right:5px"></i> Create
+											</a>												
+										</li>
+										<li class="divider"></li>
+										<li>
+											<a sec:authorize="hasAnyRole('ADMIN','SYSADMIN','USER')" 
+											style="text-decoration: none;" 
+											title="Download Template File"
+											href="/stakeholdertemplate?filename=stakholder.xlsx">
+												Get Import Template
+											</a>
+										</li>										
+										
+									</ul>
+								</li>
                             </div>
                         </div>
                         <!-- /.panel-heading -->
@@ -48,10 +76,15 @@
 							<table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-stakeholderext">
 							  <thead>
 								<th class="zacmap-zone-header-d">Stakeholder</th>
-								<th class="zacmap-zone-header-d">Role</th>							
+								<th class="zacmap-zone-header-d">Position/Title</th>
+								<th class="zacmap-zone-header-d">Location (Site)</th>
+								<th class="zacmap-zone-header-d">Role</th>
+								<th class="zacmap-zone-header-d">Email</th>
+								<th class="zacmap-zone-header-d">phone</th>									
 								<th class="zacmap-zone-header-d">Influence</th>
 								<th class="zacmap-zone-header-d">Interest</th>
 								<th class="zacmap-zone-header-d">RACI</th>
+								<th class="zacmap-zone-header-d">Notes</th>
 							  </thead>
 							  <tbody>
 								<tr th:each="stakeholderext: ${department.stakeholderexts}">
@@ -81,6 +114,8 @@
 											>
 											</a>
 									</td>
+									<td th:text="${stakeholderext.stakeholder!=null}? ${stakeholderext.stakeholder.position}:''"></td>	
+									<td th:text="${stakeholderext.stakeholder!=null && stakeholderext.stakeholder.site!=null}? ${stakeholderext.stakeholder.site.siteName}:''"></td>									
 									<td>
 										<a 
 											th:href="@{'/slaroledetail?slarole='+${stakeholderext.role.id}}" 
@@ -89,10 +124,12 @@
 										>
 										</a>
 									</td>
-									
+									<td th:text="${stakeholderext.stakeholder!=null}? ${stakeholderext.stakeholder.email}:''"></td>
+									<td th:text="${stakeholderext.stakeholder!=null}? ${stakeholderext.stakeholder.phone}:''"></td>										
 									<td th:text="${stakeholderext.influence!=null}? ${stakeholderext.influence}:''"></td>
 									<td th:text="${stakeholderext.interest!=null}? ${stakeholderext.interest}:''"></td>
 									<td th:text="${stakeholderext.raciforsyschanges.size()>0}? ${stakeholderext.raciforsyschanges}:''"></td>
+									<td th:text="${stakeholderext.note}"></td>
 
 								</tr>
 							  </tbody>
@@ -172,7 +209,48 @@
 
 					</div>	
 				</div>
+				<!--file model-->
+					<div class="modal fade" th:id="${#strings.concat(department.id,'file')}" role="dialog" >
+							<!-- Modal content-->
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+										  <button type="button" class="close" data-dismiss="modal">&times;</button>
+										  <h4 class="modal-title"> Import</h4>
+										</div>
+										<div class="modal-body">
+											<form  id="UploadFileForm"  method="POST" enctype="multipart/form-data">
+												<!-- COMPONENT START -->
+												<div class="input-group">
+																	
+														<a th:onclick="@{'uploadfile(\''+${department.id}+'\')'}"><input type="text" th:id="@{${department.id}+'filename'}" class="form-control" placeholder="Choose file..." style="cursor:pointer" readonly></a>
+														<div class="input-group-btn">
+														<button type="submit" class="btn btn-primary" id="submitform"><i class="fa fa-upload"></i></button>
+														</div>
+							
+												</div>
+												<!-- COMPONENT END -->
+												<div class="form-group  pull-center">
+													<input type="file" class="form-control" name="file" style="visibility:hidden;height:0;" th:id="@{${department.id}+'fileupload'}">
+													<input type="hidden" class="form-control" th:name="department" th:value="${department.id}"></input>
 
+
+												</div>
+											</form>
+											<div class="row" style="display:none" id="uploadProgress">
+												<div class="col-lg-12">
+													<h4 id="alertMsg"></h4>
+													<div class="progress">
+														<div id="progressBar" class="progress-bar" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+														</div>
+													</div>
+													<p id="uploadMessage" class="text-danger"></p>
+												</div>
+											</div>
+										</div>
+								   </div>
+								</div>
+					</div>
 
             <!-- /.row -->
         </div>
@@ -203,6 +281,63 @@
 			width:300,
 			noneSelectedText:'Select Role'
 	  });
+  $( "#submitform" ).on( "click", function( event ) {
+  
+  		  event.preventDefault();
+		  let myForm = document.getElementById('UploadFileForm');
+		  var dataform = new FormData(myForm);
+			$.ajax({
+				type: "POST",
+				enctype: 'multipart/form-data',
+				url: "/stakeholderimport",
+				data: dataform,
+				beforeSend: function (request, xhr) {
+					//request.setRequestHeader(csrf_headerName, csrf_paramValue);
+					 //Reset alert message and progress bar
+
+					$('#uploadProgress').css('display','block');
+					$('#alertMsg').text('');
+					$('#uploadMessage').text('');
+					$('#progressBar').css('width','0%');
+					$('#uploadMessage').removeClass("text-danger");
+					$('#uploadMessage').removeClass("text-success");
+				},
+				processData: false,
+
+				contentType: false,
+				cache: false,
+				timeout: 6000000,
+				success: function (data) {
+					//window.location.replace(this.responseURL);
+					console.log(data);
+					$('#uploadMessage').addClass("text-success");
+					$('#uploadMessage').text(data);
+				},
+
+				xhr: function(){
+					//Get XmlHttpRequest object
+					 var xhr = $.ajaxSettings.xhr() ;
+					//Set onprogress event handler
+					 xhr.upload.onprogress = function(data){
+
+						var perc = Math.round((data.loaded / data.total) * 100);
+
+						$('#alertMsg').text("Uploading... "+perc + '%');
+						$('#progressBar').css('width',perc + '%');
+					 };
+				 
+					 
+					 return xhr ;
+				},
+				error: function (e) {
+					
+					$('#uploadMessage').addClass("text-danger");
+					$('#uploadMessage').text(e.responseText);
+				}
+			});
+		  
+	});		  
+	  
 	 $('[id^=RACISelect]').multiselect(
   {
 	includeSelectAllOption: true,

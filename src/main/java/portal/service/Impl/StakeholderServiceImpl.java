@@ -50,6 +50,7 @@ public class StakeholderServiceImpl implements StakeholderService{
 			StakeholderModel stakeholderModel = new StakeholderModel();
 			stakeholderModel.setEmail(stakeholder.getEmail());
 			stakeholderModel.setNote(stakeholder.getNote());
+			stakeholderModel.setPhone(ObjectUtils.isEmpty(stakeholder.getPhone())?null:String.valueOf(stakeholder.getPhone()));
 			stakeholderModel.setPosition(stakeholder.getPosition());
 			stakeholderModel.setStakeholderName(stakeholder.getStakeholderName());
 			stakeholderModels.add(stakeholderModel);
@@ -81,7 +82,7 @@ public class StakeholderServiceImpl implements StakeholderService{
 	public void updateDetail(StakeholderModel stakeholderModel) {
 
 		stakeholderRepository.updateDetail(stakeholderModel.getStakeholderName(),stakeholderModel.getNote(),
-				ObjectUtils.isEmpty(stakeholderModel.getSite())? null: siteRepository.findOne(stakeholderModel.getSite()), stakeholderModel.getPhone(), 
+				ObjectUtils.isEmpty(stakeholderModel.getSite())? null: siteRepository.findOne(stakeholderModel.getSite()), Long.parseLong(stakeholderModel.getPhone()), 
 				stakeholderModel.getPosition(),stakeholderModel.getBusinessunit(), stakeholderModel.getEmail(), 
 				stakeholderModel.getId());
 		
