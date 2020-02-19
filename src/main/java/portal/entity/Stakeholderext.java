@@ -25,7 +25,7 @@ import portal.utility.RACI;
 
 @Entity
 @Table(name = "stakeholderext")
-public class Stakeholderext {
+public class Stakeholderext implements Cloneable{
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
 	@Column(name = "id",nullable = false,unique=true)
@@ -138,5 +138,13 @@ public class Stakeholderext {
 		if(!ObjectUtils.isEmpty(this.role)) this.role.removeStakeholderext(this);;
 		this.setRole(null);
     }
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+
+		return super.clone();
+	}
+	
+	
 
 }

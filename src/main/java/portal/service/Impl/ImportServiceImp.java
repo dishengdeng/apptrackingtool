@@ -30,13 +30,17 @@ import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
 import portal.ImportDTO.AppInventoryDTO;
+import portal.ImportDTO.StakeholderextDTO;
 import portal.entity.Appdepartment;
 import portal.entity.Department;
 import portal.models.Alert;
 import portal.repository.AppRepository;
 import portal.repository.AppdepartmentRepository;
 import portal.repository.CompanyRepository;
+import portal.repository.SLARoleRepository;
 import portal.repository.SiteRepository;
+import portal.repository.StakeholderRepository;
+import portal.repository.StakeholderextRepository;
 import portal.service.ImportService;
 
 import portal.utility.AppinventoryMap;
@@ -63,7 +67,12 @@ public class ImportServiceImp implements ImportService{
 	private CompanyRepository companyRepository;
 	@Autowired
 	private SimpMessageSendingOperations messagingTemplate;
-
+	@Autowired
+	private StakeholderextRepository stakeholderextRepository;
+	@Autowired
+	private StakeholderRepository stakeholderRepository;
+	@Autowired
+	private SLARoleRepository slaRoleRepository;
 	
 	private final int threadPoolNumber=3;
 
@@ -247,9 +256,9 @@ public class ImportServiceImp implements ImportService{
 			{
 				JSONObjectWithEmpty obj=new JSONObjectWithEmpty();
 				obj.put(StakeholderMap.Name.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
-				obj.put(StakeholderMap.Position.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
-				obj.put(StakeholderMap.Location.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
-				obj.put(StakeholderMap.Role.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
+				obj.put(StakeholderMap.Position.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Position.getColumnIndex())));
+				obj.put(StakeholderMap.Location.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Location.getColumnIndex())));
+				obj.put(StakeholderMap.Role.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Role.getColumnIndex())));
 				obj.put(StakeholderMap.Email.name(), 
 						(new StakeholderImportValidator<String>())
 						.StakeholderDataValidate(StakeholderMap.Email,row.getCell(StakeholderMap.Email.getColumnIndex()))
@@ -270,12 +279,43 @@ public class ImportServiceImp implements ImportService{
 						(new StakeholderImportValidator<JSONArray>())
 						.StakeholderDataValidate(StakeholderMap.RACI,row.getCell(StakeholderMap.RACI.getColumnIndex()))
 						);
-				obj.put(StakeholderMap.Notes.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
+				obj.put(StakeholderMap.Notes.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Notes.getColumnIndex())));
 				excelData.put(obj);
 			}
 		}
 		
 		return CompletableFuture.completedFuture(excelData);
+	}
+
+
+
+	@Override
+	public void importStakeholderext(JSONArray importData, Department department)
+			throws Exception {
+
+		List<Callable<StakeholderextDTO>> StakeholderextDTOList = new ArrayList<Callable<StakeholderextDTO>>();
+		for(Object importObj:importData)
+		{
+
+			StakeholderextDTOList.add(	new StakeholderextDTO((JSONObject)importObj,
+									department,
+									stakeholderextRepository,
+									stakeholderRepository,
+									slaRoleRepository,
+									siteRepository));
+		
+		}
+
+		execSvc.invokeAll(StakeholderextDTOList);
+
+
+		Alert alert=new Alert();
+		alert.setTitle("Job Completion");
+		alert.setContent("Import have been done for client \""+department.getDepartmentName()+"\"!");
+		
+		this.messagingTemplate.convertAndSend("/subject/alert", alert);
+		
+
 	}
 
 }

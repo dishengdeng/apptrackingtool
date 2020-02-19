@@ -60,6 +60,14 @@ public class SLARole {
         )
     private Set<Stakeholderext> stakeholderexts = new HashSet<>();
 
+    public SLARole()
+    {}
+
+    public SLARole(String _SLARoleName)
+    {
+    	this.SLARoleName=_SLARoleName;
+    }
+    
 	public Long getId() {
 		return id;
 	}

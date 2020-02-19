@@ -91,6 +91,13 @@ public class Stakeholder {
         )
     private Set<Stakeholderext> stakeholderexts = new HashSet<>();
     
+    public Stakeholder()
+    {}
+    
+    public Stakeholder(String _stakeholderName)
+    {
+    	this.stakeholderName=_stakeholderName;
+    }    
 	public Long getId() {
 		return id;
 	}

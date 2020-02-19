@@ -3,10 +3,13 @@ package portal.controllers;
 
 import java.util.concurrent.ExecutionException;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +28,7 @@ import portal.entity.Stakeholder;
 import portal.entity.Stakeholderext;
 import portal.models.StakeholderModel;
 import portal.service.DepartmentService;
+import portal.service.FileService;
 import portal.service.ImportService;
 import portal.service.SLARoleService;
 import portal.service.SiteService;
@@ -46,6 +50,9 @@ public class StakeholderController {
 	private DepartmentService departmentService;
 	
 	@Autowired
+	private FileService fileService;
+	
+	@Autowired
 	private SLARoleService slaRoleService;
 	
 	@Autowired
@@ -61,6 +68,8 @@ public class StakeholderController {
 	private ImportService importService;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(AppdepartmentController.class);
+	
+	private final String filepath="files//template//";
 	
     @GetMapping("/stakeholders")
     public String stakeholdertable(ModelMap model) {
@@ -153,7 +162,7 @@ public class StakeholderController {
     	{
 
     	JSONArray data=importService.getStakeholders(file).get();
-
+    	importService.importStakeholderext(data, department);
 
     	}
     	catch(ExecutionException ex)
@@ -180,7 +189,15 @@ public class StakeholderController {
 
     	return new ResponseEntity<String>("Successfully Submit your upload request. You will get a notice once it done. Or come back later to check",HttpStatus.CREATED);
 
-    }     
+    }
+    
+    @GetMapping("/stakeholdertemplate")
+    public ResponseEntity<Resource> downloadfile(@RequestParam("filename") String filename,HttpServletRequest request)
+    {
+    	
+
+    	return fileService.downloadTemplate(filepath, filename, request);
+    }
     
     private StakeholderModel getUpdatedStakeholder(Stakeholder stakeholder)
     {

@@ -23,7 +23,7 @@ import portal.jsonview.Views;
 
 @Entity
 @Table(name = "Department")
-public class Department implements Comparable<Department>{
+public class Department implements Comparable<Department>,Cloneable{
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE) 
@@ -365,4 +365,11 @@ public class Department implements Comparable<Department>{
 		
 		return this.departmentName.compareTo(obj.getDepartmentName());
 	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+
+		return super.clone();
+	}
+	
 }
