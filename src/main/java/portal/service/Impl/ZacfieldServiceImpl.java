@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import portal.entity.Department;
 import portal.entity.Zacfield;
 import portal.repository.ZacfieldRepository;
 import portal.service.ZacfieldService;
@@ -41,6 +42,12 @@ public class ZacfieldServiceImpl implements ZacfieldService{
 	public Zacfield findone(Long id) {
 
 		return zacfieldRepository.findOne(id);
+	}
+
+	@Override
+	public List<Zacfield> findbyDepartment(Department department) {
+		
+		return zacfieldRepository.findbyDepartment(department);
 	}
 
 }

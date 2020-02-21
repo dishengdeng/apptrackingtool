@@ -87,7 +87,8 @@ public class Department implements Comparable<Department>,Cloneable{
     @OneToMany(
             mappedBy = "department", 
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch=FetchType.LAZY
         )
     private Set<Zaclist> zaclists = new HashSet<Zaclist>();
 

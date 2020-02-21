@@ -3,7 +3,7 @@ package portal.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,14 +30,15 @@ public class Zacmap {
 	@JsonView(Views.Public.class)
 	private Long id;
 	
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id",referencedColumnName="id")
     private Application application; 
     
     @OneToMany(
             mappedBy = "zacmap", 
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+           
+            orphanRemoval = true,
+            fetch=FetchType.LAZY
         )
     private Set<Zaclist> zaclists = new HashSet<Zaclist>();
     

@@ -30,4 +30,14 @@ public interface ImportService {
 	
 	@Async("importTaskExecutor")
 	public void importStakeholderext(JSONArray importData,Department department) throws Exception;
+	
+	
+	@Async("importTaskExecutor")
+	public CompletableFuture<JSONArray> getZacs(MultipartFile file,Department department) throws InvalidTemplateFormatException, Exception;
+	
+	@Async("importTaskExecutor")
+	public void importZacmap(JSONArray importData,Department department) throws Exception;
+	
+	@Async("importTaskExecutor")
+	public void importZacmapWithSingleThread(JSONArray importData,Department department) throws Exception;
 }

@@ -3,7 +3,7 @@ package portal.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -30,17 +30,22 @@ public class Zacfield implements Comparable<Zacfield>{
 	@JsonView(Views.Public.class)
 	private Long id;
 	
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id",referencedColumnName="id")
     private Department department;
     
     @OneToMany(
             mappedBy = "zacfield", 
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
+          
+            orphanRemoval = true,
+            fetch=FetchType.LAZY
         )
     private Set<Zaclist> zaclists = new HashSet<Zaclist>();
-
+    public Zacfield() {}
+    
+    public Zacfield(String _fieldName) {
+    	this.fieldName=_fieldName;
+    }
 	public Long getId() {
 		return id;
 	}

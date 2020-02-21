@@ -1,6 +1,6 @@
 package portal.entity;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -27,21 +27,21 @@ public class Zaclist implements Comparable<Zaclist>{
 	@JsonView(Views.Public.class)
 	private Long id;
 	
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id",referencedColumnName="id")
     private Department department; 
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "zac_id",referencedColumnName="id")
     private Zac zac;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "zacmap_id",referencedColumnName="id")
     private Zacmap zacmap;
     
 
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "zacfield_id",referencedColumnName="id")
     private Zacfield zacfield;
 
@@ -78,6 +78,7 @@ public class Zaclist implements Comparable<Zaclist>{
 
 	public void setZacfield(Zacfield zacfield) {
 		this.zacfield = zacfield;
+
 	}
 
 	public Zacmap getZacmap() {

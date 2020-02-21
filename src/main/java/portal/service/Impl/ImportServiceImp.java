@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 
+import org.springframework.jdbc.core.JdbcTemplate;
+
 import java.util.List;
+import java.util.Map;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -26,13 +30,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import portal.ImportDTO.AppInventoryDTO;
 import portal.ImportDTO.StakeholderextDTO;
+import portal.ImportDTO.ZacMapDTO;
 import portal.entity.Appdepartment;
+import portal.entity.Application;
 import portal.entity.Department;
+import portal.entity.Zac;
+import portal.entity.Zacfield;
+import portal.entity.Zaclist;
+import portal.entity.Zacmap;
 import portal.models.Alert;
 import portal.repository.AppRepository;
 import portal.repository.AppdepartmentRepository;
@@ -41,15 +51,21 @@ import portal.repository.SLARoleRepository;
 import portal.repository.SiteRepository;
 import portal.repository.StakeholderRepository;
 import portal.repository.StakeholderextRepository;
+import portal.repository.ZacRepository;
+import portal.repository.ZacfieldRepository;
+import portal.repository.ZaclistRepository;
+import portal.repository.ZacmapRepository;
 import portal.service.ImportService;
-
+import portal.service.ZacfieldService;
 import portal.utility.AppinventoryMap;
 
 import portal.utility.InvalidTemplateFormatException;
 import portal.utility.JSONObjectWithEmpty;
 import portal.utility.StakeholderMap;
+import portal.utility.ZacMap;
 import portal.validator.AppInventoryImportValidator;
 import portal.validator.StakeholderImportValidator;
+import portal.validator.ZacImportValidator;
 
 @Service
 public class ImportServiceImp implements ImportService{
@@ -73,6 +89,20 @@ public class ImportServiceImp implements ImportService{
 	private StakeholderRepository stakeholderRepository;
 	@Autowired
 	private SLARoleRepository slaRoleRepository;
+	@Autowired
+	private ZacmapRepository zacmapRepository;
+	@Autowired
+	private ZaclistRepository zaclistRepository;
+	@Autowired
+	private ZacfieldRepository zacfieldRepository;
+	@Autowired
+	private ZacRepository zacRepository;
+	
+	@Autowired
+	private ZacfieldService zacfieldService;
+	
+	@Autowired
+	private JdbcTemplate JdbcTemplate;
 	
 	private final int threadPoolNumber=3;
 
@@ -255,7 +285,10 @@ public class ImportServiceImp implements ImportService{
 			if(row.getRowNum()>0)
 			{
 				JSONObjectWithEmpty obj=new JSONObjectWithEmpty();
-				obj.put(StakeholderMap.Name.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Name.getColumnIndex())));
+				obj.put(StakeholderMap.Name.name(), 
+						(new StakeholderImportValidator<String>())
+						.StakeholderDataValidate(StakeholderMap.Name,row.getCell(StakeholderMap.Name.getColumnIndex()))
+						);
 				obj.put(StakeholderMap.Position.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Position.getColumnIndex())));
 				obj.put(StakeholderMap.Location.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Location.getColumnIndex())));
 				obj.put(StakeholderMap.Role.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Role.getColumnIndex())));
@@ -316,6 +349,132 @@ public class ImportServiceImp implements ImportService{
 		this.messagingTemplate.convertAndSend("/subject/alert", alert);
 		
 
+	}
+
+
+
+	@Override
+	public CompletableFuture<JSONArray> getZacs(MultipartFile file,Department department) throws InvalidTemplateFormatException, Exception {
+		Assert.notNull(file);
+		LOGGER.info("getting Zac");
+		Workbook workbook = WorkbookFactory.create(file.getInputStream());
+		
+		Sheet sheet = workbook.getSheetAt(0);
+		Map<String,Integer> zacFieldIndex=new ZacImportValidator<>(zacfieldService).TemplateFormatValidate(sheet.getRow(0), department);
+		DataFormatter dataFormatter = new DataFormatter();
+		
+		JSONArray excelData = new JSONArray();
+		for(Row row:sheet)
+		{
+			if(row.getRowNum()>0)
+			{
+				JSONObjectWithEmpty obj=new JSONObjectWithEmpty();
+				obj.put(ZacMap.APPLICATION.name(),
+						(new ZacImportValidator<String>()).ZacDataValidate(ZacMap.APPLICATION, row.getCell(zacFieldIndex.get(ZacMap.APPLICATION.getValue())))
+						);
+
+				for(String fieldName:zacFieldIndex.keySet())
+				{
+					if(!ZacMap.APPLICATION.getValue().equals(fieldName) && !ZacMap.DETAIL.getValue().equals(fieldName))
+					{
+						
+						obj.put(fieldName, 
+								(new ZacImportValidator<String>()).ZacDataValidate(ZacMap.ZACFIELDS, row.getCell(zacFieldIndex.get(fieldName))								
+								));
+					
+					}
+
+				}
+				
+
+				obj.put(ZacMap.DETAIL.name(), 
+						dataFormatter.formatCellValue(
+								row.getCell(zacFieldIndex.get(ZacMap.DETAIL.getValue()))
+								)
+						);
+				excelData.put(obj);
+			}
+		}
+			
+		return CompletableFuture.completedFuture(excelData);
+	}
+
+
+
+	@Override
+	public void importZacmap(JSONArray importData, Department department) throws Exception {
+		List<Callable<ZacMapDTO>> ZacMapDTOList = new ArrayList<Callable<ZacMapDTO>>();
+		for(Object importObj:importData)
+		{
+
+			ZacMapDTOList.add(	new ZacMapDTO((JSONObject)importObj,
+									department,
+									zacmapRepository,
+									zaclistRepository,
+									appRepository,
+									zacfieldRepository,
+									zacRepository,
+									JdbcTemplate
+									));
+		
+		}
+
+		execSvc.invokeAll(ZacMapDTOList);
+
+
+		Alert alert=new Alert();
+		alert.setTitle("Job Completion");
+		alert.setContent("Import have been done for client \""+department.getDepartmentName()+"\" Zacmap Import");
+		
+		this.messagingTemplate.convertAndSend("/subject/alert", alert);
+		
+	}
+
+
+
+	@Override
+	public void importZacmapWithSingleThread(JSONArray importData, Department department) throws Exception {
+		for(Object obj:importData)
+		{
+			JSONObject data=(JSONObject)obj;
+			Application application=appRepository.findByName(data.getString(ZacMap.APPLICATION.name()));
+			Zacmap zacmap=zacmapRepository.findbyAppNameAndDepartment(department,application);
+			if(ObjectUtils.isEmpty(zacmap))
+			{
+				LOGGER.info("importing ZacMap");
+				Zacmap newZacMap= new Zacmap();
+				newZacMap.setDetail(data.getString(ZacMap.DETAIL.name()));
+				newZacMap.setApplication(application);
+				Zacmap newZapMapEntity=zacmapRepository.saveAndFlush(newZacMap);
+
+				List<Zacfield> zacFields=zacfieldRepository.findbyDepartment(department);
+				for(Zacfield zacField:zacFields)
+				{
+
+					Zac zac=zacRepository.findByName(data.getString(zacField.getFieldName()));
+					Zaclist newZaclist= new Zaclist();
+	
+					newZaclist.setDepartment(department);
+		
+					newZaclist.setZac(zac);
+					newZaclist.setZacfield(zacField);
+					newZaclist.setZacmap(newZapMapEntity);
+					zaclistRepository.save(newZaclist);
+				
+				
+					
+				}
+
+			}			
+		}
+		
+		Alert alert=new Alert();
+		alert.setTitle("Job Completion");
+		alert.setContent("Import have been done for client \""+department.getDepartmentName()+"\" Zacmap Import");
+		
+		this.messagingTemplate.convertAndSend("/subject/alert", alert);
+
+		
 	}
 
 }

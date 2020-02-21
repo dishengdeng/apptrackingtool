@@ -35,6 +35,13 @@ public class StakeholderImportValidator<T> {
 	public T StakeholderDataValidate(StakeholderMap elment,Cell cell) throws InvalidDataFormatException,Exception
 	{
 		Assert.notNull(elment);
+		if(elment.equals(StakeholderMap.Name))
+		{
+			if(ObjectUtils.isEmpty(dataFormatter.formatCellValue(cell).trim()))
+			{
+				throw new InvalidDataFormatException("Invalid Data Format at cell "+cell.getAddress()+". "+StakeholderMap.Name.getColumnName()+" cannot be empty.");
+			}
+		}
 		if(elment.equals(StakeholderMap.Email))
 		{
 			if(!Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE).matcher(dataFormatter.formatCellValue(cell)).matches())
