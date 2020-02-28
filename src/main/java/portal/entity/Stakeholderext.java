@@ -3,7 +3,7 @@ package portal.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
+
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -32,15 +32,15 @@ public class Stakeholderext implements Cloneable{
 	@JsonView(Views.Public.class)
 	private Long id;
 	
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id",referencedColumnName="id")
     private Department department;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "slarole_id",referencedColumnName="id")
     private SLARole role;
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "stakeholder_id",referencedColumnName="id")
     private Stakeholder stakeholder;
     

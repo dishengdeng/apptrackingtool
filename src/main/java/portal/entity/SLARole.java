@@ -54,9 +54,8 @@ public class SLARole {
     
     @OneToMany(
             mappedBy = "role", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true,
-            fetch=FetchType.EAGER
+            cascade = CascadeType.PERSIST,
+            fetch=FetchType.LAZY
         )
     private Set<Stakeholderext> stakeholderexts = new HashSet<>();
 

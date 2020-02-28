@@ -25,7 +25,6 @@ import portal.repository.ZacRepository;
 import portal.repository.ZacfieldRepository;
 import portal.repository.ZaclistRepository;
 import portal.repository.ZacmapRepository;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import portal.utility.ZacMap;
 
@@ -40,8 +39,6 @@ public class ZacMapDTO implements Callable<ZacMapDTO>{
 	private final ZaclistRepository zaclistRepository;
 
 
-	private final JdbcTemplate JdbcTemplate;
-
 	private final AppRepository appRepository;
 	
 	private final ZacfieldRepository zacfieldRepository;
@@ -54,8 +51,7 @@ public class ZacMapDTO implements Callable<ZacMapDTO>{
 							final ZaclistRepository _zaclistRepository,	
 							final AppRepository _appRepository,
 							final ZacfieldRepository _zacfieldRepository,
-							final ZacRepository _zacRepository,
-							final JdbcTemplate _JdbcTemplate
+							final ZacRepository _zacRepository
 							)
 	{
 		this.data=_data;
@@ -66,7 +62,7 @@ public class ZacMapDTO implements Callable<ZacMapDTO>{
 		this.appRepository=_appRepository;
 		this.zacfieldRepository=_zacfieldRepository;
 		this.zacRepository=_zacRepository;
-		this.JdbcTemplate=_JdbcTemplate;
+
 	}
 
 	
@@ -80,14 +76,17 @@ public class ZacMapDTO implements Callable<ZacMapDTO>{
 	@Transactional
 	public  ZacMapDTO call() throws Exception {
 
-		Application application=appRepository.findByName(data.getString(ZacMap.APPLICATION.name()));
-		Zacmap zacmap=zacmapRepository.findbyAppNameAndDepartment(department,application);
+		Application applicationEntity=appRepository.findByName(data.getString(ZacMap.APPLICATION.name()));
+		Zacmap zacmap=zacmapRepository.findbyAppNameAndDepartment(department,applicationEntity);
 		if(ObjectUtils.isEmpty(zacmap))
 		{
 			LOGGER.info("importing ZacMap");
 			Zacmap newZacMap= new Zacmap();
 			newZacMap.setDetail(data.getString(ZacMap.DETAIL.name()));
-			newZacMap.setApplication(application);
+			Application application=ObjectUtils.isEmpty(applicationEntity)?new Application(data.getString(ZacMap.APPLICATION.name())):applicationEntity;
+
+
+			newZacMap.setApplication(appRepository.saveAndFlush(application));
 			Zacmap newZapMapEntity=zacmapRepository.saveAndFlush(newZacMap);
 
 			List<Zacfield> zacFields=zacfieldRepository.findbyDepartment(department);

@@ -3,18 +3,14 @@ package portal.service.Impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
-
-import org.springframework.jdbc.core.JdbcTemplate;
-
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -38,7 +34,12 @@ import portal.ImportDTO.StakeholderextDTO;
 import portal.ImportDTO.ZacMapDTO;
 import portal.entity.Appdepartment;
 import portal.entity.Application;
+import portal.entity.Company;
 import portal.entity.Department;
+import portal.entity.SLARole;
+import portal.entity.Site;
+import portal.entity.Stakeholder;
+import portal.entity.Stakeholderext;
 import portal.entity.Zac;
 import portal.entity.Zacfield;
 import portal.entity.Zaclist;
@@ -61,6 +62,7 @@ import portal.utility.AppinventoryMap;
 
 import portal.utility.InvalidTemplateFormatException;
 import portal.utility.JSONObjectWithEmpty;
+import portal.utility.RACI;
 import portal.utility.StakeholderMap;
 import portal.utility.ZacMap;
 import portal.validator.AppInventoryImportValidator;
@@ -101,8 +103,7 @@ public class ImportServiceImp implements ImportService{
 	@Autowired
 	private ZacfieldService zacfieldService;
 	
-	@Autowired
-	private JdbcTemplate JdbcTemplate;
+
 	
 	private final int threadPoolNumber=3;
 
@@ -167,8 +168,6 @@ public class ImportServiceImp implements ImportService{
 						.AppinventoryDataValidate(AppinventoryMap.Goverinplace,row.getCell(AppinventoryMap.Goverinplace.getColumnIndex()))
 						);
 				obj.put(AppinventoryMap.Userbase.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Userbase.getColumnIndex())));
-				obj.put(AppinventoryMap.PowerUser.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.PowerUser.getColumnIndex())));
-				obj.put(AppinventoryMap.FrontlineUser.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.FrontlineUser.getColumnIndex())));
 				obj.put(AppinventoryMap.SubjectMatterExpert.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.SubjectMatterExpert.getColumnIndex())));
 				obj.put(AppinventoryMap.Trainer.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Trainer.getColumnIndex())));
 				obj.put(AppinventoryMap.UserAdmin.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.UserAdmin.getColumnIndex())));
@@ -235,8 +234,8 @@ public class ImportServiceImp implements ImportService{
 
 
 	@Override
-	public CompletableFuture<List<Appdepartment>> importAppdepartment(JSONArray importData,Department department) throws Exception {
-		List<Appdepartment> appDepartmentList=new ArrayList<Appdepartment>();
+	public void importAppdepartment(JSONArray importData,Department department) throws Exception {
+	
 		List<Callable<AppInventoryDTO>> appInventoryList = new ArrayList<Callable<AppInventoryDTO>>();
 		for(Object importObj:importData)
 		{
@@ -248,20 +247,15 @@ public class ImportServiceImp implements ImportService{
 									companyRepository));
 		}
 		
-		List<Future<AppInventoryDTO>> results=execSvc.invokeAll(appInventoryList);
+		execSvc.invokeAll(appInventoryList);
 	
-		for(Future<AppInventoryDTO> appInventoryFuture:results)
-		{
-			AppInventoryDTO appInventoryDTO=appInventoryFuture.get();
-			appDepartmentList.add(appInventoryDTO.getAppdepartment());
-			
-		}
+
 		Alert alert=new Alert();
 		alert.setTitle("Job Completion");
 		alert.setContent("Import have been done for client \""+department.getDepartmentName()+"\"!");
 
 		this.messagingTemplate.convertAndSend("/subject/alert", alert);
-		return CompletableFuture.completedFuture(appDepartmentList);
+
 	}
 
 
@@ -413,8 +407,7 @@ public class ImportServiceImp implements ImportService{
 									zaclistRepository,
 									appRepository,
 									zacfieldRepository,
-									zacRepository,
-									JdbcTemplate
+									zacRepository
 									));
 		
 		}
@@ -473,6 +466,178 @@ public class ImportServiceImp implements ImportService{
 		alert.setContent("Import have been done for client \""+department.getDepartmentName()+"\" Zacmap Import");
 		
 		this.messagingTemplate.convertAndSend("/subject/alert", alert);
+
+		
+	}
+
+
+
+	@Override
+	public void importAppdepartmentWithSingleThread(JSONArray importData, Department department) throws Exception {
+		for(Object obj:importData)
+		{
+			JSONObject data=(JSONObject)obj;
+			if(ObjectUtils.isEmpty(appdepartmentRepository.findbyAppNameAndDepartment(department,data.getString(AppinventoryMap.ApplicationName.name()))))
+			{
+				Appdepartment appdepartment= new Appdepartment();
+
+				//zone
+				appdepartment.setSouth(data.getString(AppinventoryMap.South.name()));
+				appdepartment.setNorth(data.getString(AppinventoryMap.North.name()));
+				appdepartment.setCentral(data.getString(AppinventoryMap.Central.name()));
+				appdepartment.setCalgary(data.getString(AppinventoryMap.Calgary.name()));
+				appdepartment.setEdmonton(data.getString(AppinventoryMap.Edmonton.name()));
+				
+
+
+				appdepartment.setBusinesslead(data.getString(AppinventoryMap.BusinessLead.name()));
+				
+				appdepartment.setAppowner(data.getString(AppinventoryMap.ApplicationOwner.name()));
+				
+				appdepartment.setGoverinplace(data.getString(AppinventoryMap.Goverinplace.name()));
+				
+				appdepartment.setUserbase(data.getString(AppinventoryMap.Userbase.name()));
+		
+
+				//support information
+				appdepartment.setSme(data.getString(AppinventoryMap.SubjectMatterExpert.name()));
+				appdepartment.setTrainer(data.getString(AppinventoryMap.Trainer.name()));
+				appdepartment.setUseradmin(data.getString(AppinventoryMap.UserAdmin.name()));
+				appdepartment.setSystemadmin(data.getString(AppinventoryMap.SystemAdmin.name()));
+				appdepartment.setServersupport(data.getString(AppinventoryMap.AppServerSupport.name()));
+				appdepartment.setDbsupport(data.getString(AppinventoryMap.DBServerSupport.name()));
+				appdepartment.setNetworksupport(data.getString(AppinventoryMap.NetworkSupport.name()));
+				
+				//Contract information
+				appdepartment.setContractinplace(data.getString(AppinventoryMap.Contractinplace.name()));
+				appdepartment.setContractdetail(data.getString(AppinventoryMap.Contractdetail.name()));
+				appdepartment.setExpireDate(data.getString(AppinventoryMap.ExpirationDate.name()));
+				appdepartment.setFrequency(data.getString(AppinventoryMap.Frequency.name()));
+				appdepartment.setVendorsla(data.getString(AppinventoryMap.VendorSla.name()));
+				appdepartment.setAhsitsla(data.getString(AppinventoryMap.AhsItSla.name()));
+				
+				appdepartment.setBroadmap(data.getString(AppinventoryMap.Broadmap.name()));
+				appdepartment.setImp(data.getString(AppinventoryMap.IMP.name()));
+				appdepartment.setCshrecimit(data.getString(AppinventoryMap.Cshrecimit.name()));
+				appdepartment.setNote(data.getString(AppinventoryMap.Note.name()));
+				Appdepartment newEntity=appdepartmentRepository.saveAndFlush(appdepartment);
+				
+				
+				newEntity.setDepartment(department);
+				
+				//Application
+				Application applicationEntity=appRepository.findByName(data.getString(AppinventoryMap.ApplicationName.name()));
+				Application application=ObjectUtils.isEmpty(applicationEntity)?new Application(data.getString(AppinventoryMap.ApplicationName.name())):applicationEntity;
+				application.setAppType(data.getString(AppinventoryMap.ApplicationType.name()));
+				application.setAppPurpose(data.getString(AppinventoryMap.ApplicationPurpose.name()));
+				application.setAppVersion(data.getString(AppinventoryMap.ApplicationVersion.name()));
+				newEntity.setApplication(appRepository.saveAndFlush(application));
+				LOGGER.info("Application is"+application.getAppName());	
+				
+				//site
+				JSONArray sites=data.getJSONArray(AppinventoryMap.Site.name());
+
+				for(Object siteName:sites)
+				{
+			
+					
+
+					Site siteEntity=siteRepository.findByName((String)siteName);
+					Site site=ObjectUtils.isEmpty(siteEntity)?siteRepository.saveAndFlush(new Site((String) siteName)):siteEntity;
+					appdepartmentRepository.saveSite(newEntity.getId(), site.getId());
+					
+					
+				}
+			
+				//vendor information
+				JSONArray vendors=data.getJSONArray(AppinventoryMap.Vendor.name());
+				for(Object vendorName:vendors)
+				{
+					Company companyEntity=companyRepository.findByName((String)vendorName);
+					Company company=ObjectUtils.isEmpty(companyEntity)?companyRepository.saveAndFlush(new Company((String)vendorName)):companyEntity;
+					appdepartmentRepository.saveVendor(newEntity.getId(), company.getId());
+				}			
+				
+				appdepartmentRepository.saveAndFlush(newEntity);
+			
+			}			
+			
+		}
+
+		
+	}
+
+
+
+	@Override
+	public void importStakeholderextWiteSingleThread(JSONArray importData, Department department) throws Exception {
+		for(Object obj:importData)
+		{
+			JSONObject data= (JSONObject)obj;
+			SLARole slaRoleEntity=slaRoleRepository.findByName(data.getString(StakeholderMap.Role.name()));
+			Stakeholder stakeholderEntity=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
+			if(ObjectUtils.isEmpty(stakeholderextRepository.findbyStakeholderNameAndDepartment(department,slaRoleEntity,stakeholderEntity)))
+			{
+					LOGGER.info("importting stakeholder "+data.getString(StakeholderMap.Name.name()));
+					Stakeholderext stakeholderext=new Stakeholderext();
+
+					stakeholderext.setInfluence(data.getString(StakeholderMap.Influence.name()));
+					stakeholderext.setInterest(data.getString(StakeholderMap.Interest.name()));
+					stakeholderext.setNote(data.getString(StakeholderMap.Notes.name()));	
+					
+
+					stakeholderext.setDepartment(department);
+
+
+				
+				
+				Stakeholder stakeholder=ObjectUtils.isEmpty(stakeholderEntity)?
+										new Stakeholder(data.getString(StakeholderMap.Name.name())):
+											stakeholderEntity;
+							
+				stakeholder.setPosition(data.getString(StakeholderMap.Position.name()));
+				stakeholder.setEmail(data.getString(StakeholderMap.Email.name()));
+				stakeholder.setPhone(ObjectUtils.isEmpty(data.getString(StakeholderMap.Phone.name()))?null:Long.parseLong(data.getString(StakeholderMap.Phone.name())));
+
+				stakeholderext.setStakeholder(stakeholderRepository.saveAndFlush(stakeholder));
+				
+				
+				SLARole slaRole=ObjectUtils.isEmpty(slaRoleEntity)?
+							new SLARole(data.getString(StakeholderMap.Role.name())):
+								slaRoleEntity;
+						
+				stakeholderext.setRole(slaRoleRepository.saveAndFlush(slaRole));
+				
+				if(!ObjectUtils.isEmpty(data.get(StakeholderMap.RACI.name())))
+				{
+					JSONArray array= data.getJSONArray(StakeholderMap.RACI.name());
+					Set<RACI> raci=new HashSet<RACI>();
+					for(Object e:array)
+					{
+						raci.add(RACI.valueOf((String)e));
+					}
+					stakeholderext.setRaciforsyschanges(raci);
+				}
+
+				
+				
+				
+				stakeholderextRepository.saveAndFlush(stakeholderext);
+				
+				//-get updated stakeholder
+				
+				Stakeholder updatedStakeholder=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
+				Site siteEntity=siteRepository.findByName(data.getString(StakeholderMap.Location.name()));
+				Site site=ObjectUtils.isEmpty(siteEntity)?
+										siteRepository.saveAndFlush(new Site(data.getString(StakeholderMap.Location.name()))):
+											siteEntity;
+										
+				updatedStakeholder.setSite(siteRepository.saveAndFlush(site));
+				stakeholderRepository.saveAndFlush(updatedStakeholder);
+			}
+		}
+		
+
 
 		
 	}

@@ -96,9 +96,9 @@ public class Department implements Comparable<Department>,Cloneable{
 
     @OneToMany(
             mappedBy = "department", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true,
-            fetch=FetchType.EAGER
+            cascade = CascadeType.PERSIST, 
+
+            fetch=FetchType.LAZY
         )
     private Set<Stakeholderext> stakeholderexts = new HashSet<>();
     
@@ -112,9 +112,9 @@ public class Department implements Comparable<Department>,Cloneable{
     
     @OneToMany(
             mappedBy = "department", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true,
-            fetch=FetchType.EAGER
+            cascade = CascadeType.PERSIST, 
+
+            fetch=FetchType.LAZY
         )
     private Set<Zacfield> zacfields = new HashSet<>();
     

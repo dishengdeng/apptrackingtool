@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
@@ -42,7 +41,7 @@ public class StakeholderImportValidator<T> {
 				throw new InvalidDataFormatException("Invalid Data Format at cell "+cell.getAddress()+". "+StakeholderMap.Name.getColumnName()+" cannot be empty.");
 			}
 		}
-		if(elment.equals(StakeholderMap.Email))
+		if(elment.equals(StakeholderMap.Email) && !isNull(cell))
 		{
 			if(!Pattern.compile(emailPattern, Pattern.CASE_INSENSITIVE).matcher(dataFormatter.formatCellValue(cell)).matches())
 			{
@@ -50,7 +49,7 @@ public class StakeholderImportValidator<T> {
 			}
 		}
 		
-		if(elment.equals(StakeholderMap.Phone))
+		if(elment.equals(StakeholderMap.Phone) && !isNull(cell))
 		{
 			if(!Pattern.compile(phonenumPattern, Pattern.CASE_INSENSITIVE).matcher(dataFormatter.formatCellValue(cell)).matches())
 			{
@@ -58,9 +57,9 @@ public class StakeholderImportValidator<T> {
 			}
 		}
 		
-		if(elment.equals(StakeholderMap.Influence) || elment.equals(StakeholderMap.Interest))
+		if((elment.equals(StakeholderMap.Influence) || elment.equals(StakeholderMap.Interest)) && !isNull(cell))
 		{
-			returnNull(cell);
+			
 			
 			try
 			{
@@ -81,9 +80,9 @@ public class StakeholderImportValidator<T> {
 			}
 		}
 		
-		if(elment.equals(StakeholderMap.RACI))
+		if(elment.equals(StakeholderMap.RACI) && !isNull(cell))
 		{
-			returnNull(cell);
+			
 			try
 			{
 				char[] arr=dataFormatter.formatCellValue(cell).toCharArray();
@@ -159,15 +158,15 @@ public class StakeholderImportValidator<T> {
 
 	}
 	
-	private Object returnNull(Cell cell)
+	private boolean isNull(Cell cell)
 	{
 		if(ObjectUtils.isEmpty(dataFormatter.formatCellValue(cell).trim()))
 		{
-			return null;
+			return true;
 		}
 		else
 		{
-			return StringUtils.EMPTY;
+			return false;
 		}
 	}
 }

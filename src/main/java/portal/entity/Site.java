@@ -53,9 +53,8 @@ public class Site implements Comparable<Site>{
 
     @OneToMany(
             mappedBy = "site", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true,
-            fetch=FetchType.EAGER
+            cascade = CascadeType.PERSIST,
+            fetch=FetchType.LAZY
         )
     private Set<Stakeholder> stakeholders = new HashSet<>();
     

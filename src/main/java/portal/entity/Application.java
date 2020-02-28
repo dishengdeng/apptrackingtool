@@ -58,7 +58,7 @@ public class Application implements Comparable<Application>{
     @JsonView(Views.Public.class)
 	private String AppVersion;
     
-    @Column(name = "AppType", columnDefinition="VARCHAR(3000)")
+    @Column(name = "AppType", columnDefinition="VARCHAR(4000)")
     @JsonView(Views.Public.class)
 	private String AppType;
     

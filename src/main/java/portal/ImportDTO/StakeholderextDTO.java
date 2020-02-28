@@ -84,61 +84,67 @@ public class StakeholderextDTO implements Callable<StakeholderextDTO>{
 	@Override
 	@Transactional
 	public  StakeholderextDTO call() throws Exception {
+		SLARole slaRoleEntity=slaRoleRepository.findByName(data.getString(StakeholderMap.Role.name()));
+		Stakeholder stakeholderEntity=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
+		if(ObjectUtils.isEmpty(stakeholderextRepository.findbyStakeholderNameAndDepartment(department,slaRoleEntity,stakeholderEntity)))
+		{
+				LOGGER.info("importting stakeholder "+data.getString(StakeholderMap.Name.name()));
+				Stakeholderext stakeholderext=new Stakeholderext();
 
-			if(ObjectUtils.isEmpty(stakeholderextRepository.findbyStakeholderNameAndDepartment(department,data.getString(StakeholderMap.Name.name()))))
-			{
-					LOGGER.info("importting stakeholder "+data.getString(StakeholderMap.Name.name()));
-					Stakeholderext stakeholderext=new Stakeholderext();
-
-					stakeholderext.setInfluence(data.getString(StakeholderMap.Influence.name()));
-					stakeholderext.setInterest(data.getString(StakeholderMap.Interest.name()));
-					stakeholderext.setNote(data.getString(StakeholderMap.Notes.name()));	
-					
-					Stakeholderext newEntity=stakeholderextRepository.saveAndFlush(stakeholderext);
-					newEntity.setDepartment(department);
-
-	
+				stakeholderext.setInfluence(data.getString(StakeholderMap.Influence.name()));
+				stakeholderext.setInterest(data.getString(StakeholderMap.Interest.name()));
+				stakeholderext.setNote(data.getString(StakeholderMap.Notes.name()));	
 				
-				Stakeholder stakeholderEntity=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
-				Stakeholder stakeholder=ObjectUtils.isEmpty(stakeholderEntity)?
-										new Stakeholder(data.getString(StakeholderMap.Name.name())):
-											stakeholderEntity;
-							
-				stakeholder.setPosition(data.getString(StakeholderMap.Position.name()));
-				stakeholder.setEmail(data.getString(StakeholderMap.Email.name()));
-				stakeholder.setPhone(data.getLong(StakeholderMap.Phone.name()));
 
-				newEntity.setStakeholder(stakeholder);
-				
-				SLARole slaRoleEntity=slaRoleRepository.findByName(data.getString(StakeholderMap.Role.name()));
-				SLARole slaRole=ObjectUtils.isEmpty(slaRoleEntity)?
-							new SLARole(data.getString(StakeholderMap.Role.name())):
-								slaRoleEntity;
+				stakeholderext.setDepartment(department);
+
+
+			
+			
+			Stakeholder stakeholder=ObjectUtils.isEmpty(stakeholderEntity)?
+									new Stakeholder(data.getString(StakeholderMap.Name.name())):
+										stakeholderEntity;
 						
-							newEntity.setRole(slaRole);
-				
+			stakeholder.setPosition(data.getString(StakeholderMap.Position.name()));
+			stakeholder.setEmail(data.getString(StakeholderMap.Email.name()));
+			stakeholder.setPhone(ObjectUtils.isEmpty(data.getString(StakeholderMap.Phone.name()))?null:Long.parseLong(data.getString(StakeholderMap.Phone.name())));
+
+			stakeholderext.setStakeholder(stakeholderRepository.saveAndFlush(stakeholder));
+			
+			
+			SLARole slaRole=ObjectUtils.isEmpty(slaRoleEntity)?
+						new SLARole(data.getString(StakeholderMap.Role.name())):
+							slaRoleEntity;
+					
+			stakeholderext.setRole(slaRoleRepository.saveAndFlush(slaRole));
+			
+			if(!ObjectUtils.isEmpty(data.get(StakeholderMap.RACI.name())))
+			{
 				JSONArray array= data.getJSONArray(StakeholderMap.RACI.name());
 				Set<RACI> raci=new HashSet<RACI>();
 				for(Object e:array)
 				{
 					raci.add(RACI.valueOf((String)e));
 				}
-				
-				newEntity.setRaciforsyschanges(raci);
-				
-				stakeholderextRepository.saveAndFlush(newEntity);
-				
-				//-get updated stakeholder
-				
-				Stakeholder updatedStakeholder=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
-				Site siteEntity=siteRepository.findByName(data.getString(StakeholderMap.Location.name()));
-				Site site=ObjectUtils.isEmpty(siteEntity)?
-										siteRepository.saveAndFlush(new Site(data.getString(StakeholderMap.Location.name()))):
-											siteEntity;
-				
-				updatedStakeholder.setSite(site);
-				stakeholderRepository.saveAndFlush(updatedStakeholder);
+				stakeholderext.setRaciforsyschanges(raci);
 			}
+
+			
+			
+			
+			stakeholderextRepository.saveAndFlush(stakeholderext);
+			
+			//-get updated stakeholder
+			
+			Stakeholder updatedStakeholder=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
+			Site siteEntity=siteRepository.findByName(data.getString(StakeholderMap.Location.name()));
+			Site site=ObjectUtils.isEmpty(siteEntity)?
+									siteRepository.saveAndFlush(new Site(data.getString(StakeholderMap.Location.name()))):
+										siteEntity;
+									
+			updatedStakeholder.setSite(siteRepository.saveAndFlush(site));
+			stakeholderRepository.saveAndFlush(updatedStakeholder);
+		}
 
 
 			return this;			

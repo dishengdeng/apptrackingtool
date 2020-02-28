@@ -6,9 +6,11 @@ import org.springframework.data.repository.query.Param;
 
 
 import portal.entity.Department;
+import portal.entity.SLARole;
+import portal.entity.Stakeholder;
 import portal.entity.Stakeholderext;
 
 public interface StakeholderextRepository extends JpaRepository<Stakeholderext, Long>{
-	@Query("select t from Stakeholderext t inner join t.stakeholder k where t.department=:department and k.stakeholderName = :stakeholderName")
-	Stakeholderext findbyStakeholderNameAndDepartment(@Param("department") Department department,@Param("stakeholderName") String appName);
+	@Query("select t from Stakeholderext t where t.department=:department and t.role=:role and t.stakeholder = :stakeholder")
+	Stakeholderext findbyStakeholderNameAndDepartment(@Param("department") Department department,@Param("role") SLARole role,@Param("stakeholder") Stakeholder stakeholder);
 }

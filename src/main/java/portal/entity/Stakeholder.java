@@ -79,15 +79,14 @@ public class Stakeholder {
  
 
     
-    @ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "site_id",referencedColumnName="id")
     private Site site;
     
     @OneToMany(
             mappedBy = "stakeholder", 
-            cascade = CascadeType.ALL, 
-            orphanRemoval = true,
-            fetch=FetchType.EAGER
+            cascade = CascadeType.PERSIST,
+            fetch=FetchType.LAZY
         )
     private Set<Stakeholderext> stakeholderexts = new HashSet<>();
     

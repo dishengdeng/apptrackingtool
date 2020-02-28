@@ -94,9 +94,7 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 			
 			appdepartment.setUserbase(data.getString(AppinventoryMap.Userbase.name()));
 	
-			appdepartment.setPoweruser(data.getString(AppinventoryMap.PowerUser.name()));
-			
-			appdepartment.setFluser(data.getString(AppinventoryMap.FrontlineUser.name()));
+
 			//support information
 			appdepartment.setSme(data.getString(AppinventoryMap.SubjectMatterExpert.name()));
 			appdepartment.setTrainer(data.getString(AppinventoryMap.Trainer.name()));
@@ -129,8 +127,7 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 			application.setAppType(data.getString(AppinventoryMap.ApplicationType.name()));
 			application.setAppPurpose(data.getString(AppinventoryMap.ApplicationPurpose.name()));
 			application.setAppVersion(data.getString(AppinventoryMap.ApplicationVersion.name()));
-			newEntity.setApplication(application);
-			appdepartment.setApplication(appRepository.saveAndFlush(application));
+			newEntity.setApplication(appRepository.saveAndFlush(application));
 			LOGGER.info("Application is"+application.getAppName());	
 			
 			//site
@@ -157,7 +154,7 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 				appdepartmentRepository.saveVendor(newEntity.getId(), company.getId());
 			}			
 			
-			this.setAppdepartment((Appdepartment) appdepartmentRepository.saveAndFlush(newEntity).clone());
+			appdepartmentRepository.saveAndFlush(newEntity);
 		
 		}
 		return this;
