@@ -60,9 +60,9 @@ public class ZacImportValidator<T> {
 			}
 		}
 		
-		if(elements.equals(ZacMap.ZACFIELDS))
+		if(elements.equals(ZacMap.ZACFIELDS) && !isNull(cell))
 		{
-			returnNull(cell);
+
 			if(!Pattern.compile(zacPattern, Pattern.CASE_INSENSITIVE).matcher(dataFormatter.formatCellValue(cell)).matches())
 			{
 				throw new InvalidDataFormatException("Invalid Phone Format at cell "+cell.getAddress()+". Phone number should be 0 to 5, N/A or empty.");
@@ -115,15 +115,15 @@ public class ZacImportValidator<T> {
 
 	}
 	
-	private Object returnNull(Cell cell)
+	private boolean isNull(Cell cell)
 	{
 		if(ObjectUtils.isEmpty(dataFormatter.formatCellValue(cell).trim()))
 		{
-			return null;
+			return true;
 		}
 		else
 		{
-			return StringUtils.EMPTY;
+			return false;
 		}
 	}
 }
