@@ -4,6 +4,7 @@ public enum AppInventoryDataMap {
 	
 	YES("Yes"),
 	NO("No"),
+	PARTIAL("Partial"),
 	NA("N/A");
 	
 	private final String value;

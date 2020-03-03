@@ -135,15 +135,18 @@ public class StakeholderextDTO implements Callable<StakeholderextDTO>{
 			stakeholderextRepository.saveAndFlush(stakeholderext);
 			
 			//-get updated stakeholder
-			
-			Stakeholder updatedStakeholder=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
-			Site siteEntity=siteRepository.findByName(data.getString(StakeholderMap.Location.name()));
-			Site site=ObjectUtils.isEmpty(siteEntity)?
-									siteRepository.saveAndFlush(new Site(data.getString(StakeholderMap.Location.name()))):
-										siteEntity;
-									
-			updatedStakeholder.setSite(siteRepository.saveAndFlush(site));
-			stakeholderRepository.saveAndFlush(updatedStakeholder);
+			if(!ObjectUtils.isEmpty(data.getString(StakeholderMap.Location.name())))
+			{
+				Stakeholder updatedStakeholder=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
+				Site siteEntity=siteRepository.findByName(data.getString(StakeholderMap.Location.name()));
+				Site site=ObjectUtils.isEmpty(siteEntity)?
+										siteRepository.saveAndFlush(new Site(data.getString(StakeholderMap.Location.name()))):
+											siteEntity;
+										
+				updatedStakeholder.setSite(siteRepository.saveAndFlush(site));
+				stakeholderRepository.saveAndFlush(updatedStakeholder);				
+			}
+
 		}
 
 

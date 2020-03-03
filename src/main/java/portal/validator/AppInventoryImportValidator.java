@@ -64,7 +64,7 @@ public class AppInventoryImportValidator<T> {
 			}
 			catch(Exception ex)
 			{
-				throw new InvalidDataFormatException("Invalid Data Format at cell "+cell.getAddress()+". Should be Yes, No, N/A, or Empty");
+				throw new InvalidDataFormatException("Invalid Data Format at cell "+cell.getAddress()+". Should be Yes, No, N/A, Partial or Empty");
 			}
 			
 		}

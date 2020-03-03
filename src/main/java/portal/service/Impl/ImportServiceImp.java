@@ -4,9 +4,12 @@ package portal.service.Impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -108,6 +111,7 @@ public class ImportServiceImp implements ImportService{
 	private final int threadPoolNumber=3;
 
 	private ExecutorService execSvc = Executors.newFixedThreadPool(threadPoolNumber);
+
 	
 	@Override
 	public CompletableFuture<JSONArray> getAppInventory(MultipartFile file) throws InvalidTemplateFormatException, Exception {
@@ -237,6 +241,9 @@ public class ImportServiceImp implements ImportService{
 	public void importAppdepartment(JSONArray importData,Department department) throws Exception {
 	
 		List<Callable<AppInventoryDTO>> appInventoryList = new ArrayList<Callable<AppInventoryDTO>>();
+		
+		Queue<String> queue = new LinkedList<>();
+		final Object obj=new Object();
 		for(Object importObj:importData)
 		{
 			appInventoryList.add(	new AppInventoryDTO((JSONObject)importObj,
@@ -244,11 +251,13 @@ public class ImportServiceImp implements ImportService{
 									appdepartmentRepository,
 									appRepository,
 									siteRepository,
-									companyRepository));
+									companyRepository,
+									queue,
+									obj));
 		}
 		
 		execSvc.invokeAll(appInventoryList);
-	
+
 
 		Alert alert=new Alert();
 		alert.setTitle("Job Completion");
@@ -536,27 +545,34 @@ public class ImportServiceImp implements ImportService{
 				
 				//site
 				JSONArray sites=data.getJSONArray(AppinventoryMap.Site.name());
-
-				for(Object siteName:sites)
+				
+				if(!ObjectUtils.isEmpty(sites) && sites.length()>0)
 				{
-			
-					
+					for(Object siteName:sites)
+					{
+				
+						
 
-					Site siteEntity=siteRepository.findByName((String)siteName);
-					Site site=ObjectUtils.isEmpty(siteEntity)?siteRepository.saveAndFlush(new Site((String) siteName)):siteEntity;
-					appdepartmentRepository.saveSite(newEntity.getId(), site.getId());
-					
-					
+						Site siteEntity=siteRepository.findByName((String)siteName);
+						Site site=ObjectUtils.isEmpty(siteEntity)?siteRepository.saveAndFlush(new Site((String) siteName)):siteEntity;
+						appdepartmentRepository.saveSite(newEntity.getId(), site.getId());
+						
+						
+					}				
 				}
+
 			
 				//vendor information
 				JSONArray vendors=data.getJSONArray(AppinventoryMap.Vendor.name());
-				for(Object vendorName:vendors)
+				if(!ObjectUtils.isEmpty(vendors) && vendors.length()>0)
 				{
-					Company companyEntity=companyRepository.findByName((String)vendorName);
-					Company company=ObjectUtils.isEmpty(companyEntity)?companyRepository.saveAndFlush(new Company((String)vendorName)):companyEntity;
-					appdepartmentRepository.saveVendor(newEntity.getId(), company.getId());
-				}			
+					for(Object vendorName:vendors)
+					{
+						Company companyEntity=companyRepository.findByName((String)vendorName);
+						Company company=ObjectUtils.isEmpty(companyEntity)?companyRepository.saveAndFlush(new Company((String)vendorName)):companyEntity;
+						appdepartmentRepository.saveVendor(newEntity.getId(), company.getId());
+					}	
+				}
 				
 				appdepartmentRepository.saveAndFlush(newEntity);
 			

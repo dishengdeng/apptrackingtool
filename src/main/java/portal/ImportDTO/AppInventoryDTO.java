@@ -1,6 +1,8 @@
 package portal.ImportDTO;
 
 
+import java.util.Queue;
+
 import java.util.concurrent.Callable;
 
 import org.json.JSONArray;
@@ -41,12 +43,18 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 	
 	private Appdepartment appdepartment;
 	
+	private Queue<String> queue;
+	
+	private final Object obj;
+	
 	public AppInventoryDTO(final JSONObject _data,
 							final Department _department,
 							final AppdepartmentRepository _appdepartmentRepository,
 							final AppRepository _appRepository,
 							final SiteRepository _siteRepository,
-							final CompanyRepository _companyRepository
+							final CompanyRepository _companyRepository,
+							final Queue<String> _queue,
+							final Object _obj
 							)
 	{
 		this.data=_data;
@@ -55,7 +63,8 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 		this.appRepository=_appRepository;
 		this.siteRepository=_siteRepository;
 		this.companyRepository=_companyRepository;
-
+		this.queue=_queue;
+		this.obj=_obj;
 	}
 	
 	
@@ -72,94 +81,124 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 	@Override
 	@Transactional
 	public AppInventoryDTO call() throws Exception {
-
-		if(ObjectUtils.isEmpty(appdepartmentRepository.findbyAppNameAndDepartment(department,data.getString(AppinventoryMap.ApplicationName.name()))))
+		synchronized(obj)
 		{
-			Appdepartment appdepartment= new Appdepartment();
-
-			//zone
-			appdepartment.setSouth(data.getString(AppinventoryMap.South.name()));
-			appdepartment.setNorth(data.getString(AppinventoryMap.North.name()));
-			appdepartment.setCentral(data.getString(AppinventoryMap.Central.name()));
-			appdepartment.setCalgary(data.getString(AppinventoryMap.Calgary.name()));
-			appdepartment.setEdmonton(data.getString(AppinventoryMap.Edmonton.name()));
-			
-
-
-			appdepartment.setBusinesslead(data.getString(AppinventoryMap.BusinessLead.name()));
-			
-			appdepartment.setAppowner(data.getString(AppinventoryMap.ApplicationOwner.name()));
-			
-			appdepartment.setGoverinplace(data.getString(AppinventoryMap.Goverinplace.name()));
-			
-			appdepartment.setUserbase(data.getString(AppinventoryMap.Userbase.name()));
-	
-
-			//support information
-			appdepartment.setSme(data.getString(AppinventoryMap.SubjectMatterExpert.name()));
-			appdepartment.setTrainer(data.getString(AppinventoryMap.Trainer.name()));
-			appdepartment.setUseradmin(data.getString(AppinventoryMap.UserAdmin.name()));
-			appdepartment.setSystemadmin(data.getString(AppinventoryMap.SystemAdmin.name()));
-			appdepartment.setServersupport(data.getString(AppinventoryMap.AppServerSupport.name()));
-			appdepartment.setDbsupport(data.getString(AppinventoryMap.DBServerSupport.name()));
-			appdepartment.setNetworksupport(data.getString(AppinventoryMap.NetworkSupport.name()));
-			
-			//Contract information
-			appdepartment.setContractinplace(data.getString(AppinventoryMap.Contractinplace.name()));
-			appdepartment.setContractdetail(data.getString(AppinventoryMap.Contractdetail.name()));
-			appdepartment.setExpireDate(data.getString(AppinventoryMap.ExpirationDate.name()));
-			appdepartment.setFrequency(data.getString(AppinventoryMap.Frequency.name()));
-			appdepartment.setVendorsla(data.getString(AppinventoryMap.VendorSla.name()));
-			appdepartment.setAhsitsla(data.getString(AppinventoryMap.AhsItSla.name()));
-			
-			appdepartment.setBroadmap(data.getString(AppinventoryMap.Broadmap.name()));
-			appdepartment.setImp(data.getString(AppinventoryMap.IMP.name()));
-			appdepartment.setCshrecimit(data.getString(AppinventoryMap.Cshrecimit.name()));
-			appdepartment.setNote(data.getString(AppinventoryMap.Note.name()));
-			Appdepartment newEntity=appdepartmentRepository.saveAndFlush(appdepartment);
-			
-			
-			newEntity.setDepartment(department);
-			
-			//Application
-			Application applicationEntity=appRepository.findByName(data.getString(AppinventoryMap.ApplicationName.name()));
-			Application application=ObjectUtils.isEmpty(applicationEntity)?new Application(data.getString(AppinventoryMap.ApplicationName.name())):applicationEntity;
-			application.setAppType(data.getString(AppinventoryMap.ApplicationType.name()));
-			application.setAppPurpose(data.getString(AppinventoryMap.ApplicationPurpose.name()));
-			application.setAppVersion(data.getString(AppinventoryMap.ApplicationVersion.name()));
-			newEntity.setApplication(appRepository.saveAndFlush(application));
-			LOGGER.info("Application is"+application.getAppName());	
-			
-			//site
-			JSONArray sites=data.getJSONArray(AppinventoryMap.Site.name());
-
-			for(Object siteName:sites)
+			if(ObjectUtils.isEmpty(appdepartmentRepository.findbyAppNameAndDepartment(department,data.getString(AppinventoryMap.ApplicationName.name()))))
 			{
-		
+				Appdepartment appdepartment= new Appdepartment();
+
+				//zone
+				appdepartment.setSouth(data.getString(AppinventoryMap.South.name()));
+				appdepartment.setNorth(data.getString(AppinventoryMap.North.name()));
+				appdepartment.setCentral(data.getString(AppinventoryMap.Central.name()));
+				appdepartment.setCalgary(data.getString(AppinventoryMap.Calgary.name()));
+				appdepartment.setEdmonton(data.getString(AppinventoryMap.Edmonton.name()));
 				
 
-				Site siteEntity=siteRepository.findByName((String)siteName);
-				Site site=ObjectUtils.isEmpty(siteEntity)?siteRepository.saveAndFlush(new Site((String) siteName)):siteEntity;
-				appdepartmentRepository.saveSite(newEntity.getId(), site.getId());
+
+				appdepartment.setBusinesslead(data.getString(AppinventoryMap.BusinessLead.name()));
+				
+				appdepartment.setAppowner(data.getString(AppinventoryMap.ApplicationOwner.name()));
+				
+				appdepartment.setGoverinplace(data.getString(AppinventoryMap.Goverinplace.name()));
+				
+				appdepartment.setUserbase(data.getString(AppinventoryMap.Userbase.name()));
+		
+
+				//support information
+				appdepartment.setSme(data.getString(AppinventoryMap.SubjectMatterExpert.name()));
+				appdepartment.setTrainer(data.getString(AppinventoryMap.Trainer.name()));
+				appdepartment.setUseradmin(data.getString(AppinventoryMap.UserAdmin.name()));
+				appdepartment.setSystemadmin(data.getString(AppinventoryMap.SystemAdmin.name()));
+				appdepartment.setServersupport(data.getString(AppinventoryMap.AppServerSupport.name()));
+				appdepartment.setDbsupport(data.getString(AppinventoryMap.DBServerSupport.name()));
+				appdepartment.setNetworksupport(data.getString(AppinventoryMap.NetworkSupport.name()));
+				
+				//Contract information
+				appdepartment.setContractinplace(data.getString(AppinventoryMap.Contractinplace.name()));
+				appdepartment.setContractdetail(data.getString(AppinventoryMap.Contractdetail.name()));
+				appdepartment.setExpireDate(data.getString(AppinventoryMap.ExpirationDate.name()));
+				appdepartment.setFrequency(data.getString(AppinventoryMap.Frequency.name()));
+				appdepartment.setVendorsla(data.getString(AppinventoryMap.VendorSla.name()));
+				appdepartment.setAhsitsla(data.getString(AppinventoryMap.AhsItSla.name()));
+				
+				appdepartment.setBroadmap(data.getString(AppinventoryMap.Broadmap.name()));
+				appdepartment.setImp(data.getString(AppinventoryMap.IMP.name()));
+				appdepartment.setCshrecimit(data.getString(AppinventoryMap.Cshrecimit.name()));
+				appdepartment.setNote(data.getString(AppinventoryMap.Note.name()));
+				Appdepartment newEntity=appdepartmentRepository.saveAndFlush(appdepartment);
 				
 				
+				newEntity.setDepartment(department);
+				
+				//Application
+				Application applicationEntity=appRepository.findByName(data.getString(AppinventoryMap.ApplicationName.name()));
+				Application application=ObjectUtils.isEmpty(applicationEntity)?new Application(data.getString(AppinventoryMap.ApplicationName.name())):applicationEntity;
+				application.setAppType(data.getString(AppinventoryMap.ApplicationType.name()));
+				application.setAppPurpose(data.getString(AppinventoryMap.ApplicationPurpose.name()));
+				application.setAppVersion(data.getString(AppinventoryMap.ApplicationVersion.name()));
+				newEntity.setApplication(appRepository.saveAndFlush(application));
+				LOGGER.info("Application is"+application.getAppName());	
+
+					//site
+
+
+					queue.offer(Thread.currentThread().getName());
+					LOGGER.info("current queue is "+queue.toString());
+			
+					while(!queue.peek().equalsIgnoreCase(Thread.currentThread().getName()))
+					{
+						wait();
+						
+					}
+					JSONArray sites=data.getJSONArray(AppinventoryMap.Site.name());
+					
+					if(!ObjectUtils.isEmpty(sites) && sites.length()>0)
+					{
+						for(Object siteName:sites)
+						{
+					
+							
+
+							Site siteEntity=siteRepository.findByName((String)siteName);
+							Site site=ObjectUtils.isEmpty(siteEntity)?siteRepository.saveAndFlush(new Site((String) siteName)):siteEntity;
+							appdepartmentRepository.saveSite(newEntity.getId(), site.getId());
+							
+							
+						}				
+					}
+
+				
+					//vendor information
+					JSONArray vendors=data.getJSONArray(AppinventoryMap.Vendor.name());
+					if(!ObjectUtils.isEmpty(vendors) && vendors.length()>0)
+					{
+						for(Object vendorName:vendors)
+						{
+							Company companyEntity=companyRepository.findByName((String)vendorName);
+							Company company=ObjectUtils.isEmpty(companyEntity)?companyRepository.saveAndFlush(new Company((String)vendorName)):companyEntity;
+							appdepartmentRepository.saveVendor(newEntity.getId(), company.getId());
+						}	
+					}
+
+	
+			
+				
+				appdepartmentRepository.saveAndFlush(newEntity);
+				queue.poll();
+				notify();
+
+
 			}
 		
-			//vendor information
-			JSONArray vendors=data.getJSONArray(AppinventoryMap.Vendor.name());
-			for(Object vendorName:vendors)
-			{
-				Company companyEntity=companyRepository.findByName((String)vendorName);
-				Company company=ObjectUtils.isEmpty(companyEntity)?companyRepository.saveAndFlush(new Company((String)vendorName)):companyEntity;
-				appdepartmentRepository.saveVendor(newEntity.getId(), company.getId());
-			}			
-			
-			appdepartmentRepository.saveAndFlush(newEntity);
-		
-		}
+
+			}	
 		return this;
+	
+
+	
+
 	}
-
-
+	
 
 }
