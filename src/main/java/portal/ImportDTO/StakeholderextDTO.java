@@ -42,7 +42,7 @@ public class StakeholderextDTO implements Callable<StakeholderextDTO>{
 	
 	private final SiteRepository siteRepository;
 	
-
+	private final Object synObj;
 
 	
 	private Stakeholderext stakeholderext;
@@ -52,7 +52,8 @@ public class StakeholderextDTO implements Callable<StakeholderextDTO>{
 							final StakeholderextRepository _stakeholderextRepository,
 							final StakeholderRepository _stakeholderRepository,
 							final SLARoleRepository _slaRoleRepository,
-							final SiteRepository _siteRepository
+							final SiteRepository _siteRepository,
+							final Object _synObj
 							)
 	{
 		this.data=_data;
@@ -61,6 +62,7 @@ public class StakeholderextDTO implements Callable<StakeholderextDTO>{
 		this.stakeholderRepository=_stakeholderRepository;
 		this.slaRoleRepository=_slaRoleRepository;
 		this.siteRepository=_siteRepository;
+		this.synObj=_synObj;
 
 	}
 
@@ -110,13 +112,15 @@ public class StakeholderextDTO implements Callable<StakeholderextDTO>{
 			stakeholder.setPhone(ObjectUtils.isEmpty(data.getString(StakeholderMap.Phone.name()))?null:Long.parseLong(data.getString(StakeholderMap.Phone.name())));
 
 			stakeholderext.setStakeholder(stakeholderRepository.saveAndFlush(stakeholder));
-			
-			
-			SLARole slaRole=ObjectUtils.isEmpty(slaRoleEntity)?
-						new SLARole(data.getString(StakeholderMap.Role.name())):
-							slaRoleEntity;
-					
-			stakeholderext.setRole(slaRoleRepository.saveAndFlush(slaRole));
+			//put thread into queue,otherwise it will create multiple role
+			synchronized(synObj)
+			{
+				SLARole slaRole=ObjectUtils.isEmpty(slaRoleEntity)?
+							new SLARole(data.getString(StakeholderMap.Role.name())):
+								slaRoleEntity;
+		
+				stakeholderext.setRole(slaRoleRepository.saveAndFlush(slaRole));
+			}
 			
 			if(!ObjectUtils.isEmpty(data.get(StakeholderMap.RACI.name())))
 			{
@@ -135,16 +139,19 @@ public class StakeholderextDTO implements Callable<StakeholderextDTO>{
 			stakeholderextRepository.saveAndFlush(stakeholderext);
 			
 			//-get updated stakeholder
-			if(!ObjectUtils.isEmpty(data.getString(StakeholderMap.Location.name())))
+			synchronized(synObj)
 			{
-				Stakeholder updatedStakeholder=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
-				Site siteEntity=siteRepository.findByName(data.getString(StakeholderMap.Location.name()));
-				Site site=ObjectUtils.isEmpty(siteEntity)?
-										siteRepository.saveAndFlush(new Site(data.getString(StakeholderMap.Location.name()))):
-											siteEntity;
-										
-				updatedStakeholder.setSite(siteRepository.saveAndFlush(site));
-				stakeholderRepository.saveAndFlush(updatedStakeholder);				
+				if(!ObjectUtils.isEmpty(data.getString(StakeholderMap.Location.name())))
+				{
+					Stakeholder updatedStakeholder=stakeholderRepository.findByName(data.getString(StakeholderMap.Name.name()));
+					Site siteEntity=siteRepository.findByName(data.getString(StakeholderMap.Location.name()));
+					Site site=ObjectUtils.isEmpty(siteEntity)?
+											siteRepository.saveAndFlush(new Site(data.getString(StakeholderMap.Location.name()))):
+												siteEntity;
+											
+					updatedStakeholder.setSite(siteRepository.saveAndFlush(site));
+					stakeholderRepository.saveAndFlush(updatedStakeholder);				
+				}
 			}
 
 		}

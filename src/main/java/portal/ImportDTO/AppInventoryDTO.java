@@ -1,7 +1,7 @@
 package portal.ImportDTO;
 
 
-import java.util.Queue;
+
 
 import java.util.concurrent.Callable;
 
@@ -43,7 +43,7 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 	
 	private Appdepartment appdepartment;
 	
-	private Queue<String> queue;
+
 	
 	private final Object obj;
 	
@@ -53,7 +53,6 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 							final AppRepository _appRepository,
 							final SiteRepository _siteRepository,
 							final CompanyRepository _companyRepository,
-							final Queue<String> _queue,
 							final Object _obj
 							)
 	{
@@ -63,7 +62,6 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 		this.appRepository=_appRepository;
 		this.siteRepository=_siteRepository;
 		this.companyRepository=_companyRepository;
-		this.queue=_queue;
 		this.obj=_obj;
 	}
 	
@@ -81,8 +79,7 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 	@Override
 	@Transactional
 	public AppInventoryDTO call() throws Exception {
-		synchronized(obj)
-		{
+
 			if(ObjectUtils.isEmpty(appdepartmentRepository.findbyAppNameAndDepartment(department,data.getString(AppinventoryMap.ApplicationName.name()))))
 			{
 				Appdepartment appdepartment= new Appdepartment();
@@ -141,16 +138,11 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 				LOGGER.info("Application is"+application.getAppName());	
 
 					//site
+				//put thread into queue, otherwise it will create multiple objects
+				synchronized(obj)
+				{
 
 
-					queue.offer(Thread.currentThread().getName());
-					LOGGER.info("current queue is "+queue.toString());
-			
-					while(!queue.peek().equalsIgnoreCase(Thread.currentThread().getName()))
-					{
-						wait();
-						
-					}
 					JSONArray sites=data.getJSONArray(AppinventoryMap.Site.name());
 					
 					if(!ObjectUtils.isEmpty(sites) && sites.length()>0)
@@ -181,18 +173,17 @@ public class AppInventoryDTO implements Callable<AppInventoryDTO>{
 						}	
 					}
 
-	
+					}		
 			
 				
 				appdepartmentRepository.saveAndFlush(newEntity);
-				queue.poll();
-				notify();
+
 
 
 			}
 		
 
-			}	
+
 		return this;
 	
 

@@ -4,10 +4,10 @@ package portal.service.Impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedList;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
+
 import java.util.Set;
 
 import java.util.concurrent.Callable;
@@ -242,7 +242,7 @@ public class ImportServiceImp implements ImportService{
 	
 		List<Callable<AppInventoryDTO>> appInventoryList = new ArrayList<Callable<AppInventoryDTO>>();
 		
-		Queue<String> queue = new LinkedList<>();
+
 		final Object obj=new Object();
 		for(Object importObj:importData)
 		{
@@ -252,7 +252,6 @@ public class ImportServiceImp implements ImportService{
 									appRepository,
 									siteRepository,
 									companyRepository,
-									queue,
 									obj));
 		}
 		
@@ -330,6 +329,7 @@ public class ImportServiceImp implements ImportService{
 			throws Exception {
 
 		List<Callable<StakeholderextDTO>> StakeholderextDTOList = new ArrayList<Callable<StakeholderextDTO>>();
+		final Object synObj= new Object();
 		for(Object importObj:importData)
 		{
 
@@ -338,7 +338,9 @@ public class ImportServiceImp implements ImportService{
 									stakeholderextRepository,
 									stakeholderRepository,
 									slaRoleRepository,
-									siteRepository));
+									siteRepository,
+									synObj
+									));
 		
 		}
 
