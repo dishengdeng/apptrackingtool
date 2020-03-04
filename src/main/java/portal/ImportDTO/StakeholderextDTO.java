@@ -101,25 +101,25 @@ public class StakeholderextDTO implements Callable<StakeholderextDTO>{
 				stakeholderext.setDepartment(department);
 
 
-			
-			
-			Stakeholder stakeholder=ObjectUtils.isEmpty(stakeholderEntity)?
-									new Stakeholder(data.getString(StakeholderMap.Name.name())):
-										stakeholderEntity;
-						
-			stakeholder.setPosition(data.getString(StakeholderMap.Position.name()));
-			stakeholder.setEmail(data.getString(StakeholderMap.Email.name()));
-			stakeholder.setPhone(ObjectUtils.isEmpty(data.getString(StakeholderMap.Phone.name()))?null:Long.parseLong(data.getString(StakeholderMap.Phone.name())));
-
-			stakeholderext.setStakeholder(stakeholderRepository.saveAndFlush(stakeholder));
 			//put thread into queue,otherwise it will create multiple role
 			synchronized(synObj)
-			{
-				SLARole slaRole=ObjectUtils.isEmpty(slaRoleEntity)?
-							new SLARole(data.getString(StakeholderMap.Role.name())):
-								slaRoleEntity;
-		
-				stakeholderext.setRole(slaRoleRepository.saveAndFlush(slaRole));
+			{			
+			
+				Stakeholder stakeholder=ObjectUtils.isEmpty(stakeholderEntity)?
+										new Stakeholder(data.getString(StakeholderMap.Name.name())):
+											stakeholderEntity;
+							
+				stakeholder.setPosition(data.getString(StakeholderMap.Position.name()));
+				stakeholder.setEmail(data.getString(StakeholderMap.Email.name()));
+				stakeholder.setPhone(ObjectUtils.isEmpty(data.getString(StakeholderMap.Phone.name()))?null:Long.parseLong(data.getString(StakeholderMap.Phone.name())));
+	
+				stakeholderext.setStakeholder(stakeholderRepository.saveAndFlush(stakeholder));
+	
+					SLARole slaRole=ObjectUtils.isEmpty(slaRoleEntity)?
+								new SLARole(data.getString(StakeholderMap.Role.name())):
+									slaRoleEntity;
+			
+					stakeholderext.setRole(slaRoleRepository.saveAndFlush(slaRole));
 			}
 			
 			if(!ObjectUtils.isEmpty(data.get(StakeholderMap.RACI.name())))
