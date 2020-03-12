@@ -224,12 +224,13 @@ public class DepartmentServiceImpl implements DepartmentService{
 	@Override
 	public boolean saveZacfield(JSONObject zacfieldObj) {
 		Department department=departmentRepository.findOne(zacfieldObj.getLong("department"));
-		int zacfieldsize_old=department.getZacfields().size();
+
 
 		Zacfield zacfield=new Zacfield();
 		zacfield.setDepartment(department);
 		zacfield.setFieldName(zacfieldObj.getString("fieldname"));
-		department.addZacfield(zacfield);
+		Zacfield newEntity=zacfieldService.save(zacfield);
+		
     	if(department.getZaclists().size()>0)
     	{
  
@@ -239,16 +240,16 @@ public class DepartmentServiceImpl implements DepartmentService{
 	
 	    		Zaclist zaclist= new Zaclist();
 	    		zaclist.setDepartment(department);
-	    		zaclist.setZacfield(zacfield);
+	    		zaclist.setZacfield(newEntity);
 	    		zaclist.setZacmap(zacmap);	    		
-				department.addZaclist(zaclist);
+	    		zaclistRepository.saveAndFlush(zaclist);
 			}
 
 
     		
     	}
-    	Department updatedDepartment=departmentRepository.saveAndFlush(department);
-    	return updatedDepartment.getZacfields().size()==zacfieldsize_old? false:true;
+
+    	return ObjectUtils.isEmpty(newEntity)? false:true;
 
 	}
 

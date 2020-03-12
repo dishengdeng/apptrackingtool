@@ -3,15 +3,16 @@ package portal.utility;
 
 public enum StakeholderMap {
 	Name(new String[]{"Name","0","A"}),
-	Position(new String[]{"Position/Title","1","B"}),
-	Location(new String[]{"Location (Site)","2","C"}),
-	Role(new String[]{"Role","3","D"}),
-	Email(new String[]{"Email","4","E"}),
-	Phone(new String[]{"Phone","5","F"}),
-	Influence(new String[]{"Influence(L-M-H)","6","G"}),
-	Interest(new String[]{"Interest(L-M-H)","7","H"}),
-	RACI(new String[]{"RACI for System Changes","8","I"}),
-	Notes(new String[]{"Notes","9","J"});
+	BusinessUnit(new String[]{"Business Unit","1","B"}),
+	Position(new String[]{"Position/Title","2","C"}),
+	Location(new String[]{"Location (Site)","3","D"}),
+	Role(new String[]{"Role","4","E"}),
+	Email(new String[]{"Email","5","F"}),
+	Phone(new String[]{"Phone","6","G"}),
+	Influence(new String[]{"Influence(L-M-H)","7","H"}),
+	Interest(new String[]{"Interest(L-M-H)","8","I"}),
+	RACI(new String[]{"RACI for System Changes","9","J"}),
+	Notes(new String[]{"Notes","10","K"});
 	
 	
 	private final String columnName;

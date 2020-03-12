@@ -108,7 +108,7 @@ public class StakeholderextDTO implements Callable<StakeholderextDTO>{
 				Stakeholder stakeholder=ObjectUtils.isEmpty(stakeholderEntity)?
 										new Stakeholder(data.getString(StakeholderMap.Name.name())):
 											stakeholderEntity;
-							
+				if(!ObjectUtils.isEmpty(data.getString(StakeholderMap.BusinessUnit.name()))) stakeholder.setBusinessunit(data.getString(StakeholderMap.BusinessUnit.name()));							
 				stakeholder.setPosition(data.getString(StakeholderMap.Position.name()));
 				stakeholder.setEmail(data.getString(StakeholderMap.Email.name()));
 				stakeholder.setPhone(ObjectUtils.isEmpty(data.getString(StakeholderMap.Phone.name()))?null:Long.parseLong(data.getString(StakeholderMap.Phone.name())));

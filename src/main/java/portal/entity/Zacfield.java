@@ -30,7 +30,7 @@ public class Zacfield implements Comparable<Zacfield>{
 	@JsonView(Views.Public.class)
 	private Long id;
 	
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "department_id",referencedColumnName="id")
     private Department department;
     

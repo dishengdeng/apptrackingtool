@@ -17,7 +17,7 @@ public class ZacfieldServiceImpl implements ZacfieldService{
 	@Override
 	public Zacfield save(Zacfield zacfield) {
 
-		return zacfieldRepository.save(zacfield);
+		return zacfieldRepository.saveAndFlush(zacfield);
 	}
 
 	@Override

@@ -2,7 +2,7 @@ package portal.service.Impl;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
+
 import java.util.HashSet;
 
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.commons.lang3.StringUtils;
+
 import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -157,14 +157,10 @@ public class ImportServiceImp implements ImportService{
 						(new AppInventoryImportValidator<String>())
 						.AppinventoryDataValidate(AppinventoryMap.North,row.getCell(AppinventoryMap.North.getColumnIndex()))
 						);
-				//getting sites
-				List<String> sites=Arrays.asList(StringUtils.split(dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Site.getColumnIndex())),";"));
-				JSONArray sitesArray= new JSONArray();
-				sites.forEach(site->{
-					sitesArray.put(site);
-				});
-				
-				obj.put(AppinventoryMap.Site.name(), sitesArray);
+				obj.put(AppinventoryMap.Site.name(), 
+						(new AppInventoryImportValidator<JSONArray>())
+						.AppinventoryDataValidate(AppinventoryMap.Site,row.getCell(AppinventoryMap.Site.getColumnIndex()))
+						);
 				obj.put(AppinventoryMap.BusinessLead.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.BusinessLead.getColumnIndex())));
 				obj.put(AppinventoryMap.ApplicationOwner.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.ApplicationOwner.getColumnIndex())));
 				obj.put(AppinventoryMap.Goverinplace.name(),
@@ -179,14 +175,10 @@ public class ImportServiceImp implements ImportService{
 				obj.put(AppinventoryMap.AppServerSupport.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.AppServerSupport.getColumnIndex())));
 				obj.put(AppinventoryMap.DBServerSupport.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.DBServerSupport.getColumnIndex())));
 				obj.put(AppinventoryMap.NetworkSupport.name(), dataFormatter.formatCellValue(row.getCell(AppinventoryMap.NetworkSupport.getColumnIndex())));
-				//getting Vendors
-				List<String> vendors=Arrays.asList(StringUtils.split(dataFormatter.formatCellValue(row.getCell(AppinventoryMap.Vendor.getColumnIndex())),";"));
-				JSONArray vendorsArray= new JSONArray();
-				vendors.forEach(vendor->{
-					vendorsArray.put(vendor);
-				});				
-				
-				obj.put(AppinventoryMap.Vendor.name(), vendorsArray);				
+				obj.put(AppinventoryMap.Vendor.name(), 
+						(new AppInventoryImportValidator<JSONArray>())
+						.AppinventoryDataValidate(AppinventoryMap.Vendor,row.getCell(AppinventoryMap.Vendor.getColumnIndex()))
+						);				
 				obj.put(AppinventoryMap.Contractinplace.name(),
 						(new AppInventoryImportValidator<String>())
 						.AppinventoryDataValidate(AppinventoryMap.Contractinplace,row.getCell(AppinventoryMap.Contractinplace.getColumnIndex()))
@@ -291,6 +283,7 @@ public class ImportServiceImp implements ImportService{
 						(new StakeholderImportValidator<String>())
 						.StakeholderDataValidate(StakeholderMap.Name,row.getCell(StakeholderMap.Name.getColumnIndex()))
 						);
+				obj.put(StakeholderMap.BusinessUnit.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.BusinessUnit.getColumnIndex())));
 				obj.put(StakeholderMap.Position.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Position.getColumnIndex())));
 				obj.put(StakeholderMap.Location.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Location.getColumnIndex())));
 				obj.put(StakeholderMap.Role.name(), dataFormatter.formatCellValue(row.getCell(StakeholderMap.Role.getColumnIndex())));
@@ -612,7 +605,7 @@ public class ImportServiceImp implements ImportService{
 				Stakeholder stakeholder=ObjectUtils.isEmpty(stakeholderEntity)?
 										new Stakeholder(data.getString(StakeholderMap.Name.name())):
 											stakeholderEntity;
-							
+				if(!ObjectUtils.isEmpty(data.getString(StakeholderMap.BusinessUnit.name()))) stakeholder.setBusinessunit(data.getString(StakeholderMap.BusinessUnit.name()));		
 				stakeholder.setPosition(data.getString(StakeholderMap.Position.name()));
 				stakeholder.setEmail(data.getString(StakeholderMap.Email.name()));
 				stakeholder.setPhone(ObjectUtils.isEmpty(data.getString(StakeholderMap.Phone.name()))?null:Long.parseLong(data.getString(StakeholderMap.Phone.name())));
